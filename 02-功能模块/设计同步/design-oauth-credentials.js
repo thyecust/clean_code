@@ -20,7 +20,7 @@ import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getSecureStorageDir } from "../认证-OAuth登录/keychain-access.js";
 import { OAuthLoginFlow } from "../认证-OAuth登录/oauth-login-flow.js";
-import { join as O } from "path";
+import { join } from "path";
 async function readDesignOauthTokens(r) {
   try {
     return (await getSecureStorage().readAsync(r))?.designOauth ?? null;
@@ -71,7 +71,7 @@ class T extends Error {
 async function y(r) {
   let t = getSecureStorageDir();
   await getFsSurface().mkdir(t);
-  let o = O(t, D),
+  let o = join(t, D),
     s = !1,
     e,
     c = 0;

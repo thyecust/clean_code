@@ -36,7 +36,7 @@ var m = 65534,
 function getSystemDirAllowlist() {
   return C;
 }
-import { readFile as v } from "fs/promises";
+import { readFile } from "fs/promises";
 async function N() {
   return;
 }
@@ -68,7 +68,7 @@ function h(e) {
 }
 async function S() {
   try {
-    return F(await v("/proc/sys/kernel/overflowuid", "utf8"));
+    return F(await readFile("/proc/sys/kernel/overflowuid", "utf8"));
   } catch {
     return;
   }
@@ -121,26 +121,25 @@ import {
   lstat,
   mkdir,
   readdir,
-  readFile as R,
-  rm as I,
+  rm,
   utimes,
 } from "fs/promises";
 import { connect } from "net";
-import { basename, dirname, join as i, resolve } from "path";
+import { basename, dirname, join, resolve } from "path";
 function c() {
-  return i(getClaudeConfigDir(), "daemon");
+  return join(getClaudeConfigDir(), "daemon");
 }
 function Z() {
   return createHash("sha256").update(resolve(getClaudeConfigDir())).digest("hex").slice(0, 8);
 }
 function getDaemonRuntimeDir() {
   let e = process.getuid?.() ?? 0,
-    t = a.TERMUX_VERSION && a.PREFIX ? i(a.PREFIX, "tmp") : "/tmp";
-  return i(t, `cc-daemon-${e}`, Z());
+    t = a.TERMUX_VERSION && a.PREFIX ? join(a.PREFIX, "tmp") : "/tmp";
+  return join(t, `cc-daemon-${e}`, Z());
 }
 var ee = /^[a-f0-9]{16}$/;
 function getPipeKeyPath() {
-  return i(c(), "pipe.key");
+  return join(c(), "pipe.key");
 }
 var te = rs(
   () => {
@@ -190,16 +189,16 @@ function redactDaemonNonceFromError(e) {
   return e;
 }
 function getControlKeyPath() {
-  return i(c(), "control.key");
+  return join(c(), "control.key");
 }
 async function readOrCreateControlKey() {
   let e = getControlKeyPath();
   try {
     let n = await lstat(e);
     if (n.isFile() && n.size <= 4096) {
-      let r = (await R(e, "utf8")).trim();
+      let r = (await readFile(e, "utf8")).trim();
       if (r) return r;
-    } else await I(e, { recursive: !0, force: !0 }).catch(() => {});
+    } else await rm(e, { recursive: !0, force: !0 }).catch(() => {});
   } catch (n) {
     if (!W(n)) throw n;
   }
@@ -210,7 +209,7 @@ async function readControlKey() {
   try {
     let e = await lstat(getControlKeyPath());
     if (!e.isFile() || e.size > 4096) return;
-    return (await R(getControlKeyPath(), "utf8")).trim() || void 0;
+    return (await readFile(getControlKeyPath(), "utf8")).trim() || void 0;
   } catch {
     return;
   }
@@ -282,15 +281,15 @@ function pruneStaleDaemonDirs() {
     .then(async (r) => {
       for (let o of r) {
         if (!o.isDirectory() || o.name === n) continue;
-        let s = i(t, o.name);
-        if (!(await ne(i(s, "control.sock")))) continue;
+        let s = join(t, o.name);
+        if (!(await ne(join(s, "control.sock")))) continue;
         let u = await lstat(s).catch(() => null);
         if (!u || Date.now() - u.mtimeMs < 1e4) continue;
-        let p = await readdir(i(s, "rv")).catch(() => []),
-          g = await readdir(i(s, "pty")).catch(() => []),
-          w = await readdir(i(s, "spare")).catch(() => []);
+        let p = await readdir(join(s, "rv")).catch(() => []),
+          g = await readdir(join(s, "pty")).catch(() => []),
+          w = await readdir(join(s, "spare")).catch(() => []);
         if (p.length || g.length || w.length) continue;
-        await I(s, { recursive: !0, force: !0 }).catch(() => {});
+        await rm(s, { recursive: !0, force: !0 }).catch(() => {});
       }
     })
     .catch(() => {});
@@ -318,61 +317,61 @@ function ne(e) {
   );
 }
 function getDispatchDir() {
-  return i(c(), "dispatch");
+  return join(c(), "dispatch");
 }
 function getRejectedDispatchDir() {
-  return i(c(), "dispatch", "rejected");
+  return join(c(), "dispatch", "rejected");
 }
 function getRosterFilePath() {
-  return i(c(), "roster.json");
+  return join(c(), "roster.json");
 }
 var ATTACH_JOURNAL_NAMESPACE = "attach-journal";
 function getAttachJournalDir() {
-  return i(c(), ATTACH_JOURNAL_NAMESPACE);
+  return join(c(), ATTACH_JOURNAL_NAMESPACE);
 }
 function getRendezvousDir() {
-  return i(getDaemonRuntimeDir(), "rv");
+  return join(getDaemonRuntimeDir(), "rv");
 }
 function getDaemonAuthDir() {
-  return i(c(), "auth");
+  return join(c(), "auth");
 }
 function getCredentialFilePath(e) {
-  return i(getDaemonAuthDir(), `${e}.json`);
+  return join(getDaemonAuthDir(), `${e}.json`);
 }
 function getHostManagedDir() {
-  return i(c(), "host-managed");
+  return join(c(), "host-managed");
 }
 function getHostManagedMarkerPath(e) {
-  return i(getHostManagedDir(), e);
+  return join(getHostManagedDir(), e);
 }
 function getTokensFilePath(e) {
-  return i(getDaemonAuthDir(), `${e}.tokens.json`);
+  return join(getDaemonAuthDir(), `${e}.tokens.json`);
 }
 function getRendezvousSocketPath(e) {
   if (getCurrentPlatform() === "windows") return U(`rv-${e}`);
-  return i(getRendezvousDir(), `${e}.sock`);
+  return join(getRendezvousDir(), `${e}.sock`);
 }
 function getPtySocketDir() {
-  return i(getDaemonRuntimeDir(), "pty");
+  return join(getDaemonRuntimeDir(), "pty");
 }
 function getPtySocketPath(e) {
   if (getCurrentPlatform() === "windows") return U(`pty-${e}`);
-  return i(getPtySocketDir(), `${e}.sock`);
+  return join(getPtySocketDir(), `${e}.sock`);
 }
 function getSparePtyDir() {
-  return i(getDaemonRuntimeDir(), "spare");
+  return join(getDaemonRuntimeDir(), "spare");
 }
 function getSparePtySocketPath(e) {
-  return i(getSparePtyDir(), `${e}.pty.sock`);
+  return join(getSparePtyDir(), `${e}.pty.sock`);
 }
 function getSpareClaimSocketPath(e) {
-  return i(getSparePtyDir(), `${e}.claim.sock`);
+  return join(getSparePtyDir(), `${e}.claim.sock`);
 }
 function getPtyPidDir() {
-  return i(c(), "pty-pids");
+  return join(c(), "pty-pids");
 }
 function getPtyPidFilePath(e) {
-  return i(getPtyPidDir(), `${e}.pid`);
+  return join(getPtyPidDir(), `${e}.pid`);
 }
 function getPtyHostStderrPath(e) {
   return T(e, "err");
@@ -381,16 +380,16 @@ function getPtyLateOutputPath(e) {
   return T(e, "late");
 }
 function T(e, t) {
-  if (getCurrentPlatform() === "windows") return i(getPtyPidDir(), `${e.split("\\").pop()}.${t}`);
+  if (getCurrentPlatform() === "windows") return join(getPtyPidDir(), `${e.split("\\").pop()}.${t}`);
   return `${e}.${t}`;
 }
 function getPtyExecExitPath(e) {
-  if (getCurrentPlatform() === "windows") return i(getPtyPidDir(), `${e.split("\\").pop()}.exec-exit`);
+  if (getCurrentPlatform() === "windows") return join(getPtyPidDir(), `${e.split("\\").pop()}.exec-exit`);
   return `${e}.exec-exit`;
 }
 function getControlSocketPath() {
   if (getCurrentPlatform() === "windows") return U("control");
-  return (k(), i(getDaemonRuntimeDir(), "control.sock"));
+  return (k(), join(getDaemonRuntimeDir(), "control.sock"));
 }
 var FRAME_KIND_DATA = 0,
   FRAME_KIND_CONTROL = 1,

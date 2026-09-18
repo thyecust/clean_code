@@ -253,7 +253,7 @@ function raiseSessionStartOnce(e) {
   let o = jt(e);
   return (sessionStartPromise.set(o), o);
 }
-import { open as zt } from "fs/promises";
+import { open } from "fs/promises";
 var qn = 8388608,
   Yn = '"artifact-comment-monitor"';
 async function getTranscriptFileInfo(e) {
@@ -263,7 +263,7 @@ async function getTranscriptFileInfo(e) {
 }
 async function Xn(e) {
   try {
-    let t = await zt(e, "r");
+    let t = await open(e, "r");
     try {
       return (await t.stat()).size;
     } finally {
@@ -278,7 +278,7 @@ async function Vt(e) {
     d = e.maxAppendedBytes ?? qn,
     c;
   try {
-    let I = await zt(t, "r");
+    let I = await open(t, "r");
     try {
       let { size: E } = await I.stat();
       if (E < r || E - r > d) return null;
@@ -1341,7 +1341,7 @@ function rearmArtifactLiveInHeadlessHost(e) {
     );
   }
 }
-import { stat as oo } from "fs/promises";
+import { stat } from "fs/promises";
 import { basename } from "path";
 async function ln(e, t, o) {
   if (isCrossSessionMessagingEnabled()) {
@@ -1615,7 +1615,7 @@ async function mo(e, t) {
         if (d.ok && d.value.size > 0) return d.value.mtimeMs;
       }
     } catch {}
-  let r = await oo(o);
+  let r = await stat(o);
   return r.size > 0 ? r.mtimeMs : null;
 }
 async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
@@ -2694,11 +2694,11 @@ function kn(e, t) {
   return e;
 }
 import { readFile } from "fs/promises";
-import { join as Wo } from "path";
+import { join } from "path";
 var Ko = "flagged-plugins.json",
   Yo = 172800000;
 function _n() {
-  return Wo(getPluginsDir(), Ko);
+  return join(getPluginsDir(), Ko);
 }
 function Sn(e) {
   let t = jsonParse(e);
@@ -2901,7 +2901,7 @@ async function enforceDelistedPlugins(e) {
     }
   return s;
 }
-import { randomUUID as Ke } from "crypto";
+import { randomUUID } from "crypto";
 var Zo = 10,
   vn = 1000 / Zo,
   Rn = 3,
@@ -2914,7 +2914,7 @@ function createDisplayTransformQueue({
   storageV5: s,
   credentials: d,
 }) {
-  let c = Ke(),
+  let c = randomUUID(),
     p = null;
   function _(k) {
     if (k.abandoned) return;
@@ -3032,7 +3032,7 @@ function createDisplayTransformQueue({
   return {
     newTurn() {
       if (p && !p.finalized) T(p);
-      ((p = null), (c = Ke()));
+      ((p = null), (c = randomUUID()));
     },
     begin(k) {
       if (p && !p.finalized) T(p);
@@ -3042,7 +3042,7 @@ function createDisplayTransformQueue({
       }
       ((p = {
         apiMessageId: k,
-        messageId: Ke(),
+        messageId: randomUUID(),
         turnId: c,
         raw: "",
         flushedOffset: 0,
@@ -3151,7 +3151,7 @@ async function applyMessageDisplayHooks(e, t, o, r, s, d, c) {
   try {
     for await (let v of executeMessageDisplayHooks(
       e,
-      { turnId: o, messageId: Ke(), index: 0, final: !0, delta: I },
+      { turnId: o, messageId: randomUUID(), index: 0, final: !0, delta: I },
       r,
       s,
       In,
@@ -3195,7 +3195,6 @@ var FOLLOWUP_ASK_FEATURE_FLAG = "tengu_juniper_vale",
   },
   DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG = { probability: 0 },
   DEFAULT_FOLLOWUP_ASK_CONFIG = { enabled: !1, maxChars: 500, autoDismissAfterMs: 30000 };
-import { randomUUID as tr } from "crypto";
 var nr = 7200000,
   TEXT_TOOL_NAMES = new Set([BRIEF_TOOL_NAME]);
 function qe(e) {
@@ -3383,7 +3382,7 @@ function createTurnFirstTextTracker({
   };
 }
 function createTurnFirstTextObserver({ toolUseContext: e, sessionState: t }) {
-  let o = tr();
+  let o = randomUUID();
   e.queryTracking = { chainId: o, depth: -1 };
   let r = createTurnFirstTextTracker({
     queryChainId: o,
@@ -3399,12 +3398,11 @@ function createTurnFirstTextObserver({ toolUseContext: e, sessionState: t }) {
     },
   };
 }
-import { randomUUID as rr } from "crypto";
 function markVerifiedSlackHumanTurn(e, t) {
   applyHearthRelayFields(e, t, { verifiedSlackHumanTurn: !0 });
 }
 function resolveMessageUuid(e, t) {
-  return e || (t ? rr() : void 0);
+  return e || (t ? randomUUID() : void 0);
 }
 function _e(e, t) {
   let o = (s) => (s === void 0 ? -1 : e.findIndex((d) => d.uuid === s)),
@@ -3491,7 +3489,6 @@ function completeTurn(e) {
       .then((I) => (I.text !== c && I.text.trim() !== "" ? [Fn(I.text)] : [])),
   );
 }
-import { randomUUID as gr } from "crypto";
 function createTurnEventHub(e, t) {
   let o = createTurnEventTail(e),
     r = createTurnStep((s) => {
@@ -3499,7 +3496,7 @@ function createTurnEventHub(e, t) {
       o.enqueue("turn.step", () => d.turn.step(s).then(() => []));
     });
   return {
-    begin: gr,
+    begin: randomUUID,
     read: r.read,
     note: r.note,
     enqueue: o.enqueue,

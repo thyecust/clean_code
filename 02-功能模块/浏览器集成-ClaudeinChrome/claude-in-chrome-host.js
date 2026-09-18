@@ -17,19 +17,19 @@ import { resolveExecutablePathAsync, env as a } from "../../01-核心基础设�
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "./claude-in-chrome-mcp-constants.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { readdir, stat as R } from "fs/promises";
+import { readdir, stat } from "fs/promises";
 import { homedir, platform, userInfo } from "os";
-import { join as l } from "path";
+import { join } from "path";
 import { spawn } from "child_process";
 import { lstat } from "fs/promises";
-import { dirname, win32 as _ } from "path";
+import { dirname, win32 } from "path";
 var I = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths",
   v = 1e4,
   L = 5000;
 function K() {
   if (!a.LOCALAPPDATA) return;
   let e = a.LOCALAPPDATA.replace(/[\\/]+$/, "");
-  return _.normalize(`${e}\\Microsoft\\WindowsApps\\`).toLowerCase();
+  return win32.normalize(`${e}\\Microsoft\\WindowsApps\\`).toLowerCase();
 }
 function h() {
   return a.SYSTEMROOT || a.SystemRoot || "C:\\Windows";
@@ -101,7 +101,7 @@ async function x(e, s = L) {
         b = K();
       if (
         b !== void 0 &&
-        _.normalize(p).toLowerCase().startsWith(b) &&
+        win32.normalize(p).toLowerCase().startsWith(b) &&
         d !== "ENOENT" &&
         d !== "ENOTDIR"
       )
@@ -358,12 +358,12 @@ function getAllNativeMessagingHostsDirs() {
     switch (e) {
       case "macos":
         if (t.macos.nativeMessagingPath.length > 0)
-          r.push({ browser: o, path: l(s, ...t.macos.nativeMessagingPath) });
+          r.push({ browser: o, path: join(s, ...t.macos.nativeMessagingPath) });
         break;
       case "linux":
       case "wsl":
         if (t.linux.nativeMessagingPath.length > 0)
-          r.push({ browser: o, path: l(s, ...t.linux.nativeMessagingPath) });
+          r.push({ browser: o, path: join(s, ...t.linux.nativeMessagingPath) });
         break;
       case "windows":
         break;
@@ -388,7 +388,7 @@ async function detectAvailableBrowser() {
       case "macos": {
         let o = `/Applications/${r.macos.appName}.app`;
         try {
-          if ((await R(o)).isDirectory())
+          if ((await stat(o)).isDirectory())
             return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
         } catch (t) {
           if (!Rt(t)) throw t;
@@ -406,11 +406,11 @@ async function detectAvailableBrowser() {
         let o = homedir();
         if (r.windows.dataPath.length > 0) {
           let t = r.windows.useRoaming
-              ? l(o, "AppData", "Roaming")
-              : l(o, "AppData", "Local"),
-            c = l(t, ...r.windows.dataPath);
+              ? join(o, "AppData", "Roaming")
+              : join(o, "AppData", "Local"),
+            c = join(t, ...r.windows.dataPath);
           try {
-            if ((await R(c)).isDirectory())
+            if ((await stat(c)).isDirectory())
               return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
           } catch (i) {
             if (!Rt(i)) throw i;
@@ -518,7 +518,7 @@ function getSocketDir() {
 }
 function getSecureSocketPath() {
   if (platform() === "win32") return `\\\\.\\pipe\\${H()}`;
-  return l(getSocketDir(), `${process.pid}.sock`);
+  return join(getSocketDir(), `${process.pid}.sock`);
 }
 async function getAllSocketPaths() {
   if (platform() === "win32") return [`\\\\.\\pipe\\${H()}`];
@@ -526,7 +526,7 @@ async function getAllSocketPaths() {
     s = getSocketDir();
   try {
     let r = await readdir(s);
-    for (let o of r) if (o.endsWith(".sock")) e.push(l(s, o));
+    for (let o of r) if (o.endsWith(".sock")) e.push(join(s, o));
   } catch {}
   return e;
 }

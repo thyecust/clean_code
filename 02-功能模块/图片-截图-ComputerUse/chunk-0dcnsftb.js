@@ -695,10 +695,10 @@ function formatImageDisplayAnnotation(e, t) {
 }
 import { randomBytes } from "crypto";
 import {
-  basename as fe,
+  basename,
   dirname,
-  isAbsolute as ye,
-  join as D,
+  isAbsolute,
+  join,
 } from "path";
 function convertWindowsPathToWsl(e) {
   let t = e.match(/^([A-Z]):(.*)$/i);
@@ -761,9 +761,9 @@ function we() {
   let t = getClaudeTempDir(),
     r = "claude_cli_latest_screenshot.png",
     o = {
-      darwin: D(t, "claude_cli_latest_screenshot.png"),
-      linux: D(t, "claude_cli_latest_screenshot.png"),
-      win32: D(t, "claude_cli_latest_screenshot.png"),
+      darwin: join(t, "claude_cli_latest_screenshot.png"),
+      linux: join(t, "claude_cli_latest_screenshot.png"),
+      win32: join(t, "claude_cli_latest_screenshot.png"),
     },
     s = o.darwin || o.linux,
     m = jo([s]),
@@ -958,10 +958,10 @@ async function readPastedImageFile(e, t) {
     o = await new WslPathConverter(a.WSL_DISTRO_NAME).toLocalPath(o);
   let s;
   try {
-    if (ye(o)) s = await getFsSurface().readFileBytes(o);
+    if (isAbsolute(o)) s = await getFsSurface().readFileBytes(o);
     else {
       let g = await xe();
-      if (g && o === fe(g)) s = await getFsSurface().readFileBytes(g);
+      if (g && o === basename(g)) s = await getFsSurface().readFileBytes(g);
     }
   } catch (g) {
     return (
@@ -999,12 +999,9 @@ function looksLikeBinaryContent(e) {
   for (let o of t) if (o === "\uFFFD") r++;
   return r / t.length > 0.05;
 }
-import { stat as L } from "fs/promises";
+import { stat } from "fs/promises";
 import {
-  basename as Ie,
   extname,
-  isAbsolute as Ee,
-  join as Pe,
 } from "path";
 function resolveAttachmentUploadLane(e) {
   if (e.replBridgeEnabled) return "repl";
@@ -1069,12 +1066,12 @@ function K(e) {
 async function ve(e, t, r) {
   let o = await getSuggestedPathOutsideCwd(t);
   if (o) return o;
-  if (!Ee(e)) {
+  if (!isAbsolute(e)) {
     let [s, ...m] = e.split(/[\\/]+/);
-    if (s === Ie(r) && m.length > 0) {
-      let c = Pe(r, ...m);
+    if (s === basename(r) && m.length > 0) {
+      let c = join(r, ...m);
       try {
-        if ((await L(c)).isFile()) return m.join("/");
+        if ((await stat(c)).isFile()) return m.join("/");
       } catch {}
     }
   }
@@ -1122,7 +1119,7 @@ async function validateAttachments(e, t) {
         errorCode: 1,
       };
     try {
-      if (!(await L(m)).isFile())
+      if (!(await stat(m)).isFile())
         return {
           result: !1,
           message: `Attachment "${o}" is not a regular file.`,
@@ -1171,7 +1168,7 @@ async function resolveAttachmentsForUpload(e, t) {
       throw Error(
         `Attachment "${d}" is a network path (UNC or /net autofs), which is not supported.`,
       );
-    let g = await L(p);
+    let g = await stat(p);
     (o.push(r.length),
       r.push({
         path: p,

@@ -14,7 +14,7 @@ import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操�
 var i = toESM(HA());
 var c = toESM(getPropertyProviderModule()),
   f = toESM(HA());
-import { exec as w } from "child_process";
+import { exec } from "child_process";
 import { promisify } from "util";
 var p = toESM(awsSdkCoreClientModule()),
   a = (r, e, o) => {
@@ -48,7 +48,7 @@ var u = async (r, e, o) => {
   if (e[r]) {
     let t = s.credential_process;
     if (t !== void 0) {
-      let d = promisify(f.externalDataInterceptor?.getTokenRecord?.().exec ?? w);
+      let d = promisify(f.externalDataInterceptor?.getTokenRecord?.().exec ?? exec);
       try {
         let { stdout: n } = await d(t),
           l;

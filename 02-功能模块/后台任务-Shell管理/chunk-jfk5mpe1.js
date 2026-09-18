@@ -77,15 +77,15 @@ import { CONTROL_PROMPT_PREFIX_RE } from "../../01-核心基础设施/核心工�
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import {
-  access as dr,
+  access,
   mkdir,
-  readFile as fr,
-  stat as At,
-  unlink as pr,
+  readFile,
+  stat,
+  unlink,
   writeFile,
 } from "fs/promises";
-import { homedir as Ct } from "os";
-import { join as Ge } from "path";
+import { homedir } from "os";
+import { join } from "path";
 import { setTimeout as gr } from "timers/promises";
 var be = "com.anthropic.claude-daemon";
 async function isDaemonServiceControlSupported() {
@@ -93,13 +93,13 @@ async function isDaemonServiceControlSupported() {
 }
 function getInstalledBinaryPath() {
   if (!isBunStandaloneExecutable()) return process.argv[1];
-  return Ge(getLocalBinDir(), "claude");
+  return join(getLocalBinDir(), "claude");
 }
 function Te(t) {
   return escapeHtmlText(t.replace(/[\r\n]/g, " "));
 }
 function at() {
-  return Ge(Ct(), "Library", "LaunchAgents", `${be}.plist`);
+  return join(homedir(), "Library", "LaunchAgents", `${be}.plist`);
 }
 function Tt() {
   return `gui/${process.getuid()}`;
@@ -122,7 +122,7 @@ async function installDaemonService(t) {
   {
     let m = at();
     try {
-      (await mkdir(Ge(Ct(), "Library", "LaunchAgents"), { recursive: !0 }),
+      (await mkdir(join(homedir(), "Library", "LaunchAgents"), { recursive: !0 }),
         await writeFile(
           m,
           `<?xml version="1.0" encoding="UTF-8"?>
@@ -182,7 +182,7 @@ async function uninstallDaemonService() {
     let t = at();
     await execFileNoThrow("launchctl", ["bootout", Ke()], { useCwd: !1 });
     try {
-      await pr(t);
+      await unlink(t);
     } catch (e) {
       if (!W(e)) return { ok: !1, error: l(e) };
     }
@@ -252,9 +252,9 @@ async function hr() {
   if (!t) return null;
   let e;
   try {
-    let o = await At(t);
+    let o = await stat(t);
     if (!o.isFile() || o.size > 1048576) return null;
-    e = await fr(t, "utf8");
+    e = await readFile(t, "utf8");
   } catch {
     return null;
   }
@@ -278,7 +278,7 @@ async function checkDaemonServiceStaleness() {
     c = o > 0 ? e[o - 1] : void 0;
   if (!c) return t;
   try {
-    await dr(Pt(c));
+    await access(Pt(c));
   } catch {
     t.execPathStale = !0;
   }
@@ -303,14 +303,11 @@ async function isDaemonServiceInstalled() {
 import { spawn } from "child_process";
 import { constants } from "fs";
 import {
-  access as wr,
   mkdtemp,
-  open as Er,
+  open,
   readdir,
-  stat as dt,
 } from "fs/promises";
-import { homedir as yr, tmpdir } from "os";
-import { join as lt } from "path";
+import { tmpdir } from "os";
 var xr = 1e4,
   Pr = 250,
   Ye = 120000,
@@ -322,7 +319,7 @@ var xr = 1e4,
   Tr = 60000;
 async function Mt(t) {
   try {
-    let e = await dt(t);
+    let e = await stat(t);
     if (!e.isFile() || e.size >= Ot) return "present";
     return Date.now() - Math.max(e.mtimeMs, e.ctimeMs) < Tr
       ? "fresh_stub"
@@ -378,9 +375,9 @@ async function spawnDaemonProcess(t, e) {
       }));
   }
   let k = getCurrentPlatform() === "macos" ? await Ir() : [],
-    E = await mkdtemp(lt(tmpdir(), "cc-daemon-")).catch(() => null),
-    v = E ? lt(E, "stderr.log") : void 0,
-    N = v ? await Er(v, "w").catch(() => null) : null;
+    E = await mkdtemp(join(tmpdir(), "cc-daemon-")).catch(() => null),
+    v = E ? join(E, "stderr.log") : void 0,
+    N = v ? await open(v, "w").catch(() => null) : null;
   try {
     if (c.length > 0) return { ...(await Dr(t, w, k, N)), stderrPath: v };
     let T = await Pe(await Re(k, _), w, N?.fd),
@@ -534,10 +531,10 @@ async function Dr(t, e, o, c) {
 }
 async function _e(t, e = {}) {
   try {
-    let o = await dt(t);
+    let o = await stat(t);
     if (!o.isFile()) return !1;
     if (e.rejectNpmStub && o.size < Ot) return !1;
-    return (await wr(t, constants.X_OK), !0);
+    return (await access(t, constants.X_OK), !0);
   } catch {
     return !1;
   }
@@ -561,7 +558,7 @@ async function Rt(t) {
   for (let m of d) {
     if (!m.isDirectory() || !m.name.startsWith(s)) continue;
     try {
-      let _ = await dt(lt(o, m.name));
+      let _ = await stat(join(o, m.name));
       if (Date.now() - Math.max(_.ctimeMs, _.mtimeMs) < Cr) return !0;
     } catch {}
   }
@@ -608,7 +605,7 @@ async function Je(t) {
 async function Pe(t, e, o) {
   let c;
   try {
-    c = yr();
+    c = homedir();
   } catch {
     c = void 0;
   }
@@ -792,9 +789,8 @@ function Br(t) {
 var Ue = toESM(pg(), 1);
 import {
   lstat,
-  readFile as Tn,
   realpath,
-  rm as Ze,
+  rm,
 } from "fs/promises";
 import { dirname } from "path";
 import { setTimeout as We } from "timers/promises";
@@ -968,7 +964,6 @@ async function Ft(t) {
   };
 }
 import { randomBytes } from "crypto";
-import { unlink as Jt } from "fs/promises";
 import { createServer } from "net";
 import { StringDecoder } from "string_decoder";
 var Vt =
@@ -1453,7 +1448,7 @@ async function serveDaemonControlSocket(
   let w = getControlSocketPath();
   await ensureDaemonRuntimeDir();
   let k = await readOrCreateControlKey();
-  await Jt(w).catch(() => {});
+  await unlink(w).catch(() => {});
   let E = new Set(),
     v = new Set(),
     N = new Map(),
@@ -1561,7 +1556,7 @@ async function serveDaemonControlSocket(
         for (let x of E) x.destroy();
         if (p?.skipUnlink) return ((q = !0), G.unref(), void r());
         G.close(() => {
-          if (!p?.skipUnlink) Jt(w).catch(() => {});
+          if (!p?.skipUnlink) unlink(w).catch(() => {});
           r();
         });
       }),
@@ -2685,7 +2680,7 @@ async function or(t, e, o) {
     } = ne,
     p = ne.stderrPath;
   if (Y) {
-    if (p) Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
+    if (p) rm(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
     return (
       logEvent("tengu_bg_daemon_spawn_failed", {
         errno_enoent: A(Y) === "ENOENT",
@@ -2739,7 +2734,7 @@ async function or(t, e, o) {
       let J = await spawnDaemonProcess(I);
       if (J.err === null) {
         if (((fe = !0), (O = 0), p))
-          Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
+          rm(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
         ((p = J.stderrPath),
           (r = gt({
             spawnIssuedAt: Date.now(),
@@ -2764,7 +2759,7 @@ async function or(t, e, o) {
         }),
         J.stderrPath)
       )
-        Ze(dirname(J.stderrPath), { recursive: !0, force: !0 }).catch(() => {});
+        rm(dirname(J.stderrPath), { recursive: !0, force: !0 }).catch(() => {});
     }
   }
   let X = r.budgetExtended ? mt : DAEMON_START_TIMEOUT_MS,
@@ -2792,7 +2787,7 @@ ${U}`,
       se = J && J.length > 200 ? `${truncateToCodeUnits(J, 200)}\u2026` : J;
     }
   }
-  if (p) Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
+  if (p) rm(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
   if (
     (logEvent("tengu_bg_daemon_install", {
       outcome_ok: x,
@@ -3125,7 +3120,7 @@ function Mn() {
 async function Ln() {
   let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") return;
-  let e = await Tn("/etc/systemd/logind.conf", "utf8").catch(() => "");
+  let e = await readFile("/etc/systemd/logind.conf", "utf8").catch(() => "");
   if (!/^\s*KillUserProcesses\s*=\s*yes\b/im.test(e)) return;
   logForDebugging(
     "logind KillUserProcesses=yes \u2014 SSH disconnect will kill the transient daemon and its background jobs. Run `loginctl enable-linger $USER` or `claude daemon install` to keep it alive across logout.",

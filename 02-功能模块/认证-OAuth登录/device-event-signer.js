@@ -13,7 +13,7 @@ import { jsonStringifyUntraced, logForDebugging } from "../../01-核心基础设
 import { DEVICE_REGISTRY_KID_PREFIX } from "../远程控制-Bridge/device-bind.js";
 import { loadDeviceKey } from "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
 import { resolveAccountIdentity } from "../设备注册-Cowork/chunk-d4kaq0ds.js";
-import { createHash, sign as m } from "crypto";
+import { createHash, sign } from "crypto";
 var S = "anthropic.ccr.client_event.v1",
   w = "claude-code-jcs@1";
 function h(r) {
@@ -81,7 +81,7 @@ function g(r, t) {
     },
     sign: (e, o) => ({
       kid: i,
-      signature: m("sha256", E(e, o), {
+      signature: sign("sha256", E(e, o), {
         key: t,
         dsaEncoding: "ieee-p1363",
       }).toString("base64"),

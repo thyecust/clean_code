@@ -3752,7 +3752,7 @@ function Xp(a) {
   return truncatePathMiddle(formatPathForDisplay(a).replaceAll("\\", "/"), uc);
 }
 F();
-import { readdir, readFile as em } from "fs/promises";
+import { readdir, readFile } from "fs/promises";
 import { homedir } from "os";
 import * as Wo from "path";
 var pc = 5,
@@ -3778,7 +3778,7 @@ async function Ak(a) {
     let R = Wo.join(a, w),
       A;
     try {
-      A = await em(R, "utf8");
+      A = await readFile(R, "utf8");
     } catch (X) {
       v.push(`Could not read ${w}: ${l(X)}`);
       continue;
@@ -3822,7 +3822,7 @@ async function Ak(a) {
 }
 async function Ok(a) {
   try {
-    let k = await em(Wo.join(a, "SKILL.md"), "utf8"),
+    let k = await readFile(Wo.join(a, "SKILL.md"), "utf8"),
       v = stripBom(k).match(FRONTMATTER_PATTERN);
     if (!v) return "";
     let b = parseYaml(v[1] ?? "");
@@ -6942,16 +6942,15 @@ function Gm() {
     k
   );
 }
-import { readFile as _b } from "fs/promises";
-import { join as Fb, resolve, sep as Ub } from "path";
+import { join, resolve, sep } from "path";
 async function Jm(a, k) {
-  let v = Fb(k.path, "..", ".claude-plugin", "marketplace.json");
+  let v = join(k.path, "..", ".claude-plugin", "marketplace.json");
   if (isHoverRestEnabled() && a !== void 0 && (await Vb(a, k))) {
     let b = await readLocalMarketplaceFile(a, "workspace", v);
     if ("absent" in b) throw createEnoentError(v);
     return b.text;
   }
-  return _b(v, "utf-8");
+  return readFile(v, "utf-8");
 }
 async function Vb(a, k) {
   let v = getExistingSessionPluginCacheDir();
@@ -6966,7 +6965,7 @@ async function Vb(a, k) {
 function Ym(a, k) {
   let v = resolve(a),
     b = resolve(k);
-  return b === v || b.startsWith(v + Ub);
+  return b === v || b.startsWith(v + sep);
 }
 F();
 function Xm(a, k) {

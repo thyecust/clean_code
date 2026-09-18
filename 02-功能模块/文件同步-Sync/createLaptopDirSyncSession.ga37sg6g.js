@@ -50,7 +50,7 @@ import { createStatusFeed } from "../../01-核心基础设施/核心工具-未�
 import { getFileEntryKind } from "../../01-核心基础设施/核心工具-未归类/file-entry-kind.js";
 import { getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName } from "../目录同步-dir-sync/dir-sync-record-path.js";
 import { lstat, readdir } from "fs/promises";
-import { dirname, join as C, resolve } from "path";
+import { dirname, join, resolve } from "path";
 var G = 250,
   L = 30000;
 function createLaptopDirSyncSession({
@@ -437,13 +437,13 @@ async function dirSyncElsewhereLookup(a, w, d = q) {
     let i = await B(k);
     if (i !== !1) return i ? F : { kind: "unknown", why: "here_unreadable" };
     let o = await readdir(D, { withFileTypes: !0 }),
-      m = await Promise.all(o.map((t) => getFileEntryKind(t, C(D, t.name), "unknown"))),
+      m = await Promise.all(o.map((t) => getFileEntryKind(t, join(D, t.name), "unknown"))),
       _ = o.filter((t, E) => m[E] === "dir"),
       c = _.slice(0, d),
       e = m.some((t) => t === "symlink" || t === "unknown");
     for (let t = 0; t < c.length; t += v) {
       let E = await Promise.all(
-        c.slice(t, t + v).map((b) => x(C(D, b.name, r))),
+        c.slice(t, t + v).map((b) => x(join(D, b.name, r))),
       );
       if (E.includes(!0)) return I;
       e ||= E.includes(void 0);

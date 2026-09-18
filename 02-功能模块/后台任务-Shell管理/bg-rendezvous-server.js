@@ -34,7 +34,7 @@ import { setSystemTheme } from "../../01-核心基础设施/UI组件-TUI/theme-r
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { unlink } from "fs/promises";
 import { createServer } from "net";
-import { join as F } from "path";
+import { join } from "path";
 import { StringDecoder } from "string_decoder";
 class I {
   resolver = null;
@@ -49,8 +49,7 @@ function registerPeerReplyResolver(e, t) {
 function C(e, t) {
   return x.of(e).resolver?.(t) ?? !1;
 }
-import { rm as _ } from "fs/promises";
-import { join as L } from "path";
+import { rm } from "fs/promises";
 var U = ".prompt-stash",
   M = 262144,
   N = 256,
@@ -94,12 +93,12 @@ function D(e) {
   return t.join("");
 }
 async function E(e, t) {
-  await _(e, { force: !0 });
+  await rm(e, { force: !0 });
   let r = await writeNewFileExclusive(e, t, 384);
   try {
     await renameWithRetry(r, e);
   } catch (o) {
-    throw (await _(r, { force: !0 }).catch(() => {}), o);
+    throw (await rm(r, { force: !0 }).catch(() => {}), o);
   }
 }
 function re(e) {
@@ -128,7 +127,7 @@ function re(e) {
   };
 }
 async function ne(e, t) {
-  let r = L(e, U),
+  let r = join(e, U),
     o = t === null ? "" : te(t);
   if (Buffer.byteLength(o) > M)
     (logForDebugging("[bg] prompt stash too large to persist; kept in memory only", {
@@ -136,7 +135,7 @@ async function ne(e, t) {
     }),
       (o = ""));
   try {
-    let i = await _(r, { force: !0 }).then(
+    let i = await rm(r, { force: !0 }).then(
       () => !0,
       (d) => (logJobWriteError(d), !1),
     );
@@ -147,7 +146,7 @@ async function ne(e, t) {
   }
 }
 async function se(e) {
-  let t = await readBoundedFile(L(e, U), M);
+  let t = await readBoundedFile(join(e, U), M);
   if (!t) return null;
   let r = re(t);
   if (r === null)
@@ -476,7 +475,7 @@ class H {
   async restorePromptDraft() {
     let e = a.CLAUDE_JOB_DIR;
     if (!e) return;
-    let t = F(e, Y),
+    let t = join(e, Y),
       r = await readBoundedFile(t, 4 * Q);
     if (r === null) return;
     await unlink(t).catch(() => {});
@@ -648,7 +647,7 @@ var Y = ".prompt-draft",
 async function me(e, t) {
   let r = e.getState().value;
   if (!r) return;
-  await E(F(t, Y), truncateToCodeUnits(r, Q));
+  await E(join(t, Y), truncateToCodeUnits(r, Q));
 }
 async function fe(e, t, r) {
   let o = await readJobState(e, r);

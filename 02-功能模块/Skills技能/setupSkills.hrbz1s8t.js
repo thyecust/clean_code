@@ -125,7 +125,7 @@ import * as q from "fs";
 import * as p from "path";
 import { execFile } from "child_process";
 import { promisify } from "util";
-import { Readable as nt } from "stream";
+import { Readable } from "stream";
 import { pipeline } from "stream/promises";
 var ot = promisify(execFile);
 async function setupSkills(r) {
@@ -253,7 +253,7 @@ function ft(r) {
 async function C(r, t) {
   let e = p.join(t, `.skill-archive-${process.pid}-${Date.now()}`);
   if (!r.body) throw new gn("skill download response had no body");
-  await pipeline(nt.fromWeb(r.body), q.createWriteStream(e));
+  await pipeline(Readable.fromWeb(r.body), q.createWriteStream(e));
   let i = p.join(p.dirname(t), `.skill-stage-${process.pid}-${Date.now()}`);
   try {
     let n = await ut(e, 4),

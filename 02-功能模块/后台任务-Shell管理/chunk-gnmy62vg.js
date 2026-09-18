@@ -22,7 +22,7 @@ import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { lstat, readdir, unlink } from "fs/promises";
 import { connect } from "net";
-import { basename, join as x } from "path";
+import { basename, join } from "path";
 async function readExecExitStatus(e, t) {
   if (t.launch.mode !== "exec" || !e) return null;
   try {
@@ -86,7 +86,7 @@ async function reapAllDaemonWorkers(e = {}, t) {
           if (d && !w.has(a.slice(0, -d.length))) {
             let g = a.slice(0, -`.sock${d}`.length);
             if (!(d === ".exec-exit" && r.has(g)))
-              await unlink(x(c, a)).catch(() => {});
+              await unlink(join(c, a)).catch(() => {});
           }
         }
         continue;
@@ -104,7 +104,7 @@ async function reapAllDaemonWorkers(e = {}, t) {
       let o = await readdir(getSparePtyDir()).catch(() => []);
       for (let u of o) {
         if (!u.endsWith(".pty.sock")) continue;
-        let d = x(getSparePtyDir(), u);
+        let d = join(getSparePtyDir(), u);
         if (a.has(d)) continue;
         r.set(`spare:${u}`, { pid: 0, ptySock: d });
       }

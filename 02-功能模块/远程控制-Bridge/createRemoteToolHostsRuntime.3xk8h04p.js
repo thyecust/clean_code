@@ -180,7 +180,7 @@ import { isLocalDisplayOnlyDenialReason } from "../../01-核心基础设施/核�
 import { toNumber } from "../../01-核心基础设施/核心工具-类型与数值/lodash-to-number.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe, asStringArray } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { isDeepStrictEqual as go } from "util";
+import { isDeepStrictEqual } from "util";
 var hn =
     "The user's downloads, local toolchains and anything not in the repository live here; its own Claude Code decides what may run there and may ask the user first",
   xe =
@@ -978,12 +978,10 @@ function qn(e) {
       : []),
   ];
 }
-import { posix as ge } from "path";
-import { posix as fe } from "path";
-import { isDeepStrictEqual as Tt } from "util";
+import { posix } from "path";
 function We(e, o, t) {
   return (
-    Gn(e).every(([r, s]) => Tt(zn(r, s, t), zn(r, o[r], t))) &&
+    Gn(e).every(([r, s]) => isDeepStrictEqual(zn(r, s, t), zn(r, o[r], t))) &&
     Gn(o).every(([r, s]) => e[r] !== void 0 || s === !1)
   );
 }
@@ -1002,15 +1000,15 @@ function Yn(e, o) {
   if (r === "~" || r.startsWith("~/"))
     return o.homeDir === void 0
       ? e
-      : { ...e, file_path: fe.join(o.homeDir, r.slice(2)) };
+      : { ...e, file_path: posix.join(o.homeDir, r.slice(2)) };
   return {
     ...e,
     file_path:
       r === ""
-        ? fe.normalize(o.workingDir)
-        : fe.isAbsolute(r)
-          ? fe.normalize(r)
-          : fe.resolve(o.workingDir, r),
+        ? posix.normalize(o.workingDir)
+        : posix.isAbsolute(r)
+          ? posix.normalize(r)
+          : posix.resolve(o.workingDir, r),
   };
 }
 class Ke {
@@ -1544,14 +1542,14 @@ async function Nt({
     Q =
       e.backfillObservableInput === void 0 ||
       o.description?.working_dir === void 0 ||
-      !ge.isAbsolute(o.description.working_dir) ||
+      !posix.isAbsolute(o.description.working_dir) ||
       o.description.working_dir.includes("\\")
         ? void 0
         : {
             workingDir: o.description.working_dir,
             homeDir:
               o.description.home_dir !== void 0 &&
-              ge.isAbsolute(o.description.home_dir) &&
+              posix.isAbsolute(o.description.home_dir) &&
               !o.description.home_dir.includes("\\")
                 ? o.description.home_dir
                 : void 0,
@@ -1562,14 +1560,14 @@ async function Nt({
       if (Q === void 0 || typeof F !== "string") return E;
       if (F === C.file_path && typeof N.file_path === "string")
         return { ...E, file_path: N.file_path };
-      if (!ge.isAbsolute(F)) return E;
-      let G = ge.normalize(F);
+      if (!posix.isAbsolute(F)) return E;
+      let G = posix.normalize(F);
       for (let [ke, H] of [
         [Q.workingDir, "./"],
         [Q.homeDir, "~/"],
       ]) {
         if (ke === void 0) continue;
-        let ie = `${ge.normalize(ke).replace(/\/+$/, "")}/`;
+        let ie = `${posix.normalize(ke).replace(/\/+$/, "")}/`;
         if (G.startsWith(ie) && G.length > ie.length)
           return { ...E, file_path: `${H}${G.slice(ie.length)}` };
       }
@@ -3129,7 +3127,7 @@ function sr({
         };
       let b = [HOST_FIELD_NAME, ...bo(e)],
         U = omitObjectKeys(O, b),
-        W = Object.keys(U).length > 0 && !go(U, omitObjectKeys(d.input, b));
+        W = Object.keys(U).length > 0 && !isDeepStrictEqual(U, omitObjectKeys(d.input, b));
       return {
         decision: "allow",
         raisedInPlanMode: v,
@@ -3696,7 +3694,7 @@ function _r(e, o, t) {
       r !== void 0 &&
       r !== null &&
       (typeof r !== "string" || r.trim() !== o.host.name),
-    a = bo(t).some((d) => Boolean(e[d]) && !go(e[d], o.input[d]));
+    a = bo(t).some((d) => Boolean(e[d]) && !isDeepStrictEqual(e[d], o.input[d]));
   return s || a;
 }
 var kr = 500;

@@ -12,11 +12,11 @@ import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/ch
 import { getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { createHash } from "crypto";
 import { homedir, userInfo } from "os";
-import { join as l } from "path";
+import { join } from "path";
 var CREDENTIALS_SUFFIX = "-credentials";
 function getSecureStorageDir() {
   let n = process.env.CLAUDE_SECURESTORAGE_CONFIG_DIR;
-  if (n !== void 0) return (n || l(homedir(), ".claude")).normalize("NFC");
+  if (n !== void 0) return (n || join(homedir(), ".claude")).normalize("NFC");
   return getClaudeConfigDir();
 }
 function getKeychainServiceName(n = "") {

@@ -122,7 +122,7 @@ import {
   getSettingsSourceForScope,
 } from "./chunk-33bdfgmx.js";
 F();
-import { join as ce, relative, resolve } from "path";
+import { join, relative, resolve } from "path";
 async function ee(a, o, s) {
   if (o instanceof PluginSourceError) await logFeatureSadAsync(a, "command_source_refused");
   else await logFeatureBadAsync(a, s);
@@ -321,12 +321,12 @@ async function pluginInitHandler(a, o, s, d) {
     }
   if (!areLocalPluginDirsAllowedByPolicy()) {
     (logFeatureBad("cli_plugin_init", "policy_blocked"),
-      c.push(`${figures.cross} ${localPluginDirsBlockedMessage(formatPathWithTilde(ce(getClaudeConfigDir(), "skills")))}`),
+      c.push(`${figures.cross} ${localPluginDirsBlockedMessage(formatPathWithTilde(join(getClaudeConfigDir(), "skills")))}`),
       z(a, c, 1));
     return;
   }
-  let w = ce(getClaudeConfigDir(), "skills"),
-    v = ce(w, o);
+  let w = join(getClaudeConfigDir(), "skills"),
+    v = join(w, o);
   if (relative(w, resolve(v)).startsWith("..")) {
     (logFeatureBad("cli_plugin_init", "invalid_name"),
       c.push(`${figures.cross} Plugin name "${o}" would write outside ${formatPathWithTilde(w)}`),

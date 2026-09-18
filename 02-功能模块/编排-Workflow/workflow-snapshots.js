@@ -18,17 +18,17 @@ import {
   readFile,
   writeFile,
 } from "fs/promises";
-import { basename, dirname, join as p } from "path";
+import { basename, dirname, join } from "path";
 function P(t) {
-  return p(m(), `${t}.json`);
+  return join(m(), `${t}.json`);
 }
 function m() {
   let t = fy() ?? getProjectDir(he());
-  return p(t, K(), "workflows");
+  return join(t, K(), "workflows");
 }
 function getWorkflowTranscriptDir(t) {
   let a = fy() ?? getProjectDir(he());
-  return p(a, K(), "subagents", "workflows", t);
+  return join(a, K(), "subagents", "workflows", t);
 }
 function getCurrentProjectKey() {
   let t = fy() ?? getProjectDir(he());
@@ -103,7 +103,7 @@ async function loadWorkflowSnapshots(t) {
         .filter((e) => e.endsWith(".json"))
         .map(async (e) => {
           try {
-            let r = await readFile(p(s, e), "utf8"),
+            let r = await readFile(join(s, e), "utf8"),
               o = jsonParse(r);
             return d(o, e.replace(/\.json$/, ""));
           } catch (r) {

@@ -1017,17 +1017,17 @@ function Ht(Xa) {
 }
 F();
 import { readdir, readFile } from "fs/promises";
-import { homedir as zn } from "os";
-import { join as pt } from "path";
+import { homedir } from "os";
+import { join } from "path";
 async function $t() {
   let n = new Set(),
     s = a.CLOUDSDK_CONFIG ?? Un();
   try {
-    let c = pt(s, "configurations");
+    let c = join(s, "configurations");
     for (let u of await readdir(c)) {
       if (!u.startsWith("config_")) continue;
       try {
-        let f = await readFile(pt(c, u), "utf8");
+        let f = await readFile(join(c, u), "utf8");
         for (let O of f.matchAll(/^project\s*=\s*(\S+)/gm)) {
           let m = O[1]?.trim();
           if (m) n.add(m);
@@ -1036,13 +1036,13 @@ async function $t() {
     }
   } catch {}
   try {
-    let c = jsonParse(await readFile(pt(s, "application_default_credentials.json"), "utf8"));
+    let c = jsonParse(await readFile(join(s, "application_default_credentials.json"), "utf8"));
     if (c.quota_project_id) n.add(c.quota_project_id);
   } catch {}
   return [...n].sort();
 }
 function Un() {
-  return pt(zn(), ".config", "gcloud");
+  return join(homedir(), ".config", "gcloud");
 }
 function Zn() {
   return [];
@@ -1369,8 +1369,6 @@ function ao() {
   return ci;
 }
 F();
-import { homedir as gr } from "os";
-import { join as hr } from "path";
 function uo() {
   let Fe = _(17),
     { goBack: uc, goToStep: ur, updateWizardData: pr, wizardData: pc } = useWizard(),
@@ -1390,7 +1388,7 @@ function uo() {
         return;
       }
       di(null);
-      let gc = gt === "~" || gt.startsWith("~/") ? hr(gr(), gt.slice(1)) : gt;
+      let gc = gt === "~" || gt.startsWith("~/") ? join(homedir(), gt.slice(1)) : gt;
       (pr({ keyFile: gc }), ur(H.PROJECT));
     }),
       (Fe[1] = ur),

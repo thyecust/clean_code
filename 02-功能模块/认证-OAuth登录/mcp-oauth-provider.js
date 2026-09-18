@@ -53,7 +53,7 @@ import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes, randomUUID } from "crypto";
 import { createServer } from "http";
-import { join as Ge } from "path";
+import { join } from "path";
 import { parse } from "url";
 var $e = 30000,
   xe = "urn:ietf:params:oauth:grant-type:token-exchange",
@@ -2086,7 +2086,7 @@ class ClaudeAuthProvider {
       r = getSecureStorageDir();
     await getFsSurface().mkdir(r);
     let n = t.replace(/[^a-zA-Z0-9]/g, "_"),
-      d = Ge(r, `mcp-refresh-${n}.lock`),
+      d = join(r, `mcp-refresh-${n}.lock`),
       p;
     for (let o = 0; o < fe; o++)
       try {

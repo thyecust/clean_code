@@ -153,9 +153,9 @@ async function readArtifactDiagnostics(e, r, t) {
     }
   );
 }
-import { stat as be } from "fs/promises";
+import { stat } from "fs/promises";
 import { homedir } from "os";
-import { join as I } from "path";
+import { join } from "path";
 function Te() {
   switch ("darwin") {
     case "darwin":
@@ -164,16 +164,16 @@ function Te() {
         "Chromium.app/Contents/MacOS/Chromium",
         "Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
         "Brave Browser.app/Contents/MacOS/Brave Browser",
-      ].flatMap((r) => [I("/Applications", r), I(homedir(), "Applications", r)]);
+      ].flatMap((r) => [join("/Applications", r), join(homedir(), "Applications", r)]);
     case "win32":
       return [
         "C:\\Program Files",
         "C:\\Program Files (x86)",
-        I(homedir(), "AppData", "Local"),
+        join(homedir(), "AppData", "Local"),
       ].flatMap((r) => [
-        I(r, "Google", "Chrome", "Application", "chrome.exe"),
-        I(r, "Chromium", "Application", "chrome.exe"),
-        I(r, "Microsoft", "Edge", "Application", "msedge.exe"),
+        join(r, "Google", "Chrome", "Application", "chrome.exe"),
+        join(r, "Chromium", "Application", "chrome.exe"),
+        join(r, "Microsoft", "Edge", "Application", "msedge.exe"),
       ]);
     default:
       return [
@@ -188,7 +188,7 @@ function Te() {
 }
 async function we(e) {
   try {
-    let r = await be(e);
+    let r = await stat(e);
     return r.isFile() && (r.mode & 73) !== 0;
   } catch {
     return !1;

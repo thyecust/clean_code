@@ -823,8 +823,8 @@ function toDisplayString(e) {
 }
 var L = (e) => e.isCore === !0 || e.isManaged === !0;
 var HOOK_GRACE_MS = 5000;
-import { AsyncLocalStorage as ds } from "async_hooks";
-var ft = new ds();
+import { AsyncLocalStorage } from "async_hooks";
+var ft = new AsyncLocalStorage();
 async function gs(e) {
   let t = ft.getStore();
   if (t === void 0) return e();
@@ -2491,7 +2491,7 @@ function Xs(e, t) {
   };
 }
 var DEFAULT_HOOK_BUDGET_MS = 1e4;
-import { resolve as qf } from "path";
+import { resolve } from "path";
 import * as se from "vm";
 function Dp({
   engine: e,
@@ -3440,16 +3440,14 @@ import { dirname } from "path";
 import { pathToFileURL } from "url";
 var Do = (e) => ({ url: pathToFileURL(e).href, dir: dirname(e), file: e });
 var ze = (e, t) => `${e.length}:${e}${t.length}:${t}`;
-import { resolve as If } from "path";
-var Uo = (e) => new Map(e.map((t) => [ze(If(t.from), t.spelled), t.file]));
-import { relative, resolve as _t } from "path";
+var Uo = (e) => new Map(e.map((t) => [ze(resolve(t.from), t.spelled), t.file]));
+import { relative } from "path";
 import * as Ve from "vm";
-import { resolve as Cf } from "path";
 var Ko = ({ modulePath: e, source: t, linked: r }) =>
-  new Map([[Cf(e), t], ...r.map((o) => [o.file, o.source])]);
+  new Map([[resolve(e), t], ...r.map((o) => [o.file, o.source])]);
 async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   let { modulePath: n, pluginName: s, pluginRoot: p, source: i } = e,
-    a = _t(p),
+    a = resolve(p),
     f = new Map(),
     c = new Ve.SyntheticModule([], () => {}, { context: t, identifier: CLAUDE_CODE_MODULE_ID }),
     m = Ko(e),
@@ -3457,7 +3455,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   async function u(w, S) {
     if (w === CLAUDE_CODE_MODULE_ID) return c;
     if (!isRelativeImportPath(w)) throw createBadImportError(s, w, relative(a, S.identifier) || n);
-    let O = d.get(ze(_t(S.identifier), w)),
+    let O = d.get(ze(resolve(S.identifier), w)),
       C = O === void 0 ? void 0 : m.get(O);
     if (O !== void 0 && C !== void 0) return b(O, C);
     let R = await resolveHookImport(
@@ -3492,7 +3490,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
     });
     return (f.set(w, C), C);
   }
-  let T = b(_t(n), i);
+  let T = b(resolve(n), i);
   return (await T.link(u), await o(() => T.evaluate()), T.namespace);
 }
 var Mf = `(() => {
@@ -3794,7 +3792,7 @@ async function Qf(e, t, r = {}) {
     S = makeVmClone(m),
     O = (x) => ae(S(x)),
     C = makeAsyncWrapper(m),
-    R = se.runInContext(qi, m)(Ff(qf(e.pluginRoot))),
+    R = se.runInContext(qi, m)(Ff(resolve(e.pluginRoot))),
     { fromEnvironment: J, intoEnvironment: I } = Fo(b, R, T),
     M = se.runInContext($f, m)(B(I));
   function dn(x, v) {
@@ -3986,12 +3984,11 @@ function tn(e, t, r) {
   }
   return s;
 }
-import { AsyncLocalStorage as rn } from "async_hooks";
 var fm = (e, t) => ({
   environments: new Map(),
   loading: new Map(),
-  dispatching: new rn(),
-  serving: new rn(),
+  dispatching: new AsyncLocalStorage(),
+  serving: new AsyncLocalStorage(),
   servingLive: new Set(),
   hostOps: e,
   presses: new Map(),

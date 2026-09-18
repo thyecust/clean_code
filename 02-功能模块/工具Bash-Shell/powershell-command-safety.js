@@ -14,7 +14,7 @@ import { normalizeDashCharacters, POWERSHELL_COMMAND_ALIASES, PARAMETER_PREFIX_C
 import { GIT_SAFE_FLAGS_BY_SUBCOMMAND, GH_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_CONNECTION_FLAGS, DOCKER_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_READ_ONLY_SUBCOMMANDS, isCliFlagToken, areCommandFlagsSafe, INTERPRETER_COMMAND_NAMES } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { statSync } from "fs";
-import { join as me } from "path";
+import { join } from "path";
 var COMMON_SWITCH_PARAMETERS = ["-verbose", "-debug"],
   E = [
     "-erroraction",
@@ -875,7 +875,7 @@ function xe(e) {
       if (r === "" || n.has(r)) continue;
       n.add(r);
       for (let c of be()) {
-        let i = me(t, r + c);
+        let i = join(t, r + c);
         try {
           if (statSync(i).isFile()) return r + c;
         } catch {}

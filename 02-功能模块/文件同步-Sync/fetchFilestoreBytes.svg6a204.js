@@ -23,10 +23,10 @@ import {
   readdir,
   realpath,
   rename,
-  stat as T,
+  stat,
   unlink,
 } from "fs/promises";
-import { Readable as I } from "stream";
+import { Readable } from "stream";
 import { pipeline } from "stream/promises";
 import { posix } from "path";
 var {
@@ -106,7 +106,7 @@ async function te(t, s) {
       .map(async (d) => {
         let l = b(t, d);
         try {
-          if ((await T(l)).mtimeMs < e) await unlink(l);
+          if ((await stat(l)).mtimeMs < e) await unlink(l);
         } catch {}
       }),
   );
@@ -171,7 +171,7 @@ async function stageFile(t) {
   let { dest: r, root: d, readOnly: l } = e;
   if (!t.force)
     try {
-      if ((await T(r)).isFile())
+      if ((await stat(r)).isFile())
         return (
           writeDiagnosticsEvent("debug", "stage_file_noop_already_present", {}),
           logEvent("tengu_stage_file_completed", {
@@ -247,7 +247,7 @@ async function stageFile(t) {
     h = n();
   try {
     if (!l) {
-      let u = await T(r).catch(() => null);
+      let u = await stat(r).catch(() => null);
       if (re(u, _))
         return (
           await unlink(o).catch(() => {}),
@@ -411,7 +411,7 @@ async function oe(t, s) {
           { ok: !1, error: `read gated: ${o.reason}`, gated: !0 }
         );
       if (o.status === 401 && g === 0) {
-        if ((clearTimeout(n), o.data instanceof I)) o.data.destroy();
+        if ((clearTimeout(n), o.data instanceof Readable)) o.data.destroy();
         if (
           (writeDiagnosticsEvent("info", "stage_file_read_remint_jwt", { duration_ms: r() }),
           (d = await F()),
@@ -422,7 +422,7 @@ async function oe(t, s) {
         continue;
       }
       if (o.status < 200 || o.status >= 300) {
-        if ((clearTimeout(n), o.data instanceof I)) o.data.destroy();
+        if ((clearTimeout(n), o.data instanceof Readable)) o.data.destroy();
         return (
           writeDiagnosticsEvent("warn", "stage_file_read_failed", {
             kind: "http",
@@ -436,7 +436,7 @@ async function oe(t, s) {
       (o.data.on("data", w),
         await pipeline(o.data, createWriteStream(s, { flags: "wx" })),
         clearTimeout(n));
-      let m = await T(s);
+      let m = await stat(s);
       if (c >= 0 && m.size !== c)
         return (
           writeDiagnosticsEvent("warn", "stage_file_read_truncated", {

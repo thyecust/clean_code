@@ -59,9 +59,9 @@ import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { expandTabs } from "../../01-核心基础设施/核心工具-字符串与文本/expand-tabs.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
-import { join as nl } from "path";
+import { join } from "path";
 async function Wn(s, a) {
-  let l = nl(getWorkflowTranscriptDir(s), `agent-${a}.jsonl`),
+  let l = join(getWorkflowTranscriptDir(s), `agent-${a}.jsonl`),
     c;
   try {
     c = await ake(l);
@@ -219,22 +219,21 @@ function li(s, a, l, c, m, w) {
   ri(s, l, W, [k + C], w, S);
 }
 F();
-import { join as Mi } from "path";
 import { mkdir, writeFile } from "fs/promises";
-import { dirname, join as En } from "path";
+import { dirname } from "path";
 var Oe = "Use a different name or overwrite.";
 async function ll(s, a) {
   if (s === "user") return getUserWorkflowsDir();
   let l = findGitRoot(a);
-  if (l === null) return En(a, ".claude", "workflows");
+  if (l === null) return join(a, ".claude", "workflows");
   let c = (await getProjectDirsUpToHome("workflows", a))[0];
   if (c !== void 0) return c;
-  return En(l, ".claude", "workflows");
+  return join(l, ".claude", "workflows");
 }
 async function _n(s, a) {
   let l = slugifyWorkflowName(s.name),
     c = await ll(s.scope, s.cwd),
-    m = En(c, `${l}.js`);
+    m = join(c, `${l}.js`);
   if (a !== void 0 && s.scope === "user") return cl(a, l, m, s);
   let w = s.scope !== "user" && !isConfigDirPath(dirname(c));
   if (w)
@@ -415,7 +414,7 @@ function SaveWorkflowDialog(Vu) {
     ((Sl =
       Te === "project"
         ? `.claude/workflows/${Jn}.js`
-        : formatPathWithTilde(Mi(getUserWorkflowsDir(), `${Jn}.js`))),
+        : formatPathWithTilde(join(getUserWorkflowsDir(), `${Jn}.js`))),
       (st[17] = Te),
       (st[18] = Jn),
       (st[19] = Sl));

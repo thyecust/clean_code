@@ -201,14 +201,14 @@ import { isRecord } from "../../01-核心基础设施/核心工具-类型与数�
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { spawnSync } from "child_process";
 import {
-  readdir as Ai,
-  lstat as Yt,
-  mkdir as Xt,
-  realpath as vr,
+  readdir,
+  lstat,
+  mkdir,
+  realpath,
   rm as Ii,
-  rmdir as nc,
+  rmdir,
 } from "fs/promises";
-import { createHash as Fm } from "crypto";
+import { createHash } from "crypto";
 function Bn(e) {
   return jsonStringify(fo(e, 0)) ?? "null";
 }
@@ -223,8 +223,6 @@ function fo(e, t) {
   }
   return e;
 }
-import { createHash as zn } from "crypto";
-import { readdir as hc } from "fs/promises";
 import Tt from "path";
 var uc = 40,
   dc = 16384,
@@ -371,13 +369,13 @@ function Mi({
   prompt: o,
   history: u,
 }) {
-  let d = zn("sha256")
+  let d = createHash("sha256")
       .update(
         u.map((h) => jsonStringify([h.tool, Bn(h.input), h.verdict, h.output])).join(`
 `),
       )
       .digest("hex"),
-    p = zn("sha256")
+    p = createHash("sha256")
       .update(
         o.replaceAll(
           `\r
@@ -387,7 +385,7 @@ function Mi({
         ),
       )
       .digest("hex");
-  return zn("sha256")
+  return createHash("sha256")
     .update([e, t, Bn(r), i, p, d].join(" "))
     .digest("hex");
 }
@@ -401,7 +399,7 @@ async function ji(e, t, r, i) {
     u = i[o];
   if (u === void 0) return null;
   let d = await Ui(e, o);
-  if (d === null || zn("sha256").update(d).digest("hex") !== u) return null;
+  if (d === null || createHash("sha256").update(d).digest("hex") !== u) return null;
   let p = wc().safeParse(xt(d.toString("utf8"), !1));
   return p.success && p.data.output.length <= Kn
     ? { verdict: p.data.verdict, text: p.data.output }
@@ -417,7 +415,7 @@ async function Fi(e, t = []) {
   }
   let o;
   try {
-    o = await hc(e);
+    o = await readdir(e);
   } catch {
     return r;
   }
@@ -428,7 +426,7 @@ async function Fi(e, t = []) {
     );
   for (let d of u.slice(0, mo)) {
     let p = await Ui(e, d);
-    if (p !== null) r[d] = zn("sha256").update(p).digest("hex");
+    if (p !== null) r[d] = createHash("sha256").update(p).digest("hex");
   }
   return r;
 }
@@ -466,11 +464,10 @@ var Or = ".replay",
   mo = 2000;
 import Um from "os";
 import Ee from "path";
-import { createHash as Ic } from "crypto";
-import { lstat as Pc, readdir as as, stat as Dc } from "fs/promises";
+import { stat } from "fs/promises";
 import Je from "path";
-import { lstat as Ec, open as kc, readdir as Rc } from "fs/promises";
-import { constants as Xi } from "fs";
+import { open } from "fs/promises";
+import { constants } from "fs";
 import Ve from "path";
 var _o = "TODO: describe what the agent should do",
   bo = "TODO: describe what a successful response looks like",
@@ -791,7 +788,7 @@ async function Oc(e, t, r) {
   await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), r);
   let i;
   try {
-    i = await kc(e, Xi.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : Xi.O_NONBLOCK));
+    i = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
   } catch (o) {
     if (W(o)) {
       if (await os(e))
@@ -853,7 +850,7 @@ async function Ac(e) {
   let t;
   try {
     (await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), "graders/"),
-      (t = await Rc(e, { withFileTypes: !0 })));
+      (t = await readdir(e, { withFileTypes: !0 })));
   } catch (o) {
     if (W(o)) {
       if (await os(e))
@@ -894,7 +891,7 @@ async function Ac(e) {
 var es = 256;
 async function os(e) {
   try {
-    return (await Ec(e)).isSymbolicLink();
+    return (await lstat(e)).isSymbolicLink();
   } catch {
     return !1;
   }
@@ -991,7 +988,7 @@ async function xc(e, t) {
     i;
   try {
     (await assertPathIsLocal(Je.dirname(e), Je.basename(e), "mocks/"),
-      (i = fs(await as(e, { withFileTypes: !0 }))));
+      (i = fs(await readdir(e, { withFileTypes: !0 }))));
   } catch (o) {
     if (W(o)) {
       if (await Eo(e))
@@ -1034,12 +1031,12 @@ function fs(e) {
 }
 async function Eo(e) {
   try {
-    if (!(await Pc(e)).isSymbolicLink()) return !1;
+    if (!(await lstat(e)).isSymbolicLink()) return !1;
   } catch {
     return !1;
   }
   try {
-    return (await Dc(e), !1);
+    return (await stat(e), !1);
   } catch (t) {
     return W(t);
   }
@@ -1048,7 +1045,7 @@ async function Mc(e, t, r) {
   let i;
   try {
     (await assertPathIsLocal(Je.dirname(e), t, `mocks/${formatForDisplay(t)}/`),
-      (i = fs(await as(e, { withFileTypes: !0 }))));
+      (i = fs(await readdir(e, { withFileTypes: !0 }))));
   } catch (p) {
     if (W(p) || (A(p) === "ENOTDIR" && (await Eo(e))))
       throw new R(
@@ -1202,7 +1199,7 @@ async function jc(e, t, r) {
   };
 }
 function is(e) {
-  return Ic("sha256")
+  return createHash("sha256")
     .update(
       e.replaceAll(
         `\r
@@ -1280,7 +1277,7 @@ function ps(e, t, r) {
     return new R(`${r}${e.message.slice(i.length)}`, e.telemetryMessage);
   return e;
 }
-import { lstat as _s, readlink as Bc, realpath as ms } from "fs/promises";
+import { readlink } from "fs/promises";
 import Ue from "path";
 import Gc from "path";
 function we(e, t, r = Hc) {
@@ -1769,7 +1766,7 @@ function Co(e, t, r = t, i = []) {
 async function hs(e, t) {
   let r;
   try {
-    r = await ms(t);
+    r = await realpath(t);
   } catch {
     return [];
   }
@@ -1783,11 +1780,11 @@ async function hs(e, t) {
       continue;
     }
     try {
-      u = await ms(d);
+      u = await realpath(d);
     } catch {
       try {
-        if (!(await _s(d)).isSymbolicLink()) continue;
-        u = Ue.resolve(Ue.dirname(d), await Bc(d));
+        if (!(await lstat(d)).isSymbolicLink()) continue;
+        u = Ue.resolve(Ue.dirname(d), await readlink(d));
       } catch {
         continue;
       }
@@ -1834,7 +1831,7 @@ function Ts(e) {
 async function Cs(e, t) {
   let r = e.kind === "ok" ? eu(e, t) : [],
     i = [...r, ...(await hs(r, t))],
-    o = await Promise.all(To.map((d) => _s(Ue.join(t, d)).catch(() => null))),
+    o = await Promise.all(To.map((d) => lstat(Ue.join(t, d)).catch(() => null))),
     u = To.flatMap((d, p) =>
       o[p]?.isSymbolicLink()
         ? [
@@ -1967,30 +1964,16 @@ If \`{source: file, path}\` points at an image (PNG/JPEG/GIF/WebP), an \`llm\` g
 }
 var Is = "Let's set up evals for this plugin.";
 import {
-  lstat as $t,
-  mkdir as cn,
-  mkdtemp as xu,
-  readdir as Vs,
-  readlink as Mu,
-  realpath as Ct,
+  mkdtemp,
   rm as ju,
-  stat as Go,
-  writeFile as tr,
+  writeFile,
 } from "fs/promises";
 import Fu from "os";
 import ne from "path";
-import { constants as Oo } from "fs";
 import {
-  lstat as Ur,
-  mkdtemp as ou,
-  open as iu,
-  readFile as qn,
-  readdir as Zn,
-  readlink as au,
-  realpath as $o,
-  rmdir as Ps,
+  readFile,
 } from "fs/promises";
-import { tmpdir as Ds, userInfo } from "os";
+import { tmpdir, userInfo } from "os";
 import at from "path";
 var Lo =
   "is not owned by you, is writable by other users, is a symlink, or could not be fully examined (see --debug)";
@@ -2084,14 +2067,14 @@ var pu = [
   ]);
 async function hu() {
   try {
-    if ((await Zn(mu)).some((t) => !gu.has(t))) return !0;
+    if ((await readdir(mu)).some((t) => !gu.has(t))) return !0;
   } catch (e) {
     let t = A(e);
     if (t !== "ENOENT" && t !== "ENOTDIR") return !0;
   }
   for (let e of pu)
     try {
-      if ((await Zn(e)).some((t) => t.endsWith(".membership"))) return !0;
+      if ((await readdir(e)).some((t) => t.endsWith(".membership"))) return !0;
     } catch (t) {
       let r = A(t);
       if (r !== "ENOENT" && r !== "ENOTDIR") return !0;
@@ -2165,7 +2148,7 @@ async function Ao(e) {
 }
 function Us(e) {
   return (
-    (e.passwdText ??= qn("/etc/passwd", "utf8").catch(() => null)),
+    (e.passwdText ??= readFile("/etc/passwd", "utf8").catch(() => null)),
     e.passwdText
   );
 }
@@ -2173,11 +2156,11 @@ function yu(e) {
   if (getCurrentPlatform() !== "linux" && getCurrentPlatform() !== "wsl") return Promise.resolve();
   return Promise.all([
     Promise.all([
-      qn("/run/.containerenv", "utf8").then(
+      readFile("/run/.containerenv", "utf8").then(
         () => !0,
         () => !1,
       ),
-      qn("/proc/1/cgroup", "utf8").then(
+      readFile("/proc/1/cgroup", "utf8").then(
         (t) => /docker|kubepods|containerd|libpod/i.test(t),
         () => !1,
       ),
@@ -2185,9 +2168,9 @@ function yu(e) {
       e.containerEvidence = t || r;
     }),
     hu(),
-    qn("/etc/group", "utf8").catch((t) => (A(t) === "ENOENT" ? "" : null)),
+    readFile("/etc/group", "utf8").catch((t) => (A(t) === "ENOENT" ? "" : null)),
     Us(e),
-    qn("/etc/nsswitch.conf", "utf8").catch((t) =>
+    readFile("/etc/nsswitch.conf", "utf8").catch((t) =>
       A(t) === "ENOENT" ? "" : null,
     ),
   ])
@@ -2389,7 +2372,7 @@ async function Su(e, t) {
     if (h(w)) continue;
     let _;
     try {
-      _ = await Zn(w, { withFileTypes: !0 });
+      _ = await readdir(w, { withFileTypes: !0 });
     } catch (S) {
       let C = A(S);
       if (C === "ENOENT" || C === "ENOTDIR") continue;
@@ -2426,7 +2409,7 @@ async function Su(e, t) {
           let [D, U] = L.pop(),
             N;
           try {
-            N = await Zn(D, { withFileTypes: !0 });
+            N = await readdir(D, { withFileTypes: !0 });
           } catch (F) {
             let J = A(F);
             if (J === "ENOENT" || J === "ENOTDIR") continue;
@@ -2469,7 +2452,7 @@ async function Su(e, t) {
 }
 function Tu(e, t) {
   let r = t.rootRealpaths.get(e);
-  if (r === void 0) ((r = $o(e)), t.rootRealpaths.set(e, r));
+  if (r === void 0) ((r = realpath(e)), t.rootRealpaths.set(e, r));
   return r;
 }
 async function Do(e, t) {
@@ -2478,7 +2461,7 @@ async function Do(e, t) {
 async function No(e, t, r, i) {
   for (let u = 0; u < t.length; u += 64) {
     let d = t.slice(u, u + 64),
-      p = await Promise.all(d.map(([h]) => Ur(h).catch((w) => ({ error: w }))));
+      p = await Promise.all(d.map(([h]) => lstat(h).catch((w) => ({ error: w }))));
     if (!(await Ou(e, d, p, r, i))) return !1;
   }
   return !0;
@@ -2530,7 +2513,7 @@ async function Au(e, t, r) {
   }
   let o;
   try {
-    o = await au(e);
+    o = await readlink(e);
   } catch (E) {
     return `is a symlink that could not be read (${A(E) ?? "unknown error"})`;
   }
@@ -2547,7 +2530,7 @@ async function Au(e, t, r) {
   if (d === t) return "is a symlink to the plugin directory itself";
   let p;
   try {
-    p = await $o(e);
+    p = await realpath(e);
   } catch (E) {
     return `is a symlink whose target could not be resolved (${A(E) ?? "unknown error"})`;
   }
@@ -2562,7 +2545,7 @@ async function Au(e, t, r) {
   if (!we(h, p)) return u;
   let w;
   try {
-    w = await $o(at.dirname(e));
+    w = await realpath(at.dirname(e));
   } catch (E) {
     return `is a symlink whose directory could not be resolved (${A(E) ?? "unknown error"})`;
   }
@@ -2587,7 +2570,7 @@ async function Gs(e, t, r, i) {
   if (i !== void 0) o = i;
   else
     try {
-      o = await Ur(e);
+      o = await lstat(e);
     } catch {
       return !0;
     }
@@ -2596,16 +2579,16 @@ async function Gs(e, t, r, i) {
   if (d !== void 0) return d;
   let p = typeof process.getuid === "function" ? process.getuid() : -1,
     h = r ?? (o.isDirectory() ? e : at.dirname(e));
-  t.tmpdirDevice ??= await Ur(Ds()).then(
+  t.tmpdirDevice ??= await lstat(tmpdir()).then(
     (E) => E.dev,
     () => -1,
   );
-  let w = t.tmpdirDevice === u ? [Ds(), h] : [h];
+  let w = t.tmpdirDevice === u ? [tmpdir(), h] : [h];
   for (let E of w) {
     let _, S;
     try {
-      ((_ = await ou(at.join(E, ".claude-eval-modes-"))),
-        (S = await iu(_, Oo.O_RDONLY | Oo.O_DIRECTORY | Oo.O_NOFOLLOW)));
+      ((_ = await mkdtemp(at.join(E, ".claude-eval-modes-"))),
+        (S = await open(_, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)));
       let C = await S.stat();
       if (C.dev !== u) continue;
       if (p !== -1 && C.uid !== p) return (t.modesByDevice.set(u, !0), !0);
@@ -2616,21 +2599,21 @@ async function Gs(e, t, r, i) {
       continue;
     } finally {
       if ((await S?.close().catch(() => {}), _ !== void 0))
-        await Ps(_).catch(() => {});
+        await rmdir(_).catch(() => {});
       {
         let C = (t.sweptProbeParents ??= new Set());
         if (!C.has(E)) {
           C.add(E);
           let L = Date.now() - 600000;
-          await Zn(E)
+          await readdir(E)
             .then((D) =>
               Promise.all(
                 D.filter((U) => U.startsWith(".claude-eval-modes-")).map(
                   async (U) => {
                     let N = at.join(E, U),
-                      F = await Ur(N).catch(() => null);
+                      F = await lstat(N).catch(() => null);
                     if (F !== null && F.mtimeMs < L)
-                      await Ps(N).catch(() => {});
+                      await rmdir(N).catch(() => {});
                   },
                 ),
               ),
@@ -2642,38 +2625,33 @@ async function Gs(e, t, r, i) {
   }
   return (t.modesByDevice.set(u, !0), !0);
 }
-import { constants as Fo } from "fs";
 import {
   chmod,
-  lstat as Uo,
-  open as Pu,
-  readdir as Du,
-  realpath as Nu,
 } from "fs/promises";
 import $u from "path";
-var Lu = Fo.O_RDONLY | Fo.O_DIRECTORY | Fo.O_NOFOLLOW;
+var Lu = constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW;
 async function ln(e, { harnessOwned: t = !1 } = {}) {
   if (getCurrentPlatform() === "windows") return;
   let r = t || getCurrentPlatform() === "linux" || getCurrentPlatform() === "wsl",
     i;
   try {
-    let o = await Uo(e, { bigint: !0 });
+    let o = await lstat(e, { bigint: !0 });
     if (!o.isDirectory() || o.isSymbolicLink()) return;
     let u = (p) => p.ino === o.ino && p.dev === o.dev;
     if ((Number(o.mode) & 448) !== 448) {
       if (!r) return;
-      if ((await chmod(e, 448), !u(await Uo(e, { bigint: !0 })))) return;
+      if ((await chmod(e, 448), !u(await lstat(e, { bigint: !0 })))) return;
     }
-    if ((await Nu(e)) !== e) return;
-    let d = await Pu(e, Lu);
+    if ((await realpath(e)) !== e) return;
+    let d = await open(e, Lu);
     try {
       if (!u(await d.stat({ bigint: !0 }))) return;
       if (
         (await d.chmod(448),
-        (i = (await Du(e, { withFileTypes: !0 }))
+        (i = (await readdir(e, { withFileTypes: !0 }))
           .filter((p) => p.isDirectory())
           .map((p) => p.name)),
-        !u(await Uo(e, { bigint: !0 })))
+        !u(await lstat(e, { bigint: !0 })))
       )
         return;
     } finally {
@@ -2839,12 +2817,12 @@ async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
       await assertPathIsLocal(w, S, `case ${formatForDisplay(e.name)}: plugins entry`);
       let L;
       try {
-        L = await Ct(C);
+        L = await realpath(C);
       } catch (U) {
         let N = A(U),
           F =
             N === "ENOENT" &&
-            (await $t(C)
+            (await lstat(C)
               .then((J) => J.isSymbolicLink())
               .catch(() => !1));
         throw new R(
@@ -2898,7 +2876,7 @@ async function rr(e, t) {
   return Xe(e, r) ? r : e;
 }
 function or(e) {
-  return ((e.realCwd ??= Ct(getCwd()).catch(() => getCwd())), e.realCwd);
+  return ((e.realCwd ??= realpath(getCwd()).catch(() => getCwd())), e.realCwd);
 }
 async function Xs(e, t, r) {
   let i = [],
@@ -2926,7 +2904,7 @@ async function Xs(e, t, r) {
       }
       let D;
       try {
-        D = await Ct(S);
+        D = await realpath(S);
       } catch (N) {
         let F = A(N);
         if ((F === "ENOENT" || F === "ENOTDIR") && C.link) {
@@ -2946,7 +2924,7 @@ async function Xs(e, t, r) {
       }
       let U;
       try {
-        U = await $t(D);
+        U = await lstat(D);
       } catch (N) {
         h = `${_}: ${l(N)} \u2014 not read here`;
         break;
@@ -2963,7 +2941,7 @@ async function Xs(e, t, r) {
     if (E || (h === null && w)) {
       let _ = null;
       try {
-        _ = (await $t(u)).isDirectory();
+        _ = (await lstat(u)).isDirectory();
       } catch {}
       if (E) {
         i.push(
@@ -3055,7 +3033,7 @@ async function qs(e, t, r, i = 32) {
 }
 async function Wu(e) {
   try {
-    let t = await $t(ne.join(e, ".claude-plugin"));
+    let t = await lstat(ne.join(e, ".claude-plugin"));
     if (t.isSymbolicLink()) return !0;
     if (!t.isDirectory()) return !1;
   } catch (t) {
@@ -3065,7 +3043,7 @@ async function Wu(e) {
 }
 async function Ho(e) {
   try {
-    return (await $t(e), !0);
+    return (await lstat(e), !0);
   } catch (t) {
     return !Zs(t);
   }
@@ -3096,8 +3074,8 @@ function Nt(e) {
   return Bo.includes(e);
 }
 async function Wo(e) {
-  if (!Nt(ne.basename(e))) return Ct(e);
-  return (await $t(e), ne.join(await Ct(ne.dirname(e)), ne.basename(e)));
+  if (!Nt(ne.basename(e))) return realpath(e);
+  return (await lstat(e), ne.join(await realpath(ne.dirname(e)), ne.basename(e)));
 }
 async function Vu(e) {
   let t = [];
@@ -3107,7 +3085,7 @@ async function Vu(e) {
   for (let i of t) {
     let o, u;
     try {
-      ((o = (await $t(i)).isSymbolicLink()), (u = await Ct(i)));
+      ((o = (await lstat(i)).isSymbolicLink()), (u = await realpath(i)));
     } catch (d) {
       return {
         kind: "unexaminable",
@@ -3145,7 +3123,7 @@ async function zu(e, t) {
   try {
     return (
       await assertPathIsLocal(e, t.join(ne.sep), "eval directory"),
-      await Ct(ne.join(e, ...t))
+      await realpath(ne.join(e, ...t))
     );
   } catch {
     return null;
@@ -3156,7 +3134,7 @@ async function Qs(e, t) {
   for (let i = t; ; i = ne.dirname(i))
     if ((r.unshift(i), ne.dirname(i) === i)) break;
   for (let i of r) {
-    let o = await Ct(i).catch(() => null);
+    let o = await realpath(i).catch(() => null);
     if (o === null) continue;
     if (o === e || Xe(o, e))
       return [..._t(ne.relative(e, o)), ..._t(ne.relative(i, t))];
@@ -3177,8 +3155,8 @@ async function ea(e, t, r) {
       break;
     }
     let [h, w] = await Promise.all([
-      Go(ne.join(p, u), { bigint: !0 }).catch(() => null),
-      Go(ne.join(p, d), { bigint: !0 }).catch(() => null),
+      stat(ne.join(p, u), { bigint: !0 }).catch(() => null),
+      stat(ne.join(p, d), { bigint: !0 }).catch(() => null),
     ]);
     if (
       h === null ||
@@ -3222,7 +3200,7 @@ async function Yu(e, t, r, i, o = []) {
       (w = (D) => Pr(_t(ne.relative(e, D)), t)),
       (E = (D) => pt(t, _t(ne.relative(e, D)), "exact")));
   }
-  let S = await Ct(e).catch(() => e),
+  let S = await realpath(e).catch(() => e),
     C = {
       opensEvalDir: w,
       mayLeadToEvalDir: E,
@@ -3261,7 +3239,7 @@ async function ta(e, t, r, i, o, u) {
   }
   let w;
   try {
-    w = await Vs(e, { withFileTypes: !0 });
+    w = await readdir(e, { withFileTypes: !0 });
   } catch (S) {
     let C = A(S);
     if (C === "ENOTDIR" && i === 0) {
@@ -3343,7 +3321,7 @@ async function ta(e, t, r, i, o, u) {
         }
         let J;
         try {
-          J = await Go(C);
+          J = await stat(C);
         } catch (K) {
           F(
             `${S.name} is a symbolic link whose target ${W(K) ? "does not exist" : `cannot be read (${A(K) ?? "unknown error"})`} \u2014 skipped`,
@@ -3351,7 +3329,7 @@ async function ta(e, t, r, i, o, u) {
           continue;
         }
         if (((L = J.isDirectory() ? "dir" : "other"), L === "dir")) {
-          let K = await Ct(C).catch(() => null);
+          let K = await realpath(C).catch(() => null);
           if (K === null) {
             F(
               `${S.name} is a symbolic link whose target could not be resolved \u2014 not followed`,
@@ -3424,17 +3402,17 @@ var Ju = `[core]
 async function ra() {
   let e = getCurrentPlatform() === "macos" ? "/tmp" : Fu.tmpdir(),
     t = getCurrentPlatform() === "macos" ? "e-" : "claude-eval-",
-    r = await Ct(await xu(ne.join(e, t))),
+    r = await realpath(await mkdtemp(ne.join(e, t))),
     i = ne.join(r, "config"),
     o = ne.join(r, "home"),
     u = ne.join(o, "cwd"),
     d = ne.join(r, "out"),
     p = ne.join(r, "tmp");
-  (await cn(u, { recursive: !0 }),
-    await cn(i, { recursive: !0 }),
-    await cn(d, { recursive: !0 }),
-    await cn(p, { recursive: !0, mode: 448 }),
-    await tr(
+  (await mkdir(u, { recursive: !0 }),
+    await mkdir(i, { recursive: !0 }),
+    await mkdir(d, { recursive: !0 }),
+    await mkdir(p, { recursive: !0, mode: 448 }),
+    await writeFile(
       ne.join(i, ".claude.json"),
       jsonStringify({
         hasCompletedOnboarding: !0,
@@ -3442,7 +3420,7 @@ async function ra() {
         bypassPermissionsModeAccepted: !1,
       }),
     ),
-    await tr(
+    await writeFile(
       ne.join(o, ".gitconfig"),
       `[user]
 	name = Plugin Eval
@@ -3451,16 +3429,16 @@ async function ra() {
     ));
   let h = ne.join(o, ".git");
   return (
-    await cn(ne.join(h, "objects"), { recursive: !0 }),
-    await cn(ne.join(h, "refs", "heads"), { recursive: !0 }),
-    await cn(ne.join(h, "hooks"), { recursive: !0 }),
-    await tr(
+    await mkdir(ne.join(h, "objects"), { recursive: !0 }),
+    await mkdir(ne.join(h, "refs", "heads"), { recursive: !0 }),
+    await mkdir(ne.join(h, "hooks"), { recursive: !0 }),
+    await writeFile(
       ne.join(h, "HEAD"),
       `ref: refs/heads/main
 `,
     ),
-    await tr(ne.join(h, "config"), Ju),
-    await tr(
+    await writeFile(ne.join(h, "config"), Ju),
+    await writeFile(
       ne.join(h, "commondir"),
       `.
 `,
@@ -3488,8 +3466,8 @@ async function sa(e, t, r, i = { hops: 16 }, o = { link: !1 }) {
     u = ne.join(u, h);
     let w;
     try {
-      if (!(await $t(u)).isSymbolicLink()) continue;
-      ((o.link = !0), (w = await Mu(u)));
+      if (!(await lstat(u)).isSymbolicLink()) continue;
+      ((o.link = !0), (w = await readlink(u)));
     } catch (S) {
       let C = A(S);
       return C === "ENOENT" || C === "ENOTDIR" ? null : nr;
@@ -3529,24 +3507,24 @@ async function ed(e, t) {
   if (await td(ne.join(e, t))) return !0;
   let r;
   try {
-    r = await Vs(ne.join(e, t), { withFileTypes: !0 });
+    r = await readdir(ne.join(e, t), { withFileTypes: !0 });
   } catch {
     return !1;
   }
   for (let i of r.filter((o) => o.isDirectory()).slice(0, 64))
     try {
-      return (await $t(ne.join(e, t, i.name, "case.yaml")), !0);
+      return (await lstat(ne.join(e, t, i.name, "case.yaml")), !0);
     } catch {}
   return !1;
 }
 async function td(e) {
   for (let t of Bo)
     try {
-      return (await $t(ne.join(e, t)), !0);
+      return (await lstat(ne.join(e, t)), !0);
     } catch {}
   return !1;
 }
-import { createHash as nd, randomBytes as rd } from "crypto";
+import { randomBytes } from "crypto";
 import En, { basename } from "path";
 async function ca(e) {
   let t = new Map();
@@ -3688,7 +3666,7 @@ function kn(e) {
 var Vo = "mocks.json",
   Rn = "mock-recordings";
 function fa(e) {
-  let t = rd(6).toString("hex"),
+  let t = randomBytes(6).toString("hex"),
     r = En.join(e.outDir, "mock-calls.jsonl"),
     i = {},
     o = [],
@@ -3778,7 +3756,7 @@ function pa(e) {
   return t;
 }
 function ld(e) {
-  return nd("sha256").update(e).digest("hex");
+  return createHash("sha256").update(e).digest("hex");
 }
 function Tn(e) {
   return e.some((t) =>
@@ -3793,11 +3771,7 @@ function ma(e) {
   let t = getCwd();
   return assertPathIsLocal(t, ud.resolve(t, e), "target", [getClaudeConfigDir()]);
 }
-import { constants as Kr } from "fs";
 import {
-  lstat as zr,
-  open as Vr,
-  readlink as dd,
   unlink,
 } from "fs/promises";
 import pd from "path";
@@ -3817,28 +3791,28 @@ async function ga(e, t, r) {
     if (getCurrentPlatform() === "windows") {
       let _ = null;
       try {
-        _ = await zr(e, { bigint: !0 });
+        _ = await lstat(e, { bigint: !0 });
       } catch (S) {
         if (!W(S)) throw S;
       }
       if (_ === null)
         try {
-          ((d = await Vr(e, "wx+")), (h = !0));
+          ((d = await open(e, "wx+")), (h = !0));
         } catch (S) {
           if (A(S) !== "EEXIST") throw S;
-          _ = await zr(e, { bigint: !0 }).catch((C) => {
+          _ = await lstat(e, { bigint: !0 }).catch((C) => {
             throw W(C) ? u() : C;
           });
         }
       if (h) {
-        let S = await zr(e, { bigint: !0 }).catch(() => null);
+        let S = await lstat(e, { bigint: !0 }).catch(() => null);
         if (S === null)
           throw new R(
             `${i} could not be examined after being created; refusing to use it`,
             `${r}: post-create lstat failed`,
           );
         if (S.isSymbolicLink()) {
-          let C = await dd(e).catch(() => "?");
+          let C = await readlink(e).catch(() => "?");
           throw new R(
             `${i} became a symlink while being created; refusing it (an empty file may have been created at its target, ${escapeUntrustedText(C)})`,
             `${r}: symlink raced in during create`,
@@ -3853,7 +3827,7 @@ async function ga(e, t, r) {
           );
         if (_.isSymbolicLink()) throw o();
         try {
-          d = await Vr(e, "r+");
+          d = await open(e, "r+");
         } catch (S) {
           if (W(S)) throw u();
           throw S;
@@ -3863,7 +3837,7 @@ async function ga(e, t, r) {
     } else {
       let _ = getNoFollowOpenFlags();
       try {
-        ((d = await Vr(e, Kr.O_RDWR | Kr.O_CREAT | Kr.O_EXCL | _, 420)),
+        ((d = await open(e, constants.O_RDWR | constants.O_CREAT | constants.O_EXCL | _, 420)),
           (h = !0));
       } catch (S) {
         if (A(S) !== "EEXIST") throw S;
@@ -3872,7 +3846,7 @@ async function ga(e, t, r) {
             `${i} already exists; refusing to overwrite it`,
             `${r}: exists (exclusive create)`,
           );
-        d = await Vr(e, Kr.O_RDWR | _).catch((C) => {
+        d = await open(e, constants.O_RDWR | _).catch((C) => {
           throw W(C) ? u() : C;
         });
       }
@@ -3930,7 +3904,7 @@ async function ga(e, t, r) {
 }
 async function Yr(e, t) {
   if (t.ino === 0n) return;
-  let r = await zr(e, { bigint: !0 }).catch(() => null);
+  let r = await lstat(e, { bigint: !0 }).catch(() => null);
   if (r !== null && !r.isSymbolicLink() && r.ino === t.ino && r.dev === t.dev)
     await unlink(e).catch(() => {});
 }
@@ -3987,11 +3961,8 @@ async function gd() {
 }
 var hd =
   /Failed to reach token endpoint|Unable to connect|timed out|TimeoutError|^no answer |ENOTFOUND|EAI_AGAIN|ECONNRESET|ECONNREFUSED|ETIMEDOUT|socket hang up|fetch failed/i;
-import { spawn as Em } from "child_process";
+import { spawn } from "child_process";
 import {
-  lstat as yr,
-  readdir as km,
-  realpath as Vl,
   rm as Gl,
 } from "fs/promises";
 import br from "path";
@@ -4055,13 +4026,7 @@ async function _a(e, t) {
     ...(u !== void 0 && { warning: u }),
   };
 }
-import { constants as Cn } from "fs";
 import {
-  lstat as On,
-  mkdir as wd,
-  open as ba,
-  readdir as yd,
-  realpath as _d,
   rename,
 } from "fs/promises";
 import Kt from "path";
@@ -4083,17 +4048,17 @@ async function Ea(e) {
     r,
     i;
   try {
-    i = await ba(e.root, Cn.O_RDONLY | Cn.O_DIRECTORY | Cn.O_NOFOLLOW);
+    i = await open(e.root, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
     let [o, u, d] = await Promise.all([
       i.stat({ bigint: !0 }),
-      On(e.root, { bigint: !0 }),
-      _d(e.root),
+      lstat(e.root, { bigint: !0 }),
+      realpath(e.root),
     ]);
     if (d !== e.root || !u.isDirectory() || u.ino !== o.ino || u.dev !== o.dev)
       throw Error("the kept directory is not the one the harness created");
     let [p, h] = await Promise.all([
-      On(e.home, { bigint: !0 }),
-      On(e.tmpDir, { bigint: !0 }),
+      lstat(e.home, { bigint: !0 }),
+      lstat(e.tmpDir, { bigint: !0 }),
     ]);
     if (
       !p.isDirectory() ||
@@ -4102,14 +4067,14 @@ async function Ea(e) {
       h.isSymbolicLink()
     )
       throw Error("home/ or tmp/ is not a real directory");
-    (await wd(t, { mode: 448 }),
-      (r = await ba(t, Cn.O_RDONLY | Cn.O_DIRECTORY | Cn.O_NOFOLLOW)),
+    (await mkdir(t, { mode: 448 }),
+      (r = await open(t, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)),
       await rename(e.home, Kt.join(t, "home")),
       await rename(e.tmpDir, Kt.join(t, "tmp")),
       await r.chmod(64),
       await i.chmod(320));
     let w = (N, F) =>
-        On(N, { bigint: !0 }).then(
+        lstat(N, { bigint: !0 }).then(
           (J) =>
             J.isDirectory() &&
             !J.isSymbolicLink() &&
@@ -4119,14 +4084,14 @@ async function Ea(e) {
         ),
       [E, _, S, C, L, D] = await Promise.all([
         i.stat().then((N) => N.mode & 511),
-        yd(e.root).then((N) => N.sort().join("\x00")),
+        readdir(e.root).then((N) => N.sort().join("\x00")),
         w(Kt.join(t, "home"), p),
         w(Kt.join(t, "tmp"), h),
-        On(e.home).then(
+        lstat(e.home).then(
           () => !0,
           () => !1,
         ),
-        On(e.tmpDir).then(
+        lstat(e.tmpDir).then(
           () => !0,
           () => !1,
         ),
@@ -4158,22 +4123,10 @@ async function Ea(e) {
 function ka(e, t) {
   return `home/ and tmp/ in it were written by the plugin under test and are sealed in ${jo([t])} (mode 000; the kept directory is read-only) \u2014 open them with \`chmod 700 ${jo([e.root])} ${jo([t])}\` to inspect, and do not run git (or anything that loads configuration from its working directory) anywhere inside the kept directory`;
 }
-import { spawn as kd } from "child_process";
 import {
-  lstat as ze,
-  mkdir as ti,
-  mkdtemp as Sd,
-  open as Td,
-  readFile as ni,
-  readdir as yt,
-  readlink as qa,
-  realpath as mt,
   rm as Gt,
-  stat as mr,
   symlink,
-  writeFile as Zr,
 } from "fs/promises";
-import { constants as Oa } from "fs";
 import Ot from "os";
 import k from "path";
 import { fileURLToPath } from "url";
@@ -4322,7 +4275,7 @@ function gr(e) {
 }
 async function Pd(e, t) {
   let r = gr(e),
-    i = await ze(r).catch((o) => {
+    i = await lstat(r).catch((o) => {
       if (W(o) && t.size === 0) return null;
       if (W(o))
         throw new R(
@@ -4352,7 +4305,7 @@ async function Pd(e, t) {
       u = new Set(
         o.flatMap((p) => (p.env === "stub" ? [k.basename(p.payloadDir)] : [])),
       ),
-      d = await ze(r);
+      d = await lstat(r);
     if (
       !d.isDirectory() ||
       d.isSymbolicLink() ||
@@ -4363,7 +4316,7 @@ async function Pd(e, t) {
         "the run's artifact-publish staging directory changed while it was being indexed",
         "eval: stub publish staging dir changed",
       );
-    for (let p of await yt(r))
+    for (let p of await readdir(r))
       if (!u.has(p)) await Gt(k.join(r, p), { recursive: !0, force: !0 });
     return (await Yf(r, o), o);
   } catch (o) {
@@ -4438,7 +4391,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
     }
   await If(h, r);
   for (let J of [k.join(".config", "git"), k.join(".local", "lib"), ...qr])
-    await ti(k.join(h.home, J), { recursive: !0 });
+    await mkdir(k.join(h.home, J), { recursive: !0 });
   await $d(h, w, E, p, r, void 0, { addDirs: u, readScope: d });
   let [U = process.execPath, ...N] = ri(),
     F = [...N, ...t];
@@ -4454,7 +4407,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
       ue = [],
       Ie = C ? Qd(C) : null,
       Ne = p.execution.timeout_seconds * 1000,
-      De = kd(U, F, {
+      De = spawn(U, F, {
         cwd: h.cwd,
         env: r,
         stdio: o?.viaFd
@@ -4543,7 +4496,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
         process.removeListener("exit", We));
       let ve = Xf(de, _e, Ce, i, { shellGranted: oi.some((Ke) => ii(w, Ke)) });
       ((ve.killedInFlight = _e || Ye || He),
-        Zr(
+        writeFile(
           i,
           de.map((Ke) => jsonStringify(Ke)).join(`
 `),
@@ -4791,7 +4744,7 @@ async function $d(e, t, r, i, o, u, d) {
           (C ?? "")
             .split(k.delimiter)
             .filter((I) => k.isAbsolute(I) && (!V(I) || re(I)))
-            .map((I) => mt(I).catch(() => null)),
+            .map((I) => realpath(I).catch(() => null)),
         ),
       )
     )
@@ -4810,7 +4763,7 @@ async function $d(e, t, r, i, o, u, d) {
     (async () => {
       for (let I of ie)
         try {
-          if ((await ze(I)).isDirectory()) _e.push(I);
+          if ((await lstat(I)).isDirectory()) _e.push(I);
         } catch {}
     })(),
   );
@@ -4823,7 +4776,7 @@ async function $d(e, t, r, i, o, u, d) {
               .filter((I) => !!I && k.isAbsolute(I) && (!V(I) || re(I)))
               .map(async (I) =>
                 k.join(
-                  await mt(k.dirname(I)).catch(() => k.dirname(I)),
+                  await realpath(k.dirname(I)).catch(() => k.dirname(I)),
                   k.basename(I),
                 ),
               ),
@@ -4843,10 +4796,10 @@ async function $d(e, t, r, i, o, u, d) {
     (async () => {
       for (let I of He)
         try {
-          let q = await ze(I);
+          let q = await lstat(I);
           if (!q.isFile() || q.nlink !== 1 || q.size > Jd) continue;
           if (K.some((Oe) => dt(Oe) === dt(I) || we(Oe, I, dt))) continue;
-          let ke = await ni(I, "utf8");
+          let ke = await readFile(I, "utf8");
           if (ke.includes("-----BEGIN CERTIFICATE-----") && !PRIVATE_KEY_BLOCK_PATTERN.test(ke))
             ge.push(I);
         } catch {}
@@ -5284,7 +5237,7 @@ async function $d(e, t, r, i, o, u, d) {
     ((I.length = 0), I.push(...q));
   }
   let ut = [e.home, e.tmpDir, ...i.pluginDirs, ...F, ..._e, ...ge],
-    je = await Promise.all(ut.map((I) => mt(I).catch(() => I))),
+    je = await Promise.all(ut.map((I) => realpath(I).catch(() => I))),
     pe = [];
   for (let I of Qt) {
     let q =
@@ -5401,7 +5354,7 @@ async function $d(e, t, r, i, o, u, d) {
       mode: "deny",
     }));
   }
-  await Zr(k.join(e.configDir, "settings.json"), jsonStringify(Se, null, 2), {
+  await writeFile(k.join(e.configDir, "settings.json"), jsonStringify(Se, null, 2), {
     flag: "wx",
   });
 }
@@ -5418,9 +5371,9 @@ async function Jr(e) {
 async function Ld(e) {
   let t = await xd(e);
   try {
-    if ((await ze(t)).isSymbolicLink()) {
-      let r = await mt(t);
-      if ((await ze(r)).isDirectory()) return r;
+    if ((await lstat(t)).isSymbolicLink()) {
+      let r = await realpath(t);
+      if ((await lstat(r)).isDirectory()) return r;
     }
   } catch {}
   return t;
@@ -5430,7 +5383,7 @@ async function xd(e) {
     r = [k.basename(e)];
   for (;;)
     try {
-      return k.join(await mt(t), ...r);
+      return k.join(await realpath(t), ...r);
     } catch (i) {
       let o = A(i);
       if ((o !== "ENOENT" && o !== "ENOTDIR") || t === k.parse(t).root)
@@ -5526,7 +5479,7 @@ async function nl(e, t) {
     u = (j, B) => j === B || o(j, B),
     d = async (j) => (
       await assertPathIsLocal(k.dirname(j), k.basename(j), r),
-      mt(j).catch((B) => {
+      realpath(j).catch((B) => {
         let Z = A(B);
         if (Z === "ENOENT") return j;
         throw new R(
@@ -5536,7 +5489,7 @@ async function nl(e, t) {
       })
     ),
     p = async (j) =>
-      ze(j).then(
+      lstat(j).then(
         (B) => B.nlink,
         (B) => {
           throw ht(r, B);
@@ -5562,7 +5515,7 @@ async function nl(e, t) {
     L = async (j, B) => {
       let Z;
       try {
-        Z = await yt(j, { withFileTypes: !0 });
+        Z = await readdir(j, { withFileTypes: !0 });
       } catch (ae) {
         if (B && A(ae) === "ENOENT") return [];
         return null;
@@ -5630,7 +5583,7 @@ async function nl(e, t) {
       (F.some((j) => u(j, _e)) ? _e : N),
     Te = await Promise.all(t.map(d));
   for (let j of Te) {
-    let B = await ze(j).catch((Z) => {
+    let B = await lstat(j).catch((Z) => {
       if (A(Z) === "ENOENT") return null;
       throw ht(r, Z);
     });
@@ -5640,7 +5593,7 @@ async function nl(e, t) {
         "eval add_dir is not a directory",
       );
   }
-  let ue = await yt(N).catch((j) => {
+  let ue = await readdir(N).catch((j) => {
       if (A(j) === "ENOENT") return [];
       throw ht(r, j);
     }),
@@ -5652,7 +5605,7 @@ async function nl(e, t) {
           "eval case has case-variant duplicates of a reserved directory",
         );
       let Z = k.join(N, B[0] ?? j),
-        ae = await ze(Z).catch((te) => {
+        ae = await lstat(Z).catch((te) => {
           if (A(te) === "ENOENT") return null;
           throw ht(r, te);
         });
@@ -5813,7 +5766,7 @@ async function nl(e, t) {
                 "eval suite link unresolvable",
               );
             if (Te.includes(q)) continue;
-            let ke = await ze(q).catch((Oe) => {
+            let ke = await lstat(q).catch((Oe) => {
               throw ht(r, Oe);
             });
             if (!ke.isDirectory()) {
@@ -5846,7 +5799,7 @@ async function nl(e, t) {
     kr = E.map((j) => j.join("/"));
   for (let j of ee) {
     jt(j);
-    let B = await ze(j).catch((Z) => {
+    let B = await lstat(j).catch((Z) => {
       if (A(Z) === "ENOENT") return null;
       throw ht(r, Z);
     });
@@ -6126,10 +6079,10 @@ async function Da(e, t = "plugin eval", r = [], i) {
         "eval vcs metadata unresolvable",
       );
     },
-    u = async (D) => (await assertPathIsLocal(k.dirname(D), k.basename(D), t), mt(D).catch(o)),
+    u = async (D) => (await assertPathIsLocal(k.dirname(D), k.basename(D), t), realpath(D).catch(o)),
     d = (await u(e)) ?? e,
     p = [k.join(d, ".git")],
-    h = async (D, U) => (await assertPathIsLocal(D, U, t), mt(k.resolve(D, U)).catch(o)),
+    h = async (D, U) => (await assertPathIsLocal(D, U, t), realpath(k.resolve(D, U)).catch(o)),
     w = (D) => {
       if ([d, ...r].every((U) => D !== U && !we(U, D) && !we(D, U))) p.push(D);
       else if (D !== d && !we(D, d)) i?.(D);
@@ -6152,7 +6105,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
       }
       let J = [];
       try {
-        J = await yt(k.join(D, "worktrees"), { withFileTypes: !0 });
+        J = await readdir(k.join(D, "worktrees"), { withFileTypes: !0 });
       } catch (K) {
         if (A(K) !== "ENOENT" && A(K) !== "ENOTDIR") throw ht(t, K);
       }
@@ -6187,7 +6140,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
           p.push(J);
           continue;
         }
-        let K = await yt(J, { withFileTypes: !0 }).catch((re) => {
+        let K = await readdir(J, { withFileTypes: !0 }).catch((re) => {
             if (A(re) === "ENOENT" || A(re) === "ENOTDIR") return [];
             throw ht(t, re);
           }),
@@ -6215,7 +6168,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
         ((N = k.join(D, "repo")), (F = (re) => k.dirname(k.dirname(re))));
       else return;
       if (
-        !(await ze(N).then(
+        !(await lstat(N).then(
           (re) => re.isFile(),
           (re) => {
             if (A(re) === "ENOENT" || A(re) === "ENOTDIR") return !1;
@@ -6242,7 +6195,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
         let K = await h(F, J);
         if (K !== null) (p.push(K), await E(K), w(k.dirname(K)));
       }
-      return ze(k.join(F, "HEAD")).then(
+      return lstat(k.join(F, "HEAD")).then(
         () => !0,
         (K) => {
           if (A(K) === "ENOENT") return !1;
@@ -6259,7 +6212,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
         await C(J, F);
         continue;
       }
-      let K = await ze(J).catch((de) => {
+      let K = await lstat(J).catch((de) => {
         if (A(de) === "ENOENT") return null;
         throw ht(t, de);
       });
@@ -6268,7 +6221,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
       else
         (await E(J),
           (U =
-            (await ze(k.join(J, "HEAD")).then(
+            (await lstat(k.join(J, "HEAD")).then(
               () => !0,
               (de) => {
                 if (A(de) === "ENOENT") return !1;
@@ -6318,7 +6271,7 @@ function Jo(e) {
 async function Na(e) {
   let t;
   try {
-    t = await yt(e, { withFileTypes: !0 });
+    t = await readdir(e, { withFileTypes: !0 });
   } catch {
     return !1;
   }
@@ -6329,7 +6282,7 @@ async function Na(e) {
     if ((await getFileEntryKind(i, o, "other")) !== "dir" || ++r > 200) continue;
     for (let u of ol)
       try {
-        return (await ze(k.join(o, u)), !0);
+        return (await lstat(k.join(o, u)), !0);
       } catch {}
   }
   return !1;
@@ -6501,7 +6454,7 @@ async function Yd(e) {
     },
     r =
       e ??
-      (await ni("/proc/mounts", "utf8").catch(() =>
+      (await readFile("/proc/mounts", "utf8").catch(() =>
         t("the WSL mount table (/proc/mounts) cannot be read"),
       )),
     i = zd(r);
@@ -6548,7 +6501,7 @@ function Fa(e) {
 }
 async function Vt(e) {
   let t = await zt(
-    Promise.all(e.map((r) => mt(r).catch(() => r))),
+    Promise.all(e.map((r) => realpath(r).catch(() => r))),
     "a directory",
   );
   return dedupe([...e, ...t]);
@@ -6802,7 +6755,7 @@ function sf(e, t) {
 async function li(e, t, r) {
   let i = await Qr(e, t),
     o = await il(e),
-    u = await ze(i).catch(() => null);
+    u = await lstat(i).catch(() => null);
   if (!o.some((d) => we(d, i)) || u === null || !u.isFile() || u.nlink > 1)
     throw new R(
       `case "${e.name}": ${r} "${t}" resolves (through a link) outside the case directory and the plugin under test, or is not a plain single-link file`,
@@ -6812,7 +6765,7 @@ async function li(e, t, r) {
 }
 async function il(e) {
   return Promise.all(
-    [e.caseDir, ...e.pluginDirsUnderTest].map((t) => mt(t).catch(() => t)),
+    [e.caseDir, ...e.pluginDirsUnderTest].map((t) => realpath(t).catch(() => t)),
   );
 }
 async function Qr(e, t) {
@@ -6821,7 +6774,7 @@ async function Qr(e, t) {
 async function ci(e, t, r, i) {
   await assertPathIsLocal(e, t, r);
   let o = k.resolve(e, t),
-    u = await mt(e).catch(() => k.resolve(e)),
+    u = await realpath(e).catch(() => k.resolve(e)),
     d = k.resolve(u, t);
   if (d !== u && !we(u, d))
     throw new R(
@@ -6829,7 +6782,7 @@ async function ci(e, t, r, i) {
       "case-authored path escapes its root",
     );
   try {
-    return await mt(o);
+    return await realpath(o);
   } catch (p) {
     let h = A(p);
     if (h === "ENOENT" || h === "ENOTDIR")
@@ -7045,33 +6998,33 @@ var qr = [
 ];
 async function ur(e) {
   return k.join(
-    await mt(k.dirname(e)).catch(() => k.dirname(e)),
+    await realpath(k.dirname(e)).catch(() => k.dirname(e)),
     k.basename(e),
   );
 }
 async function vf(e) {
   try {
-    return await mt(e);
+    return await realpath(e);
   } catch (r) {
     if (W(r)) {
       let i = await di(e);
       if (i !== "unresolvable") return i;
     }
   }
-  let t = await qa(e).catch(() => null);
+  let t = await readlink(e).catch(() => null);
   return t === null ? null : k.resolve(k.dirname(await ur(e)), t);
 }
 async function di(e) {
   for (let t = e, r = k.dirname(t); t !== r; t = r, r = k.dirname(t)) {
     try {
-      await ze(t);
+      await lstat(t);
     } catch (o) {
       if (W(o) || A(o) === "ENOTDIR") continue;
       return "unresolvable";
     }
-    let i = await mt(t).catch(() => null);
+    let i = await realpath(t).catch(() => null);
     if (i === null) {
-      let o = await qa(t).catch(() => null);
+      let o = await readlink(t).catch(() => null);
       return o === null
         ? "unresolvable"
         : k.join(k.resolve(k.dirname(await ur(t)), o), k.relative(t, e));
@@ -7135,7 +7088,7 @@ async function Af(e, t, r) {
       ),
     o;
   try {
-    o = await mt(e);
+    o = await realpath(e);
   } catch (p) {
     if (W(p) || A(p) === "ENOTDIR") {
       let h = await di(e);
@@ -7151,7 +7104,7 @@ async function Af(e, t, r) {
   for (let p = u.shift(); p !== void 0; p = u.shift()) {
     let h;
     try {
-      h = await yt(p, { withFileTypes: !0 });
+      h = await readdir(p, { withFileTypes: !0 });
     } catch (w) {
       let E = A(w);
       if (E === "ENOTDIR" && p === o) break;
@@ -7165,7 +7118,7 @@ async function Af(e, t, r) {
         _ = await getFileEntryKind(w, E, "unknown");
       if (_ === "symlink") throw i("holds a symbolic link inside it");
       if (_ === "unknown") {
-        let S = await ze(E).then(
+        let S = await lstat(E).then(
           () => {
             return;
           },
@@ -7193,14 +7146,14 @@ async function If(e, t) {
   for (let i of qr) {
     let o = k.join(Ot.homedir(), i);
     if (
-      !(await mr(o).then(
+      !(await stat(o).then(
         (d) => d.isDirectory(),
         () => !1,
       ))
     )
       continue;
     let u = k.join(e.home, i);
-    await ti(k.dirname(u), { recursive: !0 });
+    await mkdir(k.dirname(u), { recursive: !0 });
     try {
       await symlink(o, u, "junction");
     } catch (d) {
@@ -7227,14 +7180,14 @@ async function Nf(e) {
     o = k.join(e.configDir, fi),
     u = jsonStringify(i);
   try {
-    await Zr(o, u, { mode: 384, flag: "wx" });
+    await writeFile(o, u, { mode: 384, flag: "wx" });
   } catch (d) {
-    let p = await ze(o).catch(() => null);
+    let p = await lstat(o).catch(() => null);
     if (
       A(d) !== "EEXIST" ||
       !p?.isFile() ||
       p.size !== Buffer.byteLength(u) ||
-      (await ni(o, "utf8").catch(() => null)) !== u
+      (await readFile(o, "utf8").catch(() => null)) !== u
     )
       throw new R(
         "the organization policy snapshot could not be placed in the evaluation sandbox (a different file is already there or it could not be written)",
@@ -7268,10 +7221,10 @@ async function $f(e) {
       cleanup: async () => {},
     };
   await Pp();
-  let r = await Sd(k.join(Ot.tmpdir(), sl)),
+  let r = await mkdtemp(k.join(Ot.tmpdir(), sl)),
     i = k.join(r, "snapshot.json");
   try {
-    await Zr(
+    await writeFile(
       i,
       jsonStringify(
         e.kind === "gateway"
@@ -7484,13 +7437,13 @@ var ll = createLazyValue(() =>
 async function Kf(e, t) {
   let r;
   try {
-    let o = await ze(e);
+    let o = await lstat(e);
     if (!o.isDirectory() || o.isSymbolicLink())
       throw new R(
         "the stub publish directory is not a real directory",
         "eval: stub publish dir not a directory",
       );
-    r = await yt(e);
+    r = await readdir(e);
   } catch (o) {
     if (o instanceof R) throw o;
     throw (
@@ -7520,7 +7473,7 @@ async function Kf(e, t) {
         "eval: stub publish manifest unreadable",
       );
     if (
-      !(await Promise.all([ze(u), ze(d)])
+      !(await Promise.all([lstat(u), lstat(d)])
         .then(([L, D]) => L.isDirectory() && D.isFile())
         .catch(() => !1))
     )
@@ -7571,7 +7524,7 @@ async function cl(e, t) {
   }
 }
 async function Yf(e, t) {
-  let r = await ze(e).catch((d) => {
+  let r = await lstat(e).catch((d) => {
     if (W(d)) return null;
     throw d;
   });
@@ -7589,7 +7542,7 @@ async function Yf(e, t) {
   await writeFileExclusive(i, jsonStringify(t, null, 2));
   let u = t.at(-1);
   if (u && u.env === "stub") {
-    await ti(o);
+    await mkdir(o);
     for (let d of ["index.html", "manifest.json"]) {
       let p = await cl(k.join(u.payloadDir, d), zf);
       if (p === null) continue;
@@ -7752,7 +7705,7 @@ function ei() {
 async function Zf(e, t) {
   let r;
   try {
-    r = await yt(e, { withFileTypes: !0 });
+    r = await readdir(e, { withFileTypes: !0 });
   } catch (o) {
     let u = A(o);
     if (u === "ENOENT" || u === "ENOTDIR") return [];
@@ -7787,7 +7740,7 @@ async function ep(e, t) {
   for (let p = u.pop(); p !== void 0; p = u.pop()) {
     let h;
     try {
-      h = await yt(k.join(r, p), { withFileTypes: !0 });
+      h = await readdir(k.join(r, p), { withFileTypes: !0 });
     } catch (w) {
       let E = A(w);
       if (p === "" && (E === "ENOENT" || E === "ENOTDIR")) return [];
@@ -7801,7 +7754,7 @@ async function ep(e, t) {
         _ = await getFileEntryKind(w, k.join(r, E), "unknown");
       if (_ === "symlink") {
         if (
-          ((_ = await mr(k.join(r, E)).then(
+          ((_ = await stat(k.join(r, E)).then(
             (C) => (C.isDirectory() ? "dir" : C.isFile() ? "file" : "other"),
             (C) => {
               let L = A(C);
@@ -7870,12 +7823,12 @@ async function bt(e) {
 async function op(e) {
   let t;
   try {
-    t = await Td(e, getCurrentPlatform() === "windows" ? "r" : Oa.O_RDONLY | Oa.O_NONBLOCK);
+    t = await open(e, getCurrentPlatform() === "windows" ? "r" : constants.O_RDONLY | constants.O_NONBLOCK);
   } catch (r) {
     let i = A(r);
     if (
       (i === "ENOENT" || i === "ENOTDIR") &&
-      !(await ze(e).then(
+      !(await lstat(e).then(
         (o) => o.isSymbolicLink(),
         () => !1,
       )) &&
@@ -7885,7 +7838,7 @@ async function op(e) {
     if (
       (i === "EACCES" || i === "EPERM") &&
       process.getuid !== void 0 &&
-      (await mr(e).then(
+      (await stat(e).then(
         (o) => o.uid !== process.getuid?.(),
         () => !1,
       ))
@@ -8070,7 +8023,7 @@ async function pr(e, t, r = 0, i = k.join(t, ".ssh")) {
           U = ap(k.basename(L)),
           N;
         try {
-          N = await yt(D);
+          N = await readdir(D);
         } catch (J) {
           let K = A(J);
           if (K === "ENOENT" || K === "ENOTDIR") continue;
@@ -8201,7 +8154,7 @@ async function dp(e) {
           else {
             let N;
             try {
-              N = await yt(U);
+              N = await readdir(U);
             } catch (F) {
               let J = A(F);
               if (J === "ENOENT" || J === "ENOTDIR") continue;
@@ -8559,7 +8512,7 @@ async function wp(e, t, r) {
   let p = e("ANSIBLE_CONFIG")?.trim();
   if (p !== void 0 && p !== "" && !k.isAbsolute(p))
     throw ce("ANSIBLE_CONFIG holds a relative path");
-  let h = await mr(r).then(
+  let h = await stat(r).then(
     (w) => (w.mode & 2) !== 0,
     () => !0,
   );
@@ -8636,7 +8589,7 @@ async function yp(e) {
   for (let r of dedupe([...e, ..._p])) {
     let i;
     try {
-      i = await yt(r);
+      i = await readdir(r);
     } catch (o) {
       let u = A(o);
       if (u === "ENOENT" || u === "ENOTDIR") continue;
@@ -8767,7 +8720,7 @@ var kp = createLazyValue(() =>
 async function Rp(e, t) {
   let r;
   try {
-    r = (await yt(k.join(e, "configurations"))).filter((u) =>
+    r = (await readdir(k.join(e, "configurations"))).filter((u) =>
       u.startsWith("config_"),
     );
   } catch (u) {
@@ -8801,7 +8754,7 @@ var $n = getCurrentPlatform() === "windows" ? "\\\\.\\nul" : "/dev/null";
 async function Sp(e) {
   if (!e.isCharacterDevice()) return !1;
   return (
-    (Ya ??= mr($n).then(
+    (Ya ??= stat($n).then(
       (t) => t.rdev,
       () => {
         return;
@@ -8881,7 +8834,7 @@ var Ap = 8,
 async function Pp() {
   let e;
   try {
-    e = await yt(Ot.tmpdir());
+    e = await readdir(Ot.tmpdir());
   } catch {
     return;
   }
@@ -8892,7 +8845,7 @@ async function Pp() {
       .map(async (r) => {
         let i = k.join(Ot.tmpdir(), r);
         try {
-          let o = await ze(i);
+          let o = await lstat(i);
           if (o.isDirectory() && o.mtimeMs < t)
             await Gt(i, { recursive: !0, force: !0 });
         } catch {}
@@ -8942,8 +8895,6 @@ function Lp(e) {
   );
 }
 import Fn from "path";
-import { constants as _l } from "fs";
-import { lstat as mi, open as xp, realpath as hl } from "fs/promises";
 function Mp(e) {
   return e.arm === void 0 && e.type === "tool_used" && e.tool === SKILL_TOOL_NAME;
 }
@@ -9400,15 +9351,15 @@ async function Zp(e, t, r) {
         `focus file ${r} leaves the run directory through a link`,
         "grader focus file escapes the run directory via link",
       ),
-    o = await mi(e, { bigint: !0 }).catch(() => null);
+    o = await lstat(e, { bigint: !0 }).catch(() => null);
   if (o === null || !o.isDirectory() || o.isSymbolicLink()) throw i();
-  let u = await hl(e).catch(() => null);
+  let u = await realpath(e).catch(() => null);
   if (u === null || u !== e) throw i();
-  let d = await mi(u, { bigint: !0 }).catch(() => null);
+  let d = await lstat(u, { bigint: !0 }).catch(() => null);
   if (d === null || d.ino !== o.ino || d.dev !== o.dev) throw i();
   let p;
   try {
-    p = await xp(t, _l.O_RDONLY | Qp);
+    p = await open(t, constants.O_RDONLY | Qp);
   } catch (h) {
     if (A(h) === "ENOENT")
       throw new R(
@@ -9434,10 +9385,10 @@ async function Zp(e, t, r) {
       );
     if (h.ino === 0n) throw i();
     let w = await getFdRealPath(p.fd),
-      E = w ?? (await hl(t).catch(() => null));
+      E = w ?? (await realpath(t).catch(() => null));
     if (E === null || !we(u, E)) throw i();
     if (w === null) {
-      let C = await mi(E, { bigint: !0 }).catch(() => null);
+      let C = await lstat(E, { bigint: !0 }).catch(() => null);
       if (C === null || C.ino !== h.ino || C.dev !== h.dev || C.nlink !== 1n)
         throw i();
     }
@@ -9458,7 +9409,7 @@ async function Zp(e, t, r) {
     await p.close().catch(() => {});
   }
 }
-var Qp = getCurrentPlatform() === "windows" ? 0 : _l.O_NONBLOCK;
+var Qp = getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK;
 function em(e) {
   let t = Fn.resolve("/eval-run-base"),
     r = Fn.resolve(t, e.replaceAll("\\", "/")),
@@ -9468,7 +9419,6 @@ function em(e) {
     ? null
     : i.split(Fn.sep).join("/");
 }
-import { mkdir as tm, writeFile as Rl } from "fs/promises";
 import wr from "path";
 function nm(e, t, r) {
   if (r.length > 0) {
@@ -9582,10 +9532,10 @@ async function Il(e, t, r, i) {
         );
       if (w.length > 0) throw new io(w);
     }
-    (await tm(wr.join(r.outDir, "mocks"), { recursive: !0 }),
+    (await mkdir(wr.join(r.outDir, "mocks"), { recursive: !0 }),
       await Promise.all([
-        Rl(d.configPath, d.configJson, { mode: 384 }),
-        ...d.specs.map((h) => Rl(h.path, h.json, { mode: 384 })),
+        writeFile(d.configPath, d.configJson, { mode: 384 }),
+        ...d.specs.map((h) => writeFile(h.path, h.json, { mode: 384 })),
       ]));
   } catch (p) {
     throw (u?.dispose(), p);
@@ -9625,10 +9575,8 @@ function Pl(e) {
     0,
   );
 }
-import { createHash as Ml, randomBytes as Dl } from "crypto";
-import { mkdtemp as om, rm as Nl } from "fs/promises";
+import { rm as Nl } from "fs/promises";
 import { createServer } from "net";
-import { tmpdir as sm } from "os";
 import $l from "path";
 var am = createLazyValue(() =>
     c({ token: s(), registeredName: s(), tool: s(), input: fe(s(), se()) }),
@@ -9639,10 +9587,10 @@ var am = createLazyValue(() =>
   _i = 16384;
 async function jl({ credentials: e }) {
   let t = new Map(),
-    r = getCurrentPlatform() === "windows" ? null : await om($l.join(sm(), "cc-eval-agent-")),
+    r = getCurrentPlatform() === "windows" ? null : await mkdtemp($l.join(tmpdir(), "cc-eval-agent-")),
     i =
       r === null
-        ? `\\\\?\\pipe\\cc-eval-agent-${Dl(8).toString("hex")}`
+        ? `\\\\?\\pipe\\cc-eval-agent-${randomBytes(8).toString("hex")}`
         : $l.join(r, "s"),
     o = new Set(),
     u = createServer((d) => {
@@ -9667,7 +9615,7 @@ async function jl({ credentials: e }) {
     u.unref(),
     {
       registerRun({ model: d, callBudget: p }) {
-        let h = Dl(16).toString("hex"),
+        let h = randomBytes(16).toString("hex"),
           w = {
             specs: new Map(),
             model: d,
@@ -9930,7 +9878,7 @@ async function wm(e, t, r, i) {
         server: t.server,
         file: wo(i.tool, d),
         json: _,
-        answerHash: Ml("sha256")
+        answerHash: createHash("sha256")
           .update(
             `${h.verdict}
 ${h.text}`,
@@ -9963,7 +9911,7 @@ function bi(e, t) {
   return t === "tool_error" ? truncateMiddleWithMarker(r) : r;
 }
 function vi(e) {
-  return Ml("sha256").update(Bn(e)).digest("hex");
+  return createHash("sha256").update(Bn(e)).digest("hex");
 }
 async function zl(e) {
   let t = { ...e, onLine: (V) => e.onLine(replaceControlChars(V)) },
@@ -10659,7 +10607,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
     if (r.granted) {
       let ue = gr(_);
       if (
-        (await yr(ue).catch((Ne) => {
+        (await lstat(ue).catch((Ne) => {
           if (W(Ne)) return null;
           throw (
             logForDebugging(`eval: cannot examine ${ue}: ${l(Ne)}`, { level: "warn" }),
@@ -10748,7 +10696,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
 async function Cm(e, t, r) {
   return await new Promise((i) => {
     let o = "",
-      u = Em("bash", [e], {
+      u = spawn("bash", [e], {
         cwd: t.cwd,
         windowsHide: !0,
         ...Bs("plugin"),
@@ -10788,12 +10736,12 @@ async function Cm(e, t, r) {
 }
 async function Ri(e) {
   let t = new Set(),
-    r = await yr(e).catch(() => null);
+    r = await lstat(e).catch(() => null);
   if (
     r === null ||
     !r.isDirectory() ||
     r.isSymbolicLink() ||
-    (await Vl(e).catch(() => null)) !== e
+    (await realpath(e).catch(() => null)) !== e
   )
     throw Un();
   return (await Yl(e, "", t, 0), t);
@@ -10806,7 +10754,7 @@ function Un() {
 }
 async function Bl(e, t, r) {
   let i = vt.toLowerCase(),
-    o = await yr(br.join(e, vt)).then(
+    o = await lstat(br.join(e, vt)).then(
       (u) =>
         r === "run" && u.isFile() && u.size === 0 ? "placeholder" : "present",
       (u) => {
@@ -10837,21 +10785,21 @@ var Om = 32,
 async function Yl(e, t, r, i, o = { count: 0 }) {
   if (i > Om) throw Un();
   let u = br.join(e, t),
-    d = await yr(u, { bigint: !0 }).catch(() => null);
+    d = await lstat(u, { bigint: !0 }).catch(() => null);
   if (
     d === null ||
     !d.isDirectory() ||
     d.isSymbolicLink() ||
-    (await Vl(u).catch(() => null)) !== u
+    (await realpath(u).catch(() => null)) !== u
   )
     throw Un();
   let p;
   try {
-    p = await km(u, { withFileTypes: !0 });
+    p = await readdir(u, { withFileTypes: !0 });
   } catch {
     throw Un();
   }
-  let h = await yr(u, { bigint: !0 }).catch(() => null);
+  let h = await lstat(u, { bigint: !0 }).catch(() => null);
   if (h === null || h.ino !== d.ino || h.dev !== d.dev) throw Un();
   if (((o.count += p.length), o.count > Am)) throw Un();
   for (let w of p) {
@@ -11345,7 +11293,7 @@ Terminated \u2014 finishing up\u2026
             throw new Et(
               `results directory ${Ae} already existed \u2014 a default results directory is always new; refusing to write into it`,
             );
-        } else await Xt(Ae, { recursive: !0 });
+        } else await mkdir(Ae, { recursive: !0 });
         await pn(
           Ee.join(Ae, "aggregate-result.json"),
           `${Qe}
@@ -11524,7 +11472,7 @@ async function Xl(e) {
       if (((t = "publish"), K !== null))
         try {
           if (i.report === void 0 && h) await h();
-          else await Xt(Ee.dirname(K), { recursive: !0 });
+          else await mkdir(Ee.dirname(K), { recursive: !0 });
           (await pn(K, de, i.report === void 0 && i.outputDir === void 0),
             Ge(`Report: ${K}`),
             (r = !0));
@@ -11621,7 +11569,7 @@ async function Zl(e, { result: t, valid: r }, i) {
       });
     else {
       let u = Ee.resolve(getCwd(), e);
-      (await Xt(Ee.dirname(u), { recursive: !0 }), await pn(u, o, !1));
+      (await mkdir(Ee.dirname(u), { recursive: !0 }), await pn(u, o, !1));
     }
     return !0;
   } catch (o) {
@@ -11679,7 +11627,7 @@ async function pluginEvalInitHandler(e, t = {}) {
     p === null &&
     t.evalDir === void 0 &&
     !Vrt(d) &&
-    (await Yt(Ee.join(d, rt)).catch(() => null))?.isDirectory() !== !0 &&
+    (await lstat(Ee.join(d, rt)).catch(() => null))?.isDirectory() !== !0 &&
     !(await Vm(d))
   )
     return (
@@ -11761,9 +11709,9 @@ async function pluginEvalInitHandler(e, t = {}) {
   try {
     return (
       await Er(d, E.value.segments, D),
-      await Xt(_, { mode: 493 }),
+      await mkdir(_, { mode: 493 }),
       (L = !0),
-      await Xt(Ee.join(_, "graders"), { mode: 493 }),
+      await mkdir(Ee.join(_, "graders"), { mode: 493 }),
       await pn(S, Gi, !0),
       await pn(C, Bi, !0),
       process.stdout
@@ -11863,7 +11811,7 @@ async function Wm(e, t, r) {
     w = null;
   if (h !== u) {
     let _ = await vn(h, await rr(h, r), r, Number.POSITIVE_INFINITY);
-    if (_ !== null) w = await vr(_).catch(() => _);
+    if (_ !== null) w = await realpath(_).catch(() => _);
   }
   w ??= await vn(u, d, r, Number.POSITIVE_INFINITY);
   let E = w !== null && (await an(w, r, "core"));
@@ -11898,8 +11846,8 @@ class Et extends Error {
   }
 }
 async function Er(e, t, r, { vetOwnership: i = null, create: o = !0 } = {}) {
-  if (o) await Xt(e, { recursive: !0 });
-  let u = await Yt(e);
+  if (o) await mkdir(e, { recursive: !0 });
+  let u = await lstat(e);
   if (u.isSymbolicLink())
     throw new Et(
       `output base ${e} is a symlink \u2014 refusing to write beneath it`,
@@ -11911,14 +11859,14 @@ async function Er(e, t, r, { vetOwnership: i = null, create: o = !0 } = {}) {
         `output base ${e} ${h.message} \u2014 refusing to write beneath a directory you did not name (pass --output-dir, or name the directory itself as the target)`,
       );
   }
-  let d = await vr(e).catch(() => {
+  let d = await realpath(e).catch(() => {
       return;
     }),
     p = e;
   for (let h of t) {
     if (((p = Ee.join(p, h)), o))
       try {
-        (await Xt(p, { mode: 493 }), r.push(p));
+        (await mkdir(p, { mode: 493 }), r.push(p));
       } catch (w) {
         if (A(w) !== "EEXIST") throw w;
       }
@@ -11929,7 +11877,7 @@ async function lo(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
     try {
-      await nc(r);
+      await rmdir(r);
     } catch (i) {
       if (W(i)) continue;
       return;
@@ -11939,7 +11887,7 @@ async function lo(e) {
 async function Km(e, t, r, i) {
   let o;
   try {
-    let u = await Yt(e);
+    let u = await lstat(e);
     o = u.isSymbolicLink()
       ? "is a symlink"
       : !u.isDirectory()
@@ -11957,14 +11905,14 @@ async function Km(e, t, r, i) {
 async function Vm(e) {
   for (let t of PLUGIN_CONTENT_MARKERS) {
     if (t === ".claude-plugin") continue;
-    if ((await Yt(Ee.join(e, t)).catch(() => null)) !== null) return !0;
+    if ((await lstat(Ee.join(e, t)).catch(() => null)) !== null) return !0;
   }
   return !1;
 }
 async function zm(e, t, r, i) {
   let o, u;
   try {
-    [o, u] = await Promise.all([vr(e), i ?? vr(t)]);
+    [o, u] = await Promise.all([realpath(e), i ?? realpath(t)]);
   } catch (d) {
     throw new Et(
       `${r} ${e} could not be resolved (${l(d)}) \u2014 refusing to write there`,
@@ -11984,7 +11932,7 @@ async function sc(e, t) {
       t.segments.join(Ee.sep),
       t.source === "flag" ? "--eval-dir" : "the manifest's experimental.evals",
     ),
-      (r = await vr(Ee.join(e, ...t.segments))));
+      (r = await realpath(Ee.join(e, ...t.segments))));
   } catch (d) {
     if (d instanceof R) throw d;
     return t;
@@ -12002,7 +11950,7 @@ async function sc(e, t) {
   for (let d of t.segments) {
     u = Ee.join(u, d);
     try {
-      if ((await Yt(u)).isSymbolicLink()) return t;
+      if ((await lstat(u)).isSymbolicLink()) return t;
     } catch {
       return t;
     }
@@ -12066,7 +12014,7 @@ async function Qm(e, t, r) {
     ))
   ) {
     try {
-      await Yt(i);
+      await lstat(i);
     } catch (p) {
       if (W(p)) return;
       throw p;
@@ -12092,7 +12040,7 @@ async function Qm(e, t, r) {
   }
   if (!r && (await eg(i))) await Ii(i, { recursive: !0, force: !0 });
   try {
-    await Xt(i, { mode: 493 });
+    await mkdir(i, { mode: 493 });
   } catch (p) {
     if (A(p) === "EEXIST")
       throw new Et(
@@ -12101,11 +12049,11 @@ async function Qm(e, t, r) {
     throw p;
   }
   if (u.size === 0) {
-    await nc(i);
+    await rmdir(i);
     return;
   }
   let d = [...u].flatMap(([p, { rec: h, adoptDirs: w }]) => [
-    `${escapeUntrustedText(Ee.join(e, p))}  sha256=${Fm("sha256").update(h.json).digest("hex")}`,
+    `${escapeUntrustedText(Ee.join(e, p))}  sha256=${createHash("sha256").update(h.json).digest("hex")}`,
     ...[...w].map((E) => `    -> ${escapeUntrustedText(`${E}${Ee.sep}`)}`),
   ]);
   try {
@@ -12121,11 +12069,11 @@ async function Qm(e, t, r) {
       (S.add(Ee.basename(w)), h.set(_, S));
     }
     for (let [w, E] of h) {
-      if (!(await Yt(w)).isDirectory())
+      if (!(await lstat(w)).isDirectory())
         throw new Et(
           `${escapeUntrustedText(w)} is no longer the directory this run created \u2014 something else is writing into ${escapeUntrustedText(i)}`,
         );
-      for (let _ of await Ai(w))
+      for (let _ of await readdir(w))
         if (!E.has(_))
           throw new Et(
             `${escapeUntrustedText(Ee.join(w, _))} was not written by this run \u2014 something else is writing into ${escapeUntrustedText(i)}`,
@@ -12157,18 +12105,18 @@ var tc =
   "To replay one on later runs (no model call), copy the file into the .replay/ directory shown after it - the one beside the mock that produced it. Each line carries the sha256 of the file as written; check the copy you take against the hash printed to the terminal (this file sits where the workload could still write):";
 async function eg(e) {
   try {
-    if (!(await Yt(e)).isDirectory()) return !1;
+    if (!(await lstat(e)).isDirectory()) return !1;
   } catch (r) {
     if (W(r)) return !1;
     throw r;
   }
-  let t = await Ai(e, { withFileTypes: !0 });
+  let t = await readdir(e, { withFileTypes: !0 });
   for (let r of t) {
     let i = Ee.join(e, r.name),
       o = await getFileEntryKind(r, i, "other");
     if (r.name === "ADOPT.txt" && o === "file") continue;
     if (o !== "dir") return !1;
-    for (let u of await Ai(i, { withFileTypes: !0 }))
+    for (let u of await readdir(i, { withFileTypes: !0 }))
       if (
         !yo.test(u.name) ||
         (await getFileEntryKind(u, Ee.join(i, u.name), "other")) !== "file"

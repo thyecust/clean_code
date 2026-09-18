@@ -35,14 +35,13 @@ import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未�
 import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
-  mkdir as _e,
-  readFile as ye,
+  mkdir,
+  readFile,
   unlink,
   writeFile,
 } from "fs/promises";
-import { dirname, join as de } from "path";
-import { appendFile, mkdir as ge, readFile as Se } from "fs/promises";
-import { join as oe } from "path";
+import { dirname, join } from "path";
+import { appendFile } from "fs/promises";
 var Te = [
     "**/.claude/scheduled_tasks.lock",
     "**/.claude/scheduled_tasks.json",
@@ -62,13 +61,13 @@ async function ie(r) {
     let t = await resolveGitDir(r);
     if (!t) return;
     let a = (await getCommonDir(t)) ?? t,
-      S = oe(a, "info", "exclude"),
+      S = join(a, "info", "exclude"),
       l = "";
     try {
-      if (((l = await Se(S, "utf-8")), l.includes(se))) return;
+      if (((l = await readFile(S, "utf-8")), l.includes(se))) return;
     } catch (F) {
       if (A(F) !== "ENOENT") throw F;
-      await ge(oe(a, "info"), { recursive: !0 });
+      await mkdir(join(a, "info"), { recursive: !0 });
     }
     let u =
         l &&
@@ -84,17 +83,17 @@ async function ie(r) {
     logForDebugging(`ensureClaudeRuntimeFilesExcluded: ${t}`);
   }
 }
-var Ce = de(".claude", "scheduled_tasks.lock"),
+var Ce = join(".claude", "scheduled_tasks.lock"),
   we = createLazyValue(() =>
     c({ sessionId: s(), pid: T(), procStart: s().optional(), acquiredAt: T() }),
   );
 function N(r) {
-  return de(r ?? sn(), Ce);
+  return join(r ?? sn(), Ce);
 }
 async function le(r) {
   let t;
   try {
-    t = await ye(N(r), "utf8");
+    t = await readFile(N(r), "utf8");
   } catch {
     return;
   }
@@ -110,7 +109,7 @@ async function ae(r, t) {
     let u = A(l);
     if (u === "EEXIST") return !1;
     if (u === "ENOENT") {
-      await _e(dirname(a), { recursive: !0 });
+      await mkdir(dirname(a), { recursive: !0 });
       try {
         return (await writeFile(a, S, { flag: "wx" }), !0);
       } catch (k) {

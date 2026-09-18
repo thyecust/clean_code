@@ -89,7 +89,7 @@ import {
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
-import { basename as st, resolve } from "path";
+import { basename, resolve } from "path";
 var yt = [
   "autopilot",
   "bugfix",
@@ -2066,7 +2066,7 @@ function br(e) {
   return r.length === 1 ? r[0] : void 0;
 }
 import { appendFile, mkdir, readFile } from "fs/promises";
-import { basename as qr, dirname, join as Vt } from "path";
+import { dirname, join } from "path";
 var Bt = createLazyValue(() => {
     let e = vx().nonnegative();
     return Ko("k", [
@@ -2096,13 +2096,13 @@ var Bt = createLazyValue(() => {
   Ut = 4194304;
 function Xr() {
   let e = fy() ?? getProjectDir(he());
-  return Vt(e, K(), Gr);
+  return join(e, K(), Gr);
 }
 function Zr(e) {
   let r = dirname(e),
     t = getProjectKeyFromDir(dirname(r));
-  if (t === void 0 || qr(e) !== Gr) return;
-  let d = STORAGE_KEYS.sessionJournal(t, qr(r), "world");
+  if (t === void 0 || basename(e) !== Gr) return;
+  let d = STORAGE_KEYS.sessionJournal(t, basename(r), "world");
   return validateStorageKey(d) === void 0 ? d : void 0;
 }
 function Qr(e, r, t) {
@@ -2739,7 +2739,7 @@ name: ${e.name}`;
       let r = e ? qe(e) : void 0;
       if (r && ke()) return `workflow ${r.runId} \xB7 ${br(r) ?? "?"}`;
       if (e?.scriptPath) {
-        let t = st(stripInvisibleCharacters(e.scriptPath));
+        let t = basename(stripInvisibleCharacters(e.scriptPath));
         return e.script ? `${t} \xB7 ${Le(e.script)}` : t;
       }
       if (e?.name)
@@ -2872,7 +2872,7 @@ name: ${e.name}`;
       if (t && d) return d.renderRunOp(t, r);
       if (e.scriptPath) {
         let o = stripInvisibleCharacters(e.scriptPath),
-          a = r ? o : st(o);
+          a = r ? o : basename(o);
         if (!e.script) return a;
         return r
           ? `${o}

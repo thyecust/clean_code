@@ -21,7 +21,7 @@ import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路
 import { createHash } from "crypto";
 import { constants } from "fs";
 import T from "path";
-import { open as M } from "fs/promises";
+import { open } from "fs/promises";
 import Q from "path";
 var N = 120;
 function B(e) {
@@ -575,7 +575,7 @@ async function ye(e, t, r, o = "") {
 async function readMockFixtureFile(e) {
   try {
     await assertPathIsLocal(T.dirname(e), T.basename(e), "mock fixture");
-    let t = await M(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
+    let t = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
     try {
       let r = await t.stat();
       if (!r.isFile()) return { problem: "is not a regular file" };
@@ -609,7 +609,7 @@ async function Z(e, t) {
         constants.O_APPEND |
         constants.O_CREAT |
         (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK),
-      o = await M(e, r, 384);
+      o = await open(e, r, 384);
     try {
       if (!(await o.stat()).isFile()) return !1;
       let n = Buffer.from(
@@ -654,7 +654,7 @@ function Se(e) {
 var Ee = 4194304;
 async function ve(e) {
   await assertPathIsLocal(T.dirname(e), T.basename(e), "mock spec");
-  let t = await M(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
+  let t = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
   try {
     let r = await t.stat();
     if (!r.isFile())

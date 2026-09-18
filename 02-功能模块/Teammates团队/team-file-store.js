@@ -25,10 +25,10 @@ import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import {
   mkdir,
   readFile,
-  rm as _,
+  rm,
   writeFile,
 } from "fs/promises";
-import { join as k, resolve } from "path";
+import { join, resolve } from "path";
 class SwarmPaneError extends Error {
   constructor(e) {
     super(e);
@@ -58,10 +58,10 @@ function sanitizeAgentName(e) {
   return e.replaceAll("@", "-");
 }
 function S(e) {
-  return k(getTeamsDir(), sanitizeName(e));
+  return join(getTeamsDir(), sanitizeName(e));
 }
 function getTeamFilePath(e) {
-  return k(S(e), "config.json");
+  return join(S(e), "config.json");
 }
 function C(e) {
   return STORAGE_KEYS.team(sanitizeName(e));
@@ -447,15 +447,15 @@ async function setMemberActive(e, t, r, a) {
   }
 }
 async function q(e) {
-  let t = k(e, ".git"),
+  let t = join(e, ".git"),
     r = null;
   try {
     if (pointerFileIsSuspect(t, e)) throw Error(".git pointer file is a symlink");
     let o = (await readFile(t, "utf-8")).trim().match(/^gitdir:\s*(.+)$/);
     if (o && o[1] && !ac(o[1].trim(), e) && !rawPointerPathIsUnsafe(o[1].trim(), e)) {
       let i = resolve(e, o[1].trim()),
-        s = k(i, "..", "..");
-      r = k(s, "..");
+        s = join(i, "..", "..");
+      r = join(s, "..");
     }
   } catch {}
   if (!(await isPathSafeToRemove(e))) {
@@ -477,7 +477,7 @@ async function q(e) {
     );
   }
   try {
-    (await _(e, { recursive: !0, force: !0 }),
+    (await rm(e, { recursive: !0, force: !0 }),
       logForDebugging(`[TeammateTool] Removed worktree directory manually: ${e}`));
   } catch (a) {
     logForDebugging(`[TeammateTool] Failed to remove worktree ${e}: ${l(a)}`);
@@ -535,7 +535,7 @@ async function V(e, t) {
     for (let i of a) await q(i);
     let o = S(e);
     try {
-      (await _(o, { recursive: !0, force: !0 }),
+      (await rm(o, { recursive: !0, force: !0 }),
         logForDebugging(`[TeammateTool] Cleaned up team directory: ${o}`));
     } catch (i) {
       logForDebugging(`[TeammateTool] Failed to clean up team directory ${o}: ${l(i)}`);

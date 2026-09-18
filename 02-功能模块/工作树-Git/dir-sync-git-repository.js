@@ -32,7 +32,7 @@ import { getSafeReadOpenFlags, getNoFollowOpenFlags } from "../制品发布-Arti
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { spawn } from "child_process";
 import { constants } from "fs";
-import { lstat as Q, open as fe } from "fs/promises";
+import { lstat, open } from "fs/promises";
 var { ceil: Le, max: Ue } = Math;
 function ze(e, t, r) {
   if (r ? isIterateeCall(e, t, r) : t === void 0) t = 1;
@@ -49,7 +49,7 @@ var q = ze;
 import {
   dirname,
   isAbsolute,
-  join as H,
+  join,
   relative,
   resolve,
 } from "path";
@@ -296,7 +296,7 @@ async function writeBlobToNewFile(e, t, r) {
   let i = await N(e);
   if (i.kind === "refused") return !1;
   if (
-    await Q(r).then(
+    await lstat(r).then(
       () => !0,
       (a) => !W(a),
     )
@@ -304,7 +304,7 @@ async function writeBlobToNewFile(e, t, r) {
     return !1;
   let o;
   try {
-    o = await fe(r, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | getNoFollowOpenFlags(), 384);
+    o = await open(r, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | getNoFollowOpenFlags(), 384);
   } catch {
     return !1;
   }
@@ -573,11 +573,11 @@ function rt(e, t, r) {
 }
 async function it(e) {
   try {
-    if (!(await Q(e)).isDirectory()) return { kind: "other" };
+    if (!(await lstat(e)).isDirectory()) return { kind: "other" };
   } catch {
     return { kind: "other" };
   }
-  let t = await readBoundedTextFile(H(e, "commondir"));
+  let t = await readBoundedTextFile(join(e, "commondir"));
   switch (t.kind) {
     case "absent":
       return { kind: "directory" };
@@ -666,7 +666,7 @@ async function ke(e) {
   };
 }
 async function readAlternatesLender(e) {
-  let t = await readBoundedTextFile(H(e, "objects", "info", "alternates"));
+  let t = await readBoundedTextFile(join(e, "objects", "info", "alternates"));
   if (t.kind === "absent") return { kind: "none" };
   if (t.kind === "unreadable") return { kind: "refused" };
   let r = t.text
@@ -678,8 +678,8 @@ async function readAlternatesLender(e) {
   if (r.some((o) => lt(o) || o.startsWith('"'))) return { kind: "refused" };
   let i = r[0];
   if (i === void 0) return { kind: "none" };
-  let s = isAbsolute(i) ? i : resolve(H(e, "objects"), i);
-  return { kind: "lender", shallowFile: H(dirname(s), "shallow") };
+  let s = isAbsolute(i) ? i : resolve(join(e, "objects"), i);
+  return { kind: "lender", shallowFile: join(dirname(s), "shallow") };
 }
 function lt(e) {
   return /^[\\/]{2}/.test(e);
@@ -687,13 +687,13 @@ function lt(e) {
 var ce = 4096;
 async function readBoundedTextFile(e, { firstBytes: t } = {}) {
   try {
-    if (!(await Q(e)).isFile()) return { kind: "unreadable" };
+    if (!(await lstat(e)).isFile()) return { kind: "unreadable" };
   } catch (i) {
     return W(i) ? { kind: "absent" } : { kind: "unreadable" };
   }
   let r;
   try {
-    r = await fe(e, getSafeReadOpenFlags());
+    r = await open(e, getSafeReadOpenFlags());
   } catch (i) {
     return W(i) ? { kind: "absent" } : { kind: "unreadable" };
   }
@@ -928,16 +928,14 @@ async function isBlobIdUnchanged(e, t, r, i) {
 }
 import { randomUUID } from "crypto";
 import {
-  lstat as ie,
   mkdir,
-  open as pt,
   readdir,
   rename,
-  rm as Oe,
+  rm,
   unlink,
   writeFile,
 } from "fs/promises";
-import { basename, join as C } from "path";
+import { basename } from "path";
 var DEFAULT_MAX_BUNDLE_BYTES = 104857600,
   Fe = 16,
   Ee = 16,
@@ -1342,22 +1340,22 @@ async function Ot({
       missing: R.slice(0, wt),
     };
   }
-  let b = C(e.gitDir, "objects", "pack"),
+  let b = join(e.gitDir, "objects", "pack"),
     w = Math.max(Ne, Rt * e.timeoutMs);
   await Promise.all([
     jt(b, w),
     ne(b, (_) => _.startsWith(Ce), { directories: !0, olderThanMs: w }),
     ne(
-      C(e.gitDir, ...CLAUDE_REF_PREFIX.split("/").filter(Boolean)),
+      join(e.gitDir, ...CLAUDE_REF_PREFIX.split("/").filter(Boolean)),
       (_) => _.endsWith(".lock"),
       { recursive: !0 },
     ),
   ]);
   let B = randomUUID(),
-    v = C(b, `${Ce}${B}`),
+    v = join(b, `${Ce}${B}`),
     x = `${INCOMING_PACK_PREFIX}${B}`;
   try {
-    await mkdir(C(v, "pack"), { recursive: !0 });
+    await mkdir(join(v, "pack"), { recursive: !0 });
   } catch {
     return E("unpack", "could not create the quarantine directory");
   }
@@ -1372,10 +1370,10 @@ async function Ot({
       packName: x,
       held: u,
     });
-    if (_.published) await De(C(b, x), [".keep"]);
+    if (_.published) await De(join(b, x), [".keep"]);
     return _.outcome;
   } finally {
-    await Oe(v, { recursive: !0, force: !0 }).catch(() => {
+    await rm(v, { recursive: !0, force: !0 }).catch(() => {
       logForDebugging(
         "dir-sync: could not remove a receive quarantine (non-fatal; swept later)",
       );
@@ -1394,7 +1392,7 @@ async function Ft({
 }) {
   let l = (g) => ({ outcome: g, published: !1 }),
     u = l({ ok: !1, reason: "aborted" }),
-    d = C(s, "pack", a),
+    d = join(s, "pack", a),
     f = await runDirSyncGit(
       e,
       [
@@ -1529,7 +1527,7 @@ async function Ft({
   } catch {
     return l(E("record", "could not record which objects the pack delivered"));
   }
-  let le = C(o, a);
+  let le = join(o, a);
   try {
     for (let g of [".pack", ".rev", ".keep", DELIVERED_IDS_SUFFIX, ".idx"])
       await rename(`${d}${g}`, `${le}${g}`).catch((P) => {
@@ -1634,12 +1632,12 @@ async function ne(e, t, r = {}) {
     i
       .filter((o) => t(basename(o)))
       .map(async (o) => {
-        let a = C(e, o);
+        let a = join(e, o);
         try {
-          let c = await ie(a);
+          let c = await lstat(a);
           if (c.mtimeMs >= s) return;
           if (c.isFile() || (r.directories === !0 && c.isDirectory()))
-            await Oe(a, { recursive: !0, force: !0 });
+            await rm(a, { recursive: !0, force: !0 });
         } catch (c) {
           if (!W(c))
             logForDebugging("dir-sync: could not sweep a stale sync file (non-fatal)");
@@ -1668,10 +1666,10 @@ async function jt(e, t) {
             o.endsWith(DELIVERED_IDS_SUFFIX)),
       )
       .map(async (o) => {
-        let a = C(e, o),
+        let a = join(e, o),
           c = s - (o.endsWith(DELIVERED_IDS_SUFFIX) ? _t : t);
         try {
-          let l = await ie(a);
+          let l = await lstat(a);
           if (l.isFile() && l.mtimeMs < c) await unlink(a);
         } catch (l) {
           if (!W(l))
@@ -1705,7 +1703,7 @@ async function $e(e, t) {
   return t.filter((s, o) => i[o] !== "commit");
 }
 async function readDeliveredObjectIds(e) {
-  let t = C(e.gitDir, "objects", "pack"),
+  let t = join(e.gitDir, "objects", "pack"),
     r;
   try {
     r = await readdir(t);
@@ -1714,7 +1712,7 @@ async function readDeliveredObjectIds(e) {
   }
   let i = r
       .filter((o) => o.startsWith(INCOMING_PACK_PREFIX) && o.endsWith(DELIVERED_IDS_SUFFIX))
-      .map((o) => C(t, o)),
+      .map((o) => join(t, o)),
     s = await Promise.all(
       i.map(async (o) => {
         try {
@@ -1841,8 +1839,8 @@ async function Ut(e, t, r, i) {
   return (await Me(e, u, r, i))?.length ?? null;
 }
 async function readFileWithMaxBytes(e, t) {
-  if (!(await ie(e)).isFile()) throw Error("not a regular file");
-  let r = await pt(e, getSafeReadOpenFlags());
+  if (!(await lstat(e)).isFile()) throw Error("not a regular file");
+  let r = await open(e, getSafeReadOpenFlags());
   try {
     let i = await r.stat();
     if (!i.isFile()) throw Error("not a regular file");

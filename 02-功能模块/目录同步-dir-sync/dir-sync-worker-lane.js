@@ -13,12 +13,12 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/核心工具-日志与脱敏/diagnostics-log.js";
 import { isViolinWoodEnabled } from "./chunk-97crm80y.js";
 import { DirSyncNoticeStore, publishSeedVerdict } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { dirname, join as t } from "path";
+import { dirname, join } from "path";
 var DEFAULT_BEFORE_TURN_CAP_MS = 1e4;
 function getDirSyncWorkerSessionFile(e) {
   try {
     let n = validateBridgeId(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "", "remote session id");
-    return { sessionId: n, path: t(dirname(e), ".ccr-dir-sync", `worker-${n}.json`) };
+    return { sessionId: n, path: join(dirname(e), ".ccr-dir-sync", `worker-${n}.json`) };
   } catch {
     return null;
   }

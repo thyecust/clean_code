@@ -32,7 +32,7 @@ import { isBgExitHandoffEnabled, hasCarriedCommentMonitor, classifyBackgroundAct
 import { spawn } from "child_process";
 import { realpath } from "fs/promises";
 import { homedir } from "os";
-import { basename, join as D } from "path";
+import { basename, join } from "path";
 async function resolveLauncher() {
   let d = await resolveExecutablePathAsync("claude"),
     t = getLauncherArgv()[0],
@@ -59,7 +59,7 @@ var runUpdateCommand = async (d, t) => {
   let c = () => hasCarriedCommentMonitor(t.taskRegistry.all());
   if (!o) {
     let e = getMaterializedSessionFile(),
-      r = D(getProjectDir(resolveSessionWorkingDirectory()), `${K()}.jsonl`);
+      r = join(getProjectDir(resolveSessionWorkingDirectory()), `${K()}.jsonl`);
     if (e && e !== r) {
       let u = c();
       return (

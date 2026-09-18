@@ -37,7 +37,7 @@ import { resolveTranscriptLocator } from "../../01-核心基础设施/核心工�
 import { extractUserPromptText } from "../../01-核心基础设施/核心工具-未归类/user-prompt-text.js";
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { randomUUID } from "crypto";
-import { once as N } from "events";
+import { once } from "events";
 import { createReadStream, createWriteStream } from "fs";
 import { mkdir, unlink } from "fs/promises";
 import { createInterface } from "readline";
@@ -79,7 +79,7 @@ async function createFork(t, u, d, n) {
   await mkdir(E, { recursive: !0, mode: 448 });
   let F;
   try {
-    ((F = createReadStream(C, { encoding: "utf8" })), await N(F, "open"));
+    ((F = createReadStream(C, { encoding: "utf8" })), await once(F, "open"));
   } catch (e) {
     if (W(e)) throw Error("No conversation to branch");
     throw (logError(e), e);
@@ -99,7 +99,7 @@ async function createFork(t, u, d, n) {
     },
     M = async (e) => {
       if (w) throw (await R(), w);
-      if (!m.write(e)) await N(m, "drain").catch(() => {});
+      if (!m.write(e)) await once(m, "drain").catch(() => {});
     },
     r = A,
     o = () =>

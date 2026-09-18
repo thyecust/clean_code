@@ -33,7 +33,7 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import { extname, join as q } from "path";
+import { extname, join } from "path";
 var Pe = new RegExp(`<(${LOCAL_COMMAND_TAGS.join("|")})>[\\s\\S]*?(?:</\\1>|$)`, "g");
 function Me(e) {
   return e.replace(Pe, "").trim();
@@ -216,13 +216,13 @@ var Ae = createLazyValue(() =>
     essential: "Essential",
   };
 function se() {
-  return q(getClaudeConfigDir(), "usage-data");
+  return join(getClaudeConfigDir(), "usage-data");
 }
 function ae() {
-  return q(se(), "facets");
+  return join(se(), "facets");
 }
 function Ye() {
-  return q(se(), "session-meta");
+  return join(se(), "session-meta");
 }
 function ue(e) {
   return STORAGE_KEYS.userConfigDir("usage-data", ["facets", `${e}.json`]);
@@ -234,7 +234,7 @@ function Ve(e) {
   return STORAGE_KEYS.userConfigDir("usage-data", [e]);
 }
 async function Je(e, t, o) {
-  let i = q(se(), `report-${t}.html`);
+  let i = join(se(), `report-${t}.html`);
   if (isHoverRestEnabled() && o) {
     for (let a of [`report-${t}.html`, "report.html"]) {
       let l = await o.write(Ve(a), e, { mode: 384, keepExistingMode: !0 });
@@ -251,7 +251,7 @@ async function Je(e, t, o) {
   } catch {}
   return (
     await writeFile(i, e, { encoding: "utf-8", mode: 384 }),
-    await writeFile(q(se(), "report.html"), e, { encoding: "utf-8", mode: 384 }),
+    await writeFile(join(se(), "report.html"), e, { encoding: "utf-8", mode: 384 }),
     i
   );
 }
@@ -271,7 +271,7 @@ function we(e, t) {
   return o;
 }
 function Ee(e) {
-  return createJsonFileStore(q(Ye(), `${e}.json`), () => Ae().nullable(), {
+  return createJsonFileStore(join(Ye(), `${e}.json`), () => Ae().nullable(), {
     defaultValue: null,
     ensureDir: !0,
     indent: 2,
@@ -598,7 +598,7 @@ async function ot(e, t) {
     let [i] = await Re([e], t);
     return i ?? null;
   }
-  let o = q(ae(), `${e}.json`);
+  let o = join(ae(), `${e}.json`);
   try {
     let i = await readFile(o, { encoding: "utf-8" }),
       a = jsonParse(i);
@@ -641,7 +641,7 @@ async function nt(e, t) {
       );
     return;
   }
-  let o = q(ae(), `${e.session_id}.json`);
+  let o = join(ae(), `${e.session_id}.json`);
   await writeFile(o, jsonStringify(e, null, 2), { encoding: "utf-8", mode: 384 });
 }
 async function it(e, t) {
@@ -2240,7 +2240,7 @@ async function xt(e) {
   } catch {
     return [];
   }
-  let i = o.filter((l) => l.isDirectory()).map((l) => q(t, l.name)),
+  let i = o.filter((l) => l.isDirectory()).map((l) => join(t, l.name)),
     a = [];
   for (let l = 0; l < i.length; l++) {
     let p = await getSessionFilesWithMtime(i[l]);

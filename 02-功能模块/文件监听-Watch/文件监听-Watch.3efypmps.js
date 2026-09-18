@@ -8,17 +8,15 @@
 
 // Version: 2.1.263
 import { stat as zt } from "fs";
-import { stat as jt, readdir as Yt } from "fs/promises";
+import { stat, readdir } from "fs/promises";
 import { EventEmitter } from "events";
 import * as f from "path";
 import {
-  stat as ft,
-  lstat as j,
-  readdir as ut,
-  realpath as _t,
+  lstat,
+  realpath,
 } from "fs/promises";
-import { Readable as mt } from "stream";
-import { resolve, relative, join as pt, sep as yt } from "path";
+import { Readable } from "stream";
+import { resolve, relative, join, sep } from "path";
 var p = {
     FILE_TYPE: "files",
     DIR_TYPE: "directories",
@@ -57,14 +55,14 @@ var V = "READDIRP_RECURSIVE_ERROR",
     }
     return G;
   };
-class B extends mt {
+class B extends Readable {
   constructor(t = {}) {
     super({ objectMode: !0, autoDestroy: !0, highWaterMark: t.highWaterMark });
     let s = { ...N, ...t },
       { root: e, type: i } = s;
     ((this._fileFilter = K(s.fileFilter)),
       (this._directoryFilter = K(s.directoryFilter)));
-    let r = s.lstat ? j : ft;
+    let r = s.lstat ? lstat : stat;
     if (Dt) this._stat = (a) => r(a, { bigint: !0 });
     else this._stat = r;
     ((this._maxDepth = s.depth ?? N.depth),
@@ -123,7 +121,7 @@ class B extends mt {
   async _exploreDir(t, s) {
     let e;
     try {
-      e = await ut(t, this._rdOptions);
+      e = await readdir(t, this._rdOptions);
     } catch (i) {
       this._onError(i);
     }
@@ -133,7 +131,7 @@ class B extends mt {
     let e,
       i = this._isDirent ? t.name : t;
     try {
-      let r = resolve(pt(s, i));
+      let r = resolve(join(s, i));
       ((e = { path: relative(this._root, r), fullPath: r, basename: i }),
         (e[this._statsProp] = this._isDirent ? t : await this._stat(r)));
     } catch (r) {
@@ -155,12 +153,12 @@ class B extends mt {
     if (s && s.isSymbolicLink()) {
       let e = t.fullPath;
       try {
-        let i = await _t(e),
-          r = await j(i);
+        let i = await realpath(e),
+          r = await lstat(i);
         if (r.isFile()) return "file";
         if (r.isDirectory()) {
           let a = i.length;
-          if (e.startsWith(i) && e.substr(a, 1) === yt) {
+          if (e.startsWith(i) && e.substr(a, 1) === sep) {
             let n = Error(`Circular symlink detected: "${e}" points to "${i}"`);
             return ((n.code = V), this._onError(n));
           }
@@ -193,9 +191,9 @@ function q(t, s = {}) {
   return ((s.root = t), new B(s));
 }
 import { watchFile, unwatchFile, watch } from "fs";
-import { open as Q, stat as Z, lstat as Tt, realpath as W } from "fs/promises";
+import { open } from "fs/promises";
 import * as _ from "path";
-import { type as xt } from "os";
+import { type } from "os";
 var vt = "data",
   C = "end",
   tt = "close",
@@ -205,7 +203,7 @@ var A = "darwin",
   Ft = A === "darwin",
   At = A === "linux",
   St = A === "freebsd",
-  st = xt() === "OS400",
+  st = type() === "OS400",
   u = {
     ALL: "all",
     READY: "ready",
@@ -219,7 +217,7 @@ var A = "darwin",
   },
   y = u,
   Nt = "watch",
-  Wt = { lstat: Tt, stat: Z },
+  Wt = { lstat: lstat, stat: stat },
   P = "listeners",
   I = "errHandlers",
   g = "rawEmitters",
@@ -538,7 +536,7 @@ var x = (t, s, e, i, r) => {
         c.on(y.ERROR, async (h) => {
           if (v && h.code === "EPERM")
             try {
-              (await (await Q(t, "r")).close(), a(h));
+              (await (await open(t, "r")).close(), a(h));
             } catch (d) {}
           else a(h);
         }),
@@ -554,7 +552,7 @@ var x = (t, s, e, i, r) => {
         if (o) o.watcherUnusable = !0;
         if (v && h.code === "EPERM")
           try {
-            (await (await Q(t, "r")).close(), d(h));
+            (await (await open(t, "r")).close(), d(h));
           } catch (l) {}
         else d(h);
       }),
@@ -634,7 +632,7 @@ class O {
         if (!this.fsw._throttle(Nt, t, 5)) return;
         if (!d || d.mtimeMs === 0)
           try {
-            let l = await Z(t);
+            let l = await stat(t);
             if (this.fsw.closed) return;
             let { atimeMs: m, mtimeMs: w } = l;
             if (!m || m <= w || w !== n.mtimeMs) this.fsw._emit(y.CHANGE, t, l);
@@ -667,7 +665,7 @@ class O {
       this.fsw._incrReadyCount();
       let n;
       try {
-        n = await W(e);
+        n = await realpath(e);
       } catch (o) {
         return (this.fsw._emitReady(), !0);
       }
@@ -779,7 +777,7 @@ class O {
         h;
       if (o.isDirectory()) {
         let d = _.resolve(t),
-          l = c ? await W(t) : t;
+          l = c ? await realpath(t) : t;
         if (this.fsw.closed) return;
         if (
           ((h = await this._handleDir(n.watchPath, o, s, i, r, n, l)),
@@ -788,7 +786,7 @@ class O {
           return;
         if (d !== l && l !== void 0) this.fsw._symlinkPaths.set(d, l);
       } else if (o.isSymbolicLink()) {
-        let d = c ? await W(t) : t;
+        let d = c ? await realpath(t) : t;
         if (this.fsw.closed) return;
         let l = _.dirname(n.watchPath);
         if (
@@ -901,7 +899,7 @@ class lt {
     if ((s.delete(t), s.size > 0)) return;
     let e = this.path;
     try {
-      await Yt(e);
+      await readdir(e);
     } catch (i) {
       if (this._removeWatcher) this._removeWatcher(f.dirname(e), f.basename(e));
     }
@@ -1167,7 +1165,7 @@ class z extends EventEmitter {
       let o = i.cwd ? f.join(i.cwd, s) : s,
         c;
       try {
-        c = await jt(o);
+        c = await stat(o);
       } catch (h) {}
       if (!c || this.closed) return;
       r.push(c);

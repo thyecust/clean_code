@@ -193,8 +193,8 @@ function ht() {
   } catch {}
   return "rejected";
 }
-import { stat as Sn } from "fs/promises";
-import { sep as yt } from "path";
+import { stat } from "fs/promises";
+import { sep } from "path";
 var _t = 20;
 async function Tt(d, c, s, r, h) {
   if (isSessionHistorySuppressed())
@@ -356,7 +356,7 @@ async function bt(d, c, s = !0, r, h) {
 }
 async function vt(d, c = getAgentTranscriptPath(d)) {
   try {
-    let s = await Sn(c);
+    let s = await stat(c);
     return { agentId: d, path: c, size: s.size, mtimeMs: s.mtimeMs };
   } catch {
     return null;
@@ -451,9 +451,9 @@ async function bn(d, c) {
   );
 }
 function At(d) {
-  let c = getProjectsDir() + yt;
+  let c = getProjectsDir() + sep;
   if (!d.startsWith(c)) return null;
-  let s = d.slice(c.length).split(yt);
+  let s = d.slice(c.length).split(sep);
   if (s.length === 2 && s[1].endsWith(".jsonl")) {
     let r = s[0],
       h = s[1].slice(0, -6);

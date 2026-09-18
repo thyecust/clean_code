@@ -14,15 +14,15 @@ import { matchingRuleForInput } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19d
 import { validateUntrustedPath, getUntrustedPathReason, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { constants } from "fs";
-import { open as U, realpath } from "fs/promises";
-import { basename, dirname, isAbsolute, join as z } from "path";
+import { open, realpath } from "fs/promises";
+import { basename, dirname, isAbsolute, join } from "path";
 async function X(t) {
   let n = dirname(t),
     i = [basename(t)];
   for (let r = 0; r < 64; r++) {
     try {
       let s = await realpath(n);
-      return z(s, ...i);
+      return join(s, ...i);
     } catch (s) {
       if (s?.code !== "ENOENT") return;
     }
@@ -137,7 +137,7 @@ async function I(t, n) {
 async function it(t, n) {
   let i;
   try {
-    i = await U(t, Q);
+    i = await open(t, Q);
   } catch (r) {
     return r?.code === "ENOENT" ? { kind: "missing" } : { kind: "restricted" };
   }
@@ -350,7 +350,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
     F = i.totalMs;
   for (let u of f) {
     await new Promise((d) => setImmediate(d));
-    let m = z(s, u),
+    let m = join(s, u),
       y = validateUntrustedPath(m, m, n.trustedNetworkDirectories);
     if (!y.ok) {
       S.push(u);

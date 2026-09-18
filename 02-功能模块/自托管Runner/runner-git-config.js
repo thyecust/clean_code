@@ -15,7 +15,7 @@ import {
   readFile,
   writeFile,
 } from "fs/promises";
-import { join as s, resolve } from "path";
+import { join, resolve } from "path";
 import { promisify } from "util";
 var f = promisify(execFile),
   D = /^[a-zA-Z0-9_-]+$/,
@@ -45,10 +45,10 @@ async function configureGitForSigning(t) {
       `--configure-git requires git >= ${g}.${m} for SSH commit signing (found: ${e.trim()}). Upgrade git in your runner image, or omit --configure-git and manage git identity yourself`,
     );
   }
-  let o = s(t.baseDir, ".runner");
+  let o = join(t.baseDir, ".runner");
   await mkdir(o, { recursive: !0 });
-  let i = s(o, "code-sign"),
-    r = s(o, "commit_signing_key.pub"),
+  let i = join(o, "code-sign"),
+    r = join(o, "commit_signing_key.pub"),
     a = w(t.execPath);
   (await writeFile(i, a, { mode: 493 }), await chmod(i, 493), await writeFile(r, ""));
   let c = [
@@ -82,24 +82,24 @@ exec "$BIN" self-hosted-runner code-sign "$@"
 `;
 }
 function codeSignArtifacts(t, e) {
-  let n = s(t, ".runner");
+  let n = join(t, ".runner");
   return [
-    { path: s(n, "code-sign"), content: w(e), mode: 493 },
-    { path: s(n, "commit_signing_key.pub"), content: "", mode: 420 },
+    { path: join(n, "code-sign"), content: w(e), mode: 493 },
+    { path: join(n, "commit_signing_key.pub"), content: "", mode: 420 },
   ];
 }
 function configureGitGovernedEntries(t) {
-  let e = s(t, ".runner");
+  let e = join(t, ".runner");
   return [
     ["user.name", "Claude"],
     ["user.email", "noreply@anthropic.com"],
-    ["user.signingkey", s(e, "commit_signing_key.pub")],
+    ["user.signingkey", join(e, "commit_signing_key.pub")],
     ["gpg.format", "ssh"],
-    ["gpg.ssh.program", s(e, "code-sign")],
+    ["gpg.ssh.program", join(e, "code-sign")],
     ["commit.gpgsign", "true"],
     ["tag.gpgsign", "true"],
     ["push.negotiate", "true"],
-    ["core.hooksPath", s(e, "git-hooks")],
+    ["core.hooksPath", join(e, "git-hooks")],
   ];
 }
 async function readGitVersion() {
@@ -115,14 +115,14 @@ test "$1" = get || exit 0
 printf "username=unused\\npassword=%s\\n" "$CLAUDE_CODE_SESSION_ACCESS_TOKEN"
 `;
 function gitProxyCredHelperPath(t) {
-  return s(t, ".runner", "git-proxy-cred");
+  return join(t, ".runner", "git-proxy-cred");
 }
 function coauthorHookStubs(t) {
-  let e = s(t, ".runner", "git-hooks");
+  let e = join(t, ".runner", "git-hooks");
   return [
-    ...y.map((n) => ({ path: s(e, n), content: E })),
+    ...y.map((n) => ({ path: join(e, n), content: E })),
     ...["commit-msg", "prepare-commit-msg"].map((n) => ({
-      path: s(e, n),
+      path: join(e, n),
       content: C,
     })),
   ];
@@ -137,7 +137,7 @@ async function configureGitProxyCredential(t) {
       `--use-anthropic-git-proxy: apiBaseUrl is not a valid URL: ${e}`,
     );
   }
-  let o = s(t.baseDir, ".runner");
+  let o = join(t.baseDir, ".runner");
   await mkdir(o, { recursive: !0 });
   let i = gitProxyCredHelperPath(t.baseDir);
   (await writeFile(i, GIT_PROXY_CRED_HELPER_CONTENT, { mode: 448 }), await chmod(i, 448));
@@ -160,7 +160,7 @@ async function configureGitProxyCredential(t) {
   );
 }
 async function v(t, e, n) {
-  let o = s(t, "git-hooks"),
+  let o = join(t, "git-hooks"),
     i = e[0] === "--file" ? e : [],
     r = await f("git", ["config", ...i, "--get", "core.hooksPath"], {
       windowsHide: !0,
@@ -176,11 +176,11 @@ async function v(t, e, n) {
   }
   await mkdir(o, { recursive: !0 });
   for (let a of y) {
-    let c = s(o, a);
+    let c = join(o, a);
     (await writeFile(c, E, { mode: 493 }), await chmod(c, 493));
   }
   for (let a of ["commit-msg", "prepare-commit-msg"]) {
-    let c = s(o, a);
+    let c = join(o, a);
     (await writeFile(c, C, { mode: 493 }), await chmod(c, 493));
   }
   (await f("git", ["config", ...e, "--replace-all", "core.hooksPath", o], {

@@ -20,10 +20,9 @@ import { Bf } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { homedir } from "os";
-import { join as x } from "path";
+import { join } from "path";
 var SECURE_STORAGE_READ_FAILED_SENTINEL = Symbol("secureStorage.READ_FAILED");
 import { AsyncLocalStorage } from "async_hooks";
-import { join as U } from "path";
 var P = new AsyncLocalStorage(),
   R = Promise.resolve();
 async function withSecureStorageWriteLock(e) {
@@ -35,7 +34,7 @@ async function withSecureStorageWriteLock(e) {
     await t;
     let a = getSecureStorageDir();
     await getFsSurface().mkdir(a);
-    let o = await Cs(U(a, ".storage-write"), {
+    let o = await Cs(join(a, ".storage-write"), {
       realpath: !1,
       retries: { retries: 10, minTimeout: 100, maxTimeout: 1000 },
       stale: 15000,
@@ -292,11 +291,10 @@ function isKeychainLocked() {
   );
 }
 import { chmod } from "fs/promises";
-import { join as G } from "path";
 function c() {
   let e = getSecureStorageDir(),
     t = ".credentials.json";
-  return { storageDir: e, storagePath: G(e, ".credentials.json") };
+  return { storageDir: e, storagePath: join(e, ".credentials.json") };
 }
 var T = "Warning: Storing credentials in plaintext.";
 function X(e, t) {
@@ -528,8 +526,8 @@ function te() {
 }
 function re() {
   return {
-    legacyPath: x(getClaudeConfigDir(), ".config.json"),
-    configPath: x(process.env.CLAUDE_CONFIG_DIR || homedir(), `.claude${fileSuffixForOauthConfig()}.json`),
+    legacyPath: join(getClaudeConfigDir(), ".config.json"),
+    configPath: join(process.env.CLAUDE_CONFIG_DIR || homedir(), `.claude${fileSuffixForOauthConfig()}.json`),
   };
 }
 function primeWindowsCredManBackendEnabled(e) {

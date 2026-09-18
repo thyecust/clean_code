@@ -500,7 +500,7 @@ function Ot(Xn) {
 }
 F();
 import { mkdir } from "fs/promises";
-import { join as xt } from "path";
+import { join } from "path";
 var ze = `${MEMORY_LIST_TOOL_NAME} / ${MEMORY_READ_TOOL_NAME} / ${MEMORY_WRITE_TOOL_NAME}`,
   to = 80,
   Yo =
@@ -870,7 +870,7 @@ function fn(w, b, M) {
         .filter((I) => I.scope === "team")
         .map((I) => ({
           mount: I.mount,
-          dir: xt(getTeamMemoryDir(), I.mount),
+          dir: join(getTeamMemoryDir(), I.mount),
           description:
             W !== void 0 && normalizeStorePath(I.path) === normalizeStorePath(W.path)
               ? I.mode === "rw" && getGrantedStoreMode(I.path) === "rw" && canWriteOrgMemory()
@@ -936,8 +936,8 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                     : "signed out \u2014 next session decides fresh",
               }
             : null,
-    mt = xt(getClaudeConfigDir(), "CLAUDE.md"),
-    Ke = xt(R, "CLAUDE.md"),
+    mt = join(getClaudeConfigDir(), "CLAUDE.md"),
+    Ke = join(R, "CLAUDE.md"),
     ho = B.some((S) => S.path === mt),
     yo = B.some((S) => S.path === Ke),
     wo = [

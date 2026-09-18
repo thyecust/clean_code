@@ -37,41 +37,38 @@ import {
 } from "fs";
 import {
   appendFile,
-  mkdir as ce,
-  unlink as N,
-  writeFile as ae,
+  mkdir,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { createServer } from "net";
 import { getPriority, setPriority } from "os";
 import { dirname } from "path";
 import {
-  link as j,
-  mkdir as q,
-  stat as Y,
-  unlink as J,
-  writeFile as ee,
+  link,
+  stat,
 } from "fs/promises";
-import { join as v, sep as te } from "path";
+import { join, sep } from "path";
 async function ne() {
-  let r = v(getXdgDataHome(), "claude");
-  if (!process.execPath.startsWith(v(r, "versions") + te)) return null;
-  let n = v(r, "ClaudeCode.app", "Contents", "MacOS"),
-    t = v(n, "claude");
+  let r = join(getXdgDataHome(), "claude");
+  if (!process.execPath.startsWith(join(r, "versions") + sep)) return null;
+  let n = join(r, "ClaudeCode.app", "Contents", "MacOS"),
+    t = join(n, "claude");
   try {
-    let o = (await Y(process.execPath)).ino;
-    (await q(n, { recursive: !0 }),
-      await ee(
-        v(n, "..", "Info.plist"),
+    let o = (await stat(process.execPath)).ino;
+    (await mkdir(n, { recursive: !0 }),
+      await writeFile(
+        join(n, "..", "Info.plist"),
         `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict><key>CFBundleIdentifier</key><string>com.anthropic.claude-code</string><key>CFBundleName</key><string>Claude Code</string><key>CFBundleDisplayName</key><string>Claude Code</string><key>CFBundleExecutable</key><string>claude</string><key>CFBundlePackageType</key><string>APPL</string><key>LSUIElement</key><true/><key>NSMicrophoneUsageDescription</key><string>Claude Code uses the microphone for voice dictation.</string><key>NSAppleEventsUsageDescription</key><string>Claude Code needs to send Apple Events to open URLs and control applications you authorize.</string><key>NSLocalNetworkUsageDescription</key><string>Claude Code connects to servers and devices on your local network when commands you run need to reach them.</string></dict></plist>
 `,
       ));
     try {
-      if ((await Y(t)).ino === o) return t;
-      await J(t);
+      if ((await stat(t)).ino === o) return t;
+      await unlink(t);
     } catch {}
-    return (await j(process.execPath, t), t);
+    return (await link(process.execPath, t), t);
   } catch {
     return null;
   }
@@ -122,7 +119,7 @@ async function runPtyHost(r) {
     else if (!A) await X(o, "tokens-file unreadable; DATA gate fail-open");
     if (c)
       (delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH,
-        await N(x).catch(() => {}));
+        await unlink(x).catch(() => {}));
   }
   if (getCurrentPlatform() !== "windows")
     try {
@@ -213,7 +210,7 @@ async function runPtyHost(r) {
         return;
     }
   }
-  await N(o).catch(() => {});
+  await unlink(o).catch(() => {});
   let C = createServer((e) => {
     (e.on("error", () => e.destroy()),
       e.once("close", () => p.delete(e)),
@@ -393,7 +390,7 @@ async function runPtyHost(r) {
     } catch {}
   }
   if ((K(encodeControlFrame({ t: "exit", code: T, signal: U })), p.size === 0))
-    await pe(C, c ? () => ae(getPtyLateOutputPath(o), Buffer.concat(B.chunks)) : void 0);
+    await pe(C, c ? () => writeFile(getPtyLateOutputPath(o), Buffer.concat(B.chunks)) : void 0);
   for (let e of p) e.end();
   if (
     (await Promise.race([
@@ -402,7 +399,7 @@ async function runPtyHost(r) {
     ]),
     getCurrentPlatform() !== "windows")
   )
-    await N(o).catch(() => {});
+    await unlink(o).catch(() => {});
   process.exit(T);
 }
 async function pe(r, n, t = 5000) {
@@ -478,7 +475,7 @@ function ye(r, n, t) {
 async function X(r, n) {
   try {
     let t = getPtyHostStderrPath(r);
-    (await ce(dirname(t), { recursive: !0 }),
+    (await mkdir(dirname(t), { recursive: !0 }),
       await appendFile(
         t,
         `${new Date().toISOString()} ${n}

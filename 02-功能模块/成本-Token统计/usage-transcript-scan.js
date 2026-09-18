@@ -60,8 +60,8 @@ function getUsagePatternsAccess() {
 function getSkillTokenCountsAccess() {
   return j(Re);
 }
-import { readdir, stat as be } from "fs/promises";
-import { extname, join as N } from "path";
+import { readdir, stat } from "fs/promises";
+import { extname, join } from "path";
 var D = 4,
   te = 4194304,
   ye = te,
@@ -246,7 +246,7 @@ async function ue(e, t, o, s, r) {
     if (Rt(u)) return;
     throw u;
   }
-  let f = (await Promise.all(c.map((u) => In(N(i, u))))).flat(),
+  let f = (await Promise.all(c.map((u) => In(join(i, u))))).flat(),
     m = de(t, s);
   for (let u = 0; u < f.length; u += D) {
     let g = f.slice(u, u + D),
@@ -459,15 +459,15 @@ async function In(e) {
   let o = [],
     s = [];
   for (let i of t)
-    if (i.isFile() && extname(i.name) === ".jsonl") o.push(N(e, i.name));
+    if (i.isFile() && extname(i.name) === ".jsonl") o.push(join(e, i.name));
     else if (i.isDirectory()) s.push(i.name);
   let r = await Promise.all(
     s.map(async (i) => {
-      let c = N(e, i, "subagents");
+      let c = join(e, i, "subagents");
       try {
         return (await readdir(c, { recursive: !0 }))
           .filter((f) => extname(f) === ".jsonl")
-          .map((f) => N(c, f));
+          .map((f) => join(c, f));
       } catch (a) {
         if (Rt(a)) return [];
         throw a;
@@ -484,7 +484,7 @@ async function vn(e, t, o) {
 async function Nn(e, t, o) {
   let s;
   try {
-    s = await be(e);
+    s = await stat(e);
   } catch (r) {
     if (Rt(r)) return;
     throw r;

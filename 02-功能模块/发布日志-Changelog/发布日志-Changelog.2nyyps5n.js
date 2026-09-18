@@ -22,14 +22,14 @@ import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/e
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var c = toESM(pg(), 1);
-import { dirname, join as b } from "path";
+import { dirname, join } from "path";
 var CHANGELOG_GITHUB_URL = "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
   CHANGELOG_DOCS_URL = "https://code.claude.com/docs/en/changelog",
   CHANGELOG_DOCS_URL_LABEL = CHANGELOG_DOCS_URL.replace(/^https:\/\//, ""),
   y =
     "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md";
 function u() {
-  return b(getClaudeConfigDir(), "cache", "changelog.md");
+  return join(getClaudeConfigDir(), "cache", "changelog.md");
 }
 function p() {
   return STORAGE_KEYS.cache("changelog", "changelog.md");

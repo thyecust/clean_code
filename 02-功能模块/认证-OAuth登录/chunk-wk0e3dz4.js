@@ -164,11 +164,11 @@ import {
   basename,
   dirname,
   isAbsolute,
-  join as u,
+  join,
   parse,
   relative,
   resolve,
-  sep as H,
+  sep,
 } from "path";
 function parseAccountOnHoldApiError(e) {
   if (
@@ -315,7 +315,7 @@ function getProfileBaseUrl() {
         e === "profile-explicit"
           ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
           : getActiveProfileName(r),
-      o = g(u(r, "configs", `${t}.json`));
+      o = g(join(r, "configs", `${t}.json`));
     if (o === null) return;
     let s = JSON.parse(o);
     return typeof s.base_url === "string" && s.base_url.trim()
@@ -346,8 +346,8 @@ function _e() {
     let t = resolve(e);
     r = N(t)
       ? {
-          dirs: [u(t, "configs"), u(t, "credentials")],
-          files: [u(t, "active_config")],
+          dirs: [join(t, "configs"), join(t, "credentials")],
+          files: [join(t, "active_config")],
         }
       : { dirs: [t], files: [] };
     let s = process.env.ANTHROPIC_PROFILE?.trim() || getActiveProfileName(e),
@@ -355,7 +355,7 @@ function _e() {
     if (typeof i !== "string" || !i.trim()) return { value: r, complete: !0 };
     let f = dedupe(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
       (p) =>
-        !r.dirs.some((y) => p === y || p.startsWith(y + H)) &&
+        !r.dirs.some((y) => p === y || p.startsWith(y + sep)) &&
         !r.files.includes(p) &&
         !N(p),
     );
@@ -374,10 +374,10 @@ function _e() {
   }
 }
 function getActiveProfileName(e) {
-  return g(u(e, "active_config"))?.trim() || "default";
+  return g(join(e, "active_config"))?.trim() || "default";
 }
 function O(e, r) {
-  let t = g(u(e, "configs", `${r}.json`));
+  let t = g(join(e, "configs", `${r}.json`));
   if (t === null) return null;
   let o;
   try {
@@ -393,14 +393,14 @@ function O(e, r) {
 }
 function I(e, r, t) {
   if (t === void 0) {
-    let o = g(u(e, "configs", `${r}.json`));
+    let o = g(join(e, "configs", `${r}.json`));
     if (o !== null)
       try {
         t = JSON.parse(o);
       } catch {}
   }
   return (
-    t?.authentication?.credentials_path ?? u(e, "credentials", `${r}.json`)
+    t?.authentication?.credentials_path ?? join(e, "credentials", `${r}.json`)
   );
 }
 function getAnthropicConfigDir() {
@@ -411,9 +411,9 @@ function G() {
     r = e.ANTHROPIC_CONFIG_DIR?.trim();
   if (r) return { dir: r, space: "userNamed" };
   let t = e.XDG_CONFIG_HOME?.trim();
-  if (t) return { dir: u(t, "anthropic"), space: "home" };
+  if (t) return { dir: join(t, "anthropic"), space: "home" };
   let o = e.HOME?.trim();
-  return o ? { dir: u(o, ".config", "anthropic"), space: "home" } : null;
+  return o ? { dir: join(o, ".config", "anthropic"), space: "home" } : null;
 }
 function V() {
   return process.env.ANTHROPIC_PROFILE?.trim();
@@ -425,7 +425,7 @@ function N(e) {
   let r = U(e);
   if (r === parse(r).root) return !0;
   let t = relative(r, U(getFsSurface().cwd())),
-    o = t.split(H)[0];
+    o = t.split(sep)[0];
   return t === "" || (o !== ".." && !isAbsolute(t));
 }
 function U(e) {
@@ -433,15 +433,15 @@ function U(e) {
     t = "";
   for (;;)
     try {
-      r = u(realpathSync.native(r), t);
+      r = join(realpathSync.native(r), t);
       break;
     } catch {
       let o = dirname(r);
       if (o === r) {
-        r = u(r, t);
+        r = join(r, t);
         break;
       }
-      ((t = t ? u(basename(r), t) : basename(r)), (r = o));
+      ((t = t ? join(basename(r), t) : basename(r)), (r = o));
     }
   return r.toLowerCase();
 }
@@ -490,8 +490,8 @@ async function primeProfileReadAhead(e) {
     },
     p = V();
   if (!p && q()) return;
-  let y = p || (await f(u(o, "active_config")))?.trim() || "default";
-  (await f(u(o, "configs", `${y}.json`)), (r.primedFiles = i));
+  let y = p || (await f(join(o, "active_config")))?.trim() || "default";
+  (await f(join(o, "configs", `${y}.json`)), (r.primedFiles = i));
   try {
     (getAuthPrecedenceSource(), getProfileAuthType());
   } catch (x) {

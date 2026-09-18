@@ -14,11 +14,11 @@ import { jsonStringify, getFsSurface } from "../../01-核心基础设施/核心�
 import { getSecureStorageDir } from "./keychain-access.js";
 import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/核心工具-其他/max-credential-file-bytes.js";
 import { constants } from "fs";
-import { lstat, mkdir, open as p } from "fs/promises";
-import { basename, dirname, isAbsolute, join as _ } from "path";
+import { lstat, mkdir, open } from "fs/promises";
+import { basename, dirname, isAbsolute, join } from "path";
 function f() {
   let e = getSecureStorageDir();
-  return { storeDir: e, storePath: _(e, ".credentials.json") };
+  return { storeDir: e, storePath: join(e, ".credentials.json") };
 }
 var k = constants.O_NONBLOCK,
   c = 1048576;
@@ -26,7 +26,7 @@ async function N(e) {
   try {
     return {
       kind: "open",
-      fileHandle: await p(e, constants.O_RDONLY | constants.O_NOFOLLOW | k),
+      fileHandle: await open(e, constants.O_RDONLY | constants.O_NOFOLLOW | k),
     };
   } catch (r) {
     let n = A(r);
@@ -37,7 +37,7 @@ async function N(e) {
 async function D(e, r) {
   let n = constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC;
   try {
-    return { kind: "open", fileHandle: await p(e, n | constants.O_NOFOLLOW, r) };
+    return { kind: "open", fileHandle: await open(e, n | constants.O_NOFOLLOW, r) };
   } catch (t) {
     let a = A(t);
     if (a === "ELOOP") return { kind: "refused-symlink" };
@@ -146,7 +146,7 @@ var y = {
     let n;
     if (r === "follow")
       try {
-        n = await p(e, constants.O_RDONLY | k);
+        n = await open(e, constants.O_RDONLY | k);
       } catch (t) {
         return m(A(t));
       }

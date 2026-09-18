@@ -5918,10 +5918,10 @@ var otelResourcesModule = commonJS(function (Mt) {
   });
 });
 var Cc = toESM(fetchHttpHandlerModule(), 1);
-import { exec as B0, execFile } from "child_process";
-import { createHash as tfe } from "crypto";
-import { readFile as nfe, realpath, stat as Km } from "fs/promises";
-import { dirname as ofe, join as jm, resolve as O0 } from "path";
+import { exec, execFile } from "child_process";
+import { createHash } from "crypto";
+import { readFile, realpath, stat } from "fs/promises";
+import { dirname, join, resolve } from "path";
 var CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE = "Cloud gateway session expired \u2014 run /login to reconnect.";
 function Pc() {
   return parseRegionName(a.AWS_REGION) || parseRegionName(a.AWS_DEFAULT_REGION);
@@ -6844,16 +6844,14 @@ function getUsageLimitGraceMock() {
 function setProTrialOverride(e) {
   return;
 }
-import { randomBytes as bm, randomUUID as Rde } from "crypto";
-import { readFileSync as SB, unwatchFile } from "fs";
-import { homedir as TB } from "os";
-import { basename as lc, dirname as Ql, join as Ve, resolve as lt } from "path";
-import { homedir as pde } from "os";
+import { randomBytes, randomUUID } from "crypto";
+import { readFileSync, unwatchFile } from "fs";
+import { homedir } from "os";
+import { basename } from "path";
 import {
   isAbsolute,
-  join as jl,
   normalize,
-  sep as Yl,
+  sep,
 } from "path";
 var d_ = {
   fetch: globalThis.fetch ? globalThis.fetch.bind(globalThis) : void 0,
@@ -10716,7 +10714,6 @@ class OtelBatchLogRecordProcessor extends Zd {
   onShutdown() {}
 }
 var Kl = toESM(otelSemanticConventionsModule(), 1);
-import { randomUUID as YF } from "crypto";
 var ep = toESM(otelCoreModule(), 1);
 var TELEMETRY_LOG_PREFIX = "[Anthropic telemetry]";
 class TelemetryExportFailureReporter {
@@ -10788,13 +10785,12 @@ function shouldSuppressFeedbackSurvey() {
   return isNonessentialTrafficRestricted();
 }
 var Bn = toESM(otelCoreModule(), 1);
-import { createHash as xue, randomUUID as Nue } from "crypto";
 import {
   appendFile,
-  mkdir as GF,
-  readdir as VF,
-  unlink as KF,
-  writeFile as Uue,
+  mkdir,
+  readdir,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import * as xi from "path";
 function f7() {
@@ -12092,7 +12088,6 @@ function getModelBucketForAnalytics(e) {
     .replaceAll("-", "_");
   return /^[a-z0-9_]{1,40}$/.test(t) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(t) : S("nonconforming");
 }
-import { randomUUID as zx } from "crypto";
 var xx = 200,
   Nx = Date.now() - process.uptime() * 1000;
 class Lx {
@@ -12301,12 +12296,12 @@ class Fx {
   drain() {
     let e = this.currentQueueOrNull();
     if (!e || e.length === 0) return [];
-    return e.splice(0).map((r) => ({ ...r, uuid: zx(), session_id: K() }));
+    return e.splice(0).map((r) => ({ ...r, uuid: randomUUID(), session_id: K() }));
   }
   drainForSession(e) {
     let t = this.queuesByKey.get(e);
     if (!t || t.length === 0) return [];
-    return t.splice(0).map((r) => ({ ...r, uuid: zx(), session_id: e }));
+    return t.splice(0).map((r) => ({ ...r, uuid: randomUUID(), session_id: e }));
   }
 }
 var dee = new j(() => new Fx());
@@ -13166,9 +13161,6 @@ function Pee(e) {
   let o = getGlobalConfig().additionalModelCostsCache;
   return (o ? (getOwnValue(o, e) ?? getOwnValue(o, t)) : void 0) || void 0;
 }
-import { readFileSync as Rne } from "fs";
-import { mkdir as SN, writeFile as Cne } from "fs/promises";
-import { join as bN } from "path";
 var SESSION_ID_HEADER_NAME = "X-Claude-Code-Session-Id";
 class InvalidRequestHeaderValueError extends R {
   header;
@@ -13310,7 +13302,6 @@ function Un(e) {
 function mp(e) {
   return e === 1 ? "1 character" : `${e} characters`;
 }
-import { homedir as Fee } from "os";
 var xee =
   /hooks\.slack\.com\/(?:services|workflows|triggers)\/[A-Za-z0-9/_-]+/gi;
 var _p = {
@@ -13406,7 +13397,7 @@ function Bee(e) {
   let t = e,
     r = "";
   try {
-    r = Fee();
+    r = homedir();
   } catch {}
   if (r) t = t.replaceAll(r + "/", "~/").replaceAll(r + "\\", "~\\");
   let o = (d, p) => /https?:\/\/[^\s'",;|()]*$/i.test(d.slice(0, p));
@@ -13866,10 +13857,10 @@ function Pp() {
   return !0;
 }
 function Op() {
-  return bN(getClaudeConfigDir(), "cache");
+  return join(getClaudeConfigDir(), "cache");
 }
 function Mp() {
-  return bN(Op(), "gateway-models.json");
+  return join(Op(), "gateway-models.json");
 }
 function wp() {
   return STORAGE_KEYS.cache("gateway-models", "gateway-models.json");
@@ -13887,7 +13878,7 @@ function yN(e, t = getProviderState().gatewayModelsStorageV5) {
   if (t) return null;
   let o;
   try {
-    let d = Rne(e, "utf-8");
+    let d = readFileSync(e, "utf-8");
     o = Ka(d);
   } catch {
     o = null;
@@ -14028,7 +14019,7 @@ async function fetchAndCacheGatewayModels(e) {
       if (re && re.baseUrl === t && Qs(re.models, U)) return;
       let ce = jsonStringify({ baseUrl: t, fetchedAt: Date.now(), models: U });
       try {
-        await SN(Op(), { recursive: !0 });
+        await mkdir(Op(), { recursive: !0 });
       } catch (Be) {
         logForDebugging(
           `[gatewayDiscovery] cache folder could not be made: ${Be instanceof Error ? Be.message : "unknown"}`,
@@ -14048,8 +14039,8 @@ async function fetchAndCacheGatewayModels(e) {
     }
     let V = yN(F);
     if (V && V.baseUrl === t && Qs(V.models, U)) return;
-    (await SN(Op(), { recursive: !0 }),
-      await Cne(F, jsonStringify({ baseUrl: t, fetchedAt: Date.now(), models: U }), {
+    (await mkdir(Op(), { recursive: !0 }),
+      await writeFile(F, jsonStringify({ baseUrl: t, fetchedAt: Date.now(), models: U }), {
         encoding: "utf-8",
         mode: 384,
       }),
@@ -16528,9 +16519,6 @@ function kre(e, t) {
 function strip1mTag(e) {
   return e.replace(/\[1m\]/gi, "");
 }
-import { readFileSync as wre } from "fs";
-import { mkdir as HL, writeFile as Pre } from "fs/promises";
-import { join as GL } from "path";
 var VL = createLazyValue(() =>
     c({
       id: s(),
@@ -16544,10 +16532,10 @@ function parseModelCapabilitiesEntry(e) {
   return t.success ? t.data : void 0;
 }
 function $p() {
-  return GL(getClaudeConfigDir(), "cache");
+  return join(getClaudeConfigDir(), "cache");
 }
 function qp() {
-  return GL($p(), "model-capabilities.json");
+  return join($p(), "model-capabilities.json");
 }
 function Yp() {
   return STORAGE_KEYS.cache("model-capabilities", "model-capabilities.json");
@@ -16573,7 +16561,7 @@ function KL(e, t = getProviderState().modelCapabilitiesStorageV5) {
   if (t) return null;
   let o;
   try {
-    let d = wre(e, "utf-8");
+    let d = readFileSync(e, "utf-8");
     o = al(d);
   } catch {
     o = null;
@@ -16624,7 +16612,7 @@ async function writeModelCapabilitiesCache(e, t) {
     }
     let _ = jsonStringify({ models: o, timestamp: Date.now() });
     try {
-      await HL($p(), { recursive: !0 });
+      await mkdir($p(), { recursive: !0 });
     } catch (C) {
       logForDebugging(
         `[modelCapabilities] cache folder could not be made: ${C instanceof Error ? C.message : "unknown"}`,
@@ -16643,8 +16631,8 @@ async function writeModelCapabilitiesCache(e, t) {
     logForDebugging("[modelCapabilities] cache unchanged, skipping write");
     return;
   }
-  (await HL($p(), { recursive: !0 }),
-    await Pre(r, jsonStringify({ models: o, timestamp: Date.now() }), {
+  (await mkdir($p(), { recursive: !0 }),
+    await writeFile(r, jsonStringify({ models: o, timestamp: Date.now() }), {
       encoding: "utf-8",
       mode: 384,
     }),
@@ -17518,7 +17506,6 @@ function filterSupportedBetas(e) {
   if (ks()) return e;
   return e.filter((t) => ZL.has(t));
 }
-import { join as Qp } from "path";
 var MASKED_IDS_FILE_NAME = "masked-ids.json",
   nU = 512,
   Xre = 64,
@@ -17530,13 +17517,13 @@ var MASKED_IDS_FILE_NAME = "masked-ids.json",
   Qre = 3,
   Zre = createLazyValue(() => c({ version: k(oU), ids: v(se()) }));
 function getModelCatalogCacheDir() {
-  return Qp(getClaudeConfigDir(), "cache", "model-catalog");
+  return join(getClaudeConfigDir(), "cache", "model-catalog");
 }
 function sU() {
-  return Qp(getModelCatalogCacheDir(), MASKED_IDS_FILE_NAME);
+  return join(getModelCatalogCacheDir(), MASKED_IDS_FILE_NAME);
 }
 function eoe() {
-  return Qp(getModelCatalogCacheDir(), iU);
+  return join(getModelCatalogCacheDir(), iU);
 }
 function isServedCatalogMaskHydrated(e = Date.now()) {
   let t = getProviderState();
@@ -17684,12 +17671,10 @@ async function roe(e) {
     logForDebugging(`[servedCatalog] mask file quarantine failed: ${A(t) ?? "unknown"}`);
   }
 }
-import { createHash as ooe } from "crypto";
 function hashForTelemetry(e) {
-  return fromSanitizer_SANITIZER_OUTPUT_ONLY(ooe("sha256").update(e).digest("hex").slice(0, 12));
+  return fromSanitizer_SANITIZER_OUTPUT_ONLY(createHash("sha256").update(e).digest("hex").slice(0, 12));
 }
-import { createHash as Rle } from "crypto";
-import { Readable as aoe } from "stream";
+import { Readable } from "stream";
 var ioe = "Invalid SemVer: <redacted>";
 function ul(e, t) {
   try {
@@ -17775,7 +17760,7 @@ function DU(e, t = {}) {
   let _ = createStallWatchdog(d, r),
     E = 0;
   return {
-    body: aoe.from(
+    body: Readable.from(
       iterateUploadChunks(e, (C) => {
         if (((E = C), C === e.length)) _.relax(o);
         else _.touch();
@@ -17793,16 +17778,13 @@ function DU(e, t = {}) {
     }),
   };
 }
-import { Readable as Cle } from "stream";
-import { createHash as gle } from "crypto";
-import { randomUUID as coe } from "crypto";
 async function signClientEvent(e, t, r) {
   let o = await e?.catch(() => {
     return;
   });
   if (o === void 0) return { payload: r };
   try {
-    let d = uoe({ ...r, uuid: r.uuid || coe() });
+    let d = uoe({ ...r, uuid: r.uuid || randomUUID() });
     if ([t, d.uuid, d.type].some((_) => _.includes("\x00")))
       return { payload: r };
     let p = o.sign(t, d);
@@ -23699,7 +23681,6 @@ var Gwe = createLazyValue(() => [
       "Everything a client may write to the CLI's input stream (stdin in stream-json input mode): exactly one StdinMessage per line, as a single JSON object - user messages that start turns, control requests the client originates, control responses answering the CLI's requests, cancellations and keep-alives. initialize is optional and normally the first line; the first user message initializes with defaults. An initialize that arrives later (e.g. from a client joining the session) is answered with the current state: the one-time session setup (e.g. system prompt, agents, skills, supportedDialogKinds) is not re-applied, but title, sdkMcpServers and agentProgressSummaries are still processed on every initialize, and hooks sent by the process that owns this stream replace the earlier set (see hooks_applied on the response). Closing the stream tells the CLI to finish the current turn and exit.",
     ),
   );
-import { randomUUID as Al } from "crypto";
 function tryHandleFrame(e, t, r) {
   try {
     return (e(t), !0);
@@ -23854,7 +23835,7 @@ function sessionsApiBearerFingerprint() {
   let e = getClaudeAIOAuthTokens()?.accessToken;
   return e === void 0
     ? void 0
-    : gle("sha256").update(e).digest("hex").slice(0, 24);
+    : createHash("sha256").update(e).digest("hex").slice(0, 24);
 }
 async function primeSessionsApiBearer({ refresh: e, credentials: t }) {
   if (!isFirstPartyProvider()) return;
@@ -24056,7 +24037,7 @@ async function sendEventToRemoteSession(e, t, r) {
   return yl(
     e,
     {
-      uuid: r?.uuid ?? Al(),
+      uuid: r?.uuid ?? randomUUID(),
       session_id: e,
       type: "user",
       parent_tool_use_id: null,
@@ -24070,7 +24051,7 @@ async function sendEventToRemoteSession(e, t, r) {
 async function sendControlRequestToRemoteSession(e, t, r) {
   return yl(
     e,
-    { uuid: Al(), ...t },
+    { uuid: randomUUID(), ...t },
     "[sendControlRequestToRemoteSession]",
     r?.eventSigner,
   );
@@ -24078,7 +24059,7 @@ async function sendControlRequestToRemoteSession(e, t, r) {
 async function sendControlResponseToRemoteSession(e, t, r) {
   return yl(
     e,
-    { uuid: Al(), ...buildSuccessControlResponse(t, r) },
+    { uuid: randomUUID(), ...buildSuccessControlResponse(t, r) },
     "[sendControlResponseToRemoteSession]",
   );
 }
@@ -24086,7 +24067,7 @@ async function sendBashCommandToRemoteSession(e, t, r) {
   return yl(
     e,
     {
-      uuid: r?.uuid ?? Al(),
+      uuid: r?.uuid ?? randomUUID(),
       session_id: e,
       type: "bash_command",
       command: t.command,
@@ -24373,7 +24354,7 @@ function Oz(e) {
   }
 }
 function hashSha256Hex(e) {
-  return Rle("sha256").update(e).digest("hex");
+  return createHash("sha256").update(e).digest("hex");
 }
 function getClaudeAiTokenFingerprint() {
   let e = getClaudeAIOAuthTokens(),
@@ -24589,7 +24570,7 @@ function Nle(e) {
   return ArrayBuffer.isView(e);
 }
 function vl(e) {
-  if (e instanceof Cle) e.destroy();
+  if (e instanceof Readable) e.destroy();
 }
 async function wz(e, t, r) {
   if (await handleOAuth401Error(e, t, r)) return "retry";
@@ -24865,7 +24846,6 @@ var Hz = [
   "release_full_control",
   "request_full_control",
 ];
-import { createHash as Gle } from "crypto";
 function isXaaEnabled() {
   return a.CLAUDE_CODE_ENABLE_XAA;
 }
@@ -24919,7 +24899,7 @@ async function Wle(e, t) {
 }
 function getMcpOAuthCredentialKey(e, t) {
   let r = jsonStringify({ type: t.type, url: t.url, headers: t.headers || {} }),
-    o = Gle("sha256").update(r).digest("hex").substring(0, 16);
+    o = createHash("sha256").update(r).digest("hex").substring(0, 16);
   return `${e}|${o}`;
 }
 function hasAuthorizationHeader(e) {
@@ -25141,26 +25121,17 @@ var POWERSHELL_TOOL_NAME = "PowerShell";
 import { statSync, unlinkSync } from "fs";
 import {
   chmod,
-  lstat as Zce,
-  mkdir as eue,
-  readdir as RF,
-  readFile as tue,
-  unlink as wi,
-  writeFile as rm,
+  lstat,
 } from "fs/promises";
-import { homedir as bF } from "os";
-import { basename as nue, join as It, sep as rue } from "path";
-import { basename as uce, join as Jz } from "path";
 function getJobsDir() {
-  return Jz(getClaudeConfigDir(), "jobs");
+  return join(getClaudeConfigDir(), "jobs");
 }
 function getJobStorageKey(e, t) {
-  let r = uce(e);
-  if (!isValidPathSegment(r) || e !== Jz(getJobsDir(), r)) return;
+  let r = basename(e);
+  if (!isValidPathSegment(r) || e !== join(getJobsDir(), r)) return;
   return STORAGE_KEYS.job(r, t);
 }
 var maxSlugLength = 200;
-import { basename as wce } from "path";
 function buildAgentId(e, t) {
   return `${e}@${t}`;
 }
@@ -25171,7 +25142,6 @@ function createRequestId(e, t) {
   let r = Date.now();
   return `${e}-${r}@${t}`;
 }
-import { basename as bce, dirname as Wg, resolve as Tr } from "path";
 import { createHmac } from "crypto";
 var pce = /[^\p{L}\p{N}._-]+/gu,
   fce = /^[._-]+|[._-]+$/gu,
@@ -25390,9 +25360,9 @@ function aF(e, t) {
   }
   if (e === t) return "same";
   if (my(e) || my(t))
-    return Cl(Ci(Tr(e))) === Cl(Ci(Tr(t))) ? "maybe" : "different";
-  let d = Ci(Tr(e)),
-    p = Ci(Tr(t));
+    return Cl(Ci(resolve(e))) === Cl(Ci(resolve(t))) ? "maybe" : "different";
+  let d = Ci(resolve(e)),
+    p = Ci(resolve(t));
   if (d === p) return "same";
   let _ = getCurrentPlatform(),
     E = _ === "macos" || _ === "windows";
@@ -25444,7 +25414,7 @@ function isTrustedPeerSocket(e, t, r) {
     return o !== void 0 && kce.test(o);
   }
   if (my(e)) return !1;
-  if (Wg(Tr(e)) === Wg(Tr(t))) return e.endsWith(".sock");
+  if (dirname(resolve(e)) === dirname(resolve(t))) return e.endsWith(".sock");
   return (
     r?.verifiedPeerPid !== void 0 &&
     r.ownerUids !== void 0 &&
@@ -25459,9 +25429,9 @@ var Jg = "reply_across_default_dirs",
     /^\/data\/data\/com\.termux\/files\/usr\/tmp\/cc-socks(?:-(0|[1-9]\d*))?$/,
   ];
 function lF(e, t) {
-  let r = Tr(e);
-  if (!/^(\d+(-[0-9a-f]{8})?|[0-9a-f]{1,16})\.sock$/.test(bce(r))) return !1;
-  let o = Wg(r);
+  let r = resolve(e);
+  if (!/^(\d+(-[0-9a-f]{8})?|[0-9a-f]{1,16})\.sock$/.test(basename(r))) return !1;
+  let o = dirname(r);
   for (let d of Oce) {
     let p = d.exec(o);
     if (p) return p[1] === void 0 || t.some((_) => String(_) === p[1]);
@@ -25576,7 +25546,7 @@ function buildRecipientListing(e, t) {
   }
   for (let L of t.sessions)
     r.push({
-      name: L.name || wce(L.cwd),
+      name: L.name || basename(L.cwd),
       id: L.sock,
       kind: "session",
       where: "this-machine",
@@ -25790,18 +25760,15 @@ function isCloudSessionKnownLocally(e, t) {
     (o) => o.bridgeSessionId !== void 0 && sessionIdBody(o.bridgeSessionId) === r,
   );
 }
-import { randomBytes as Dce } from "crypto";
-import { basename as xce } from "path";
 function pF(e) {
-  return `${slugifyText(xce(e)) || "claude"}-${Dce(1).toString("hex")}`;
+  return `${slugifyText(basename(e)) || "claude"}-${randomBytes(1).toString("hex")}`;
 }
-import { readFileSync as Nce, lstatSync } from "fs";
-import { lstat as Uce, readFile as zce } from "fs/promises";
+import { lstatSync } from "fs";
 async function readBoundedFile(e, t) {
   try {
-    let r = await Uce(e);
+    let r = await lstat(e);
     if (!r.isFile() || r.size > t) return null;
-    return await zce(e, "utf8");
+    return await readFile(e, "utf8");
   } catch {
     return null;
   }
@@ -25810,7 +25777,7 @@ function readBoundedFileSync(e, t) {
   try {
     let r = lstatSync(e);
     if (!r.isFile() || r.size > t) return null;
-    return Nce(e, "utf8");
+    return readFileSync(e, "utf8");
   } catch {
     return null;
   }
@@ -25825,9 +25792,6 @@ function readBoundedFileWithFsSync(e, t, r) {
   if (!o.isFile() || o.size > r) return null;
   return e.readFileSync(t, { encoding: "utf8" });
 }
-import { createHash as Fce, randomBytes as fF } from "crypto";
-import { mkdir as Bce, readdir as gF, unlink as em } from "fs/promises";
-import { basename as Hce, join as go, resolve as Gce } from "path";
 async function Il(e, t) {
   let r = [],
     o;
@@ -25880,23 +25844,23 @@ function isWindowsPlatform() {
 }
 function createSessionTokens() {
   return {
-    peerToken: fF(Zg).toString("hex"),
-    childToken: fF(Zg).toString("hex"),
+    peerToken: randomBytes(Zg).toString("hex"),
+    childToken: randomBytes(Zg).toString("hex"),
   };
 }
 var TORN_RECORD_REREAD_DELAY_MS = 25;
 function getSessionsDir() {
-  return go(getClaudeConfigDir(), "sessions");
+  return join(getClaudeConfigDir(), "sessions");
 }
 function getCanonicalSocketPath(e) {
   let t = parseWindowsPipeName(e);
   if (t !== void 0) return `\\\\.\\pipe\\${kl(t)}`;
   if (my(e)) return;
-  return Gce(e);
+  return resolve(e);
 }
 function hF(e) {
   let t = getCanonicalSocketPath(e);
-  return t === void 0 ? void 0 : Fce("sha256").update(t).digest("hex");
+  return t === void 0 ? void 0 : createHash("sha256").update(t).digest("hex");
 }
 function EF(e, t) {
   let r = hF(t);
@@ -25909,10 +25873,10 @@ function EF(e, t) {
 async function publishMessagingKey(e, t, r, { sweepPermitted: o }) {
   if (isHoverRestEnabled() && r !== void 0) return jce(r, e, t);
   let d = getSessionsDir();
-  (await Bce(d, { recursive: !0, mode: 448 }), await Wce(d, o));
-  let p = go(d, EF(process.pid, e));
+  (await mkdir(d, { recursive: !0, mode: 448 }), await Wce(d, o));
+  let p = join(d, EF(process.pid, e));
   try {
-    await em(p);
+    await unlink(p);
   } catch {}
   return (
     await writeFileAtomic(
@@ -25944,7 +25908,7 @@ async function jce(e, t, r) {
       logForDebugging(`[uds-auth] key publish failed: ${describeStorageError(p.error)}`),
       Error("messaging key could not be published through storage")
     );
-  return go(getSessionsDir(), o);
+  return join(getSessionsDir(), o);
 }
 async function ki(e) {
   try {
@@ -25960,7 +25924,7 @@ async function Wce(e, t) {
   if (!t) return;
   let r;
   try {
-    r = await gF(e);
+    r = await readdir(e);
   } catch {
     return;
   }
@@ -25969,10 +25933,10 @@ async function Wce(e, t) {
     r.map(async (d) => {
       let p = Vce.exec(d);
       if (!p || !isProcessProvablyGone(parseInt(p[1], 10))) return;
-      let _ = await ki(go(e, d));
+      let _ = await ki(join(e, d));
       if (_ !== void 0 && _ !== o) return;
       try {
-        await em(go(e, d));
+        await unlink(join(e, d));
       } catch {}
     }),
   );
@@ -25980,12 +25944,12 @@ async function Wce(e, t) {
 async function removeMessagingKey(e, t) {
   if (isHoverRestEnabled() && t !== void 0) {
     try {
-      await t.delete(STORAGE_KEYS.session(Hce(e)));
+      await t.delete(STORAGE_KEYS.session(basename(e)));
     } catch {}
     return;
   }
   try {
-    await em(e);
+    await unlink(e);
   } catch {}
 }
 async function resolveMessagingKey(e, t, r) {
@@ -25997,7 +25961,7 @@ async function resolveMessagingKey(e, t, r) {
     d = D;
   } else
     try {
-      d = await gF(o);
+      d = await readdir(o);
     } catch (D) {
       return W(D) ? { kind: "no-key" } : { kind: "unusable" };
     }
@@ -26013,7 +25977,7 @@ async function resolveMessagingKey(e, t, r) {
       .filter((D) => D !== void 0);
   if (E.length === 0) return { kind: "no-key" };
   let C = async (D) => {
-    let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await readBoundedFile(go(o, D), Dl);
+    let x = isHoverRestEnabled() && t !== void 0 ? await $ce(t, D) : await readBoundedFile(join(o, D), Dl);
     if (x === null) return;
     try {
       let N = _F().safeParse(jsonParseUntraced(x));
@@ -26323,7 +26287,7 @@ async function touchFleetViewHeartbeat(e) {
     return;
   }
   try {
-    await rm(It(getSessionsDir(), Nl), String(Date.now()));
+    await writeFile(join(getSessionsDir(), Nl), String(Date.now()));
   } catch {}
 }
 async function clearFleetViewHeartbeat(e) {
@@ -26334,7 +26298,7 @@ async function clearFleetViewHeartbeat(e) {
     return;
   }
   try {
-    await wi(It(getSessionsDir(), Nl));
+    await unlink(join(getSessionsDir(), Nl));
   } catch {}
 }
 var lue = 1000;
@@ -26349,7 +26313,7 @@ function isBeingWatched() {
   if (r !== void 0) return r;
   let o = !1;
   try {
-    let { mtimeMs: d } = statSync(It(getSessionsDir(), Nl));
+    let { mtimeMs: d } = statSync(join(getSessionsDir(), Nl));
     o = t - d < OF;
   } catch (d) {
     if (!W(d)) logForDebugging(`[concurrentSessions] heartbeat stat failed: ${l(d)}`);
@@ -26392,7 +26356,7 @@ async function cue(e, t) {
       ? sanitizeSessionName(a.CLAUDE_CODE_SESSION_NAME) || void 0
       : void 0,
     _ = getSessionsDir(),
-    E = It(_, `${process.pid}.json`);
+    E = join(_, `${process.pid}.json`);
   (process.on("exit", () => {
     try {
       unlinkSync(E);
@@ -26406,12 +26370,12 @@ async function cue(e, t) {
         return;
       }
       try {
-        await wi(E);
+        await unlink(E);
       } catch {}
     }));
   try {
     let C = await mue();
-    (await eue(_, { recursive: !0, mode: 448 }), await chmod(_, 448));
+    (await mkdir(_, { recursive: !0, mode: 448 }), await chmod(_, 448));
     let I = p
         ? { name: p, source: "user" }
         : o === "interactive"
@@ -26450,7 +26414,7 @@ async function cue(e, t) {
           logPath: a.CLAUDE_CODE_SESSION_LOG,
           agent: a.CLAUDE_CODE_AGENT,
           jobId:
-            o === "bg" && a.CLAUDE_JOB_DIR ? nue(a.CLAUDE_JOB_DIR) : void 0,
+            o === "bg" && a.CLAUDE_JOB_DIR ? basename(a.CLAUDE_JOB_DIR) : void 0,
           spare: d ? !0 : void 0,
         },
       });
@@ -26461,7 +26425,7 @@ async function cue(e, t) {
           logForDebugging(`[concurrentSessions] v5 pid-file write failed: ${describeStorageError(x.error)}`),
           Error("v5 pid-file write failed")
         );
-    } else await rm(E, D);
+    } else await writeFile(E, D);
     if (((e.registered = !0), d)) pue(t);
     if (I && e.registeredName === void 0) e.setRegisteredName(I.name, I.source);
     return (
@@ -26480,7 +26444,7 @@ async function cue(e, t) {
   }
 }
 async function hn(e, t) {
-  let r = It(getSessionsDir(), `${process.pid}.json`),
+  let r = join(getSessionsDir(), `${process.pid}.json`),
     o = yt(),
     d = o.pidFileWriteChain.then(async () => {
       try {
@@ -26510,8 +26474,8 @@ async function hn(e, t) {
             );
           return !0;
         }
-        let p = jsonParse(await tue(r, "utf8"));
-        return (await rm(r, jsonStringify({ ...p, ...e })), !0);
+        let p = jsonParse(await readFile(r, "utf8"));
+        return (await writeFile(r, jsonStringify({ ...p, ...e })), !0);
       } catch (p) {
         return (logForDebugging(`[concurrentSessions] updatePidFile failed: ${l(p)}`), !1);
       }
@@ -26602,7 +26566,7 @@ async function MF(e) {
       }
   }
   try {
-    return (await Zce(It(t, "state.json")), !0);
+    return (await lstat(join(t, "state.json")), !0);
   } catch (r) {
     return !W(r);
   }
@@ -26673,18 +26637,18 @@ async function reapKeysOfReapedRecord(e, t, r, o) {
   }
   let d;
   try {
-    d = await RF(e);
+    d = await readdir(e);
   } catch {
     return;
   }
-  await vF(d, e, t, r, (p) => wi(It(e, p)).catch(() => {}));
+  await vF(d, e, t, r, (p) => unlink(join(e, p)).catch(() => {}));
 }
 async function vF(e, t, r, o, d) {
   let p = `${r}.`;
   await Promise.all(
     e.map(async (_) => {
       if (!_.startsWith(p) || !Oi.test(_)) return;
-      let E = await ki(It(t, _));
+      let E = await ki(join(t, _));
       if (E !== void 0 && E !== o) return;
       if (r === process.pid || !isProcessProvablyGone(r)) return;
       await d(_);
@@ -26704,7 +26668,7 @@ function mayReapRecordFromThisDomain(e, t, r = []) {
       return !gue(e.cwd);
     case "macos":
       return (
-        !d || e.cwd === void 0 || e.cwd.startsWith(bF() + rue) || e.cwd === bF()
+        !d || e.cwd === void 0 || e.cwd.startsWith(homedir() + sep) || e.cwd === homedir()
       );
     default:
       return !0;
@@ -26719,7 +26683,7 @@ async function countConcurrentSessions(e) {
     r = D;
   } else
     try {
-      r = await RF(t);
+      r = await readdir(t);
     } catch (D) {
       if (!Rt(D)) logForDebugging(`[concurrentSessions] readdir failed: ${l(D)}`);
       return 0;
@@ -26754,7 +26718,7 @@ async function countConcurrentSessions(e) {
     }
     if (!isProcessProvablyGone(x)) continue;
     if (!d) continue;
-    let N = It(t, D),
+    let N = join(t, D),
       G = e
         ? await AF(e, D)
         : await readBoundedFile(N, MAX_SESSION_RECORD_BYTES)
@@ -26772,7 +26736,7 @@ async function countConcurrentSessions(e) {
     }
     let U =
       L === null
-        ? await Promise.all((I.get(x) ?? []).map((V) => ki(It(t, V))))
+        ? await Promise.all((I.get(x) ?? []).map((V) => ki(join(t, V))))
         : [];
     if (!mayReapRecordFromThisDomain(L, p, U)) {
       E.add(x);
@@ -26786,7 +26750,7 @@ async function countConcurrentSessions(e) {
       (C.add(x),
       (e
         ? await yF(e, D)
-        : await wi(N).then(
+        : await unlink(N).then(
             () => !0,
             () => !1,
           )) &&
@@ -26828,11 +26792,11 @@ async function countConcurrentSessions(e) {
       if (!x) continue;
       let N = parseInt(x[1], 10);
       if (N === process.pid || E.has(N) || !isProcessProvablyGone(N)) continue;
-      let G = await ki(It(t, D));
+      let G = await ki(join(t, D));
       if (!(G !== void 0 ? G === p : C.has(N) || getCurrentPlatform() === "linux")) continue;
       if (!isProcessProvablyGone(N)) continue;
       if (e) yF(e, D).catch(() => {});
-      else wi(It(t, D)).catch(() => {});
+      else unlink(join(t, D)).catch(() => {});
     }
   if (d) o.setUncleanExitsScanned(!0);
   return _;
@@ -26854,7 +26818,7 @@ async function mue() {
   );
   return t === 0 ? r.trim() : void 0;
 }
-import { AsyncLocalStorage as hue } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks";
 function getHookCallerPluginName(e) {
   return e.hookCaller;
 }
@@ -26881,8 +26845,7 @@ var PERMISSION_PROMPT_DIALOG = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-import { AsyncLocalStorage as _ue } from "async_hooks";
-var Ul = new _ue();
+var Ul = new AsyncLocalStorage();
 function runWithTurnAttributionKey(e, t) {
   return Ul.run({ key: e }, t);
 }
@@ -26918,7 +26881,7 @@ function getSingleTurnAttributionKey(e) {
   let t = e.filter((r) => r.turnAttributionKey !== void 0 && !r.isMeta);
   return t.length === 1 ? Mi(t[0]?.turnAttributionKey) : void 0;
 }
-var agentContextStorage = new hue();
+var agentContextStorage = new AsyncLocalStorage();
 function runWithAgentContext(e, t) {
   if (!("turnAttributionKey" in e)) e.turnAttributionKey = getTurnAttributionKey();
   return agentContextStorage.run(e, () => runWithTurnAttributionKey(e.turnAttributionKey, t));
@@ -27737,10 +27700,10 @@ function HF(e, t, r = {}) {
     },
   };
 }
-var Di = Nue(),
+var Di = randomUUID(),
   sm = "1p_failed_events.";
 function zue(e, t) {
-  let r = xue("sha256").update(t).digest("base64url").slice(0, 22);
+  let r = createHash("sha256").update(t).digest("base64url").slice(0, 22);
   return `flat-migration.${e}.${r}`;
 }
 function br() {
@@ -27854,16 +27817,16 @@ class gm {
     try {
       if (t.length === 0)
         try {
-          await KF(e);
+          await unlink(e);
         } catch {}
       else {
-        await GF(br(), { recursive: !0 });
+        await mkdir(br(), { recursive: !0 });
         let r =
           t.map((o) => jsonStringify(o)).join(`
 `) +
           `
 `;
-        await Uue(e, r, "utf8");
+        await writeFile(e, r, "utf8");
       }
     } catch (r) {
       logForDebugging(
@@ -27875,7 +27838,7 @@ class gm {
   async appendEventsToFile(e, t) {
     if (t.length === 0) return;
     try {
-      await GF(br(), { recursive: !0 });
+      await mkdir(br(), { recursive: !0 });
       let r =
         t.map((o) => jsonStringify(o)).join(`
 `) +
@@ -27891,7 +27854,7 @@ class gm {
   }
   async deleteFile(e) {
     try {
-      return (await KF(e), !0);
+      return (await unlink(e), !0);
     } catch (t) {
       return W(t);
     }
@@ -27950,7 +27913,7 @@ class gm {
       let e = `${sm}${K()}.`,
         t;
       try {
-        t = (await VF(br()))
+        t = (await readdir(br()))
           .filter((r) => r.startsWith(e) && r.endsWith(".json"))
           .filter((r) => !r.includes(Di));
       } catch (r) {
@@ -28031,7 +27994,7 @@ class gm {
     let o = `${sm}${t}.`,
       d;
     try {
-      d = (await VF(br())).filter(
+      d = (await readdir(br())).filter(
         (p) => p.startsWith(o) && p.endsWith(".json"),
       );
     } catch (p) {
@@ -28594,7 +28557,7 @@ async function ZF(e, t, r = {}) {
     let o = await Vl({ model: r.model, betas: r.betas }),
       d = {
         event_name: t,
-        event_id: YF(),
+        event_id: randomUUID(),
         core_metadata: o,
         user_metadata: ws(!0),
         event_metadata: r,
@@ -28639,7 +28602,7 @@ function logGrowthBookExposure(e) {
     { accountUuid: d, organizationUuid: p } = ws(!0),
     _ = {
       event_type: "GrowthbookExperimentEvent",
-      event_id: YF(),
+      event_id: randomUUID(),
       experiment_id: e.experimentId,
       variation_id: e.variationId,
       ...(o && { device_id: o }),
@@ -29026,7 +28989,6 @@ var kze = createLazyValue(() => c({ root: s(), primary: s().nullish() }));
 async function oB(e) {
   return null;
 }
-import { sep as dde } from "path";
 var RESERVED_DIRECTORY_NAMES_LC = new Set([
   ".git",
   "hooks",
@@ -29061,7 +29023,7 @@ function normalizePathSegment(e) {
   );
 }
 function hasReservedPathSegment(e, t, r) {
-  let o = e.slice(t.length).split(dde),
+  let o = e.slice(t.length).split(sep),
     d = o.length - 1;
   for (let p = 0; p < o.length; p++) {
     let _ = normalizePathSegment(o[p]);
@@ -29130,16 +29092,16 @@ function _m(e, t) {
     if (
       p === "." ||
       p === ".." ||
-      p.startsWith(`..${Yl}`) ||
+      p.startsWith(`..${sep}`) ||
       p.startsWith("../") ||
       p.startsWith("..\\")
     )
       return;
-    r = jl(pde(), d);
+    r = join(homedir(), d);
   }
   let o = normalize(r).replace(/[/\\]+$/, "");
   if (iB(o)) return;
-  return (o + Yl).normalize("NFC");
+  return (o + sep).normalize("NFC");
 }
 function iB(e) {
   return (
@@ -29208,11 +29170,11 @@ class aB {
   }
   defaultPath() {
     let e = getMemoryBaseDir(),
-      t = jl(e, "projects"),
+      t = join(e, "projects"),
       r = sn(),
       d = this.canonicalWcRootForProject(r) ?? findCanonicalGitRoot(r) ?? r,
       p = e === getClaudeConfigDir() ? getProjectKey(d) : sanitizePath(d);
-    return (jl(t, p, gde) + Yl).normalize("NFC");
+    return (join(t, p, gde) + sep).normalize("NFC");
   }
   warmCanonicalWcRoot() {
     return Promise.resolve();
@@ -29245,19 +29207,18 @@ function activeSessionLogExcluder(e) {
   };
 }
 function getAutoMemEntrypoint() {
-  return jl(getAutoMemPath(), mde);
+  return join(getAutoMemPath(), mde);
 }
 function isAutoMemPath(e) {
   return normalize(e).startsWith(getAutoMemPath());
 }
 var AUTO_MEM_WRITE_ALLOW_REASON = "auto memory files are allowed for writing";
 function isAutoMemPathSafeForCarveout(e, t = getAutoMemPath()) {
-  if (!t.endsWith(Yl) || iB(t.replace(/[/\\]+$/, ""))) return !1;
+  if (!t.endsWith(sep) || iB(t.replace(/[/\\]+$/, ""))) return !1;
   let r = normalize(e);
   if (!r.startsWith(t)) return !1;
   return !hasReservedPathSegment(r, t);
 }
-import { createHash as Sde } from "crypto";
 var lB = "bi1-";
 function buildClientDataCacheKey(e) {
   let t = JSON.stringify([
@@ -29266,7 +29227,7 @@ function buildClientDataCacheKey(e) {
       e.ccVersion,
       e.organizationUuid,
     ]),
-    r = Sde("sha256").update(t).digest("hex");
+    r = createHash("sha256").update(t).digest("hex");
   return lB + r.slice(0, 16);
 }
 var Tde = 12,
@@ -29817,17 +29778,17 @@ function getWorkspacePersistedTrustKey(e) {
   return getPersistedTrustKeyForPath(e ?? he());
 }
 function getPersistedTrustKeyForPath(e) {
-  return toForwardSlashPath(findCanonicalGitRootUncached(e) ?? zn(lt(e)));
+  return toForwardSlashPath(findCanonicalGitRootUncached(e) ?? zn(resolve(e)));
 }
 function isPathPersistedTrustedCwdExact(e) {
   return isTrustKeyPersistedTrusted(getPersistedTrustKeyForExactPath(e));
 }
 function getPersistedTrustKeyForExactPath(e) {
-  return toForwardSlashPath(zn(lt(e)));
+  return toForwardSlashPath(zn(resolve(e)));
 }
 async function persistedTrustKeyThroughBackend(e, t) {
   if (e.hostFiles.serving("workspace") !== "host") return;
-  let r = lt(t),
+  let r = resolve(t),
     o = await findGitRootThroughBackendUncached(e.hostFiles, r);
   if (o === void 0) return;
   if (o.gitRoot === null) return toForwardSlashPath(zn(r));
@@ -29844,7 +29805,7 @@ async function workspacePersistedTrustThroughBackend(e) {
 }
 function isLocalSettingsGitTracked({ onIndeterminate: e }) {
   if (!checkHasTrustDialogAccepted()) {
-    if (Ode() && resolveLocalSettingsStoreRoot(he(), findCanonicalGitRoot) === lt(he())) return !1;
+    if (Ode() && resolveLocalSettingsStoreRoot(he(), findCanonicalGitRoot) === resolve(he())) return !1;
     return !0;
   }
   let t = bB();
@@ -29873,15 +29834,15 @@ function Ode() {
   let e = he(),
     t = getFsSurface();
   try {
-    if (t.realpathSync(lt(e)) === t.realpathSync(TB())) return !0;
+    if (t.realpathSync(resolve(e)) === t.realpathSync(homedir())) return !0;
   } catch {}
-  return lt(getClaudeConfigDir()) === lt(Ve(e, ".claude"));
+  return resolve(getClaudeConfigDir()) === resolve(join(e, ".claude"));
 }
 function kde() {
   let e = he(),
     t = [e],
     r = resolveLocalSettingsStoreRoot(e, findCanonicalGitRoot);
-  if (r !== lt(e)) t.push(r);
+  if (r !== resolve(e)) t.push(r);
   let o = !1,
     d = !1;
   for (let p of t) {
@@ -29896,17 +29857,17 @@ function kde() {
 function wde(e) {
   let t = getFsSurface();
   try {
-    if (t.realpathSync(lt(e)) === t.realpathSync(TB())) return "untracked";
+    if (t.realpathSync(resolve(e)) === t.realpathSync(homedir())) return "untracked";
   } catch {}
-  if (lt(getClaudeConfigDir()) === lt(Ve(e, ".claude"))) return "untracked";
-  for (let r of [Ve(e, ".claude"), Ve(e, ".claude", "settings.local.json")])
+  if (resolve(getClaudeConfigDir()) === resolve(join(e, ".claude"))) return "untracked";
+  for (let r of [join(e, ".claude"), join(e, ".claude", "settings.local.json")])
     try {
       if (t.lstatSync(r).isSymbolicLink()) return "tracked";
     } catch (o) {
       if (!W(o)) return "tracked";
     }
   try {
-    return (t.lstatSync(Ve(e, ".claude", ".git")), "tracked");
+    return (t.lstatSync(join(e, ".claude", ".git")), "tracked");
   } catch (r) {
     if (!W(r)) return "tracked";
   }
@@ -29965,9 +29926,9 @@ function Pde() {
   return AB(e, he());
 }
 function AB(e, t) {
-  let r = zn(lt(t)),
+  let r = zn(resolve(t)),
     o = findGitRootUncached(r),
-    d = o !== null ? toForwardSlashPath(lt(o)) : null;
+    d = o !== null ? toForwardSlashPath(resolve(o)) : null;
   return yB(e, r, d);
 }
 function yB(e, t, r) {
@@ -29977,14 +29938,14 @@ function yB(e, t, r) {
       return !1;
     if (e.projects?.[o]?.hasTrustDialogAccepted) return !0;
     if (o === r) return !1;
-    let p = toForwardSlashPath(lt(o, ".."));
+    let p = toForwardSlashPath(resolve(o, ".."));
     if (p === o) return !1;
     o = p;
   }
 }
 function isPathTrusted(e, { advisoryNoFsProbe: t = !1 } = {}) {
   let r = getGlobalConfig();
-  if (t) return yB(r, zn(lt(e)), null);
+  if (t) return yB(r, zn(resolve(e)), null);
   if (r.projects?.[getWorkspacePersistedTrustKey(e)]?.hasTrustDialogAccepted === !0) return !0;
   return AB(r, e);
 }
@@ -30712,7 +30673,7 @@ async function _c(e, t, r) {
   try {
     let d = pickBy(e, (p, _) => jsonStringify(p) !== jsonStringify(DEFAULT_GLOBAL_CONFIG[_]));
     if (isHoverRestEnabled() && r !== void 0) {
-      await getFsSurface().mkdir(Ql(getGlobalClaudeFile()));
+      await getFsSurface().mkdir(dirname(getGlobalClaudeFile()));
       let p = await r.write(STORAGE_KEYS.globalConfig(), jsonStringify(d, null, 2), {
         publishDiscipline: "followAtomic",
         mode: 384,
@@ -30724,7 +30685,7 @@ async function _c(e, t, r) {
         });
     } else {
       let p = getGlobalClaudeFile();
-      (await getFsSurface().mkdir(Ql(p)),
+      (await getFsSurface().mkdir(dirname(p)),
         await writeFileAndFlush(p, jsonStringify(d, null, 2), {
           encoding: "utf-8",
           mode: 384,
@@ -30750,7 +30711,7 @@ async function Sc(e, t, r) {
   }
   let o = getFsSurface();
   try {
-    let d = lc(e),
+    let d = basename(e),
       p = Tc();
     try {
       await o.mkdir(p);
@@ -30766,7 +30727,7 @@ async function Sc(e, t, r) {
       C = E ? Number(E.split(".backup.").pop()) : 0,
       D = (Number.isNaN(C) || Date.now() - C >= MB) && !t;
     if (D) {
-      let N = Ve(p, `${d}.backup.${Date.now()}`);
+      let N = join(p, `${d}.backup.${Date.now()}`);
       await o.copyFile(e, N);
     }
     let x = D
@@ -30778,7 +30739,7 @@ async function Sc(e, t, r) {
       : _;
     for (let N of x.slice(IB))
       try {
-        await o.unlink(Ve(p, N));
+        await o.unlink(join(p, N));
       } catch {}
   } catch (d) {
     if (A(d) !== "ENOENT")
@@ -30844,7 +30805,7 @@ async function Hi(e, t, r, o, d, p) {
   let _ = Q();
   if (isHoverRestEnabled() && p !== void 0 && e === getGlobalClaudeFile()) return $de(p, e, t, r, o);
   let E = t(),
-    C = Ql(e),
+    C = dirname(e),
     I = getFsSurface();
   await I.mkdir(C);
   let D;
@@ -30974,7 +30935,7 @@ async function Hi(e, t, r, o, d, p) {
   }
 }
 async function Kde(e, t, r) {
-  let o = `${lc(t)}.corrupted.`,
+  let o = `${basename(t)}.corrupted.`,
     d = await xB(e, "corrupted", !1);
   if (!d.ok) {
     logForDebugging(`Could not back up corrupted config (${d.error}); continuing.`, {
@@ -30996,7 +30957,7 @@ async function Kde(e, t, r) {
       exactMode: await DB(e),
     });
   if (_.ok) {
-    let E = Ve(Tc(), o + p);
+    let E = join(Tc(), o + p);
     (logForDebugging(FB(E), { level: "error" }), process.stderr.write(BB(E)));
   } else
     logForDebugging(`Could not back up corrupted config (${describeStorageError(_.error)}); continuing.`, {
@@ -31369,7 +31330,7 @@ async function qde(e, t) {
   writeDiagnosticsEvent("info", "enable_configs_completed", { duration_ms: Date.now() - o });
 }
 function Tc() {
-  return Ve(getClaudeConfigDir(), "backups");
+  return join(getClaudeConfigDir(), "backups");
 }
 function UB(e, t) {
   return `
@@ -31405,14 +31366,14 @@ Claude configuration file not found at: ${e}
 }
 async function mo(e, t) {
   let r = getFsSurface(),
-    o = lc(e),
+    o = basename(e),
     d = Tc();
   if (isHoverRestEnabled() && t !== void 0) {
     let _ = await NB(t).catch(() => {
         return;
       }),
       E = _?.ok ? _.value.sort().at(-1) : void 0;
-    if (E) return Ve(d, `${o}.backup.${E}`);
+    if (E) return join(d, `${o}.backup.${E}`);
   } else
     try {
       let E = (await r.readdir(d))
@@ -31420,16 +31381,16 @@ async function mo(e, t) {
         .filter((C) => C.startsWith(`${o}.backup.`))
         .sort()
         .at(-1);
-      if (E) return Ve(d, E);
+      if (E) return join(d, E);
     } catch {}
-  let p = Ql(e);
+  let p = dirname(e);
   try {
     let E = (await r.readdir(p))
       .map((I) => I.name)
       .filter((I) => I.startsWith(`${o}.backup.`))
       .sort()
       .at(-1);
-    if (E) return Ve(p, E);
+    if (E) return join(p, E);
     let C = `${e}.backup`;
     try {
       return (await r.stat(C), C);
@@ -31471,7 +31432,7 @@ async function Tm(e, t, r) {
         process.stderr.write(UB(e, p.message)));
       let E = 0;
       try {
-        let I = lc(e),
+        let I = basename(e),
           D = Tc();
         await d.mkdir(D);
         let x = (await d.readdir(D))
@@ -31483,14 +31444,14 @@ async function Tm(e, t, r) {
         E = L.length;
         for (let U of x)
           try {
-            let F = await d.readFile(Ve(D, U), { encoding: "utf-8" });
+            let F = await d.readFile(join(D, U), { encoding: "utf-8" });
             if (L === F) {
               G = !0;
               break;
             }
           } catch {}
         if (!G)
-          ((N = Ve(D, `${I}.corrupted.${Date.now()}`)),
+          ((N = join(D, `${I}.corrupted.${Date.now()}`)),
             await d.copyFile(e, N),
             logForDebugging(FB(N), { level: "error" }));
         if (N) process.stderr.write(BB(N));
@@ -31550,7 +31511,7 @@ function getProjectPathForConfig() {
   if (e.projectPathForConfig !== null) return e.projectPathForConfig;
   let t = he(),
     r = findCanonicalGitRoot(t),
-    o = r ? toForwardSlashPath(r) : toForwardSlashPath(zn(lt(t)));
+    o = r ? toForwardSlashPath(r) : toForwardSlashPath(zn(resolve(t)));
   return (e.setProjectPathForConfig(o), o);
 }
 function clearProjectPathForConfigCache() {
@@ -31684,7 +31645,7 @@ function saveCurrentProjectConfigSyncForExit(e) {
       o = getProjectPathForConfig(),
       d = null;
     try {
-      d = SB(r, { encoding: "utf-8" });
+      d = readFileSync(r, { encoding: "utf-8" });
     } catch (D) {
       if (!W(D)) throw D;
     }
@@ -31711,7 +31672,7 @@ function saveGlobalConfigSyncForExit(e) {
     let r = getGlobalClaudeFile(),
       o = null;
     try {
-      o = SB(r, { encoding: "utf-8" });
+      o = readFileSync(r, { encoding: "utf-8" });
     } catch (C) {
       if (!W(C)) throw C;
     }
@@ -31903,7 +31864,7 @@ function getOrCreateUserID(e) {
     r = getGlobalConfig();
   if (typeof r.userID === "string" && Nm.test(r.userID)) return r.userID;
   if (t.generatedUserID) return t.generatedUserID;
-  let o = bm(32).toString("hex");
+  let o = randomBytes(32).toString("hex");
   return (t.setGeneratedUserID(o), saveGlobalConfig((d) => ({ ...d, userID: o }), e), o);
 }
 function getOrCreateMachineID(e) {
@@ -31912,7 +31873,7 @@ function getOrCreateMachineID(e) {
   if (typeof r.machineID === "string" && Nm.test(r.machineID))
     return r.machineID;
   if (t.generatedMachineID) return t.generatedMachineID;
-  let o = bm(32).toString("hex");
+  let o = randomBytes(32).toString("hex");
   return (
     t.setGeneratedMachineID(o),
     saveGlobalConfig((d) => ({ ...d, machineID: o }), e),
@@ -31928,7 +31889,7 @@ function getOrCreateSummonSidKey(e) {
   if (typeof r.summonSidKey === "string" && Nm.test(r.summonSidKey))
     return r.summonSidKey;
   if (t.generatedSummonSidKey) return t.generatedSummonSidKey;
-  let o = bm(32).toString("hex");
+  let o = randomBytes(32).toString("hex");
   return (
     t.setGeneratedSummonSidKey(o),
     saveGlobalConfig((d) => ({ ...d, summonSidKey: o }), e),
@@ -31945,7 +31906,7 @@ function getOrCreateRemoteControlMachineId(e) {
 async function Qde(e) {
   let t = getGlobalConfig();
   if (EB(t.remoteControlMachineId)) return t.remoteControlMachineId;
-  let r = Rde(),
+  let r = randomUUID(),
     o = r;
   return (await Rm(
     (p) => (
@@ -31987,22 +31948,22 @@ function getMemoryPath(e) {
   let t = he();
   switch (e) {
     case "User":
-      return Ve(getClaudeConfigDir(), "CLAUDE.md");
+      return join(getClaudeConfigDir(), "CLAUDE.md");
     case "Local":
-      return Ve(t, "CLAUDE.local.md");
+      return join(t, "CLAUDE.local.md");
     case "Project":
-      return Ve(t, "CLAUDE.md");
+      return join(t, "CLAUDE.md");
     case "Managed":
-      return Ve(getManagedSettingsDirPath(), "CLAUDE.md");
+      return join(getManagedSettingsDirPath(), "CLAUDE.md");
     case "AutoMem":
       return getAutoMemEntrypoint();
   }
 }
 function getManagedClaudeRulesDir() {
-  return Ve(getManagedSettingsDirPath(), ".claude", "rules");
+  return join(getManagedSettingsDirPath(), ".claude", "rules");
 }
 function getUserClaudeRulesDir() {
-  return Ve(getClaudeConfigDir(), "rules");
+  return join(getClaudeConfigDir(), "rules");
 }
 var _getConfigForTesting = Tm,
   _wouldLoseAuthStateForTesting = Lt,
@@ -32142,7 +32103,6 @@ function hasClientDataCacheSlot() {
 }
 hB(() => getCachedClientData());
 nh(() => getCachedClientData());
-import { createHash as Zde } from "crypto";
 function createBatchedSender({ maxBatchSize: e, getFlushIntervalMs: t, post: r }) {
   let o = [],
     d = null;
@@ -32533,7 +32493,7 @@ class WB {
   });
   getUserBucket = rs(() => {
     let e = getOrCreateUserID(),
-      t = Zde("sha256").update(e).digest("hex");
+      t = createHash("sha256").update(e).digest("hex");
     return parseInt(t.slice(0, 8), 16) % hpe;
   });
   peerRateWindows = new Map();
@@ -33496,8 +33456,8 @@ function Dpe() {
   return Ipe.of(B().host);
 }
 import { lookup } from "dns/promises";
-import { request as xpe } from "http";
-import { Agent as Npe, request as Lpe } from "https";
+import { request } from "http";
+import { Agent, request as Lpe } from "https";
 import { isIPv4, isIPv6 } from "net";
 import { connect, checkServerIdentity } from "tls";
 var Fpe = new Set(["localhost", "127.0.0.1", "[::1]"]);
@@ -33648,7 +33608,7 @@ async function probeTlsFingerprint(e, t = 1e4) {
 function Hpe(e, t, r, o = 1e4) {
   let d = new URL(e),
     p = d.protocol === "https:",
-    _ = p ? Lpe : xpe,
+    _ = p ? Lpe : request,
     E = t.includes(":") ? `[${t}]` : t,
     C = { Host: `${E}:${r}` };
   if (d.username) {
@@ -33726,7 +33686,7 @@ function extractFingerprintMismatch(e) {
 }
 function Gpe(e) {
   let t = getCACertificates();
-  return new Npe({
+  return new Agent({
     ...getMTLSConfig(),
     ...(t && { ca: t }),
     checkServerIdentity: (r, o) => {
@@ -34167,7 +34127,7 @@ class K0 {
     async (e, t, r, o) => {
       let d;
       try {
-        d = jsonParse(await nfe(e, "utf-8"));
+        d = jsonParse(await readFile(e, "utf-8"));
       } catch {
         return null;
       }
@@ -34250,11 +34210,11 @@ async function dfe(e, t, r) {
   try {
     let d = await o.ssoProfile(e, t, r);
     if (!d) return null;
-    let p = jm(
-      ofe(e),
+    let p = join(
+      dirname(e),
       "sso",
       "cache",
-      `${tfe("sha1").update(d.cacheId).digest("hex")}.json`,
+      `${createHash("sha1").update(d.cacheId).digest("hex")}.json`,
     );
     return await o.ssoRole(p, d.accountId, d.roleName, d.region);
   } catch (d) {
@@ -34861,7 +34821,7 @@ function refreshAwsAuth(e, t) {
     new Promise((o) => {
       let d;
       if (typeof e === "string")
-        d = B0(e, { timeout: D0, signal: t, windowsHide: !0 });
+        d = exec(e, { timeout: D0, signal: t, windowsHide: !0 });
       else {
         let p = resolveExecutableSafely(e.file, !0);
         if (p === null) {
@@ -35181,7 +35141,7 @@ function refreshGcpAuth(e) {
   return (
     t.startAuthentication(),
     new Promise((r) => {
-      let o = B0(e, { timeout: kfe, windowsHide: !0 });
+      let o = exec(e, { timeout: kfe, windowsHide: !0 });
       (wS(o.pid),
         o.stdout.on("data", (d) => {
           let p = d.toString().trim();
@@ -35710,7 +35670,7 @@ async function Nfe(e, t) {
     return;
   }
   try {
-    let { mtimeMs: r } = await Km(jm(getSecureStorageDir(), ".credentials.json"));
+    let { mtimeMs: r } = await stat(join(getSecureStorageDir(), ".credentials.json"));
     if (r !== e.lastCredentialsMtimeMs) ((e.lastCredentialsMtimeMs = r), clearOAuthTokenCache());
   } catch {
     await L0(e, t);
@@ -35995,12 +35955,12 @@ async function Fm(e, t) {
       typeof e.file === "string"
         ? e.file
         : void 0,
-    o = r === void 0 || O0(r) === O0(t),
+    o = r === void 0 || resolve(r) === resolve(t),
     d = o ? oauthRefreshLockOptions(t).lockfilePath : r,
     p,
     _;
   try {
-    let E = await Km(d);
+    let E = await stat(d);
     ((_ = E.mtimeMs), (p = Math.max(0, Math.round(Date.now() - E.mtimeMs))));
   } catch {
     p = void 0;
@@ -36022,7 +35982,7 @@ function F0(e, t) {
 }
 function oauthRefreshLockOptions(e, t) {
   return {
-    lockfilePath: jm(e, ".oauth_refresh.lock"),
+    lockfilePath: join(e, ".oauth_refresh.lock"),
     realpath: !1,
     stale: 60000,
     update: 5000,
@@ -36549,7 +36509,7 @@ async function getOtelHeadersFromHelper() {
         let o = e.trim(),
           d = !1;
         try {
-          d = (await Km(o)).isFile();
+          d = (await stat(o)).isFile();
         } catch {}
         let p = null;
         if (d)
@@ -37095,9 +37055,8 @@ function validateForceLoginMethod(e) {
   };
 }
 class Vm extends Error {}
-import { AsyncLocalStorage as jfe } from "async_hooks";
 var CRON_WORKLOAD_NAME = "cron",
-  mH = new jfe();
+  mH = new AsyncLocalStorage();
 function getCurrentWorkload() {
   return mH.getStore()?.workload;
 }

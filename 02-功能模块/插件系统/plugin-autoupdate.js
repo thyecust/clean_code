@@ -48,8 +48,8 @@ import { updatePlugin } from "./chunk-q8w2zntw.js";
 import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
 import { splitPluginId } from "./chunk-33bdfgmx.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { stat as z, writeFile } from "fs/promises";
-import { join as B } from "path";
+import { stat, writeFile } from "fs/promises";
+import { join } from "path";
 var D = 600000;
 function registerAutoUpdateListener(t) {
   let e = getPluginRegistryState();
@@ -480,7 +480,7 @@ async function q(t) {
     return e.ok && Date.now() - e.value.mtimeMs < O;
   }
   try {
-    let e = await z(B(getClaudeConfigDir(), ".last-cleanup"));
+    let e = await stat(join(getClaudeConfigDir(), ".last-cleanup"));
     return Date.now() - e.mtimeMs < O;
   } catch {
     return !1;
@@ -513,7 +513,7 @@ async function runBackgroundHousekeeping(t, e) {
         if (!o.ok)
           logForDebugging(`.last-cleanup write failed: ${o.error.code}`, { level: "error" });
       } else
-        await writeFile(B(getClaudeConfigDir(), ".last-cleanup"), new Date().toISOString()).catch(
+        await writeFile(join(getClaudeConfigDir(), ".last-cleanup"), new Date().toISOString()).catch(
           (o) =>
             Po(o)
               ? logForDebugging(`.last-cleanup write failed: ${o.code} ${o.message}`, {

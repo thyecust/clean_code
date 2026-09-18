@@ -29,20 +29,20 @@ import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { access as Ae, chmod, writeFile as Me } from "fs/promises";
-import { join as N } from "path";
+import { access, chmod, writeFile } from "fs/promises";
+import { join } from "path";
 function G() {
-  return N(getClaudeConfigDir(), "local");
+  return join(getClaudeConfigDir(), "local");
 }
 function le() {
-  return N(G(), "claude");
+  return join(G(), "claude");
 }
 function isRunningFromLocalInstall() {
   return (process.argv[1] || "").includes("/.claude/local/node_modules/");
 }
 async function se(e, t, r) {
   try {
-    return (await Me(e, t, { encoding: "utf8", flag: "wx", mode: r }), !0);
+    return (await writeFile(e, t, { encoding: "utf8", flag: "wx", mode: r }), !0);
   } catch (o) {
     if (A(o) === "EEXIST") return !1;
     throw o;
@@ -53,10 +53,10 @@ async function Oe() {
     let e = G();
     (await getFsSurface().mkdir(e),
       await se(
-        N(e, "package.json"),
+        join(e, "package.json"),
         jsonStringify({ name: "claude-local", version: "0.0.1", private: !0 }, null, 2),
       ));
-    let t = N(e, "claude");
+    let t = join(e, "claude");
     if (
       await se(
         t,
@@ -113,7 +113,7 @@ async function applyLocalUpdate(e, t, r) {
 }
 async function localInstallExists() {
   try {
-    return (await Ae(N(G(), "node_modules", ".bin", "claude")), !0);
+    return (await access(join(G(), "node_modules", ".bin", "claude")), !0);
   } catch {
     return !1;
   }
@@ -126,12 +126,11 @@ function detectCurrentShell() {
   return "unknown";
 }
 import { existsSync } from "fs";
-import { open as Ue, readFile, stat as Ne } from "fs/promises";
-import { homedir as ce } from "os";
-import { join as D } from "path";
+import { open, readFile, stat } from "fs/promises";
+import { homedir } from "os";
 var ue = /^\s*alias\s+claude\s*=/;
 function getShellConfigPaths(e) {
-  let t = e?.homedir ?? ce(),
+  let t = e?.homedir ?? homedir(),
     r = e?.env ?? process.env,
     o = e?.platform ?? "darwin",
     s = e?.fileExists ?? existsSync,
@@ -139,14 +138,14 @@ function getShellConfigPaths(e) {
     R =
       o === "darwin"
         ? ([".bash_profile", ".bash_login", ".profile"].find((p) =>
-            s(D(t, p)),
+            s(join(t, p)),
           ) ?? ".bash_profile")
         : ".bashrc";
   return {
-    zsh: D(c, ".zshrc"),
-    bash: D(t, R),
-    ...(o === "darwin" && { bashrc: D(t, ".bashrc") }),
-    fish: D(t, ".config/fish/config.fish"),
+    zsh: join(c, ".zshrc"),
+    bash: join(t, R),
+    ...(o === "darwin" && { bashrc: join(t, ".bashrc") }),
+    fish: join(t, ".config/fish/config.fish"),
   };
 }
 function filterClaudeAliasLines(e) {
@@ -177,7 +176,7 @@ async function readLinesOrNull(e) {
   }
 }
 async function writeFileLines(e, t) {
-  let r = await Ue(e, "w");
+  let r = await open(e, "w");
   try {
     (await r.writeFile(
       t.join(`
@@ -226,10 +225,10 @@ async function findClaudeAliasTarget(e) {
 async function findInstalledClaudeAliasTarget(e) {
   let t = await findClaudeAliasTarget(e);
   if (!t) return null;
-  let r = e?.homedir ?? ce(),
+  let r = e?.homedir ?? homedir(),
     o = t.startsWith("~") ? t.replace("~", r) : t;
   try {
-    let s = await Ne(o);
+    let s = await stat(o);
     if (s.isFile() || s.isSymbolicLink()) return t;
   } catch {}
   return null;
@@ -238,17 +237,13 @@ var U = toESM(pg(), 1);
 import { randomBytes } from "crypto";
 import { constants } from "fs";
 import {
-  access as we,
   copyFile,
   readdir,
   rename,
-  rm as We,
-  stat as K,
+  rm,
   unlink,
-  writeFile as me,
 } from "fs/promises";
-import { homedir as H } from "os";
-import { basename, dirname, join as x } from "path";
+import { basename, dirname } from "path";
 async function runWithRetry(e, t) {
   let r;
   for (let o = 1; o <= t.attempts; o++)
@@ -392,7 +387,7 @@ function shouldSkipVersion(e) {
 }
 var z = 300000;
 function Pe() {
-  return x(getClaudeConfigDir(), ".update.lock");
+  return join(getClaudeConfigDir(), ".update.lock");
 }
 function X() {
   return STORAGE_KEYS.state("update-lock");
@@ -460,7 +455,7 @@ async function qe(e) {
   }
   try {
     return (
-      await me(r, `${process.pid}`, { encoding: "utf8", flag: "wx" }),
+      await writeFile(r, `${process.pid}`, { encoding: "utf8", flag: "wx" }),
       !0
     );
   } catch (o) {
@@ -470,7 +465,7 @@ async function qe(e) {
       try {
         return (
           await t.mkdir(getClaudeConfigDir()),
-          await me(r, `${process.pid}`, { encoding: "utf8", flag: "wx" }),
+          await writeFile(r, `${process.pid}`, { encoding: "utf8", flag: "wx" }),
           !0
         );
       } catch (c) {
@@ -537,12 +532,12 @@ async function ke() {
     t = null;
   if (e)
     t = await execFileNoThrowWithCwd("bun", ["pm", "bin", "-g"], {
-      cwd: H(),
+      cwd: homedir(),
       useToolMemoryCgroup: !1,
     });
   else
     t = await execFileNoThrowWithCwd("npm", ["-g", "config", "get", "prefix"], {
-      cwd: H(),
+      cwd: homedir(),
       useToolMemoryCgroup: !1,
     });
   if (t.code !== 0)
@@ -558,16 +553,16 @@ async function ke() {
 async function Ze() {
   let e = await ke();
   if (!e) return [];
-  if (re() === "bun") return [x(e, "claude")];
-  if (getCurrentPlatform() === "windows") return [x(e, "claude.cmd"), x(e, "claude.exe")];
-  return [x(e, "bin", "claude")];
+  if (re() === "bun") return [join(e, "claude")];
+  if (getCurrentPlatform() === "windows") return [join(e, "claude.cmd"), join(e, "claude.exe")];
+  return [join(e, "bin", "claude")];
 }
 async function checkGlobalInstallPermissions() {
   try {
     let e = await ke();
     if (!e) return { hasPermissions: !1, npmPrefix: null };
     try {
-      return (await we(e, constants.W_OK), { hasPermissions: !0, npmPrefix: e });
+      return (await access(e, constants.W_OK), { hasPermissions: !0, npmPrefix: e });
     } catch {
       return (
         logForDebugging("Insufficient permissions for global npm install.", {
@@ -592,7 +587,7 @@ async function fetchNpmPackageVersion(e) {
       ],
       {
         abortSignal: AbortSignal.timeout(5000),
-        cwd: H(),
+        cwd: homedir(),
         useToolMemoryCgroup: !1,
       },
     );
@@ -691,14 +686,14 @@ async function Qe(e) {
     };
 }
 function ne(e) {
-  return we(e, constants.F_OK).then(
+  return access(e, constants.F_OK).then(
     () => !0,
     () => !1,
   );
 }
 function Se() {
-  let e = x(dirname(process.execPath), "..", "..");
-  return [x(e, ".."), e];
+  let e = join(dirname(process.execPath), "..", "..");
+  return [join(e, ".."), e];
 }
 async function Re() {
   return (
@@ -708,7 +703,7 @@ async function Re() {
           .then((r) =>
             r
               .filter((o) => o.isDirectory() && o.name.startsWith("."))
-              .map((o) => x(t, o.name)),
+              .map((o) => join(t, o.name)),
           )
           .catch(() => []),
       ),
@@ -716,7 +711,7 @@ async function Re() {
   ).flat();
 }
 async function Q(e, t) {
-  let r = await K(t, { bigint: !0 }).then(
+  let r = await stat(t, { bigint: !0 }).then(
     (o) => o.ino,
     () => 0n,
   );
@@ -725,7 +720,7 @@ async function Q(e, t) {
 async function $e(e, t) {
   if (await Q(e, t)) return t;
   let r = basename(t),
-    o = (await Re()).flatMap((s) => [x(s, r), x(s, "bin", r)]);
+    o = (await Re()).flatMap((s) => [join(s, r), join(s, "bin", r)]);
   for (let s of o) if (await Q(e, s)) return s;
   return null;
 }
@@ -735,7 +730,7 @@ async function ee(e, t) {
     let o = dirname(t),
       s = `${basename(t)}.restoring.`;
     for (let c of await readdir(o))
-      if (c.startsWith(s)) await unlink(x(o, c)).catch(() => {});
+      if (c.startsWith(s)) await unlink(join(o, c)).catch(() => {});
   } catch {}
   let r = `${t}.restoring.${randomBytes(4).toString("hex")}`;
   try {
@@ -764,11 +759,11 @@ async function et(e, t) {
     s = (
       await Promise.all(
         t.flatMap((p) =>
-          [p, x(p, "bin")].map(async (E) =>
+          [p, join(p, "bin")].map(async (E) =>
             (await readdir(E).catch(() => []))
               .map((T) => o.exec(T))
               .filter((T) => T !== null)
-              .map((T) => ({ path: x(E, T[0]), ts: Number(T[1]) })),
+              .map((T) => ({ path: join(E, T[0]), ts: Number(T[1]) })),
           ),
         ),
       )
@@ -899,7 +894,7 @@ To fix this issue:
             (await Re()).map(async (d) =>
               (await Promise.all([
                 readdir(d).catch(() => []),
-                readdir(x(d, "bin")).catch(() => []),
+                readdir(join(d, "bin")).catch(() => []),
               ]).then(([k, v]) =>
                 [...k, ...v].some((I) => /\.exe\.old\.\d+$/.test(I)),
               ))
@@ -912,22 +907,22 @@ To fix this issue:
         if (await ne(process.execPath))
           await Promise.all(
             w.map((d) =>
-              We(d, { recursive: !0, force: !0 }).catch((m) =>
+              rm(d, { recursive: !0, force: !0 }).catch((m) =>
                 logForDebugging(`retired-dir cleanup failed: ${m}`),
               ),
             ),
           );
         else await et(r, w);
       let C = Date.now(),
-        O = await K(process.execPath, { bigint: !0 })
+        O = await stat(process.execPath, { bigint: !0 })
           .then((d) => d.ino)
           .catch(() => 0n),
         F = [process.execPath];
       for (let d of await readdir(_).catch(() => []))
         for (let m of ["claude.exe", "cli.exe"]) {
-          let k = x(_, d, m);
+          let k = join(_, d, m);
           if (k === process.execPath) continue;
-          let v = await K(k, { bigint: !0 })
+          let v = await stat(k, { bigint: !0 })
             .then((I) => I.ino)
             .catch(() => -1n);
           if (O && v === O) F.push(k);
@@ -940,7 +935,7 @@ To fix this issue:
           continue;
         }
         p.push([d, m]);
-        let k = await K(m, { bigint: !0 }).then(
+        let k = await stat(m, { bigint: !0 }).then(
           (v) => v.ino,
           () => 0n,
         );
@@ -948,7 +943,7 @@ To fix this issue:
       }
     }
     let E = await execFileNoThrowWithCwd(s, ["install", "-g", c], {
-        cwd: H(),
+        cwd: homedir(),
         useToolMemoryCgroup: !1,
       }),
       T = 0,
@@ -1029,7 +1024,7 @@ To fix this issue:
         for (let v of F) {
           let I = await execFileNoThrowWithCwd(v, ["--version"], {
             abortSignal: AbortSignal.timeout(45000),
-            cwd: H(),
+            cwd: homedir(),
             useToolMemoryCgroup: !1,
           });
           if (

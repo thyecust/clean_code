@@ -14,20 +14,19 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { getBundledSkillsRoot } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { defineLazyProperty, Fwt } from "../../01-核心基础设施/核心工具-类型与数值/define-lazy-property.js";
 import { areBundledSkillsDisabled } from "./disable-bundled-skills.js";
-import { join as P } from "path";
+import { join } from "path";
 import { constants } from "fs";
-import { lstat, mkdir, open as b } from "fs/promises";
+import { lstat, mkdir, open } from "fs/promises";
 import {
   dirname,
   isAbsolute,
-  join as v,
   normalize,
-  sep as T,
+  sep,
 } from "path";
 var k = constants.O_NOFOLLOW ?? 0,
   B = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | k;
 async function E(e, o, r = 384) {
-  let t = await b(e, B, r);
+  let t = await open(e, B, r);
   try {
     if (r !== 384) await t.chmod(r);
     await t.writeFile(o, "utf8");
@@ -37,9 +36,9 @@ async function E(e, o, r = 384) {
 }
 function O(e, o) {
   let r = normalize(o);
-  if (isAbsolute(r) || r.split(T).includes("..") || r.split("/").includes(".."))
+  if (isAbsolute(r) || r.split(sep).includes("..") || r.split("/").includes(".."))
     throw Error("bundled file path escapes its extraction dir");
-  return v(e, r);
+  return join(e, r);
 }
 async function materializeFileMap(e, o, r) {
   let t = new Map();
@@ -62,7 +61,7 @@ async function materializeFileMap(e, o, r) {
                   return lstat(a).then((s) => {
                     if (!s.isFile()) throw i;
                   });
-                return b(a, constants.O_RDONLY | k | (constants.O_NONBLOCK ?? 0))
+                return open(a, constants.O_RDONLY | k | (constants.O_NONBLOCK ?? 0))
                   .then((s) =>
                     s
                       .stat()
@@ -192,7 +191,7 @@ function getRegisteredBundledSkillsIgnoringKillSwitch() {
   return [...getHostStateStore().bundledSkills];
 }
 function getBundledSkillExtractDir(e) {
-  return P(getBundledSkillsRoot(), e);
+  return join(getBundledSkillsRoot(), e);
 }
 async function R(e, o) {
   if (Object.keys(o).length === 0) return null;

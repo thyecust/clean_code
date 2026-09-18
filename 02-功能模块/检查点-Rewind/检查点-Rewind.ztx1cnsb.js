@@ -30,10 +30,10 @@ import {
   mkdir,
   readFile,
   readdir,
-  rm as pt,
+  rm,
 } from "fs/promises";
 import { homedir } from "os";
-import { isAbsolute, join as s, relative } from "path";
+import { isAbsolute, join, relative } from "path";
 var v = ".claude/RESUME.md",
   O = "refs/claude/checkpoint-",
   h = 30000,
@@ -107,7 +107,7 @@ async function kt(o) {
     if (A === null || !S(A, r))
       return { committed: !1, skipReason: "gitdir_uncontained" };
     if (
-      (await lstat(s(m, "commondir")).catch((t) => {
+      (await lstat(join(m, "commondir")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
@@ -116,21 +116,21 @@ async function kt(o) {
     for (let t of [
       "objects",
       "refs",
-      s("refs", "claude"),
+      join("refs", "claude"),
       "logs",
-      s("logs", "refs"),
-      s("logs", "refs", "claude"),
+      join("logs", "refs"),
+      join("logs", "refs", "claude"),
       "packed-refs",
       "reftable",
     ]) {
-      let p = await lstat(s(m, t)).catch((R) => {
+      let p = await lstat(join(m, t)).catch((R) => {
         if (R.code === "ENOENT") return null;
         throw R;
       });
       if (p !== null && p.isSymbolicLink())
         return { committed: !1, skipReason: "gitdir_uncontained" };
     }
-    let rt = await readdir(s(m, "objects"), { withFileTypes: !0 }).catch((t) => {
+    let rt = await readdir(join(m, "objects"), { withFileTypes: !0 }).catch((t) => {
       if (t.code === "ENOENT") return [];
       throw t;
     });
@@ -146,7 +146,7 @@ async function kt(o) {
       GIT_TERMINAL_PROMPT: "0",
     });
     if (
-      (await lstat(s(m, "info", "sparse-checkout")).catch((t) => {
+      (await lstat(join(m, "info", "sparse-checkout")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
@@ -159,11 +159,11 @@ async function kt(o) {
       if (t.code === 0 && t.stdout.trim() === "true")
         return { committed: !1, skipReason: "sparse_checkout" };
     }
-    let nt = await lstat(s(m, "lfs")).catch((t) => {
+    let nt = await lstat(join(m, "lfs")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       }),
-      F = s(e, ".gitattributes"),
+      F = join(e, ".gitattributes"),
       T = await lstat(F).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
@@ -190,7 +190,7 @@ async function kt(o) {
           input: p.input,
           timeout: h,
         });
-    f = s(m, `claude-checkpoint-index.${process.pid}`);
+    f = join(m, `claude-checkpoint-index.${process.pid}`);
     let k = { ...w, GIT_INDEX_FILE: f };
     if (
       (await execFileNoThrowWithCwd(gitExe(), [...c, "read-tree", L], { cwd: e, env: k, timeout: h }))
@@ -232,13 +232,13 @@ async function kt(o) {
         if (t.split("/").some((C) => C === "." || C === "..")) return;
         let R;
         try {
-          R = await lstat(s(e, t));
+          R = await lstat(join(e, t));
         } catch (C) {
           if (p && W(C)) I.push(t);
           return;
         }
         if (!R.isFile()) return;
-        let Z = RS(s(e, t));
+        let Z = RS(join(e, t));
         if (Z === null || !S(Z, r)) return;
         z += R.size;
         let dt = (R.mode & 64) !== 0 ? "100755" : "100644";
@@ -252,13 +252,13 @@ async function kt(o) {
       z > wt)
     )
       return { committed: !1, skipReason: "too_large" };
-    let N = s(e, ".claude"),
+    let N = join(e, ".claude"),
       P = !isConfigDirPath(N),
       U = yt({ sessionId: a, ref: l, trigger: o.trigger, todos: o.todos });
     try {
       if (P) await assertDirChainReal(e, N);
       (await mkdir(N, { recursive: !0 }),
-        await writeFileAndFlush(s(e, ".claude", "RESUME.md"), U, {
+        await writeFileAndFlush(join(e, ".claude", "RESUME.md"), U, {
           encoding: "utf-8",
           allowSymlink: !P,
           checkParentDir: P,
@@ -363,7 +363,7 @@ async function kt(o) {
     if (q.code !== 0) return { committed: !1, skipReason: "git_error" };
     let V = q.stdout.trim();
     if (
-      (await lstat(s(m, "commondir")).catch((t) => {
+      (await lstat(join(m, "commondir")).catch((t) => {
         if (t.code === "ENOENT") return null;
         throw t;
       })) !== null
@@ -395,7 +395,7 @@ async function kt(o) {
   } catch {
     return { committed: !1, skipReason: "git_error" };
   } finally {
-    if (f !== void 0) await pt(f, { force: !0 }).catch(() => {});
+    if (f !== void 0) await rm(f, { force: !0 }).catch(() => {});
   }
 }
 async function Et(o) {
@@ -409,7 +409,7 @@ async function Et(o) {
         "rebase-merge",
         "rebase-apply",
       ].map((r) =>
-        lstat(s(o, r)).then(
+        lstat(join(o, r)).then(
           () => !0,
           () => !1,
         ),
@@ -420,8 +420,8 @@ async function Et(o) {
 async function Ct(o, e) {
   let r = await e(["rev-parse", "--git-path", "info/exclude"], { cwd: o });
   if (r.code !== 0) return;
-  let n = isAbsolute(r.stdout.trim()) ? r.stdout.trim() : s(o, r.stdout.trim());
-  for (let c of [s(n, ".."), n])
+  let n = isAbsolute(r.stdout.trim()) ? r.stdout.trim() : join(o, r.stdout.trim());
+  for (let c of [join(n, ".."), n])
     try {
       let f = await lstat(c);
       if (f.isSymbolicLink()) return;
@@ -431,7 +431,7 @@ async function Ct(o, e) {
   let a = await readFile(n, "utf-8").catch(() => ""),
     d = `/${v}`;
   if (a.split(/\r?\n/).includes(d)) return;
-  await mkdir(s(n, ".."), { recursive: !0 }).catch(() => {});
+  await mkdir(join(n, ".."), { recursive: !0 }).catch(() => {});
   let l =
     a.length > 0 &&
     !a.endsWith(`

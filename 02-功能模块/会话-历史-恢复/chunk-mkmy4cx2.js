@@ -15,18 +15,17 @@ import { resolveExecutableSafely } from "../../03-入口与运行时/CLI入口-C
 import { runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { extractUserPromptText } from "../../01-核心基础设施/核心工具-未归类/user-prompt-text.js";
 import { randomUUID } from "crypto";
-import { once as C } from "events";
+import { once } from "events";
 import { constants, createWriteStream } from "fs";
 import {
-  lstat as J,
-  open as B,
-  lstat as x,
+  lstat,
+  open,
   readdir,
   realpath,
   rename,
-  stat as de,
+  stat,
 } from "fs/promises";
-import { basename, dirname, isAbsolute, join as S } from "path";
+import { basename, dirname, isAbsolute, join } from "path";
 import { createInterface } from "readline";
 import { execFile } from "child_process";
 import { promisify } from "util";
@@ -211,8 +210,8 @@ async function q(e, n, r, t) {
 `,
         )
       )
-        await C(a, "drain");
-    (a.end(), await C(a, "finish"));
+        await once(a, "drain");
+    (a.end(), await once(a, "finish"));
   } catch (i) {
     throw (a.destroy(), i);
   }
@@ -283,9 +282,9 @@ async function readHeadAndTail(e, n, r, t) {
   if (t !== void 0 && t.hoverRestOn) return ge(t.source);
   try {
     if (T === constants.O_RDONLY) {
-      if (!(await J(e)).isFile()) return { head: "", tail: "" };
+      if (!(await lstat(e)).isFile()) return { head: "", tail: "" };
     }
-    let a = await B(e, T);
+    let a = await open(e, T);
     try {
       if (!(await a.stat()).isFile()) return { head: "", tail: "" };
       let i = await a.read(r, 0, LITE_READ_BUF_SIZE, 0);
@@ -340,13 +339,13 @@ async function H(e, n) {
 async function j(e, n) {
   if (n !== void 0 && n.hoverRestOn) return K(n.source);
   try {
-    if (!(await x(e)).isFile()) return "none";
+    if (!(await lstat(e)).isFile()) return "none";
   } catch (t) {
     return R(t) ? "none" : "unknown";
   }
   let r;
   try {
-    r = await B(e, "r");
+    r = await open(e, "r");
   } catch (t) {
     return R(t) ? "none" : "unknown";
   }
@@ -450,22 +449,22 @@ async function resolveJobTranscript(e, n, r, t, a) {
   let i = await canonicalizePath(n, workspaceV5Of(a?.source, a?.hoverRestOn === !0));
   if (validateUuid(e) === null)
     return {
-      path: S(getProjectDir(i), "invalid-resume-id.jsonl"),
+      path: join(getProjectDir(i), "invalid-resume-id.jsonl"),
       hasMessages: !1,
       via: "computed",
     };
-  let o = S(getProjectDir(i), `${e}.jsonl`),
+  let o = join(getProjectDir(i), `${e}.jsonl`),
     c = [];
   if (r !== void 0)
     c.push(
       r.endsWith(`${e}.jsonl`)
         ? { path: r, via: "linkScanPath" }
-        : { path: S(dirname(r), `${e}.jsonl`), via: "linkScanDir" },
+        : { path: join(dirname(r), `${e}.jsonl`), via: "linkScanDir" },
     );
   let u =
     a !== void 0 && a.hoverRestOn ? { ...a, source: Q(a.source) } : void 0;
   for (let f of await findProjectDirs(i, u))
-    c.push({ path: S(f, `${e}.jsonl`), via: "projectDir" });
+    c.push({ path: join(f, `${e}.jsonl`), via: "projectDir" });
   c.push({ path: o, via: "computed" });
   let s = new Set(),
     p = (f) => Pe(f, e, u),
@@ -479,7 +478,7 @@ async function resolveJobTranscript(e, n, r, t, a) {
   }
   if (t?.crossWorktree !== !1)
     for (let { projectDir: f } of await te(i, u)) {
-      let d = S(f, `${e}.jsonl`);
+      let d = join(f, `${e}.jsonl`);
       if (u !== void 0) {
         if (s.has(d)) continue;
         s.add(d);
@@ -508,7 +507,7 @@ async function Pe(e, n, r) {
   let a = await K(t);
   if (a === "has") return "has";
   try {
-    if (!(await x(e)).isFile()) return "none";
+    if (!(await lstat(e)).isFile()) return "none";
   } catch (i) {
     if (!R(i)) return "has";
     return a === "unknown" ? "unverifiable" : "none";
@@ -573,7 +572,7 @@ async function findSoleTranscriptWithMessagesById(e, n = new Set(), r) {
   try {
     for (let i of await readdir(t, { withFileTypes: !0 })) {
       if (!i.isDirectory()) continue;
-      let o = S(t, i.name, `${e}.jsonl`);
+      let o = join(t, i.name, `${e}.jsonl`);
       if (n.has(o)) continue;
       if ((await j(o)) !== "has") continue;
       if (a !== null) return null;
@@ -597,13 +596,13 @@ async function ve(e, n, r) {
         for (let f of l) {
           let d = listedProjectKey(f, i);
           if (d === void 0) continue;
-          let y = S(o, d, `${e}.jsonl`);
+          let y = join(o, d, `${e}.jsonl`);
           if (s.has(y) || n.has(y)) continue;
           s.add(y);
           let m = await K({ backend: t, key: a(d, e) });
           if (m === "unknown")
             try {
-              m = (await x(y)).isFile() ? await j(y) : "none";
+              m = (await lstat(y)).isFile() ? await j(y) : "none";
             } catch {}
           if (m !== "has") continue;
           if (c !== null) {
@@ -625,9 +624,9 @@ async function readSessionLite(e, n) {
   if (n !== void 0 && n.hoverRestOn) return ee(n.source);
   try {
     if (T === constants.O_RDONLY) {
-      if (!(await J(e)).isFile()) return null;
+      if (!(await lstat(e)).isFile()) return null;
     }
-    let r = await B(e, T);
+    let r = await open(e, T);
     try {
       let t = await r.stat();
       if (!t.isFile()) return null;
@@ -711,7 +710,7 @@ function slugCollisionGuardFoldsCase() {
   return !0;
 }
 function getProjectsDir() {
-  return S(getClaudeConfigDir(), "projects");
+  return join(getClaudeConfigDir(), "projects");
 }
 function getProjectKey(e) {
   return getConfiguredProjectDirName() ?? sanitizePath(e);
@@ -721,7 +720,7 @@ function legacyDerivedProjectKey(e) {
   return n === getProjectKey(e) ? void 0 : n;
 }
 function getProjectDir(e) {
-  return S(getProjectsDir(), getProjectKey(e));
+  return join(getProjectsDir(), getProjectKey(e));
 }
 function addressableProjectKey(e, n) {
   let r = basename(e);
@@ -754,7 +753,7 @@ async function dirBelongsToProject(e, n, r, t) {
   }
   for (let u of c) {
     if (!u.isFile() || !u.name.endsWith(".jsonl")) continue;
-    let s = await readSessionLite(S(e, u.name));
+    let s = await readSessionLite(join(e, u.name));
     if (s === null) continue;
     if (ne(s, o, r)) return !0;
   }
@@ -812,7 +811,7 @@ async function findProjectDirs(e, n) {
   } catch {}
   let a = legacyDerivedProjectKey(e);
   if (a !== void 0) {
-    let l = S(getProjectsDir(), a);
+    let l = join(getProjectsDir(), a);
     try {
       (await readdir(l), t.push(l));
     } catch {}
@@ -828,7 +827,7 @@ async function findProjectDirs(e, n) {
   try {
     for (let l of await readdir(o, { withFileTypes: !0 })) {
       if (!l.isDirectory() || !u(l.name).startsWith(s)) continue;
-      let f = S(o, l.name);
+      let f = join(o, l.name);
       if (u(f) !== p && (await dirBelongsToProject(f, e, c))) t.push(f);
     }
   } catch {}
@@ -838,7 +837,7 @@ async function Oe(e, n) {
   let r = await listProjectDirNamesV5(n.source);
   if (r === null) {
     let t = legacyDerivedProjectKey(e);
-    return [getProjectDir(e), ...(t !== void 0 ? [S(getProjectsDir(), t)] : [])];
+    return [getProjectDir(e), ...(t !== void 0 ? [join(getProjectsDir(), t)] : [])];
   }
   return projectDirsFromListedNames(e, r, !1, n);
 }
@@ -884,12 +883,12 @@ async function projectDirsFromListedNames(e, n, r, t) {
   for (let g of n)
     if (g === a) f = !0;
     else if (o !== void 0) {
-      if (d === void 0 && s(g) === s(o)) d = S(u, g);
+      if (d === void 0 && s(g) === s(o)) d = join(u, g);
     } else if (p !== void 0 && s(g).startsWith(p) && s(g) !== l && !m.has(s(g)))
       (m.add(s(g)), y.push(g));
   let h = [];
   for (let g of y) {
-    let I = S(u, g);
+    let I = join(u, g);
     if (await dirBelongsToProject(I, e, r, t)) h.push(I);
   }
   return [...(f ? [i] : []), ...(d !== void 0 ? [d] : []), ...h];
@@ -915,7 +914,7 @@ async function resolveSessionFilePath(e, n, r, t) {
     i = t && r !== void 0 && r.isKeySegment(e) ? Q(r) : void 0,
     o = i === void 0 ? void 0 : { source: i, hoverRestOn: t };
   async function c(p, l) {
-    let f = S(p, a);
+    let f = join(p, a);
     if (i) {
       let d = addressableProjectKey(p, i.isKeySegment);
       if (d !== void 0) {
@@ -930,7 +929,7 @@ async function resolveSessionFilePath(e, n, r, t) {
       }
     }
     try {
-      let d = await de(f);
+      let d = await stat(f);
       if (d.size > 0) return { filePath: f, projectPath: l, fileSize: d.size };
     } catch {}
     return;
@@ -990,7 +989,7 @@ async function resolveSessionFilePath(e, n, r, t) {
             : 0,
     );
     for (let { projectKey: f } of l) {
-      let d = await c(S(u, f), void 0);
+      let d = await c(join(u, f), void 0);
       if (d) return d;
     }
     return;
@@ -1002,7 +1001,7 @@ async function resolveSessionFilePath(e, n, r, t) {
     return;
   }
   for (let p of s) {
-    let l = await c(S(u, p), void 0);
+    let l = await c(join(u, p), void 0);
     if (l) return l;
   }
   return;
@@ -1234,7 +1233,7 @@ async function readTranscriptForLoad(e, n, r) {
     );
   }
   let o = Buffer.allocUnsafe(a),
-    c = await B(e, "r");
+    c = await open(e, "r");
   try {
     let u = 0;
     while (u < n) {

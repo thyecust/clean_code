@@ -15,7 +15,7 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
-import { join as S } from "path";
+import { join } from "path";
 var A = "active-time.json";
 var y = 31536000000,
   DEFAULT_BREAK_THRESHOLD_MINUTES = 10;
@@ -23,7 +23,7 @@ function d() {
   return { version: 1, windows: [] };
 }
 function v() {
-  return S(getClaudeConfigDir(), A);
+  return join(getClaudeConfigDir(), A);
 }
 function f() {
   return STORAGE_KEYS.state("active-time-ledger");

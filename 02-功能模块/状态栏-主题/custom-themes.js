@@ -23,8 +23,8 @@ import { createStore } from "../../01-核心基础设施/文件存储-原子写�
 import { serializeAsyncCalls } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { s, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
-import { readdir, readFile, stat as _ } from "fs/promises";
-import { basename, extname, join as C } from "path";
+import { readdir, readFile, stat } from "fs/promises";
+import { basename, extname, join } from "path";
 import { isDeepStrictEqual } from "util";
 class N {
   customThemeBases = void 0;
@@ -80,7 +80,7 @@ function getCachedCustomTheme(e) {
   );
 }
 function getThemesDir() {
-  return C(getClaudeConfigDir(), "themes");
+  return join(getClaudeConfigDir(), "themes");
 }
 function customThemeRef(e) {
   return `${k}${e}`;
@@ -128,7 +128,7 @@ async function S(e, t, r, i, a, h) {
   }
   let f;
   try {
-    if ((await _(e)).size > P) {
+    if ((await stat(e)).size > P) {
       logForDebugging(`[theme] ${e} exceeds 256KB; skipping`, { level: "warn" });
       return;
     }
@@ -157,7 +157,7 @@ async function R(e, t, r, i) {
                 : "";
             if (extname(T) !== ".json") continue;
             if ((d.size ?? 0) > P) {
-              logForDebugging(`[theme] ${C(e, T)} exceeds 256KB; skipping`, {
+              logForDebugging(`[theme] ${join(e, T)} exceeds 256KB; skipping`, {
                 level: "warn",
               });
               continue;
@@ -214,7 +214,7 @@ async function R(e, t, r, i) {
     }
     let x = { readErrors: 0 };
     for (let [u, d] of o.entries()) {
-      let T = await S(C(e, d.name), d.slug, t, i, g[u], x);
+      let T = await S(join(e, d.name), d.slug, t, i, g[u], x);
       if (T) v.push(T);
     }
     if (v.length === 0 && x.readErrors > 0)
@@ -241,7 +241,7 @@ async function R(e, t, r, i) {
   let h = [];
   for (let f of a) {
     if (extname(f) !== ".json") continue;
-    let o = await S(C(e, f), r + basename(f, ".json"), t);
+    let o = await S(join(e, f), r + basename(f, ".json"), t);
     if (o) h.push(o);
   }
   return h;
@@ -278,7 +278,7 @@ async function saveCustomTheme(e, t) {
       );
     return;
   }
-  await createJsonFileStore(C(getThemesDir(), `${e.slug}.json`), H, {
+  await createJsonFileStore(join(getThemesDir(), `${e.slug}.json`), H, {
     defaultValue: () => ({ name: e.slug, base: "dark", overrides: {} }),
     ensureDir: !0,
     indent: 2,

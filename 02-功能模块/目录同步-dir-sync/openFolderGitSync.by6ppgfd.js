@@ -52,7 +52,7 @@ import "../../01-核心基础设施/核心工具-类型与数值/to-integer.js";
 import { sanitizePathSegment, resolveDirSyncRecordLocation } from "./dir-sync-record-path.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { mkdir } from "fs/promises";
-import { join as q } from "path";
+import { join } from "path";
 var M = new Set();
 function W({ folder: e }) {
   return {
@@ -609,7 +609,7 @@ async function openFolderGitSync({
     b = d !== void 0,
     F = await resolveDirSyncStoreRoot(t, p),
     E = getDirSyncSessionDir(F, o),
-    k = q(E, TRASH_DIR_NAME);
+    k = join(E, TRASH_DIR_NAME);
   await mkdir(k, { recursive: !0, mode: se });
   let C = he(y),
     _ = await ue({
@@ -706,7 +706,7 @@ async function openFolderGitSync({
         initialPass: b ? "send" : "none",
         ...(f !== void 0 && { endedEarlier: f }),
         writerLock: (w) =>
-          acquireGitSyncWriterLock({ recordPath: c.path, lockPath: q(E, re), onLost: w }),
+          acquireGitSyncWriterLock({ recordPath: c.path, lockPath: join(E, re), onLost: w }),
         onPeerSilent: () => {},
         ...(isDirSyncStreamingEnabled() && {
           changeFeed: () => createDirChangeFeed({ root: t }),

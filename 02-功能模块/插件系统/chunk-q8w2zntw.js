@@ -208,7 +208,7 @@ async function refreshMarketplaceForScopedInstall(e, t, s) {
   }
 }
 var _e = toESM(pg(), 1);
-import { join as Ae, resolve, sep as He } from "path";
+import { join, resolve, sep } from "path";
 function We(e, t) {
   let s = { install: "installed", update: "updated", uninstall: "uninstalled" }[
     t
@@ -219,7 +219,7 @@ function We(e, t) {
     case SYNCED_PLUGIN_SOURCE:
       return `This plugin is synced from your claude.ai account with no marketplace backing \u2014 it cannot be ${s} here. Manage it on claude.ai, or \`claude plugin disable\` to turn it off on this machine.`;
     case SKILLS_DIR_PLUGIN_SOURCE:
-      return `This plugin is loaded from ${formatPathWithTilde(Ae(getClaudeConfigDir(), "skills"))}/ with no marketplace backing \u2014 it cannot be ${s}. Delete the directory to remove it; \`claude plugin disable\` to turn it off; edits there take effect after /reload-plugins.`;
+      return `This plugin is loaded from ${formatPathWithTilde(join(getClaudeConfigDir(), "skills"))}/ with no marketplace backing \u2014 it cannot be ${s}. Delete the directory to remove it; \`claude plugin disable\` to turn it off; edits there take effect after /reload-plugins.`;
   }
 }
 function Ce(e, t, s) {
@@ -726,7 +726,7 @@ async function $e(e, t, s, r, i) {
           (h = Se(F, h, p)?.key ?? h));
     }
     if (t && a === SKILLS_DIR_PLUGIN_SOURCE) {
-      if (!areLocalPluginDirsAllowedByPolicy()) return { success: !1, message: localPluginDirsBlockedMessage(formatPathWithTilde(Ae(getClaudeConfigDir(), "skills"))) };
+      if (!areLocalPluginDirsAllowedByPolicy()) return { success: !1, message: localPluginDirsBlockedMessage(formatPathWithTilde(join(getClaudeConfigDir(), "skills"))) };
     }
     if (t && isPluginBlockedByPolicy(h))
       return {
@@ -1634,7 +1634,7 @@ async function qe(
     };
   } finally {
     let u = getVersionedCachePath(c, B);
-    if (ue && v !== u && !resolve(u).startsWith(resolve(v) + He))
+    if (ue && v !== u && !resolve(u).startsWith(resolve(v) + sep))
       await ee.rm(v, { recursive: !0, force: !0 });
   }
 }

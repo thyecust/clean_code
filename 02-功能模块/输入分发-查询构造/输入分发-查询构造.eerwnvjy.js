@@ -958,10 +958,10 @@ import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-
 import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { constants } from "fs";
 import {
-  lstat as Mg,
-  open as Tg,
+  lstat,
+  open,
   readlink,
-  realpath as tc,
+  realpath,
 } from "fs/promises";
 function validateUntrustedPath(w, I, O) {
   let U = w.trim(),
@@ -989,7 +989,7 @@ function Da(w, I) {
 }
 var Dg = 1e6,
   REMOTE_READ_OPEN_FLAGS = constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | (constants.O_NOCTTY ?? 0),
-  nc = { realpath: tc, lstat: Mg, readlink: readlink },
+  nc = { realpath: realpath, lstat: lstat, readlink: readlink },
   REMOTE_READ_MAX_BYTES = 1e7,
   Og = new j(() => ({ promise: void 0 }));
 function Fg() {
@@ -1044,7 +1044,7 @@ async function isCanonicalPathContained(w, I) {
       continue;
     let V;
     try {
-      V = await tc(U);
+      V = await realpath(U);
     } catch {
       continue;
     }
@@ -1096,7 +1096,7 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
     for (let Oe of Me.pathsToCheck)
       if (!checkPathPermission(Oe, O, "read").allowed || matchingRuleForInput(Oe, O, "read", "ask") !== null)
         throw lr(w);
-    let Se = await Tg(me, REMOTE_READ_OPEN_FLAGS),
+    let Se = await open(me, REMOTE_READ_OPEN_FLAGS),
       xe,
       De;
     try {
@@ -1155,9 +1155,8 @@ async function readFileForRemote(w, I, O, U = "utf-8", V, te = nc) {
   }
 }
 F();
-import { randomUUID as My } from "crypto";
-import { readFile as Ay, stat as Ty } from "fs/promises";
-import { randomUUID as Ng } from "crypto";
+import { randomUUID } from "crypto";
+import { readFile, stat } from "fs/promises";
 function applyUsageToResultMessage(w, I) {
   if (w.type !== "result") return w;
   let O = I.subagentStats !== void 0 ? { subagent_stats: I.subagentStats } : {};
@@ -1177,14 +1176,14 @@ function buildResultMessage({ startedAt: w, common: I, variant: O }) {
   let U = {
     type: "result",
     duration_ms: Math.max(0, Math.round(performance.now() - w)),
-    uuid: Ng(),
+    uuid: randomUUID(),
   };
   return { ...I, ...O, ...U };
 }
 import { randomBytes } from "crypto";
 import { createWriteStream } from "fs";
-import { mkdir as Zg, rm as ty } from "fs/promises";
-import { join as lc } from "path";
+import { mkdir, rm } from "fs/promises";
+import { join } from "path";
 class La {
   chunks = [];
   static encoder = new TextEncoder();
@@ -1236,8 +1235,8 @@ function serializeFeedbackPayload(w, I, O, U) {
   if (Me) for (let [Se, xe] of Object.entries(Me)) V.push(`,${jsonStringify(Se)}:${jsonStringify(xe)}`);
   return (V.push("}"), V.toBuffer());
 }
-import { readdir as jg, stat as Hg } from "fs/promises";
-import { basename as Na, dirname as $a, join as Gg } from "path";
+import { readdir } from "fs/promises";
+import { basename, dirname } from "path";
 var $g = [
   "msg_bdrk_",
   "msg_vrtx_",
@@ -1405,10 +1404,10 @@ async function Wg(w, I, O) {
 }
 function ac(w) {
   if (!w.endsWith(".jsonl")) return;
-  let I = $a(w),
-    O = Na(I),
-    U = Na(w).slice(0, -6);
-  if ($a(I) !== getProjectsDir() || !isValidPathSegment(O) || !isValidPathSegment(U)) return;
+  let I = dirname(w),
+    O = basename(I),
+    U = basename(w).slice(0, -6);
+  if (dirname(I) !== getProjectsDir() || !isValidPathSegment(O) || !isValidPathSegment(U)) return;
   let V = STORAGE_KEYS.transcript(O, U);
   return V.namespace === "transcript" && validateStorageKey(V) === void 0 ? V : void 0;
 }
@@ -1418,12 +1417,12 @@ async function qg(w, I, O, U) {
     let Oe = ac(w);
     if (Oe !== void 0) return Yg(U, Oe, I, O);
   }
-  let V = $a(w),
-    te = Na(w),
+  let V = dirname(w),
+    te = basename(w),
     ne = Date.now() - oc[I],
     me;
   try {
-    me = await jg(V);
+    me = await readdir(V);
   } catch {
     return { transcripts: void 0, droppedThirdParty: 0 };
   }
@@ -1432,9 +1431,9 @@ async function qg(w, I, O, U) {
     me
       .filter((Oe) => Oe.endsWith(".jsonl") && Oe !== te)
       .map(async (Oe) => {
-        let Ae = Gg(V, Oe);
+        let Ae = join(V, Oe);
         try {
-          let $e = await Hg(Ae);
+          let $e = await stat(Ae);
           if ($e.isFile() && $e.mtimeMs >= ne)
             Me.push({
               path: Ae,
@@ -2050,10 +2049,10 @@ async function submitFeedbackPayload({
 }
 async function writeFeedbackBundleZip(w, I = "feedback.json") {
   let V = `cc-${new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15)}-${randomBytes(3).toString("hex")}`,
-    te = lc(getClaudeConfigDir(), "feedback-bundles"),
-    ne = lc(te, `${V}.zip`);
+    te = join(getClaudeConfigDir(), "feedback-bundles"),
+    ne = join(te, `${V}.zip`);
   try {
-    await Zg(te, { recursive: !0, mode: 448 });
+    await mkdir(te, { recursive: !0, mode: 448 });
     let { Zip: me, ZipDeflate: Me } = await import("../../00-第三方库/fflate/zipSync.gv6wj3ch.js"),
       Se = createWriteStream(ne, { mode: 384 });
     return (
@@ -2071,7 +2070,7 @@ async function writeFeedbackBundleZip(w, I = "feedback.json") {
     );
   } catch (me) {
     return (
-      await ty(ne, { force: !0 }).catch(() => {}),
+      await rm(ne, { force: !0 }).catch(() => {}),
       logError(me),
       logFeatureBad("feedback_bundle", "write_failed"),
       { success: !1, error: l(me) }
@@ -2130,7 +2129,6 @@ function mc(w) {
 function getTerminalLifecycleState(w, I) {
   return I || isFailedTerminalReason(w) ? "cancelled" : "completed";
 }
-import { randomUUID as ly } from "crypto";
 function fc(w) {
   if (w.length === 0) return;
   return {
@@ -2141,11 +2139,10 @@ function fc(w) {
       path: I.path,
       scope: getMemoryScopeForPath(I.path) ?? "personal",
     })),
-    uuid: ly(),
+    uuid: randomUUID(),
     session_id: K(),
   };
 }
-import { randomUUID as fy } from "crypto";
 var dy = 6,
   cy = 32,
   my = createLazyValue(() => c({ text: s().optional() }));
@@ -2312,7 +2309,7 @@ function buildSystemInitMessage(w) {
       ...(O.length > 0 && { mcp_server_errors: O.map((te) => ({ ...te })) }),
       analytics_disabled: w.analyticsDisabled,
       product_feedback_disabled: w.productFeedbackDisabled,
-      uuid: fy(),
+      uuid: randomUUID(),
     };
   if (w.memoryPaths) V.memory_paths = { ...w.memoryPaths };
   if (w.workerEpoch !== void 0 && w.workerEpoch >= 1)
@@ -2334,19 +2331,17 @@ function attachStartupTiming(w, I) {
   let O = consumeStartupTiming();
   if (O) w.startup_timing = O;
 }
-import { randomUUID as qa } from "crypto";
 function getLastTextBlockText(w) {
   if (typeof w === "string") return w;
   let I = w.at(-1);
   return I?.type === "text" ? I.text : null;
 }
-import { randomUUID as hy } from "crypto";
 function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
   let De =
       typeof w === "string"
         ? w
         : w.find((Qt) => Qt.type === "text")?.text || "",
-    Oe = te || hy(),
+    Oe = te || randomUUID(),
     Ae =
       typeof w === "string"
         ? w
@@ -2715,7 +2710,7 @@ async function ky({
       te,
       null,
       [],
-      { now: () => new Date().toISOString(), uuid: qa },
+      { now: () => new Date().toISOString(), uuid: randomUUID },
       ne,
       me,
       {
@@ -2754,7 +2749,7 @@ async function wy(
   ro,
   lo,
 ) {
-  let to = qa();
+  let to = randomUUID();
   if (!contentHasToolResult(w)) Rje(to);
   if (
     I === "prompt" &&
@@ -2946,7 +2941,7 @@ async function wy(
             O,
             te ?? null,
             [],
-            { now: () => new Date().toISOString(), uuid: () => qa() },
+            { now: () => new Date().toISOString(), uuid: () => randomUUID() },
             ne,
             Se,
             {
@@ -3242,7 +3237,7 @@ function createSdkEngine({
   let It = (Ke) => ({
       ...Ke,
       session_id: en,
-      uuid: "uuid" in Ke && typeof Ke.uuid === "string" ? Ke.uuid : My(),
+      uuid: "uuid" in Ke && typeof Ke.uuid === "string" ? Ke.uuid : randomUUID(),
     }),
     cn = (Ke) => (typeof Ke === "function" ? Ke() : Ke),
     ln = () => {
@@ -4080,11 +4075,11 @@ function createSdkEngine({
               });
             return;
           }
-          let Bt = await Ty(vt);
+          let Bt = await stat(vt);
           if (Bt.size > 10485760) return;
           let En = Math.floor(Bt.mtimeMs);
           if (En <= ze) {
-            let Rn = await Ay(vt, "utf-8"),
+            let Rn = await readFile(vt, "utf-8"),
               no = normalizeFileContent(Rn);
             Wo({
               type: "seed_read_state",
@@ -5685,16 +5680,11 @@ async function ih(w, I) {
   }
 }
 import {
-  lstat as Vc,
   lutimes,
-  mkdir as gh,
-  readdir as ru,
   rename,
-  rm as $r,
   rmdir,
-  stat as iu,
 } from "fs/promises";
-import { basename as jo, join as _o, relative as au, sep as yh } from "path";
+import { relative, sep } from "path";
 var Kc = 600000,
   ah = 2400000,
   ch = 60000,
@@ -5774,16 +5764,16 @@ function Bs() {
   (al(), invalidateSkillDirCaches(), skillsChangedEmitter.emit());
 }
 function dr() {
-  return _o(getClaudeConfigDir(), SYNCED_SKILLS_DIR_PATH);
+  return join(getClaudeConfigDir(), SYNCED_SKILLS_DIR_PATH);
 }
 function du(w) {
-  return _o(dr(), w);
+  return join(dr(), w);
 }
 function cu(w) {
-  return STORAGE_KEYS.userConfigDir("skills", au(_o(getClaudeConfigDir(), "skills"), w).split(yh));
+  return STORAGE_KEYS.userConfigDir("skills", relative(join(getClaudeConfigDir(), "skills"), w).split(sep));
 }
 function _h() {
-  return _o(getClaudeConfigDir(), "skills");
+  return join(getClaudeConfigDir(), "skills");
 }
 async function uu(w) {
   let I = dr();
@@ -5798,7 +5788,7 @@ async function uu(w) {
     return null;
   let U;
   try {
-    U = await ru(I, { withFileTypes: !0 });
+    U = await readdir(I, { withFileTypes: !0 });
   } catch {
     return null;
   }
@@ -5812,7 +5802,7 @@ async function uu(w) {
 }
 async function mu(w, I) {
   let O = 0;
-  for (let U of w) if (await xi(_o(dr(), U), I)) O++;
+  for (let U of w) if (await xi(join(dr(), U), I)) O++;
   if (O > 0) writeDiagnosticsEvent("info", "skills_sync_stray_entry_trashed", { count: O });
   return O;
 }
@@ -5864,10 +5854,10 @@ async function pruneSyncedSkillsForClosedGate(w) {
   return te;
 }
 function Oi() {
-  return _o(getClaudeConfigDir(), SKILLS_TRASH_DIR_PATH);
+  return join(getClaudeConfigDir(), SKILLS_TRASH_DIR_PATH);
 }
 function Fi(w) {
-  return _o(w, MANIFEST_FILE_NAME);
+  return join(w, MANIFEST_FILE_NAME);
 }
 var Zc = new Set(),
   tu = [],
@@ -5980,19 +5970,19 @@ async function sl(w, I, O, U) {
   await writeFileAtomic(Fi(U.root), me);
 }
 function ll(w) {
-  return _o(w, STAGING_DIR_NAME, String(process.pid));
+  return join(w, STAGING_DIR_NAME, String(process.pid));
 }
 function xo(w, I) {
   return validateSyncedItemName(I, w);
 }
 function wh(w) {
-  return cu(_o(w, "SKILL.md"));
+  return cu(join(w, "SKILL.md"));
 }
 async function Eh(w, I, O) {
   try {
     let U = xo(w, I);
     if (O) return (await O.statMeta(wh(U))).ok;
-    return (await iu(_o(U, "SKILL.md"))).isFile();
+    return (await stat(join(U, "SKILL.md"))).isFile();
   } catch {
     return !1;
   }
@@ -6021,7 +6011,7 @@ function Rh(w, I, O) {
 }
 function Mh(w, I) {
   let O = xo(w, I.name),
-    U = jo(O),
+    U = basename(O),
     V = createSkillCommand({
       skillName: U,
       displayName: void 0,
@@ -6096,8 +6086,8 @@ async function ou(
 ) {
   let me = I.root,
     Me = xo(me, w.name),
-    Se = _o(ll(me), au(me, Me)),
-    xe = _o(
+    Se = join(ll(me), relative(me, Me)),
+    xe = join(
       getTempBaseDir(),
       `claude-skill-${process.pid}-${Math.random().toString(36).slice(2)}.zip`,
     );
@@ -6111,21 +6101,21 @@ async function ou(
     )
       return _u;
     if (!(await I.guard.verify())) return LANDING_ROOT_REFUSED;
-    (await $r(Se, { recursive: !0, force: !0 }),
-      await gh(ll(me), { recursive: !0 }),
+    (await rm(Se, { recursive: !0, force: !0 }),
+      await mkdir(ll(me), { recursive: !0 }),
       await extractZipFile(xe, Se, {
         skipEntry: ($e) => $e.split(/[\\/]/).some((We) => isHiddenPathSegment(We)),
       }));
     let Oe = Se,
-      Ae = await ru(Se, { withFileTypes: !0 });
+      Ae = await readdir(Se, { withFileTypes: !0 });
     if (
       !Ae.some(($e) => $e.name === "SKILL.md") &&
       Ae.length === 1 &&
       Ae[0].isDirectory()
     )
-      Oe = _o(Se, Ae[0].name);
+      Oe = join(Se, Ae[0].name);
     try {
-      if (!(await iu(_o(Oe, "SKILL.md"))).isFile())
+      if (!(await stat(join(Oe, "SKILL.md"))).isFile())
         return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
     } catch {
       return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
@@ -6133,7 +6123,7 @@ async function ou(
     if (await isBareGitRepoLayout(Oe))
       return (writeDiagnosticsEvent("warn", "skills_sync_extracted_zip_unusable"), Ai);
     if (!(await I.guard.verify())) return LANDING_ROOT_REFUSED;
-    if (V) await $r(Me, { recursive: !0, force: !0 });
+    if (V) await rm(Me, { recursive: !0, force: !0 });
     try {
       await rename(Oe, Me);
     } catch ($e) {
@@ -6145,10 +6135,10 @@ async function ou(
           landingLocalFailure(We)
         );
       }
-      let Ye = await te(jo(Me));
+      let Ye = await te(basename(Me));
       if (Ye === "inFlight")
         return (writeDiagnosticsEvent("info", "skills_sync_target_in_flight_elsewhere"), LANDING_DEFERRED);
-      if (Ye === "landed") await $r(Me, { recursive: !0, force: !0 });
+      if (Ye === "landed") await rm(Me, { recursive: !0, force: !0 });
       else if (!(await xi(Me, U))) return LANDING_DISPLACE_BLOCKED;
       try {
         await rename(Oe, Me);
@@ -6164,7 +6154,7 @@ async function ou(
     return LANDING_OK;
   } finally {
     if (
-      (await $r(xe, { force: !0 }).catch(() => {}),
+      (await rm(xe, { force: !0 }).catch(() => {}),
       !I.guard.refused() &&
         (await verifySyncOwnedPath(
           me,
@@ -6173,7 +6163,7 @@ async function ou(
           { checkStagingLeaf: !0, storageV5: U },
         ).catch(() => null)) === "real")
     )
-      await $r(Se, { recursive: !0, force: !0 }).catch(() => {});
+      await rm(Se, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
 var Th = 500;
@@ -6203,7 +6193,7 @@ async function bu(w, I) {
   );
 }
 async function Cu(w, I, O) {
-  let U = _o(w, MANIFEST_FILE_NAME),
+  let U = join(w, MANIFEST_FILE_NAME),
     V,
     te,
     ne;
@@ -6302,7 +6292,7 @@ async function Cu(w, I, O) {
       2,
     );
     if (Ae !== te) await writeFileAtomic(U, Ae).catch(() => {});
-  } else await $r(U, { force: !0 }).catch(() => {});
+  } else await rm(U, { force: !0 }).catch(() => {});
   return Se;
 }
 async function xh(w, I, O) {
@@ -6385,7 +6375,7 @@ async function xh(w, I, O) {
     if (
       ((xe.consecutiveFailedRounds = 0),
       !(await hasSyncMarker(dr(), De)) &&
-        (await Vc(Ae).then(
+        (await lstat(Ae).then(
           (He) => He.isDirectory(),
           () => !1,
         )) &&
@@ -6428,7 +6418,7 @@ async function xh(w, I, O) {
         if (Je === "indeterminate") return !1;
         return xi(Qe, I);
       },
-      ro = new Set(Array.from(at, (He) => jo(He))),
+      ro = new Set(Array.from(at, (He) => basename(He))),
       lo = pruneStaleSyncedSkills(ro);
     if (pruneStaleSkillEntries(ro) + lo > 0) (clearCommandMemoizationCaches(), al(), skillsChangedEmitter.emit());
     let to = await Promise.all(
@@ -6443,7 +6433,7 @@ async function xh(w, I, O) {
         if (nn) (Tt.add(Qe.skillId), Ye.push({ item: nn }));
         continue;
       }
-      let Ot = jo(xo(Ae, Qe.name));
+      let Ot = basename(xo(Ae, Qe.name));
       if (xe.placeholders.delete(Ot))
         (xe.pendingDownloads.get(Ot)?.resolve({ ok: !0 }),
           xe.pendingDownloads.delete(Ot),
@@ -6515,14 +6505,14 @@ async function xh(w, I, O) {
     let At = 0;
     for (let { item: He, prev: Qe } of Ye)
       if (!Qe)
-        (addSkillPlaceholder(Mh(Ae, He)), At++, me.set(He.skillId, registerPendingSkillDownload(jo(xo(Ae, He.name)))));
+        (addSkillPlaceholder(Mh(Ae, He)), At++, me.set(He.skillId, registerPendingSkillDownload(basename(xo(Ae, He.name)))));
     if (At > 0) (clearCommandMemoizationCaches(), al(), skillsChangedEmitter.emit());
     let Mn = !0;
     try {
       let He = [];
       for (let { item: Qe } of Ye)
         try {
-          He.push(formatSyncClaimKey(jo(xo(Ae, Qe.name)), Hn));
+          He.push(formatSyncClaimKey(basename(xo(Ae, Qe.name)), Hn));
         } catch {}
       if (He.length > 0)
         await sl(
@@ -6586,7 +6576,7 @@ async function xh(w, I, O) {
             if ((rn.push(He), Qe && Qe.name !== He.name)) {
               if (!(await dn(Qe.name))) on.add(Qe.name);
             }
-            (removeSkillPlaceholder(jo(xo(Ae, He.name))), invalidateSkillDirCaches(), clearCommandMemoizationCaches(), logFeatureOk("skills_sync_download"));
+            (removeSkillPlaceholder(basename(xo(Ae, He.name))), invalidateSkillDirCaches(), clearCommandMemoizationCaches(), logFeatureOk("skills_sync_download"));
           } else {
             let Ot = getLandingFailureCode(Je.cause);
             if (Ot === null) (Tn++, writeDiagnosticsEvent("info", "skills_sync_landing_deferred"));
@@ -6600,12 +6590,12 @@ async function xh(w, I, O) {
               try {
                 let Fn = xo(Ae, He.name);
                 if (
-                  await Vc(Fn).then(
+                  await lstat(Fn).then(
                     () => !1,
                     (Oo) => W(Oo),
                   )
                 )
-                  Kt.add(formatSyncClaimKey(jo(Fn), Hn));
+                  Kt.add(formatSyncClaimKey(basename(Fn), Hn));
               } catch {}
           }
           me.get(He.skillId)?.(
@@ -6637,7 +6627,7 @@ async function xh(w, I, O) {
         Qe = new Set();
       for (let Je of [...He, ...an])
         try {
-          Qe.add(jo(xo(Ae, Je.name)));
+          Qe.add(basename(xo(Ae, Je.name)));
         } catch {}
       for (let Je of Qe) Kt.add(formatSyncClaimKey(Je, Hn));
       for (let Je of Zt) if (Qe.has(parseSyncClaimKey(Je).name)) Kt.add(Je);
@@ -6736,7 +6726,7 @@ async function xh(w, I, O) {
           { checkStagingLeaf: !0, storageV5: I },
         ).catch(() => null)) === "real"
       )
-        await $r(ll(Se.root), { recursive: !0, force: !0 }).catch(() => {});
+        await rm(ll(Se.root), { recursive: !0, force: !0 }).catch(() => {});
     }
   }
 }
@@ -6756,7 +6746,7 @@ async function ku(w, I, O) {
   try {
     let U = xo(w, I),
       V = xo(w, O);
-    return jo(U) === jo(V) || (await isSameFile(U, V));
+    return basename(U) === basename(V) || (await isSameFile(U, V));
   } catch {
     return !1;
   }
@@ -7283,13 +7273,9 @@ async function runPluginUpdateCommand(w, I, { yes: O = !1 } = {}, U) {
     return handlePluginCommandError(V, "update", w);
   }
 }
-import { mkdir as Fu, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import {
-  dirname as Bh,
-  join as Cr,
-  relative as $h,
-  resolve as Uu,
-  sep as jh,
+  resolve,
 } from "path";
 var Hh = "https://anthropic.com/claude-code/plugin.schema.json",
   PLUGIN_SCAFFOLD_COMPONENTS = ["skills", "agents", "hooks", "mcp", "lsp", "output-style", "channel"];
@@ -7316,7 +7302,7 @@ function buildPluginScaffoldFiles(w) {
   if (
     ((ne.skills = ["./"]),
     te.push({
-      relPath: Cr(".claude-plugin", "plugin.json"),
+      relPath: join(".claude-plugin", "plugin.json"),
       contents:
         jsonStringify(ne, null, 2) +
         `
@@ -7326,16 +7312,16 @@ function buildPluginScaffoldFiles(w) {
     V.includes("skills"))
   )
     te.push({
-      relPath: Cr("skills", "example", "SKILL.md"),
+      relPath: join("skills", "example", "SKILL.md"),
       contents: Nu("example"),
     });
   if (V.includes("agents"))
-    te.push({ relPath: Cr("agents", "example.md"), contents: Gh() });
+    te.push({ relPath: join("agents", "example.md"), contents: Gh() });
   if (V.includes("hooks"))
     te.push(
-      { relPath: Cr("hooks", "hooks.json"), contents: Kh() },
+      { relPath: join("hooks", "hooks.json"), contents: Kh() },
       {
-        relPath: Cr("hooks-handlers", "on-session-start.ts"),
+        relPath: join("hooks-handlers", "on-session-start.ts"),
         contents: Wh(),
         mode: 493,
       },
@@ -7344,7 +7330,7 @@ function buildPluginScaffoldFiles(w) {
     te.push({ relPath: ".mcp.json", contents: zh() });
   if (V.includes("lsp")) te.push({ relPath: ".lsp.json", contents: qh() });
   if (V.includes("output-style"))
-    te.push({ relPath: Cr("output-styles", `${I}.md`), contents: Xh(I) });
+    te.push({ relPath: join("output-styles", `${I}.md`), contents: Xh(I) });
   if (V.includes("channel"))
     ((ne.channels = [{ server: I, displayName: I }]),
       te.push(
@@ -7361,25 +7347,25 @@ function buildPluginScaffoldFiles(w) {
   );
 }
 async function writePluginScaffoldFiles(w, I, O) {
-  let U = Uu(w);
+  let U = resolve(w);
   if (!O.force)
     try {
-      await Fu(Cr(U, ".claude-plugin"));
+      await mkdir(join(U, ".claude-plugin"));
     } catch (te) {
       if (A(te) === "EEXIST")
         return {
           ok: !1,
-          error: `${Cr(U, ".claude-plugin")} already exists. Use --force to overwrite.`,
+          error: `${join(U, ".claude-plugin")} already exists. Use --force to overwrite.`,
         };
       if (A(te) !== "ENOENT") throw te;
     }
   let V = [];
   for (let te of I) {
-    let ne = Uu(U, te.relPath),
-      me = $h(U, ne);
-    if (me.startsWith(".." + jh) || me === "..")
+    let ne = resolve(U, te.relPath),
+      me = relative(U, ne);
+    if (me.startsWith(".." + sep) || me === "..")
       return { ok: !1, error: `Refusing to write outside ${U}: ${te.relPath}` };
-    if ((await Fu(Bh(ne), { recursive: !0 }), O.force))
+    if ((await mkdir(dirname(ne), { recursive: !0 }), O.force))
       await writeFileAtomic(ne, te.contents, te.mode);
     else
       try {
@@ -7619,7 +7605,6 @@ function getCloudSessionsUnavailableReason() {
   return policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
 }
 var gl = toESM(picomatchModule(), 1);
-import { readFile as cS, stat as uS } from "fs/promises";
 function* Bu(w) {
   for (let I of w)
     if (I.type === "assistant" && Array.isArray(I.message.content)) {
@@ -7768,8 +7753,8 @@ async function matchPluginRelevanceSignal(w, I) {
               let Oe = ne.get(De),
                 Ae = Oe && isFullFileView(Oe) ? Oe.content : void 0;
               if (!Ae) {
-                if ((await uS(De)).size > 524288) continue;
-                Ae = await cS(De, "utf8");
+                if ((await stat(De)).size > 524288) continue;
+                Ae = await readFile(De, "utf8");
               }
               if (xe.test(Ae)) return De;
             } catch {}
@@ -8328,15 +8313,15 @@ function zu(w) {
   if (I < 60) return `${I}s`;
   return `${Math.floor(I / 60)}m ${I % 60}s`;
 }
-import { isAbsolute, resolve as wS, win32 as Vu } from "path";
+import { isAbsolute, win32 } from "path";
 async function isSessionCwdSafeToAdopt(w, I, O = fsSurface) {
   if (
-    !(isAbsolute(w) || Vu.isAbsolute(w)) ||
+    !(isAbsolute(w) || win32.isAbsolute(w)) ||
     An(w) ||
     gp(w) ||
-    gp(Vu.normalize(w)) ||
+    gp(win32.normalize(w)) ||
     jf(w) ||
-    jf(wS(w)) ||
+    jf(resolve(w)) ||
     pl(w)
   )
     return (
@@ -8355,9 +8340,7 @@ async function isSessionCwdSafeToAdopt(w, I, O = fsSurface) {
     );
   return !0;
 }
-import { stat as PS } from "fs/promises";
-import { homedir as RS } from "os";
-import { join as Xu, sep as MS } from "path";
+import { homedir } from "os";
 var AS = 604800000,
   PREFILL_LONG_PROMPT_THRESHOLD = 1000;
 function formatDeepLinkSessionNotice(w) {
@@ -8383,24 +8366,24 @@ async function getRepoLastFetchTime(w) {
   if (!I) return;
   let O = await getCommonDir(I),
     [U, V] = await Promise.all([
-      Ju(Xu(I, "FETCH_HEAD")),
-      O ? Ju(Xu(O, "FETCH_HEAD")) : Promise.resolve(void 0),
+      Ju(join(I, "FETCH_HEAD")),
+      O ? Ju(join(O, "FETCH_HEAD")) : Promise.resolve(void 0),
     ]);
   if (U && V) return U > V ? U : V;
   return U ?? V;
 }
 async function Ju(w) {
   try {
-    let { mtime: I } = await PS(w);
+    let { mtime: I } = await stat(w);
     return I;
   } catch {
     return;
   }
 }
 function TS(w) {
-  let I = RS();
+  let I = homedir();
   if (w === I) return "~";
-  if (w.startsWith(I + MS)) return "~" + w.slice(I.length);
+  if (w.startsWith(I + sep)) return "~" + w.slice(I.length);
   return w;
 }
 var IS = new Set([
@@ -8849,8 +8832,6 @@ function Rl(w, I) {
     );
   return U;
 }
-import { readFile as GS } from "fs/promises";
-import { resolve as KS } from "path";
 function lm(w, I = process.env) {
   if (w) I.CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT = "1";
 }
@@ -8863,9 +8844,9 @@ async function cm(w) {
       error:
         "Error: Cannot use both --append-subagent-system-prompt and --append-subagent-system-prompt-file. Please use only one.",
     };
-  let I = KS(w.appendSubagentSystemPromptFile);
+  let I = resolve(w.appendSubagentSystemPromptFile);
   try {
-    return { ok: !0, prompt: await GS(I, "utf8") };
+    return { ok: !0, prompt: await readFile(I, "utf8") };
   } catch (O) {
     if (A(O) === "ENOENT")
       return {
@@ -9768,11 +9749,6 @@ function Am({ deferToCleanup: w, storageV5: I }) {
     return registerCleanup(() => U);
   return;
 }
-import { readFile as vf } from "fs/promises";
-import { resolve as ps } from "path";
-import { lstat as xm, readdir as Dm, realpath as __ } from "fs/promises";
-import { homedir as C_ } from "os";
-import { join as ji, resolve as w_ } from "path";
 var P_ = 65536,
   E_ = 20,
   R_ = [
@@ -9893,7 +9869,7 @@ function K_(w, I) {
 }
 async function os(w, I) {
   try {
-    let O = await readFileHardened(ji(w, I), P_, { noFollow: !0 });
+    let O = await readFileHardened(join(w, I), P_, { noFollow: !0 });
     return typeof O === "string" ? O : null;
   } catch {
     return null;
@@ -9901,7 +9877,7 @@ async function os(w, I) {
 }
 async function Om(w) {
   try {
-    return (await xm(w)).isFile();
+    return (await lstat(w)).isFile();
   } catch {
     return !1;
   }
@@ -9921,7 +9897,7 @@ async function W_(w, I, O) {
       : []),
   ];
   for (let [V, te] of U) {
-    if (V.startsWith(".cargo/") && !(await Om(ji(w, V)))) continue;
+    if (V.startsWith(".cargo/") && !(await Om(join(w, V)))) continue;
     let ne = await os(w, V);
     if (ne === null) continue;
     for (let me of K_(ne, te))
@@ -9961,16 +9937,16 @@ async function z_(w, I) {
 }
 async function V_(w) {
   try {
-    return (await xm(w)).isDirectory();
+    return (await lstat(w)).isDirectory();
   } catch {
     return !1;
   }
 }
 async function q_(w) {
   try {
-    let I = ji(w, ".github", "workflows");
+    let I = join(w, ".github", "workflows");
     if (!(await V_(I))) return !1;
-    return (await Dm(I)).some((U) => U.endsWith(".yml") || U.endsWith(".yaml"));
+    return (await readdir(I)).some((U) => U.endsWith(".yml") || U.endsWith(".yaml"));
   } catch {
     return !1;
   }
@@ -9986,7 +9962,7 @@ async function X_(w, I, O) {
     if (V !== null && Im.test($i(V))) return !0;
   }
   if (O) {
-    let U = ji(w, "gradle", "libs.versions.toml");
+    let U = join(w, "gradle", "libs.versions.toml");
     if (await Om(U)) {
       let V = await os(w, "gradle/libs.versions.toml");
       if (V !== null && Im.test($i(V))) return !0;
@@ -10034,7 +10010,7 @@ async function Q_(w, I, O, U, V) {
   return "none";
 }
 async function Z_(w) {
-  let I = await Dm(w, { withFileTypes: !0 }),
+  let I = await readdir(w, { withFileTypes: !0 }),
     O = I.filter((Ae) => Ae.isFile()).map((Ae) => Ae.name),
     U = I.filter((Ae) => Ae.isDirectory()).map((Ae) => Ae.name),
     V = new Set(O),
@@ -10111,11 +10087,11 @@ async function Fm() {
     let w = findGitRoot(getCwd());
     if (w === null) return null;
     try {
-      let V = C_();
+      let V = homedir();
       if (V) {
-        let te = zn(w_(V));
+        let te = zn(resolve(V));
         if (w === te) return null;
-        let ne = await __(V).then(
+        let ne = await realpath(V).then(
           (me) => zn(me),
           () => null,
         );
@@ -11381,7 +11357,6 @@ async function ep(w, I) {
     );
   }
 }
-import { join as kb } from "path";
 import { createPublicKey } from "crypto";
 var hb = {
     id: "claude-code-release-signing-key",
@@ -11496,7 +11471,7 @@ var lp = 2,
     }),
   );
 function Nl(w) {
-  return kb(getModelCatalogCacheDir(), `published-${w}.json`);
+  return join(getModelCatalogCacheDir(), `published-${w}.json`);
 }
 function Ks() {
   return getProviderState().publishedCatalogByKey;
@@ -12557,7 +12532,6 @@ function na(w, I) {
 function Gp(w, I) {
   return { match: I === void 0 ? void 0 : w === I, old: w, new: I };
 }
-import { join as yC } from "path";
 var Xp = 2,
   Jp = 3600000,
   Qp = 0.1,
@@ -12587,7 +12561,7 @@ function la(w, I) {
   );
 }
 function Zp(w, I) {
-  return yC(getModelCatalogCacheDir(), `${w.orgUuid}-${w.accountScope}-${I}.json`);
+  return join(getModelCatalogCacheDir(), `${w.orgUuid}-${w.accountScope}-${I}.json`);
 }
 function ia() {
   return getProviderState().servedCatalogByKey;
@@ -13262,7 +13236,6 @@ async function Sf(w, I, O, U) {
     return (logError(dt(ge(V), "skill load telemetry failed")), null);
   }
 }
-import { resolve as KC } from "path";
 function _f(w, I) {
   if (shouldDisableAllHooksIncludingManaged()) return;
   if (isCustomizationDisabled("hooks")) return;
@@ -13273,7 +13246,7 @@ function _f(w, I) {
     if (U && ne !== "policySettings") continue;
     let me = getSettingsFilePathForSource(ne);
     if (me) {
-      let Se = KC(me);
+      let Se = resolve(me);
       if (V.has(Se)) continue;
       V.add(Se);
     }
@@ -13909,12 +13882,12 @@ ${getTmuxInstallInstructions()}`);
         "Error: Cannot use both --system-prompt and --system-prompt-file. Please use only one.",
       );
     try {
-      let Le = ps(I.systemPromptFile);
-      Wr = await vf(Le, "utf8");
+      let Le = resolve(I.systemPromptFile);
+      Wr = await readFile(Le, "utf8");
     } catch (Le) {
       if (A(Le) === "ENOENT")
         return cliError(
-          `Error: System prompt file not found: ${ps(I.systemPromptFile)}`,
+          `Error: System prompt file not found: ${resolve(I.systemPromptFile)}`,
         );
       return cliError(`Error reading system prompt file: ${l(Le)}`);
     }
@@ -13926,12 +13899,12 @@ ${getTmuxInstallInstructions()}`);
         "Error: Cannot use both --append-system-prompt and --append-system-prompt-file. Please use only one.",
       );
     try {
-      let Le = ps(I.appendSystemPromptFile);
-      Cs = verifyBridgeCarrierPrompt(await vf(Le));
+      let Le = resolve(I.appendSystemPromptFile);
+      Cs = verifyBridgeCarrierPrompt(await readFile(Le));
     } catch (Le) {
       if (A(Le) === "ENOENT")
         return cliError(
-          `Error: Append system prompt file not found: ${ps(I.appendSystemPromptFile)}`,
+          `Error: Append system prompt file not found: ${resolve(I.appendSystemPromptFile)}`,
         );
       return cliError(`Error reading append system prompt file: ${l(Le)}`);
     }
@@ -14063,7 +14036,7 @@ ${Le}`
         if (ao.config) yo = ao.config.mcpServers;
         So = ao.errors;
       } else {
-        let ao = ps(Cn),
+        let ao = resolve(Cn),
           qo = parseMcpConfigFromFilePath({
             filePath: ao,
             expandVars: !0,
@@ -14248,7 +14221,7 @@ ${Gn}`
             strictMcpConfig: Ct,
             restricted: We,
           },
-          ps,
+          resolve,
         ),
       ),
       ...(xr ? ["--fallback-model", xr] : []),
@@ -15260,7 +15233,6 @@ ${so}`
   if (!Os) return { kind: "prepared-headless", ...Xd };
   return { kind: "prepared-interactive", ...Xd, ...Os };
 }
-import { realpath as ZC } from "fs/promises";
 async function addTrackedRepoPath(w) {
   try {
     let I = await detectCurrentRepository();
@@ -15272,7 +15244,7 @@ async function addTrackedRepoPath(w) {
       V = findGitRoot(O) ?? O,
       te;
     try {
-      te = zn(await ZC(V));
+      te = zn(await realpath(V));
     } catch {
       te = V;
     }

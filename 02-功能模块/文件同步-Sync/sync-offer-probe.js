@@ -43,7 +43,7 @@ import { MAX_OVERLAY_BUNDLE_BYTES } from "../云会话-Teleport/overlay-bundle.j
 import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { lstat } from "fs/promises";
-import { join as R } from "path";
+import { join } from "path";
 var B = 15000,
   E = 1048576,
   x = 8;
@@ -405,7 +405,7 @@ async function j(e) {
 var A = createConcurrencyLimiter(x, async (e, o) => {
   if ((e.signal.throwIfAborted(), !isSafePortablePath(o))) return 0;
   try {
-    let t = await lstat(R(e.gitRoot, o));
+    let t = await lstat(join(e.gitRoot, o));
     return t.isFile() ? t.size : 0;
   } catch {
     return 0;

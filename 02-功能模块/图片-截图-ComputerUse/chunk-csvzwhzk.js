@@ -329,7 +329,7 @@ import {
   writeFile,
 } from "fs/promises";
 import { tmpdir } from "os";
-import { join as R } from "path";
+import { join } from "path";
 var S = {
     "image/png": "png",
     "image/jpeg": "jpg",
@@ -341,7 +341,7 @@ var S = {
   w;
 function E() {
   return (
-    (w ??= mkdtemp(R(tmpdir(), "claude-chrome-screenshots-")).catch((e) => {
+    (w ??= mkdtemp(join(tmpdir(), "claude-chrome-screenshots-")).catch((e) => {
       throw ((w = void 0), e);
     })),
     w
@@ -408,7 +408,7 @@ async function _(e, t) {
   for (let s of e.content) {
     if ((o.push(s), s.type !== "image")) continue;
     let r = Object.hasOwn(S, s.mimeType) ? S[s.mimeType] : "png",
-      i = R(n, `screenshot-${Date.now()}-${X++}.${r}`);
+      i = join(n, `screenshot-${Date.now()}-${X++}.${r}`);
     try {
       (await writeFile(i, Buffer.from(s.data, "base64"), { flag: "wx", mode: 384 }),
         (l = !0),

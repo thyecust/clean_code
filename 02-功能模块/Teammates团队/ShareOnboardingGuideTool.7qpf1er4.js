@@ -16,8 +16,8 @@ import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME, SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION } from "./share-onboarding-guide-tool.js";
 import { isOnboardingGuideSharingEnabled, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides } from "./onboarding-guide-api.js";
 import { s, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { readFile, stat as b } from "fs/promises";
-import { join as O } from "path";
+import { readFile, stat } from "fs/promises";
+import { join } from "path";
 var k = createLazyValue(() =>
     Qe({
       mode: X(["check", "update", "create", "delete"])
@@ -104,10 +104,10 @@ var k = createLazyValue(() =>
                 ? (await listOnboardingGuides(t)).find((r) => r.short_code === o)
                 : await p(t);
               if (e) {
-                let r = O(he(), u),
+                let r = join(he(), u),
                   d = null;
                 try {
-                  d = (await b(r)).size;
+                  d = (await stat(r)).size;
                 } catch (y) {
                   if (!W(y)) throw y;
                 }
@@ -134,10 +134,10 @@ var k = createLazyValue(() =>
                 `Upload didn't go through (${r}). Fall back to the manual share copy.`,
               );
             }
-          let n = O(he(), u),
+          let n = join(he(), u),
             l;
           try {
-            l = (await b(n)).size;
+            l = (await stat(n)).size;
           } catch (e) {
             if (W(e))
               return i(
