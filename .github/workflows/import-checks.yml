@@ -42,3 +42,12 @@ jobs:
       # `readEmbeddedAsset*("./x", import.meta.dirname)` 是普通字符串字面量，根本不是 import。
       - name: 懒加载解析基准
         run: bun .analysis/move/check-lazy-base.mjs
+
+      # 上面三道看的都是引用**关系**（能不能解析、落不落得到文件、导出面对不对），
+      # 没有一道在看「这个标识符有没有定义」。实测因此炸过两次，都是运行时报错才发现：
+      # shell-utils.js 的 `WZt`（拆分时定义留在了 execution-core.js）、
+      # execution-core.js 的 `yr`（改名 yr → slugify 只改了一半，同文件里混用）。
+      # 这条用 oxlint 的 no-undef 兜住，只对**新引入**的报错 —— 既存债务记在脚本的
+      # KNOWN 里，修一条删一条。
+      - name: 悬空的自由标识符
+        run: bun .analysis/check-undef.mjs

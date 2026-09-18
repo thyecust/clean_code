@@ -102229,7 +102229,7 @@ function Szo(e, t, r) {
   let o = new Map();
   for (let _ of getInProcessTeammateTasks(t.all())) {
     if (_.status !== "running") continue;
-    o.set(yr(_.identity.agentName), _.identity.agentId);
+    o.set(slugify(_.identity.agentName), _.identity.agentId);
   }
   let d = r?.().agentNameRegistry;
   if (d)
@@ -102239,7 +102239,7 @@ function Szo(e, t, r) {
         C?.type === "local_agent" &&
         (C.status === "running" || isAgentParkedOnKeepalive(C))
       )
-        o.set(yr(_), _);
+        o.set(slugify(_), _);
     }
   let p = findNearNameMatches(e, [...o.keys()], 1)[0];
   return p === void 0 ? void 0 : o.get(p);
@@ -102248,7 +102248,7 @@ function Szo(e, t, r) {
 function kzo(e, t) {
   let r = new Map();
   for (let p of getInProcessTeammateTasks(t)) {
-    if (yr(p.identity.agentName) !== e) continue;
+    if (slugify(p.identity.agentName) !== e) continue;
     let _ = r.get(p.identity.agentId);
     if (!_ || (_.status !== "running" && p.status === "running"))
       r.set(p.identity.agentId, p);
@@ -146500,12 +146500,12 @@ var ifs = 20,
 
 function lfs(e, t, r = Date.now()) {
   let o = buildRecipientListing(e, t),
-    d = new Set([yr(MAIN_CONVERSATION_NAME)]);
-  if (e.teamContext) d.add(yr(TEAM_LEAD_AGENT_NAME));
+    d = new Set([slugify(MAIN_CONVERSATION_NAME)]);
+  if (e.teamContext) d.add(slugify(TEAM_LEAD_AGENT_NAME));
   let p = [];
   for (let F of o.candidates)
     if (F.kind === "main" || F.kind === "teammate" || F.kind === "subagent")
-      d.add(yr(F.name));
+      d.add(slugify(F.name));
     else p.push(F);
   let _ = (F) => Math.min(F.lastActive ?? 0, r);
   p.sort((F, U) => {
@@ -146515,14 +146515,14 @@ function lfs(e, t, r = Date.now()) {
   });
   let E = new Set(),
     C = p.filter((F) => {
-      let U = `${F.kind}\x00${F.id}\x00${yr(F.name)}`;
+      let U = `${F.kind}\x00${F.id}\x00${slugify(F.name)}`;
       if (E.has(U)) return !1;
       return (E.add(U), !0);
     }),
     I = new Set();
   for (let F of t.sessions) {
     let U = F.name ? normalizeSessionName(F.name) : null;
-    if (U) I.add(`session\x00${F.sock}\x00${yr(U)}`);
+    if (U) I.add(`session\x00${F.sock}\x00${slugify(U)}`);
   }
   let D = new Set(),
     N = new Set();
@@ -146533,11 +146533,11 @@ function lfs(e, t, r = Date.now()) {
       (F.kind === "cloud-session" || F.kind === "bridge-session") &&
       N.has(F.id)
     )
-      D.add(`${F.kind}\x00${F.id}\x00${yr(F.name)}`);
+      D.add(`${F.kind}\x00${F.id}\x00${slugify(F.name)}`);
   for (let F of t.sessions)
     if (!F.name && F.cwd) {
       let U = normalizeSessionName(basename(F.cwd)),
-        V = U && `session\x00${F.sock}\x00${yr(U)}`;
+        V = U && `session\x00${F.sock}\x00${slugify(U)}`;
       if (V && !I.has(V)) D.add(V);
     }
   return { candidates: C, inProcess: d, defaultNamed: D };
@@ -146595,14 +146595,14 @@ function Tfr(e) {
     let p = d[1] ?? d[2];
     if (!kfr(p)) continue;
     let _ = d[3],
-      E = `${yr(p)}\x00${_ ?? ""}`;
+      E = `${slugify(p)}\x00${_ ?? ""}`;
     if (r.has(E)) continue;
     (r.add(E), t.push({ name: p, ref: _ }));
   }
   let o = new Set(
     t.filter((d) => d.ref !== void 0).map((d) => slugify(d.name)),
   );
-  return t.filter((d) => d.ref !== void 0 || !o.has(yr(d.name)));
+  return t.filter((d) => d.ref !== void 0 || !o.has(slugify(d.name)));
 }
 
 function vfr(e, t) {
@@ -146638,7 +146638,7 @@ function vfr(e, t) {
 }
 
 function Cfr(e, t) {
-  return e.defaultNamed.has(`${t.kind}\x00${t.id}\x00${yr(t.name)}`);
+  return e.defaultNamed.has(`${t.kind}\x00${t.id}\x00${slugify(t.name)}`);
 }
 
 function HTt(e) {

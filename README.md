@@ -455,18 +455,19 @@ bun .analysis/check-imports.mjs --runtime  额外真跑一次 hooks worker
 | 3 | **导出面**：具名 import 的名字确实在被导入模块的导出里 | **改名只改了一半** | 链接期报缺导出 |
 | 4 | **单独入口**（`--runtime`）：真拉起 hooks worker | 入口旁边依赖不全 | worker 起不来 |
 
-上面那条只看 `.js` 之间的引用。2026-09-17 的目录重组又补了两条，补的都是
-**它看不见**的形状（脚本在 `.analysis/move/`）：
+上面那条只看 `.js` 之间的引用。后来又补了三条，补的都是**它看不见**的形状：
 
 ```
 bun .analysis/move/check-index.mjs       索引与磁盘一致
 bun .analysis/move/check-lazy-base.mjs   两类懒加载的解析基准
+bun .analysis/check-undef.mjs            悬空的自由标识符（oxlint 的 no-undef）
 ```
 
 | # | 检查 | 抓什么 |
 |---|---|---|
 | 5 | **索引一致**：`file-map.json` 每条 path 在磁盘上、每个主树 `.js` 都有记录 | 索引与实际脱节。**实测已经脱节过一次** —— 某条记录的 path 指向一个早已改名的文件，而改名后的文件在索引里没有记录 |
 | 6 | **懒加载基准**：`importMetaRequire("./x")` 按**捕获 `import.meta.require` 的模块所在目录**解析；`readEmbeddedAsset*("./x", …)` 按**引用方目录**解析 | 第 2 类检查的正则 `import\.meta\.require\(` 匹配不到 `importMetaRequire(`；`"./x"` 是普通字符串字面量，根本不是 import 说明符 |
+| 7 | **悬空标识符**：引用了既没在本文件定义、也没 import 进来的名字（oxlint `no-undef`，扣掉标准全局与脚本里记账的既存项） | **改名 / 拆分只做了一半**。实测炸过两次、都是运行时报错才发现：`shell-utils.js` 的 `WZt`（拆分时定义留在了 `execution-core.js`）、`execution-core.js` 的 `yr`（改名 `yr` → `slugify` 只改了一半，同文件里 918 行 import 了 slugify、146503 行却写 `yr(...)`）。第 1~3 道看的都是引用**关系**，没有一道在看标识符有没有定义 |
 
 第 5 类失败时会把**下一步命令**直接打出来，因为两类脱节的修法正好相反 ——
 「磁盘有、索引无」要**补录**，「索引有、磁盘无」要**改 path**，照错的那条做只会把索引改得更烂：
