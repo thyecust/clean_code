@@ -39,7 +39,7 @@ import { copyEnvWithoutUndefined } from "../核心工具-其他/copy-env-without
 import { resolveTranscriptLocator } from "../核心工具-未归类/hover-rest-transcript.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { spawnSync } from "child_process";
-import { stat as I } from "fs/promises";
+import { stat } from "fs/promises";
 import { constants } from "os";
 import { dirname } from "path";
 import { isAbsolute } from "path";
@@ -70,7 +70,7 @@ async function _(e) {
 }
 async function v(e, t) {
   if (
-    await I(e).then(
+    await stat(e).then(
       (a) => a.size > 0,
       () => !1,
     )

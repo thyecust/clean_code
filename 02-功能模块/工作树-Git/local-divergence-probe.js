@@ -30,7 +30,7 @@ import { isSafePortablePath, openTreeAnchor, createFileSystemHost } from "../../
 import { computeGitBlobId } from "../目录同步-dir-sync/sync-state-schema.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工具-并发与缓存/linked-abort-signal.js";
 import { readlink } from "fs/promises";
-import { join as U } from "path";
+import { join } from "path";
 import { finished } from "stream/promises";
 var LOCAL_DIVERGENCE_DEADLINE_MS = 5000,
   Y = 1500,
@@ -503,7 +503,7 @@ async function F(e, i, r, t, o) {
   if (!isSafePortablePath(r)) return null;
   if (t === J)
     try {
-      return computeGitBlobId(await readlink(U(e, r), "buffer"));
+      return computeGitBlobId(await readlink(join(e, r), "buffer"));
     } catch {}
   let a = await readSeedFile(e, i, r, o);
   return a.kind === "read" ? computeGitBlobId(a.content) : null;

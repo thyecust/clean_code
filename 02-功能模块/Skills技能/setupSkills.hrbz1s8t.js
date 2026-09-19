@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { Fn, He, gn, Bm, Hu, cot } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import * as d from "fs/promises";
-import * as R from "fs";
-import * as u from "path";
+import * as fsPromises from "fs/promises";
+import * as fs from "fs";
+import * as path from "path";
 import * as W from "child_process";
 import * as j from "crypto";
 import * as H from "readline";
@@ -29,14 +29,12 @@ function v(r) {
     ...(r.close ? { close: r.close } : {}),
   };
 }
-import * as b from "fs/promises";
-import * as m from "path";
 import { randomUUID } from "crypto";
 var E = 493,
   Q = 420;
 async function tt(r) {
   try {
-    return await b.realpath(r);
+    return await fsPromises.realpath(r);
   } catch {
     return r;
   }
@@ -48,52 +46,52 @@ async function et(r) {
   for (;;) {
     let n;
     try {
-      n = await b.realpath(e);
+      n = await fsPromises.realpath(e);
     } catch {
       let a = !1;
       try {
-        a = (await b.lstat(e)).isSymbolicLink();
+        a = (await fsPromises.lstat(e)).isSymbolicLink();
       } catch {}
       if (a) {
         if (++i > 40)
           throw new Hu(
             `path ${JSON.stringify(r)} has too many levels of symbolic links`,
           );
-        e = m.resolve(m.dirname(e), await b.readlink(e));
+        e = path.resolve(path.dirname(e), await fsPromises.readlink(e));
         continue;
       }
-      let s = m.dirname(e);
+      let s = path.dirname(e);
       if (s === e) return r;
-      (t.push(m.basename(e)), (e = s));
+      (t.push(path.basename(e)), (e = s));
       continue;
     }
-    return t.length ? m.join(n, ...t.reverse()) : n;
+    return t.length ? path.join(n, ...t.reverse()) : n;
   }
 }
 async function B(r, t, e) {
   let i = e?.allowOutside ?? !1,
-    n = await tt(m.resolve(r)),
-    a = m.resolve(n, t);
+    n = await tt(path.resolve(r)),
+    a = path.resolve(n, t);
   if (i) return a;
   let s = await et(a);
-  if (s !== n && !s.startsWith(n + m.sep))
+  if (s !== n && !s.startsWith(n + path.sep))
     throw new Hu(`path ${JSON.stringify(t)} escapes workdir`);
   return s;
 }
 async function F(r, t) {
-  let e = m.dirname(r),
-    i = m.join(e, `.tmp-${process.pid}-${randomUUID()}`),
+  let e = path.dirname(r),
+    i = path.join(e, `.tmp-${process.pid}-${randomUUID()}`),
     n;
   try {
-    ((n = await b.open(i, "wx", Q)),
+    ((n = await fsPromises.open(i, "wx", Q)),
       await n.writeFile(t, "utf-8"),
       await n.sync(),
       await n.close(),
       (n = void 0),
-      await b.rename(i, r));
+      await fsPromises.rename(i, r));
   } catch (a) {
     if (n) await n.close().catch(() => {});
-    throw (await b.unlink(i).catch(() => {}), a);
+    throw (await fsPromises.unlink(i).catch(() => {}), a);
   }
 }
 function O(r, t) {
@@ -120,12 +118,9 @@ function O(r, t) {
       return `${t}: ${r instanceof Error ? r.message : String(r)}`;
   }
 }
-import * as y from "fs/promises";
-import * as q from "fs";
-import * as p from "path";
 import { execFile } from "child_process";
 import { promisify } from "util";
-import { Readable as nt } from "stream";
+import { Readable } from "stream";
 import { pipeline } from "stream/promises";
 var ot = promisify(execFile);
 async function setupSkills(r) {
@@ -133,16 +128,16 @@ async function setupSkills(r) {
   if (!t || !e) return async () => {};
   let i = Bm(t),
     n = await t.beta.sessions.retrieve(e),
-    a = p.resolve(r.workdir, "skills"),
+    a = path.resolve(r.workdir, "skills"),
     s = [];
   for (let o of n.agent.skills)
     try {
       let c = await U(t, o.skill_id, o.version),
         l = await t.beta.skills.versions.retrieve(c, { skill_id: o.skill_id }),
-        f = p.basename(l.name.trim());
+        f = path.basename(l.name.trim());
       if (f === "" || f === "." || f === "..") f = o.skill_id;
-      let h = p.resolve(a, f);
-      if (h !== a && !h.startsWith(a + p.sep)) {
+      let h = path.resolve(a, f);
+      if (h !== a && !h.startsWith(a + path.sep)) {
         i.warn("skill name escapes the skills dir; skipping", {
           component: "agent-tool-context",
           name: l.name,
@@ -152,8 +147,8 @@ async function setupSkills(r) {
       let M = await t.beta.skills.versions.download(c, {
         skill_id: o.skill_id,
       });
-      (await y.rm(h, { recursive: !0, force: !0 }),
-        await y.mkdir(h, { recursive: !0, mode: E }),
+      (await fsPromises.rm(h, { recursive: !0, force: !0 }),
+        await fsPromises.mkdir(h, { recursive: !0, mode: E }),
         s.push(h),
         await C(M, h),
         i.info("downloaded skill", {
@@ -171,7 +166,7 @@ async function setupSkills(r) {
     }
   return async () => {
     for (let o of s)
-      await y.rm(o, { recursive: !0, force: !0 }).catch((c) => {
+      await fsPromises.rm(o, { recursive: !0, force: !0 }).catch((c) => {
         i.warn("failed to clean up skill", {
           component: "agent-tool-context",
           dest: o,
@@ -200,7 +195,7 @@ function ct(r) {
 `)) {
     let e = t.trim();
     if (!e) continue;
-    if (p.isAbsolute(e) || e.split(/[\\/]/).includes(".."))
+    if (path.isAbsolute(e) || e.split(/[\\/]/).includes(".."))
       throw new gn(`refusing to extract unsafe archive member: ${e}`);
   }
 }
@@ -251,10 +246,10 @@ function ft(r) {
   return t !== void 0 && e ? t : "";
 }
 async function C(r, t) {
-  let e = p.join(t, `.skill-archive-${process.pid}-${Date.now()}`);
+  let e = path.join(t, `.skill-archive-${process.pid}-${Date.now()}`);
   if (!r.body) throw new gn("skill download response had no body");
-  await pipeline(nt.fromWeb(r.body), q.createWriteStream(e));
-  let i = p.join(p.dirname(t), `.skill-stage-${process.pid}-${Date.now()}`);
+  await pipeline(Readable.fromWeb(r.body), fs.createWriteStream(e));
+  let i = path.join(path.dirname(t), `.skill-stage-${process.pid}-${Date.now()}`);
   try {
     let n = await ut(e, 4),
       a =
@@ -263,17 +258,17 @@ async function C(r, t) {
       o = await L(s, a ? ["-Z1", e] : ["-tf", e]);
     (ct(o), lt(await L(s, a ? ["-Z", e] : ["-tvf", e])));
     let c = ft(o);
-    (await y.mkdir(i, { recursive: !0, mode: E }),
+    (await fsPromises.mkdir(i, { recursive: !0, mode: E }),
       await L(s, a ? ["-oq", e, "-d", i] : ["-xf", e, "-C", i]));
-    let l = c ? p.join(i, c) : i;
-    for (let f of await y.readdir(l))
-      await y.rename(p.join(l, f), p.join(t, f));
+    let l = c ? path.join(i, c) : i;
+    for (let f of await fsPromises.readdir(l))
+      await fsPromises.rename(path.join(l, f), path.join(t, f));
   } finally {
-    (await y.rm(e, { force: !0 }), await y.rm(i, { recursive: !0, force: !0 }));
+    (await fsPromises.rm(e, { force: !0 }), await fsPromises.rm(i, { recursive: !0, force: !0 }));
   }
 }
 async function ut(r, t) {
-  let e = await y.open(r, "r");
+  let e = await fsPromises.open(r, "r");
   try {
     let i = Buffer.alloc(t),
       { bytesRead: n } = await e.read(i, 0, t, 0);
@@ -296,7 +291,7 @@ var I,
   pt = 2000,
   ht = 200,
   mt = /\x1b\[[0-9;?]*[ -/]*[@-~]/g,
-  wt = d.glob;
+  wt = fsPromises.glob;
 function K(r) {
   return r === void 0 ? dt : r;
 }
@@ -513,14 +508,14 @@ function bt(r) {
       let i = await x(r, t),
         n;
       try {
-        let f = await d.stat(i);
+        let f = await fsPromises.stat(i);
         if (!f.isFile()) throw new Hu(`read: ${t} is not a regular file`);
         let h = K(r.maxFileBytes);
         if (h !== null && f.size > h)
           throw new Hu(
             `read: ${t} is ${f.size} bytes, exceeds ${h}-byte limit. Use bash (head/tail/sed) to read a slice.`,
           );
-        n = await d.readFile(i, "utf8");
+        n = await fsPromises.readFile(i, "utf8");
       } catch (f) {
         if (f instanceof Hu) throw f;
         throw new Hu(`read: ${O(f, t)}`);
@@ -555,7 +550,7 @@ function _t(r) {
       if (!t) throw new Hu("write: file_path is required");
       let i = await x(r, t);
       try {
-        (await d.mkdir(u.dirname(i), { recursive: !0, mode: E }),
+        (await fsPromises.mkdir(path.dirname(i), { recursive: !0, mode: E }),
           await F(i, e ?? ""));
       } catch (n) {
         throw new Hu(`write: ${O(n, t)}`);
@@ -590,14 +585,14 @@ function vt(r) {
       let a = await x(r, t),
         s;
       try {
-        let l = await d.stat(a);
+        let l = await fsPromises.stat(a);
         if (!l.isFile()) throw new Hu(`edit: ${t} is not a regular file`);
         let f = K(r.maxFileBytes);
         if (f !== null && l.size > f)
           throw new Hu(
             `edit: ${t} is ${l.size} bytes, exceeds ${f}-byte limit. Use bash (sed/awk) to edit a large file.`,
           );
-        s = await d.readFile(a, "utf8");
+        s = await fsPromises.readFile(a, "utf8");
       } catch (l) {
         if (l instanceof Hu) throw l;
         throw new Hu(`edit: ${O(l, t)}`);
@@ -640,16 +635,16 @@ function $t(r) {
     },
     run: async ({ pattern: t, path: e }) => {
       if (!t) throw new Hu("glob: pattern is required");
-      let i = u.resolve(r.workdir),
+      let i = path.resolve(r.workdir),
         n = t;
-      if (u.isAbsolute(t)) {
+      if (path.isAbsolute(t)) {
         if (!r.unrestrictedPaths)
           throw new Hu("glob: absolute pattern not permitted");
-        ((i = u.parse(t).root), (n = u.relative(i, t)));
+        ((i = path.parse(t).root), (n = path.relative(i, t)));
       } else if (e) i = await x(r, e);
       if (!r.unrestrictedPaths && n.split(/[\\/]/).includes(".."))
         throw new Hu('glob: ".." is not permitted in the pattern');
-      let a = r.unrestrictedPaths ? i : await d.realpath(i).catch(() => i),
+      let a = r.unrestrictedPaths ? i : await fsPromises.realpath(i).catch(() => i),
         s = [];
       try {
         for await (let o of wt(n, {
@@ -658,11 +653,11 @@ function $t(r) {
           exclude: (c) => c.name === ".git" || c.name === "node_modules",
         })) {
           if (!o.isFile()) continue;
-          let c = u.join(o.parentPath, o.name);
+          let c = path.join(o.parentPath, o.name);
           if (!r.unrestrictedPaths) {
             let f;
             try {
-              f = await d.realpath(c);
+              f = await fsPromises.realpath(c);
             } catch {
               continue;
             }
@@ -670,7 +665,7 @@ function $t(r) {
           }
           let l = 0;
           try {
-            l = (await d.stat(c)).mtimeMs;
+            l = (await fsPromises.stat(c)).mtimeMs;
           } catch {}
           s.push({ path: c, mtime: l });
         }
@@ -698,7 +693,7 @@ function kt(r) {
     },
     run: async ({ pattern: t, path: e }, i) => {
       if (!t) throw new Hu("grep: pattern is required");
-      let n = u.resolve(r.workdir);
+      let n = path.resolve(r.workdir);
       if (e) n = await x(r, e);
       let a = await It();
       return a ? Et(a, t, n, i?.signal) : Ot(t, n, i?.signal);
@@ -753,15 +748,15 @@ async function Ot(r, t, e) {
         return (n.push(`[output truncated at ${T} bytes]`), !1);
       return (n.push(c), !0);
     };
-  if ((await d.stat(t).catch(() => null))?.isFile()) await G(t, i, s);
-  else await At(t, "", (c) => G(u.join(t, c), i, s), e);
+  if ((await fsPromises.stat(t).catch(() => null))?.isFile()) await G(t, i, s);
+  else await At(t, "", (c) => G(path.join(t, c), i, s), e);
   if (e?.aborted) throw new Hu("grep: aborted");
   if (n.length === 0) return "no matches";
   return n.join(`
 `);
 }
 async function G(r, t, e) {
-  let i = R.createReadStream(r, { encoding: "utf8" }),
+  let i = fs.createReadStream(r, { encoding: "utf8" }),
     n = H.createInterface({ input: i, crlfDelay: 1 / 0 }),
     a = 0;
   try {
@@ -776,9 +771,9 @@ async function G(r, t, e) {
   return !0;
 }
 function St(r, t) {
-  let e = u.relative(r, t);
+  let e = path.relative(r, t);
   return (
-    e === "" || (!e.startsWith(".." + u.sep) && e !== ".." && !u.isAbsolute(e))
+    e === "" || (!e.startsWith(".." + path.sep) && e !== ".." && !path.isAbsolute(e))
   );
 }
 var Tt = 40,
@@ -790,7 +785,7 @@ async function At(r, t, e, i) {
     if (i?.aborted) return !1;
     let c;
     try {
-      c = await d.readdir(u.join(r, s), { withFileTypes: !0 });
+      c = await fsPromises.readdir(path.join(r, s), { withFileTypes: !0 });
     } catch {
       return !0;
     }
@@ -798,7 +793,7 @@ async function At(r, t, e, i) {
       if (l.name === ".git" || l.name === "node_modules") continue;
       if (n-- <= 0) return !1;
       if (i?.aborted) return !1;
-      let f = s ? u.join(s, l.name) : l.name;
+      let f = s ? path.join(s, l.name) : l.name;
       if (l.isDirectory()) {
         if (!(await a(f, o + 1))) return !1;
       } else if (l.isFile()) {
@@ -810,11 +805,11 @@ async function At(r, t, e, i) {
   await a(t, 0);
 }
 async function It() {
-  let r = (process.env.PATH ?? "").split(u.delimiter);
+  let r = (process.env.PATH ?? "").split(path.delimiter);
   for (let t of r) {
-    let e = u.join(t, "rg");
+    let e = path.join(t, "rg");
     try {
-      return (await d.access(e, R.constants.X_OK), e);
+      return (await fsPromises.access(e, fs.constants.X_OK), e);
     } catch {}
   }
   return null;

@@ -20,7 +20,7 @@ import { isBunStandaloneExecutable, getGlobalClaudeFile, env as a, antEnv } from
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
@@ -108,20 +108,20 @@ import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-
 import { execFileSync } from "child_process";
 import { createWriteStream, fchmod } from "fs";
 import {
-  lstat as pa,
-  mkdir as $r,
-  readFile as Ks,
-  rm as nr,
-  writeFile as ha,
+  lstat,
+  mkdir,
+  readFile,
+  rm,
+  writeFile,
 } from "fs/promises";
-import { homedir as Ar, hostname } from "os";
-import { dirname as ma, join as mn, resolve as rr } from "path";
-import { access, constants as Dr, mkdir as ii } from "fs/promises";
+import { homedir, hostname } from "os";
+import { dirname, join, resolve } from "path";
+import { access, constants as Dr } from "fs/promises";
 var oi = 1e4;
 async function Pr(e, t = oi) {
   try {
     await raceWithTimeout(
-      ii(e, { recursive: !0 }).then(() => access(e, Dr.W_OK | Dr.X_OK)),
+      mkdir(e, { recursive: !0 }).then(() => access(e, Dr.W_OK | Dr.X_OK)),
       t,
       `base directory check for ${e}`,
     );
@@ -139,31 +139,22 @@ import { spawn } from "child_process";
 import { randomUUID } from "crypto";
 import {
   chmod,
-  lstat as Ht,
-  mkdir as Mt,
   mkdtemp,
-  open as Ii,
+  open,
   readdir,
-  readFile as Dn,
   realpath,
-  rm as ct,
-  stat as br,
+  stat,
   unlink,
-  writeFile as sn,
 } from "fs/promises";
-import { homedir as Jn, tmpdir } from "os";
+import { tmpdir } from "os";
 import {
   basename,
-  dirname as on,
   isAbsolute,
-  join as X,
   normalize,
-  resolve as bn,
-  sep as Ge,
+  sep,
 } from "path";
 import { createInterface } from "readline";
 import { readdirSync, readFileSync } from "fs";
-import { readFile as di } from "fs/promises";
 var ui = 4096,
   Mr = 64;
 function Gr(e, t) {
@@ -202,7 +193,7 @@ async function Br(e, t) {
   else if (o === "linux" || o === "wsl")
     ((s = pi()),
       (c = Ur(n, async ([p, i]) => {
-        let h = await di(`/proc/${p}/stat`, "utf8").catch(() => {
+        let h = await readFile(`/proc/${p}/stat`, "utf8").catch(() => {
           return;
         });
         if (h !== void 0 && getProcStartTime(h) === i && !isExitedProcessState(getProcState(h))) r.set(p, getProcGroupId(h));
@@ -440,9 +431,7 @@ function jr() {
     },
   };
 }
-import { constants as Si } from "fs";
-import { lstat as wi, open as Ei, opendir } from "fs/promises";
-import { join as rn } from "path";
+import { constants } from "fs";
 var hn = "/tmp",
   ki = "ccr-byoc-prewarm-vda.done",
   bi = "ccr-byoc-prewarm-stat.done",
@@ -512,7 +501,7 @@ function qr(e, t) {
   };
 }
 async function Zr(e = {}) {
-  let t = await dn(rn(e.dir ?? hn, Gn));
+  let t = await dn(join(e.dir ?? hn, Gn));
   return (qr(t, Date.now()).prefetch_ok ?? 0) >= 1;
 }
 var Ai = 5000,
@@ -552,7 +541,7 @@ function $i(e, t, n, r) {
   }
 }
 async function Jr(e) {
-  let t = await dn(rn(e.dir ?? hn, Gn));
+  let t = await dn(join(e.dir ?? hn, Gn));
   return $i(t, e.now ?? Date.now(), e.maxAgeS, e.branch);
 }
 var Ci = /^[0-9a-f]{40}$/,
@@ -580,17 +569,17 @@ function Li(e) {
 }
 async function Qr(e = {}) {
   let t = e.dir ?? hn,
-    n = rn(t, ur),
-    r = Li(await dn(rn(t, Gn)));
+    n = join(t, ur),
+    r = Li(await dn(join(t, Gn)));
   if (
-    !(await wi(n).then(
+    !(await lstat(n).then(
       (i) => i.isDirectory(),
       () => !1,
     ))
   )
     return { state: r, lock: void 0 };
   let [d, o, c, m] = await Promise.all(
-      ["pgid", "start", "base", "target"].map((i) => dn(rn(n, i))),
+      ["pgid", "start", "base", "target"].map((i) => dn(join(n, i))),
     ),
     p = Pt(d);
   return {
@@ -606,7 +595,7 @@ async function Qr(e = {}) {
 async function dn(e) {
   let t;
   try {
-    t = await Ei(e, Si.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
+    t = await open(e, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
     let n = Buffer.alloc(Yr),
       { bytesRead: r } = await t.read(n, 0, Yr, 0),
       s = n.subarray(0, r).toString("utf8"),
@@ -622,9 +611,9 @@ async function dn(e) {
 async function pr(e = {}) {
   let t = e.dir ?? hn,
     [n, r, s] = await Promise.all([
-      dn(rn(t, ki)),
-      dn(rn(t, bi)),
-      dn(rn(t, Ri)),
+      dn(join(t, ki)),
+      dn(join(t, bi)),
+      dn(join(t, Ri)),
     ]),
     d = dr(n),
     o = dr(r),
@@ -652,7 +641,7 @@ function es(e, t) {
 async function ts(e = {}) {
   let t = e.dir ?? hn,
     n = e.now ?? Date.now(),
-    [r, s] = await Promise.all([pr({ dir: t }), dn(rn(t, Gn))]);
+    [r, s] = await Promise.all([pr({ dir: t }), dn(join(t, Gn))]);
   return { ...r, ...qr(s, n) };
 }
 var xi = 1e4,
@@ -735,7 +724,7 @@ async function bs(e, t) {
   let n =
       process.env.SELF_HOSTED_RUNNER_HOST_CONFIG_DIR ||
       process.env.CLAUDE_CONFIG_DIR ||
-      X(Jn(), ".claude"),
+      join(homedir(), ".claude"),
     r = new Map(),
     s = { bytes: 0 };
   try {
@@ -772,7 +761,7 @@ async function bs(e, t) {
         ? await (async (i) => {
             for (let h of i)
               try {
-                return await Dn(X(n, h), "utf8");
+                return await readFile(join(n, h), "utf8");
               } catch (L) {
                 if (!W(L)) throw L;
               }
@@ -784,7 +773,7 @@ async function bs(e, t) {
           ])
         : isHoverRestEnabled() && t !== void 0
           ? await Ki(t)
-          : await Dn(getGlobalClaudeFile(), "utf8"),
+          : await readFile(getGlobalClaudeFile(), "utf8"),
       p = await jsonParse(m);
     if (p !== null && typeof p === "object") {
       let i = p.mcpServers;
@@ -842,20 +831,20 @@ function ji(e) {
 }
 var Xn = 67108864;
 async function Rs(e, t, n, r, s) {
-  let d = await readdir(X(e, t), { withFileTypes: !0 });
+  let d = await readdir(join(e, t), { withFileTypes: !0 });
   for (let o of d) {
     if (t === "" && s && !s(o.name)) continue;
-    let c = t === "" ? o.name : X(t, o.name);
+    let c = t === "" ? o.name : join(t, o.name);
     if (o.isDirectory()) await Rs(e, c, n, r);
     else if (o.isFile()) {
-      let m = X(e, c),
-        p = await br(m);
+      let m = join(e, c),
+        p = await stat(m);
       if (((r.bytes += p.size), r.bytes > Xn))
         throw new R(
           `host config exceeds ${Xn} bytes at ${c} \u2014 reduce ~/.claude size or set SELF_HOSTED_RUNNER_HOST_CONFIG_DIR to a slimmer dir`,
           "host config exceeds the snapshot size limit",
         );
-      let i = await Dn(m);
+      let i = await readFile(m);
       if (((r.bytes += i.length - p.size), r.bytes > Xn))
         throw new R(
           `host config exceeds ${Xn} bytes at ${c} \u2014 reduce ~/.claude size or set SELF_HOSTED_RUNNER_HOST_CONFIG_DIR to a slimmer dir`,
@@ -867,13 +856,13 @@ async function Rs(e, t, n, r, s) {
 }
 async function Ts(e) {
   let t = process.env.GIT_CONFIG_GLOBAL,
-    n = process.env.HOME || Jn(),
-    r = process.env.XDG_CONFIG_HOME || X(n, ".config"),
-    s = t ? [t] : [X(r, "git", "config"), X(n, ".gitconfig")],
+    n = process.env.HOME || homedir(),
+    r = process.env.XDG_CONFIG_HOME || join(n, ".config"),
+    s = t ? [t] : [join(r, "git", "config"), join(n, ".gitconfig")],
     d = [];
   for (let m of s) {
     try {
-      await xe(br(m), `stat ${m}`);
+      await xe(stat(m), `stat ${m}`);
     } catch (p) {
       if (!W(p))
         e(
@@ -916,10 +905,10 @@ async function Ts(e) {
   if (o.length === 0) return "";
   let c;
   try {
-    c = await mkdtemp(X(tmpdir(), "ccr-govseed-"));
-    let m = X(c, "seed.gitconfig");
+    c = await mkdtemp(join(tmpdir(), "ccr-govseed-"));
+    let m = join(c, "seed.gitconfig");
     for (let [p, i] of o) await _r(["config", "--file", m, "--add", p, i]);
-    return await xe(Dn(m, "utf8"), `read ${m}`);
+    return await xe(readFile(m, "utf8"), `read ${m}`);
   } catch (m) {
     return (
       e(
@@ -928,7 +917,7 @@ async function Ts(e) {
       ""
     );
   } finally {
-    if (c) await ct(c, { recursive: !0, force: !0 }).catch(() => {});
+    if (c) await rm(c, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
 function os(e, t) {
@@ -987,9 +976,9 @@ async function Vi(e, t) {
   await writeFileAtomic(e, t, 384);
 }
 async function ys(e, t) {
-  let n = X(e, "hooks"),
+  let n = join(e, "hooks"),
     r = await xe(
-      Ht(n).catch((s) => (W(s) ? void 0 : Promise.reject(s))),
+      lstat(n).catch((s) => (W(s) ? void 0 : Promise.reject(s))),
       `lstat ${n}`,
     );
   if (r !== void 0 && !r.isDirectory())
@@ -1011,20 +1000,20 @@ async function qi(e, t, n, r, s = fileSuffixForOauthConfig()) {
           let o = await ys(e, r);
           for (let [c, { buf: m, mode: p }] of t.files) {
             let i = c.toLowerCase();
-            if (!o && (i === "hooks" || i.startsWith("hooks" + Ge))) continue;
+            if (!o && (i === "hooks" || i.startsWith("hooks" + sep))) continue;
             if (
-              i.startsWith("hooks" + Ge + ".ccr-launcher" + Ge) ||
-              i === "hooks" + Ge + ".ccr-launcher"
+              i.startsWith("hooks" + sep + ".ccr-launcher" + sep) ||
+              i === "hooks" + sep + ".ccr-launcher"
             )
               continue;
-            let h = X(e, c),
-              L = c.lastIndexOf(Ge);
-            if (L > 0) await Mt(X(e, c.slice(0, L)), { recursive: !0 });
-            (await sn(h, m, { mode: p }), d.push(c));
+            let h = join(e, c),
+              L = c.lastIndexOf(sep);
+            if (L > 0) await mkdir(join(e, c.slice(0, L)), { recursive: !0 });
+            (await writeFile(h, m, { mode: p }), d.push(c));
           }
           if (t.mcpServers) {
             let c = await jsonStringify({ mcpServers: t.mcpServers });
-            await sn(X(e, `.claude${s}.json`), c, { mode: 384 });
+            await writeFile(join(e, `.claude${s}.json`), c, { mode: 384 });
           }
         })(),
         ks,
@@ -1104,25 +1093,25 @@ async function eo(e, t, n, r, s) {
     );
     return;
   }
-  let c = X(e, "hooks", ".ccr-launcher");
-  (await xe(ct(c, { recursive: !0, force: !0 }), `rm ${c}`),
-    await xe(Mt(c, { recursive: !0, mode: 448 }), `mkdir ${c}`));
+  let c = join(e, "hooks", ".ccr-launcher");
+  (await xe(rm(c, { recursive: !0, force: !0 }), `rm ${c}`),
+    await xe(mkdir(c, { recursive: !0, mode: 448 }), `mkdir ${c}`));
   for (let p of t) {
-    let i = X(c, p.filename);
+    let i = join(c, p.filename);
     (n.push(i),
       await xe(unlink(i), `unlink ${i}`).catch(() => {}),
-      await xe(sn(i, p.script, { flag: "wx", mode: 448 }), `writeFile ${i}`),
+      await xe(writeFile(i, p.script, { flag: "wx", mode: 448 }), `writeFile ${i}`),
       (o[p.event] ??= []).push({
         matcher: "",
         hooks: [{ type: "command", command: i, args: [] }],
       }));
   }
-  let m = X(e, "launcher-settings.json");
+  let m = join(e, "launcher-settings.json");
   return (
     n.push(m),
     await xe(unlink(m), `unlink ${m}`).catch(() => {}),
     await xe(
-      sn(m, jsonStringify({ hooks: o }, null, 2), { flag: "wx", mode: 384 }),
+      writeFile(m, jsonStringify({ hooks: o }, null, 2), { flag: "wx", mode: 384 }),
       `writeFile ${m}`,
     ),
     r(`[runner:session] Wrote ${t.length} launcher hook(s) + ${m}`),
@@ -1131,20 +1120,20 @@ async function eo(e, t, n, r, s) {
 }
 async function ds(e, t, n, r) {
   try {
-    (await Mt(e, { recursive: !0, mode: 448 }),
-      await sn(`${e}/${t}`, n, { mode: 384 }));
+    (await mkdir(e, { recursive: !0, mode: 448 }),
+      await writeFile(`${e}/${t}`, n, { mode: 384 }));
   } catch (s) {
     r(`[runner:debug] failed to write ${t} to ${e} (best-effort): ${s}`);
   }
 }
 function vs(e, t) {
-  return X(e, `.session_ingress_token.e${t}`);
+  return join(e, `.session_ingress_token.e${t}`);
 }
 async function mr(e, t, n, r, s = Nn) {
   try {
     return (
       await Ln(
-        Mt(on(e), { recursive: !0, mode: 448 }),
+        mkdir(dirname(e), { recursive: !0, mode: 448 }),
         s,
         "[runner:session] mkdir for session-ingress token file",
         r,
@@ -1204,7 +1193,7 @@ async function us(e, t, n, r = Nn) {
     return;
   }
   let d = Number(s[1]),
-    o = on(e);
+    o = dirname(e);
   try {
     let c = await Ln(
       readdir(o),
@@ -1222,7 +1211,7 @@ async function us(e, t, n, r = Nn) {
       }
       if (Number(p[1]) > d) continue;
       try {
-        await Ln(unlink(X(o, m)), r, "[runner:session] unlink token temp file", n);
+        await Ln(unlink(join(o, m)), r, "[runner:session] unlink token temp file", n);
       } catch (i) {
         if (!W(i))
           t(`[runner:session] token temp sweep failed for a sibling: ${i}`);
@@ -1330,9 +1319,9 @@ async function Os(e, t, n) {
     ve,
     It,
     _n = [],
-    Ze = X(d, "_sessions", `${e}.claude-config`),
-    nt = X(d, "_sessions", `${e}.gitconfig`),
-    Ut = X(Ze, "claude-code-debug.txt"),
+    Ze = join(d, "_sessions", `${e}.claude-config`),
+    nt = join(d, "_sessions", `${e}.gitconfig`),
+    Ut = join(Ze, "claude-code-debug.txt"),
     Ee,
     He,
     rt,
@@ -1363,8 +1352,8 @@ async function Os(e, t, n) {
       !e || !/^[a-zA-Z0-9_-]+$/.test(e))
     )
       throw Error("Invalid session_id: contains unsafe characters");
-    He = X(d, "_sessions", e);
-    let _e = X(d, "_sessions", `${e}.uploads`),
+    He = join(d, "_sessions", e);
+    let _e = join(d, "_sessions", `${e}.uploads`),
       D = await gn(() => r.issueSessionToken(s(), e, n), {
         initialDelayMs: 500,
         maxDelayMs: 8000,
@@ -1384,13 +1373,13 @@ async function Os(e, t, n) {
         ((process.env.CLAUDE_CODE_SESSION_ACCESS_TOKEN = D.session_token),
         lt !== void 0 && Me)
       ) {
-        let K = process.env.XDG_CONFIG_HOME || X(Jn(), ".config");
+        let K = process.env.XDG_CONFIG_HOME || join(homedir(), ".config");
         await bo(
           {
             globalConfigPath: Me,
             globalConfigSnapshot: lt,
-            homeGitconfigPath: X(Jn(), ".gitconfig"),
-            xdgConfigPath: X(K, "git", "config"),
+            homeGitconfigPath: join(homedir(), ".gitconfig"),
+            xdgConfigPath: join(K, "git", "config"),
             credHelper: pt,
             signingArtifacts: Gt,
           },
@@ -1628,19 +1617,19 @@ async function Os(e, t, n) {
       });
       let vn = Co($o(C.push_targets));
       (await raceWithTimeout(
-        Mt(He, { recursive: !0 }),
+        mkdir(He, { recursive: !0 }),
         Nn,
         `[runner:stuck] mkdir ${He} (check NFS/CSI mount health)`,
       ),
         await raceWithTimeout(
-          Mt(Ze, { recursive: !0, mode: 448 }),
+          mkdir(Ze, { recursive: !0, mode: 448 }),
           Nn,
           `[runner:stuck] mkdir ${Ze}`,
         ));
       let pn = Wi(C.api_base_url);
       if ((await qi(Ze, zt, i, h, pn), Se?.toolConfig.gitConfig)) {
         if ((await Vi(nt, ht ?? ""), wt)) {
-          await ct(nt + ".lock", { force: !0 }).catch(() => {});
+          await rm(nt + ".lock", { force: !0 }).catch(() => {});
           for (let [N, I] of configureGitGovernedEntries(d))
             await _r(["config", "--file", nt, "--replace-all", N, I]);
         }
@@ -1676,7 +1665,7 @@ async function Os(e, t, n) {
               step_detail: T.repo,
             }));
           let Oe = (vn.get(kr(T.repo))?.length ?? 0) > 0,
-            he = X(He, Xe),
+            he = join(He, Xe),
             Ft = async () => {
               if (!Vt) return;
               if (be.includes(he)) {
@@ -1698,7 +1687,7 @@ async function Os(e, t, n) {
                   }
                 );
               let Ve = await raceWithTimeout(
-                ct(he, { recursive: !0, force: !0 }).then(
+                rm(he, { recursive: !0, force: !0 }).then(
                   () => {
                     return;
                   },
@@ -1754,7 +1743,7 @@ async function Os(e, t, n) {
                 }));
               continue;
             }
-            let tt = De ? X(He, Xe) : pe;
+            let tt = De ? join(He, Xe) : pe;
             if (
               (await no(H, pe, async () => {
                 if (Je || (Se && !De)) {
@@ -2068,7 +2057,7 @@ async function Os(e, t, n) {
         }
         let Q = (se) => {
           for (let ce of I)
-            if (se === ce || se.startsWith(ce.endsWith(Ge) ? ce : ce + Ge))
+            if (se === ce || se.startsWith(ce.endsWith(sep) ? ce : ce + sep))
               return !0;
           return !1;
         };
@@ -2125,17 +2114,17 @@ async function Os(e, t, n) {
             ...(zt?.mcpServers && { mcpServers: zt.mcpServers }),
             projects: N,
           }),
-          Q = X(Ze, `.claude${pn}.json`);
-        (await xe(sn(Q, I, { mode: 384 }), `writeFile ${Q}`),
+          Q = join(Ze, `.claude${pn}.json`);
+        (await xe(writeFile(Q, I, { mode: 384 }), `writeFile ${Q}`),
           i(
             `[runner:session] Seeded persisted trust for ${Object.keys(N).length} path(s) in ${Q}`,
           ));
       }
       if (C.mcp_config?.content) {
         let N = Buffer.from(C.mcp_config.content, "base64").toString("utf-8");
-        ((ve = X(Ze, "mcp-config.json")),
+        ((ve = join(Ze, "mcp-config.json")),
           await xe(unlink(ve), `unlink ${ve}`).catch(() => {}),
-          await xe(sn(ve, N, { flag: "wx", mode: 384 }), `writeFile ${ve}`),
+          await xe(writeFile(ve, N, { flag: "wx", mode: 384 }), `writeFile ${ve}`),
           i(`[runner:session] Wrote MCP config to ${ve} (${N.length} bytes)`));
       }
       if (
@@ -2647,7 +2636,7 @@ async function Os(e, t, n) {
         });
     for (let D of ze)
       await raceWithTimeout(
-        ct(D, { recursive: !0, force: !0 }),
+        rm(D, { recursive: !0, force: !0 }),
         rs,
         `[runner:hook] rm -rf ${D}`,
       ).catch((ue) => {
@@ -3534,15 +3523,15 @@ async function gn(e, t) {
     }
   }
 }
-class Cs {
+class RunnerRequestIdSequence {
   last = 0;
   next() {
     return ++this.last;
   }
 }
-var co = new j(() => new Cs());
+var runnerRequestIdSequence = new j(() => new RunnerRequestIdSequence());
 function lo() {
-  return co.of(B().host);
+  return runnerRequestIdSequence.of(B().host);
 }
 function ls(e) {
   let t =
@@ -3819,10 +3808,10 @@ var wo = new Map([
   ["shallow", "file"],
 ]);
 async function Eo(e, t, n) {
-  let r = X(e, ".git"),
+  let r = join(e, ".git"),
     s;
   try {
-    s = await Ht(r);
+    s = await lstat(r);
   } catch (c) {
     let m = A(c);
     if (m === "ENOENT" || m === "ENOTDIR") return;
@@ -3832,7 +3821,7 @@ async function Eo(e, t, n) {
     );
   }
   if (!s.isDirectory()) {
-    (await ct(r, { force: !0 }),
+    (await rm(r, { force: !0 }),
       t(
         `[runner:session] sanitized canonical at ${e}: .git was not a directory (gitlink/symlink) \u2014 removed, will fresh-init`,
       ));
@@ -3863,7 +3852,7 @@ async function Eo(e, t, n) {
     for (let S of c) {
       let w = wo.get(S);
       if (w) {
-        let U = await Ht(X(r, S)).catch(() => {
+        let U = await lstat(join(r, S)).catch(() => {
           return;
         });
         if (
@@ -3876,20 +3865,20 @@ async function Eo(e, t, n) {
           `[runner:session] sanitize: kept entry .git/${S} has unexpected type \u2014 removing`,
         );
       }
-      await ct(X(r, S), { recursive: !0, force: !0 });
+      await rm(join(r, S), { recursive: !0, force: !0 });
     }
-    (await Er(X(r, "refs"), !0),
-      await Er(X(r, "objects"), !1),
-      await ct(X(r, "objects", "info"), { recursive: !0, force: !0 }),
-      await ct(X(r, "objects", "pack", "multi-pack-index"), {
+    (await Er(join(r, "refs"), !0),
+      await Er(join(r, "objects"), !1),
+      await rm(join(r, "objects", "info"), { recursive: !0, force: !0 }),
+      await rm(join(r, "objects", "pack", "multi-pack-index"), {
         recursive: !0,
         force: !0,
       }));
-    let m = X(r, "HEAD"),
-      p = await Ht(m).catch(() => {
+    let m = join(r, "HEAD"),
+      p = await lstat(m).catch(() => {
         return;
       }),
-      i = p && p.size <= 1024 ? await Dn(m, "utf-8").catch(() => "") : "",
+      i = p && p.size <= 1024 ? await readFile(m, "utf-8").catch(() => "") : "",
       h = /^ref: (refs\/[A-Za-z0-9._/-]+)\n?$/.exec(i);
     if (
       !(
@@ -3907,8 +3896,8 @@ async function Eo(e, t, n) {
       ) &&
       !/^[0-9a-f]{40}([0-9a-f]{24})?\n?$/.test(i)
     )
-      await ct(m, { force: !0 });
-    (await sn(X(r, "config"), o, { mode: 420 }),
+      await rm(m, { force: !0 });
+    (await writeFile(join(r, "config"), o, { mode: 420 }),
       t(
         `[runner:session] sanitized canonical .git/ at ${e} (git-proxy cross-session isolation)`,
       ));
@@ -3929,42 +3918,42 @@ async function Er(e, t) {
     throw r;
   }
   for (let r of n) {
-    let s = X(e, r),
+    let s = join(e, r),
       d;
     try {
-      d = await Ht(s);
+      d = await lstat(s);
     } catch (o) {
       let c = A(o);
       if (c === "ENOENT" || c === "ENOTDIR") continue;
       throw o;
     }
     if (d.isSymbolicLink()) {
-      await ct(s, { force: !0 });
+      await rm(s, { force: !0 });
       continue;
     }
     if (t && d.isDirectory()) await Er(s, !0);
   }
 }
 async function xn(e, t, n) {
-  (await ct(e, { recursive: !0, force: !0 }),
-    await Mt(on(e), { recursive: !0 }),
-    await sn(e, t, { mode: n }),
+  (await rm(e, { recursive: !0, force: !0 }),
+    await mkdir(dirname(e), { recursive: !0 }),
+    await writeFile(e, t, { mode: n }),
     await chmod(e, n));
 }
 async function ko(e, t, n) {
   if (e.length === 0) return;
-  let r = on(e[0].path),
-    s = on(r);
+  let r = dirname(e[0].path),
+    s = dirname(r);
   try {
-    let d = await Ht(s).catch(() => {
+    let d = await lstat(s).catch(() => {
       return;
     });
-    if (!d) await Mt(s, { recursive: !0 });
+    if (!d) await mkdir(s, { recursive: !0 });
     else if (!d.isDirectory() || d.isSymbolicLink())
-      (await ct(s, { recursive: !0, force: !0 }),
-        await Mt(s, { recursive: !0 }));
+      (await rm(s, { recursive: !0, force: !0 }),
+        await mkdir(s, { recursive: !0 }));
     if (t) for (let o of t) await xn(o.path, o.content, o.mode);
-    (await ct(r, { recursive: !0, force: !0 }), await Mt(r, { recursive: !0 }));
+    (await rm(r, { recursive: !0, force: !0 }), await mkdir(r, { recursive: !0 }));
     for (let o of e) await xn(o.path, o.content, 493);
     n(
       `[runner:session] clean-slated ${r} and rewrote ${e.length} hook stubs (cross-session isolation)`,
@@ -3979,21 +3968,21 @@ async function ko(e, t, n) {
 async function bo(e, t) {
   try {
     if (
-      (await ct(on(e.xdgConfigPath), { recursive: !0, force: !0 }),
+      (await rm(dirname(e.xdgConfigPath), { recursive: !0, force: !0 }),
       e.homeGitconfigPath && e.homeGitconfigPath !== e.globalConfigPath)
     )
-      await ct(e.homeGitconfigPath, { recursive: !0, force: !0 });
+      await rm(e.homeGitconfigPath, { recursive: !0, force: !0 });
     if (
       (await xn(e.globalConfigPath, e.globalConfigSnapshot, 420), e.credHelper)
     ) {
-      let n = on(e.credHelper.path),
-        r = await Ht(n).catch(() => {
+      let n = dirname(e.credHelper.path),
+        r = await lstat(n).catch(() => {
           return;
         });
-      if (!r) await Mt(n, { recursive: !0 });
+      if (!r) await mkdir(n, { recursive: !0 });
       else if (!r.isDirectory() || r.isSymbolicLink())
-        (await ct(n, { recursive: !0, force: !0 }),
-          await Mt(n, { recursive: !0 }));
+        (await rm(n, { recursive: !0, force: !0 }),
+          await mkdir(n, { recursive: !0 }));
       if (e.signingArtifacts)
         for (let s of e.signingArtifacts) await xn(s.path, s.content, s.mode);
       await xn(e.credHelper.path, e.credHelper.content, 448);
@@ -4009,7 +3998,7 @@ async function bo(e, t) {
   }
 }
 async function Ro(e, t, n) {
-  if (n) await ct(X(e, ".git", "config.lock"), { force: !0 }).catch(() => {});
+  if (n) await rm(join(e, ".git", "config.lock"), { force: !0 }).catch(() => {});
   await new Promise((r) => {
     let s = spawn(
         "git",
@@ -4157,7 +4146,7 @@ function gs(e, t, n) {
   if (t.length === 1) return { childCwd: t[0], addDirs: [...t, e] };
   if (t.length > 1)
     return {
-      childCwd: t.every((s) => s.startsWith(e + Ge)) ? e : t[0],
+      childCwd: t.every((s) => s.startsWith(e + sep)) ? e : t[0],
       addDirs: [...t],
     };
   return { childCwd: e, addDirs: [] };
@@ -4190,14 +4179,14 @@ async function No(e, t, n) {
       if (L !== void 0) return L;
       let S = i;
       for (let w = 0; w < 64; w++) {
-        let U = await xe(Ht(S).catch(s(i, h, "lstat")), `lstat ${S}`);
+        let U = await xe(lstat(S).catch(s(i, h, "lstat")), `lstat ${S}`);
         if (U?.isSymbolicLink())
           throw new _t(
             { ...h, path: i },
             `traverses a symlink at ${S} whose target path cannot be realpath'd \u2014 a repo-shipped link (dangling, or pointing outside the workspace with a nonexistent leaf) can be retargeted at use time`,
           );
         if (U !== void 0) return;
-        let V = on(S);
+        let V = dirname(S);
         if (V === S) return;
         S = V;
       }
@@ -4208,22 +4197,22 @@ async function No(e, t, n) {
     },
     c = async (i, h) => {
       if (!isAbsolute(i)) return;
-      let L = i.split(Ge).filter((w) => w.length > 0);
+      let L = i.split(sep).filter((w) => w.length > 0);
       if (!L.includes("..")) return;
       if (d(i))
         throw new _t(
           { ...h, path: i },
           "names an automount/NT-namespace-transiting spelling with '..' \u2014 the kernel-divergence probe cannot run without performing the automount lookup itself; refusing (fail-closed)",
         );
-      let S = i.startsWith(Ge) ? Ge : "";
+      let S = i.startsWith(sep) ? sep : "";
       for (let w of L) {
         if (w === ".") continue;
         if (w === "..") {
-          S = on(S);
+          S = dirname(S);
           continue;
         }
-        S = S === Ge ? Ge + w : X(S, w);
-        let U = await xe(Ht(S).catch(s(i, h, "lstat")), `lstat ${S}`);
+        S = S === sep ? sep + w : join(S, w);
+        let U = await xe(lstat(S).catch(s(i, h, "lstat")), `lstat ${S}`);
         if (U?.isSymbolicLink())
           throw new _t(
             { ...h, path: i },
@@ -4233,14 +4222,14 @@ async function No(e, t, n) {
       }
     },
     m = (i) => {
-      let h = stripRecursiveGlobSuffix(i) || Ge;
+      let h = stripRecursiveGlobSuffix(i) || sep;
       return resolvePath(h, e);
     },
-    p = (i) => stripRecursiveGlobSuffix(i) || Ge;
+    p = (i) => stripRecursiveGlobSuffix(i) || sep;
   for (let i of new Set([e, ...t])) {
-    let h = X(i, ".claude"),
+    let h = join(i, ".claude"),
       L = await xe(
-        Ht(h).catch((S) => {
+        lstat(h).catch((S) => {
           if (W(S)) return;
           throw S;
         }),
@@ -4258,9 +4247,9 @@ async function No(e, t, n) {
         "is a symlink \u2014 refusing to follow (the settings read below would escape the workspace)",
       );
     for (let S of ["settings.json", "settings.local.json"]) {
-      let w = X(h, S),
+      let w = join(h, S),
         U = await xe(
-          Ht(w).catch((H) => {
+          lstat(w).catch((H) => {
             if (W(H)) return;
             throw new _t(
               { path: w, sourceFile: w, raw: S, kind: "scan-fs-error" },
@@ -4294,7 +4283,7 @@ async function No(e, t, n) {
         );
       }
       let ae = xt(V, !1);
-      if (n && (i === e || e.startsWith(i + Ge)) && ae?.disableAllHooks === !0)
+      if (n && (i === e || e.startsWith(i + sep)) && ae?.disableAllHooks === !0)
         n.repoDisablesAllHooks = !0;
       if (
         ae?.env !== void 0 &&
@@ -4339,7 +4328,7 @@ async function No(e, t, n) {
         if (![EDIT_TOOL_NAME, WRITE_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME].includes(fe.toolName)) continue;
         if (fe.ruleContent === void 0) {
           r.push({
-            path: Ge,
+            path: sep,
             sourceFile: w,
             raw: H,
             kind: "permissions.allow (bare write-tool rule)",
@@ -4401,7 +4390,7 @@ async function No(e, t, n) {
           },
           ke;
         try {
-          ke = bn(resolvePath(H, e));
+          ke = resolve(resolvePath(H, e));
         } catch (de) {
           throw new _t(
             { ...fe, path: String(H) },
@@ -4419,7 +4408,7 @@ async function No(e, t, n) {
 }
 function $n(e, t, n, r) {
   let s = e.toLowerCase(),
-    d = (o) => (o.endsWith(Ge) ? o : o + Ge);
+    d = (o) => (o.endsWith(sep) ? o : o + sep);
   for (let o of [n, ...r]) {
     let c = o.toLowerCase();
     if (s === c || s.startsWith(d(c)) || c.startsWith(d(s)))
@@ -4430,26 +4419,26 @@ function $n(e, t, n, r) {
   }
 }
 function Ls(e, t) {
-  let n = bn(e),
-    r = isAbsolute(t) ? bn(t) : bn(n, t);
+  let n = resolve(e),
+    r = isAbsolute(t) ? resolve(t) : resolve(n, t);
   if (r === n) return r;
-  if (r.startsWith(n + Ge)) return r;
+  if (r.startsWith(n + sep)) return r;
   return null;
 }
 async function Lo(e, t) {
-  let n = bn(e),
-    r = bn(t);
-  if (r !== n && !r.startsWith(n + Ge)) return !1;
-  let s = r.slice(n.length).split(Ge).filter(Boolean);
+  let n = resolve(e),
+    r = resolve(t);
+  if (r !== n && !r.startsWith(n + sep)) return !1;
+  let s = r.slice(n.length).split(sep).filter(Boolean);
   for (let d of s) {
-    n = X(n, d);
+    n = join(n, d);
     try {
-      let o = await Ht(n);
+      let o = await lstat(n);
       if (o.isSymbolicLink() || !o.isDirectory()) return !1;
     } catch (o) {
       if (!W(o)) return !1;
       try {
-        await Mt(n);
+        await mkdir(n);
       } catch {
         return !1;
       }
@@ -4461,7 +4450,7 @@ async function xo(e, t) {
   try {
     let n = await realpath(e),
       r = await realpath(t);
-    return r === n || r.startsWith(n + Ge);
+    return r === n || r.startsWith(n + sep);
   } catch {
     return !1;
   }
@@ -5084,9 +5073,9 @@ async function Wo(e) {
     o = 262144,
     c;
   try {
-    let L = await xe(br(e.debugFile), `stat ${e.debugFile}`),
+    let L = await xe(stat(e.debugFile), `stat ${e.debugFile}`),
       S = Math.max(0, L.size - 262144),
-      w = await xe(Ii(e.debugFile, "r"), `open ${e.debugFile}`);
+      w = await xe(open(e.debugFile, "r"), `open ${e.debugFile}`);
     try {
       let U = Buffer.alloc(Math.min(L.size, 262144)),
         { bytesRead: V } = await xe(
@@ -5558,7 +5547,7 @@ function Na(e) {
     n = {
       apiUrl: zs,
       capacity: js,
-      baseDir: rr(t ?? Ys),
+      baseDir: resolve(t ?? Ys),
       baseDirSource: t === void 0 ? "default" : "env",
       execPath: process.env.SELF_HOSTED_RUNNER_EXEC_PATH,
       logLevel: "info",
@@ -5582,7 +5571,7 @@ function Na(e) {
       envSetByFlag: new Set(),
     };
   if (process.env.SELF_HOSTED_RUNNER_HOOKS_DIR)
-    process.env.SELF_HOSTED_RUNNER_HOOKS_DIR = rr(
+    process.env.SELF_HOSTED_RUNNER_HOOKS_DIR = resolve(
       process.env.SELF_HOSTED_RUNNER_HOOKS_DIR,
     );
   for (let s = 0; s < e.length; s++) {
@@ -5609,13 +5598,13 @@ function Na(e) {
         }
         break;
       case "--base-dir":
-        if (o) ((n.baseDir = rr(o)), (n.baseDirSource = "flag"), s++);
+        if (o) ((n.baseDir = resolve(o)), (n.baseDirSource = "flag"), s++);
         break;
       case "--exec-path":
         if (o) ((n.execPath = o), s++);
         break;
       case "--hooks-dir":
-        if (o) ((process.env.SELF_HOSTED_RUNNER_HOOKS_DIR = rr(o)), s++);
+        if (o) ((process.env.SELF_HOSTED_RUNNER_HOOKS_DIR = resolve(o)), s++);
         break;
       case "--git-ssh-rewrite":
         if (!o) throw Error("--git-ssh-rewrite requires a hostname");
@@ -5886,7 +5875,7 @@ async function Da(e) {
     let r;
     try {
       r = await raceWithTimeout(
-        Ks(e.poolSecretFile, { encoding: "utf-8" }),
+        readFile(e.poolSecretFile, { encoding: "utf-8" }),
         va,
         `environment-secret read from ${e.poolSecretFile}`,
       );
@@ -6264,7 +6253,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
   let H = La(n, t.capacity);
   if (H !== null) i(H);
   if (t.debugTokenDir)
-    await $r(t.debugTokenDir, { recursive: !0, mode: 448 })
+    await mkdir(t.debugTokenDir, { recursive: !0, mode: 448 })
       .then(() => {
         i(`[runner:debug] debug token dir ready: ${t.debugTokenDir}`);
       })
@@ -6416,9 +6405,9 @@ Run 'claude self-hosted-runner --help' for usage.`),
       ),
         await m(),
         process.exit(1));
-    De = process.env.GIT_CONFIG_GLOBAL || mn(Ar(), ".gitconfig");
+    De = process.env.GIT_CONFIG_GLOBAL || join(homedir(), ".gitconfig");
     let Re = De,
-      ye = await pa(Re).catch(() => {
+      ye = await lstat(Re).catch(() => {
         return;
       });
     if (ye && (ye.isCharacterDevice() || ye.isBlockDevice()))
@@ -6427,15 +6416,15 @@ Run 'claude self-hosted-runner --help' for usage.`),
       ),
         await m(),
         process.exit(1));
-    let me = process.env.XDG_CONFIG_HOME || mn(Ar(), ".config");
+    let me = process.env.XDG_CONFIG_HOME || join(homedir(), ".config");
     (i(
-      `[runner:git] --use-anthropic-git-proxy: wiping HOME-level git config (${Re}, ${mn(me, "git")}, ${mn(t.baseDir, ".runner")}) for cross-session isolation. Operator-provisioned git config must live in system config (/etc/gitconfig) or via --configure-git; see the self-hosted runners guide.`,
+      `[runner:git] --use-anthropic-git-proxy: wiping HOME-level git config (${Re}, ${join(me, "git")}, ${join(t.baseDir, ".runner")}) for cross-session isolation. Operator-provisioned git config must live in system config (/etc/gitconfig) or via --configure-git; see the self-hosted runners guide.`,
     ),
-      await nr(Re, { recursive: !0, force: !0 }),
-      await nr(mn(Ar(), ".gitconfig"), { recursive: !0, force: !0 }),
-      await nr(mn(me, "git"), { recursive: !0, force: !0 }),
-      await nr(mn(t.baseDir, ".runner"), { recursive: !0, force: !0 }),
-      await $r(ma(Re), { recursive: !0 }));
+      await rm(Re, { recursive: !0, force: !0 }),
+      await rm(join(homedir(), ".gitconfig"), { recursive: !0, force: !0 }),
+      await rm(join(me, "git"), { recursive: !0, force: !0 }),
+      await rm(join(t.baseDir, ".runner"), { recursive: !0, force: !0 }),
+      await mkdir(dirname(Re), { recursive: !0 }));
   }
   if (t.configureGit)
     try {
@@ -6480,7 +6469,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
         gitProxyCredHelperPath: C,
       } = await import("./GIT_PROXY_CRED_HELPER_CONTENT.pcspxqeg.js");
       (await v({ baseDir: t.baseDir, apiBaseUrl: t.apiUrl, onStatus: i }),
-        (Tt = await Ks(De, "utf-8").catch(() => "")),
+        (Tt = await readFile(De, "utf-8").catch(() => "")),
         (jt = { path: C(t.baseDir), content: O }));
     } catch (v) {
       (i(
@@ -7727,8 +7716,8 @@ function Qs(e, t, n) {
 }
 async function Ws(e, t, n, r) {
   try {
-    (await $r(e, { recursive: !0, mode: 448 }),
-      await ha(`${e}/${t}`, n, { mode: 384 }));
+    (await mkdir(e, { recursive: !0, mode: 448 }),
+      await writeFile(`${e}/${t}`, n, { mode: 384 }));
   } catch (s) {
     r(`[runner:debug] failed to write ${t} to ${e} (best-effort): ${s}`);
   }

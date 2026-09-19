@@ -15,9 +15,9 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { CLAUDE_DESKTOP_SUPPORTED_PLATFORMS, getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { readdir, readFile, stat as p } from "fs/promises";
+import { readdir, readFile, stat } from "fs/promises";
 import { homedir } from "os";
-import { join as l } from "path";
+import { join } from "path";
 async function g() {
   let o = getCurrentPlatform();
   if (!CLAUDE_DESKTOP_SUPPORTED_PLATFORMS.includes(o))
@@ -25,7 +25,7 @@ async function g() {
       `Unsupported platform: ${o} - Claude Desktop integration only works on macOS and WSL.`,
     );
   if (o === "macos")
-    return l(
+    return join(
       homedir(),
       "Library",
       "Application Support",
@@ -36,7 +36,7 @@ async function g() {
   if (i) {
     let e = `/mnt/c${i.replace(/^[A-Z]:/, "")}/AppData/Roaming/Claude/claude_desktop_config.json`;
     try {
-      return (await p(e), e);
+      return (await stat(e), e);
     } catch {}
   }
   try {
@@ -50,7 +50,7 @@ async function g() {
           r.name === "All Users"
         )
           continue;
-        let s = l(
+        let s = join(
           "/mnt/c/Users",
           r.name,
           "AppData",
@@ -59,7 +59,7 @@ async function g() {
           "claude_desktop_config.json",
         );
         try {
-          return (await p(s), s);
+          return (await stat(s), s);
         } catch {}
       }
     } catch {}

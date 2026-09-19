@@ -951,7 +951,7 @@ function openServedChannel(e) {
     B();
   return G;
 }
-import { realpath as te } from "fs/promises";
+import { realpath } from "fs/promises";
 import { isAbsolute } from "path";
 import { posix } from "path";
 function yn(e, o) {
@@ -1750,7 +1750,7 @@ var Ue = 30000;
 function jn(
   e,
   o,
-  d = async (t) => ({ real: await te(t), aliased: await isAliasedFilePath(t) }),
+  d = async (t) => ({ real: await realpath(t), aliased: await isAliasedFilePath(t) }),
 ) {
   let t = {
     path: e,
@@ -1879,7 +1879,7 @@ function Be({
     D = createHookStagingArea(getStagingFileSystemAccess(), () => [...(C()?.cloudWritableRoots ?? [e]), ...getAllWriteRoots(e)]),
     M = registerCleanup(() => D.dispose()),
     H = e;
-  te(e).then(
+  realpath(e).then(
     (p) => {
       H = p;
     },
@@ -1983,7 +1983,7 @@ function ze({
   storageV5: C,
 }) {
   let D = getRealFileSystemAccess().openNoFollow,
-    M = te(e).catch(() => e),
+    M = realpath(e).catch(() => e),
     H = findGitRootUncached(e) ?? e,
     O = o.senderFor(e),
     A = { ...subprocessEnv() };
@@ -2025,7 +2025,7 @@ function ze({
           optInPins: O.optInPins,
         },
         {
-          realpath: te,
+          realpath: realpath,
           open: D,
           home: getHomeDirFromEnv(W),
           defaultShell: getPreferredShellToolName(),
@@ -2038,11 +2038,11 @@ function ze({
     cloudSessionId: d,
     launchDir: e,
     launchDirReal: () => M,
-    realpath: te,
+    realpath: realpath,
     projectRoot: H,
     syncRoot: async () => {
       let w = k();
-      return w === null ? null : { root: w, real: await te(w).catch(() => w) };
+      return w === null ? null : { root: w, real: await realpath(w).catch(() => w) };
     },
     servingMuted: R,
     commonWriteRoots: () => getCommonWriteRoots(e),
@@ -2068,7 +2068,7 @@ function ze({
         (logEvent("tengu_device_hooks_consent_notice", {}),
           _({ line: Wn(w), level: "info" }));
       },
-      isStoreInReach: (w) => isConsentStoreInReach(getDeviceHooksConsentFilePath(), w, te),
+      isStoreInReach: (w) => isConsentStoreInReach(getDeviceHooksConsentFilePath(), w, realpath),
       onUntrustedStore: (w) => {
         let E = sanitizeForDisplay(getDeviceHooksConsentFilePath());
         _({
@@ -2170,10 +2170,9 @@ function Bn(e) {
       return e;
   }
 }
-import { realpath as zn } from "fs/promises";
 function createConsentReachJudge(e) {
   let o = {
-      realpath: zn,
+      realpath: realpath,
       repoRootOf: findGitRootUncached,
       consentPath: getCloudPluginsConsentPath,
       configHome: getClaudeConfigDir,

@@ -22,11 +22,11 @@ import {
   lstat,
   readFile,
   rename,
-  rm as p,
+  rm,
   unlink,
 } from "fs/promises";
 import { uptime } from "os";
-import { join as w } from "path";
+import { join } from "path";
 async function terminateProcessGracefully(e, r = {}) {
   try {
     process.kill(e, "SIGTERM");
@@ -47,7 +47,7 @@ async function terminateProcessGracefully(e, r = {}) {
 }
 var L = "daemon.lock";
 function getDaemonLockPath() {
-  return w(getClaudeConfigDir(), L);
+  return join(getClaudeConfigDir(), L);
 }
 function getDaemonLockStateKey() {
   return STORAGE_KEYS.state("daemon-lock");
@@ -55,16 +55,16 @@ function getDaemonLockStateKey() {
 function h(e) {
   return e === "EISDIR" || e === "ENXIO";
 }
-class k {
+class DaemonLockLogState {
   logged = !1;
   markLogged() {
     if (this.logged) return !1;
     return ((this.logged = !0), !0);
   }
 }
-var D = new j(() => new k());
+var daemonLockLogState = new j(() => new DaemonLockLogState());
 function E() {
-  return D.of(B().host);
+  return daemonLockLogState.of(B().host);
 }
 async function S() {
   let e = await lstat(getDaemonLockPath()).catch(() => {
@@ -92,7 +92,7 @@ async function y(e) {
       `[DaemonLock] ${o} at the lock path (${e}) \u2014 removing it as the legacy path does`,
       { level: "warn" },
     );
-  await p(r, { recursive: !0, force: !0 }).catch(() => {});
+  await rm(r, { recursive: !0, force: !0 }).catch(() => {});
 }
 var I = 65536;
 async function acquireDaemonLock(e, r) {
@@ -171,7 +171,7 @@ async function readDaemonLock(e) {
     let o = await lstat(getDaemonLockPath());
     if (!o.isFile() || o.size > 65536)
       return (
-        await p(getDaemonLockPath(), { recursive: !0, force: !0 }).catch(() => {}),
+        await rm(getDaemonLockPath(), { recursive: !0, force: !0 }).catch(() => {}),
         null
       );
     r = await readFile(getDaemonLockPath(), "utf8");

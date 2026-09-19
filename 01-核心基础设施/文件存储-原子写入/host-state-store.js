@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 var o = "cli";
-class s {
+class HostStateStore {
   bundledSkills = [];
   bundledSkillKillSwitchSurvivors = new Set();
   bundledSkillSessionResetHooks = [];
@@ -96,8 +96,8 @@ function getOrCompute(e, n, i) {
   let l = i();
   return (e.set(n, l), l);
 }
-var a = new j(() => new s());
+var hostStateStores = new j(() => new HostStateStore());
 function getHostStateStore() {
-  return a.of(B().host);
+  return hostStateStores.of(B().host);
 }
 export { getOrCompute, getHostStateStore };

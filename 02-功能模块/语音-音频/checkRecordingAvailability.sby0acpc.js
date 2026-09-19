@@ -18,10 +18,10 @@ import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { spawn } from "child_process";
 import { homedir } from "os";
-import { join as v } from "path";
-var V = v(homedir(), ".cache", "coder-audio", "port"),
-  M = v(homedir(), ".cache", "coder-audio", "token");
-class g {
+import { join } from "path";
+var V = join(homedir(), ".cache", "coder-audio", "port"),
+  M = join(homedir(), ".cache", "coder-audio", "token");
+class VoiceRecordingState {
   audioNapi = null;
   audioNapiPromise = null;
   arecordProbe = null;
@@ -31,7 +31,7 @@ class g {
   forwardedStartGeneration = 0;
   nativeRecordingActive = !1;
 }
-var l = new j(() => new g());
+var voiceRecordingState = new j(() => new VoiceRecordingState());
 var w = { started: !0 };
 var h = { started: !1, superseded: !1, hint: null, expected: !1 };
 function f(e) {
@@ -66,7 +66,7 @@ async function b() {
   return null;
 }
 async function checkVoiceDependencies(e) {
-  let o = l.of(e);
+  let o = voiceRecordingState.of(e);
   if ((await f(o)).isNativeAudioAvailable())
     return { available: !0, missing: [], installCommand: null };
   let s = [];
@@ -79,7 +79,7 @@ async function checkVoiceDependencies(e) {
   };
 }
 async function requestMicrophonePermission(e) {
-  if (!(await f(l.of(e))).isNativeAudioAvailable()) return !0;
+  if (!(await f(voiceRecordingState.of(e))).isNativeAudioAvailable()) return !0;
   if (
     (
       await startRecording(
@@ -101,7 +101,7 @@ async function checkRecordingAvailability(e, o = {}) {
 
 To use voice mode, run Claude Code locally instead.`,
     };
-  let r = l.of(e);
+  let r = voiceRecordingState.of(e);
   if ((await f(r)).isNativeAudioAvailable())
     return { available: !0, reason: null };
   let t =
@@ -136,7 +136,7 @@ This usually means the host has no microphone (for example, a remote server). Ru
 }
 async function startRecording(e, o, r, s) {
   logForDebugging("[voice] startRecording called, platform=darwin");
-  let t = l.of(e),
+  let t = voiceRecordingState.of(e),
     d = await f(t),
     i = d.isNativeAudioAvailable() && !0,
     c = s?.silenceDetection !== !1;
@@ -202,7 +202,7 @@ function C(e, o, r, s) {
   );
 }
 function stopRecording(e) {
-  let o = l.of(e);
+  let o = voiceRecordingState.of(e);
   if (o.nativeRecordingActive && o.audioNapi) {
     (o.audioNapi.stopNativeRecording(), (o.nativeRecordingActive = !1));
     return;

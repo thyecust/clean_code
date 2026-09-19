@@ -12,11 +12,11 @@ import { AHt } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileSync } from "child_process";
 import { lstatSync } from "fs";
-import { join as w } from "path";
+import { join } from "path";
 function E() {
   return !1;
 }
-class f {
+class ExecutablePathCache {
   resolved = new Map();
   lookup(e) {
     return this.resolved.get(e);
@@ -28,7 +28,7 @@ class f {
     this.resolved.delete(e);
   }
 }
-var h = new j(() => new f()),
+var executablePathCachesByHost = new j(() => new ExecutablePathCache()),
   b = 5000;
 function u(e) {
   try {
@@ -47,7 +47,7 @@ function y(e) {
   return n > 0 && v.has(t.slice(n));
 }
 function findExecutableWindows(e, t = !1) {
-  let n = h.of(B().host),
+  let n = executablePathCachesByHost.of(B().host),
     o = n.lookup(e);
   if (o !== void 0)
     if (o !== null) {
@@ -58,7 +58,7 @@ function findExecutableWindows(e, t = !1) {
       n.forget(e);
     }
   let c = a.SYSTEMROOT || "C:\\Windows",
-    d = w(c, "System32", "where.exe");
+    d = join(c, "System32", "where.exe");
   try {
     let i = execFileSync(d, [e], {
         stdio: "pipe",

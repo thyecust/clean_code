@@ -19,7 +19,7 @@ import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
 import { MAX_MCP_TASK_ID_LENGTH, MCP_TASK_ID_PATTERN } from "./mcp-task-id.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
-import { dirname, join as f } from "path";
+import { dirname, join } from "path";
 var x = /^k[0-9a-z]{8}$/,
   d = 256,
   g = /^(?:[^\p{Cc}\p{Cf}]|[\u200c\u200d])+$/u,
@@ -61,10 +61,10 @@ function getSessionProjectDir() {
   return fy() ?? getProjectDir(he());
 }
 function y(t = K(), e = getSessionProjectDir()) {
-  return f(e, t, "mcp-tasks");
+  return join(e, t, "mcp-tasks");
 }
 function S(t, e = K(), r) {
-  return f(y(e, r), `mcp-task-${t}.meta.json`);
+  return join(y(e, r), `mcp-task-${t}.meta.json`);
 }
 function k(t = getSessionProjectDir()) {
   return getProjectKeyFromDir(t);
@@ -121,7 +121,7 @@ async function listMcpTaskMetadata(t) {
   for (let s of o) {
     if (!s.endsWith(".meta.json")) continue;
     try {
-      let a = await getFileStorage().read(f(r, s)),
+      let a = await getFileStorage().read(join(r, s)),
         i = T().safeParse(jsonParse(a));
       if (!i.success) {
         logForDebugging(`listMcpTaskMetadata: skipping ${s}: ${String(i.error)}`);

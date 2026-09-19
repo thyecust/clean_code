@@ -186,7 +186,7 @@ import "../../01-核心基础设施/核心工具-未归类/c4e-upsell-command-ga
 import "../远程控制-Bridge/chunk-1yq098a7.js";
 import "../制品发布-Artifact/artifact-comment-monitor-intent.js";
 import "../制品发布-Artifact/chunk-kshc4v5t.js";
-import "../工具Monitor/工具Monitor.981fw9dy.js";
+import "../../04-tools/MonitorTool.js";
 import "../制品发布-Artifact/artifact-reply-yield.js";
 import "../../01-核心基础设施/核心工具-未归类/chunk-d8c3rz29.js";
 import "../制品发布-Artifact/artifact-asset-store.js";

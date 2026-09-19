@@ -15,9 +15,9 @@ import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核�
 import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { join as u } from "path";
+import { join } from "path";
 function getDaemonStatusPath() {
-  return u(getClaudeConfigDir(), "daemon.status.json");
+  return join(getClaudeConfigDir(), "daemon.status.json");
 }
 function getDaemonStatusStateKey() {
   return STORAGE_KEYS.state("daemon-status");

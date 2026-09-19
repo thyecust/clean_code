@@ -24,7 +24,7 @@ import { createConcurrencyLimiter, getUploadsDirectory, buildUploadFileName, cac
 import { getImageMediaTypeOrDefault, buildImageBlockFromBytes } from "./chunk-0dcnsftb.js";
 import { randomUUID } from "crypto";
 import { mkdir, realpath, writeFile } from "fs/promises";
-import { join as L } from "path";
+import { join } from "path";
 var j = 30000;
 function a(e) {
   logForDebugging(`[bridge:inbound-attach] ${e}`);
@@ -84,7 +84,7 @@ async function D(e, s, l, m, p) {
     ).replace(/[^a-zA-Z0-9_-]/g, "_"),
     k = getUploadsDirectory(),
     _ = buildUploadFileName(h, d),
-    c = L(k, _),
+    c = join(k, _),
     B = K();
   if (isHoverRestEnabled() && m !== void 0 && isValidPathSegment(B) && isValidPathSegment(_)) {
     let o = await m.write(STORAGE_KEYS.userConfigDir("uploads", [B, _]), r, {

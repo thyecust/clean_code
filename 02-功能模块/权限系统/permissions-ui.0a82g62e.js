@@ -88,7 +88,7 @@ import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
 import "../工作树-Git/git-operations.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
@@ -2072,16 +2072,16 @@ ${" ".repeat(Pe)}\u2026 (+${Ja} more ${Ja === 1 ? "line" : "lines"})`,
   return Qm;
 }
 F();
-import { open as Of } from "fs/promises";
-import { constants as Dr } from "fs";
-import { randomBytes as Nf } from "crypto";
+import { open } from "fs/promises";
+import { constants } from "fs";
+import { randomBytes } from "crypto";
 import { join } from "path";
 function Lf(aw) {
   return `- ${aw}`;
 }
 async function vc(i, u) {
-  let f = join(getClaudeTempDir(), `${AUTO_MODE_BUILTINS_FILE_PREFIX}${i}-${Nf(8).toString("hex")}.md`),
-    a = await Of(f, Dr.O_WRONLY | Dr.O_CREAT | Dr.O_EXCL | Dr.O_NOFOLLOW, 384);
+  let f = join(getClaudeTempDir(), `${AUTO_MODE_BUILTINS_FILE_PREFIX}${i}-${randomBytes(8).toString("hex")}.md`),
+    a = await open(f, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 384);
   try {
     await a.writeFile(u, "utf8");
   } finally {
@@ -2975,12 +2975,10 @@ function Br(cw) {
 F();
 import {
   closeSync,
-  constants as Or,
   mkdirSync,
   openSync,
   writeSync,
 } from "fs";
-import { randomBytes as sp } from "crypto";
 import { dirname } from "path";
 function ap(Sc) {
   return { label: me(Sc), value: Sc, description: Dc(Sc), dimDescription: !0 };
@@ -3011,11 +3009,11 @@ function Dc(i) {
   }
 }
 function Qs(i) {
-  let u = resolveSidecarFilePath(`${AUTO_MODE_ENV_EDIT_FILE_PREFIX}${sp(8).toString("hex")}.md`);
+  let u = resolveSidecarFilePath(`${AUTO_MODE_ENV_EDIT_FILE_PREFIX}${randomBytes(8).toString("hex")}.md`);
   if (u === null) return { content: null, problem: null };
   try {
     mkdirSync(dirname(u), { recursive: !0, mode: 448 });
-    let a = openSync(u, Or.O_WRONLY | Or.O_CREAT | Or.O_EXCL | Or.O_NOFOLLOW, 384);
+    let a = openSync(u, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 384);
     try {
       writeSync(
         a,

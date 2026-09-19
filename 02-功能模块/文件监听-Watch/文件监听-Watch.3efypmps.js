@@ -8,17 +8,15 @@
 
 // Version: 2.1.263
 import { stat as zt } from "fs";
-import { stat as jt, readdir as Yt } from "fs/promises";
+import { stat, readdir } from "fs/promises";
 import { EventEmitter } from "events";
-import * as f from "path";
+import * as path from "path";
 import {
-  stat as ft,
-  lstat as j,
-  readdir as ut,
-  realpath as _t,
+  lstat,
+  realpath,
 } from "fs/promises";
-import { Readable as mt } from "stream";
-import { resolve, relative, join as pt, sep as yt } from "path";
+import { Readable } from "stream";
+import { resolve, relative, join, sep } from "path";
 var p = {
     FILE_TYPE: "files",
     DIR_TYPE: "directories",
@@ -57,14 +55,14 @@ var V = "READDIRP_RECURSIVE_ERROR",
     }
     return G;
   };
-class B extends mt {
+class B extends Readable {
   constructor(t = {}) {
     super({ objectMode: !0, autoDestroy: !0, highWaterMark: t.highWaterMark });
     let s = { ...N, ...t },
       { root: e, type: i } = s;
     ((this._fileFilter = K(s.fileFilter)),
       (this._directoryFilter = K(s.directoryFilter)));
-    let r = s.lstat ? j : ft;
+    let r = s.lstat ? lstat : stat;
     if (Dt) this._stat = (a) => r(a, { bigint: !0 });
     else this._stat = r;
     ((this._maxDepth = s.depth ?? N.depth),
@@ -123,7 +121,7 @@ class B extends mt {
   async _exploreDir(t, s) {
     let e;
     try {
-      e = await ut(t, this._rdOptions);
+      e = await readdir(t, this._rdOptions);
     } catch (i) {
       this._onError(i);
     }
@@ -133,7 +131,7 @@ class B extends mt {
     let e,
       i = this._isDirent ? t.name : t;
     try {
-      let r = resolve(pt(s, i));
+      let r = resolve(join(s, i));
       ((e = { path: relative(this._root, r), fullPath: r, basename: i }),
         (e[this._statsProp] = this._isDirent ? t : await this._stat(r)));
     } catch (r) {
@@ -155,12 +153,12 @@ class B extends mt {
     if (s && s.isSymbolicLink()) {
       let e = t.fullPath;
       try {
-        let i = await _t(e),
-          r = await j(i);
+        let i = await realpath(e),
+          r = await lstat(i);
         if (r.isFile()) return "file";
         if (r.isDirectory()) {
           let a = i.length;
-          if (e.startsWith(i) && e.substr(a, 1) === yt) {
+          if (e.startsWith(i) && e.substr(a, 1) === sep) {
             let n = Error(`Circular symlink detected: "${e}" points to "${i}"`);
             return ((n.code = V), this._onError(n));
           }
@@ -193,9 +191,8 @@ function q(t, s = {}) {
   return ((s.root = t), new B(s));
 }
 import { watchFile, unwatchFile, watch } from "fs";
-import { open as Q, stat as Z, lstat as Tt, realpath as W } from "fs/promises";
-import * as _ from "path";
-import { type as xt } from "os";
+import { open } from "fs/promises";
+import { type } from "os";
 var vt = "data",
   C = "end",
   tt = "close",
@@ -205,7 +202,7 @@ var A = "darwin",
   Ft = A === "darwin",
   At = A === "linux",
   St = A === "freebsd",
-  st = xt() === "OS400",
+  st = type() === "OS400",
   u = {
     ALL: "all",
     READY: "ready",
@@ -219,7 +216,7 @@ var A = "darwin",
   },
   y = u,
   Nt = "watch",
-  Wt = { lstat: Tt, stat: Z },
+  Wt = { lstat: lstat, stat: stat },
   P = "listeners",
   I = "errHandlers",
   g = "rawEmitters",
@@ -487,7 +484,7 @@ var A = "darwin",
     "zip",
     "zipx",
   ]),
-  Ct = (t) => kt.has(_.extname(t).slice(1).toLowerCase()),
+  Ct = (t) => kt.has(path.extname(t).slice(1).toLowerCase()),
   k = (t, s) => {
     if (t instanceof Set) t.forEach(s);
     else s(t);
@@ -512,7 +509,7 @@ var A = "darwin",
 function X(t, s, e, i, r) {
   let a = (n, o) => {
     if ((e(t), r(n, o, { watchedPath: t }), o && t !== o))
-      x(_.resolve(t, o), P, _.join(t, o));
+      x(path.resolve(t, o), P, path.join(t, o));
   };
   try {
     return watch(t, { persistent: s.persistent }, a);
@@ -538,7 +535,7 @@ var x = (t, s, e, i, r) => {
         c.on(y.ERROR, async (h) => {
           if (v && h.code === "EPERM")
             try {
-              (await (await Q(t, "r")).close(), a(h));
+              (await (await open(t, "r")).close(), a(h));
             } catch (d) {}
           else a(h);
         }),
@@ -554,7 +551,7 @@ var x = (t, s, e, i, r) => {
         if (o) o.watcherUnusable = !0;
         if (v && h.code === "EPERM")
           try {
-            (await (await Q(t, "r")).close(), d(h));
+            (await (await open(t, "r")).close(), d(h));
           } catch (l) {}
         else d(h);
       }),
@@ -604,10 +601,10 @@ class O {
   }
   _watchWithNodeFs(t, s) {
     let e = this.fsw.options,
-      i = _.dirname(t),
-      r = _.basename(t);
+      i = path.dirname(t),
+      r = path.basename(t);
     this.fsw._getWatchedDir(i).add(r);
-    let n = _.resolve(t),
+    let n = path.resolve(t),
       o = { persistent: e.persistent };
     if (!s) s = F;
     let c;
@@ -625,8 +622,8 @@ class O {
   }
   _handleFile(t, s, e) {
     if (this.fsw.closed) return;
-    let i = _.dirname(t),
-      r = _.basename(t),
+    let i = path.dirname(t),
+      r = path.basename(t),
       a = this.fsw._getWatchedDir(i),
       n = s;
     if (a.has(r)) return;
@@ -634,7 +631,7 @@ class O {
         if (!this.fsw._throttle(Nt, t, 5)) return;
         if (!d || d.mtimeMs === 0)
           try {
-            let l = await Z(t);
+            let l = await stat(t);
             if (this.fsw.closed) return;
             let { atimeMs: m, mtimeMs: w } = l;
             if (!m || m <= w || w !== n.mtimeMs) this.fsw._emit(y.CHANGE, t, l);
@@ -667,7 +664,7 @@ class O {
       this.fsw._incrReadyCount();
       let n;
       try {
-        n = await W(e);
+        n = await realpath(e);
       } catch (o) {
         return (this.fsw._emitReady(), !0);
       }
@@ -686,7 +683,7 @@ class O {
     this.fsw._symlinkPaths.set(r, !0);
   }
   _handleRead(t, s, e, i, r, a, n) {
-    if (((t = _.join(t, "")), (n = this.fsw._throttle("readdir", t, 1000)), !n))
+    if (((t = path.join(t, "")), (n = this.fsw._throttle("readdir", t, 1000)), !n))
       return;
     let o = this.fsw._getWatchedDir(e.path),
       c = new Set(),
@@ -703,7 +700,7 @@ class O {
             return;
           }
           let l = d.path,
-            m = _.join(t, l);
+            m = path.join(t, l);
           if (
             (c.add(l),
             d.stats.isSymbolicLink() && (await this._handleSymlink(d, t, m, l)))
@@ -715,7 +712,7 @@ class O {
           }
           if (l === i || (!i && !o.has(l)))
             (this.fsw._incrReadyCount(),
-              (m = _.join(r, _.relative(r, m))),
+              (m = path.join(r, path.relative(r, m))),
               this._addToNodeFs(m, s, e, a + 1));
         })
         .on(y.ERROR, this._boundHandleError),
@@ -744,11 +741,11 @@ class O {
     );
   }
   async _handleDir(t, s, e, i, r, a, n) {
-    let o = this.fsw._getWatchedDir(_.dirname(t)),
-      c = o.has(_.basename(t));
+    let o = this.fsw._getWatchedDir(path.dirname(t)),
+      c = o.has(path.basename(t));
     if (!(e && this.fsw.options.ignoreInitial) && !r && !c)
       this.fsw._emit(y.ADD_DIR, t, s);
-    (o.add(_.basename(t)), this.fsw._getWatchedDir(t));
+    (o.add(path.basename(t)), this.fsw._getWatchedDir(t));
     let h,
       d,
       l = this.fsw.options.depth;
@@ -778,8 +775,8 @@ class O {
       let c = this.fsw.options.followSymlinks,
         h;
       if (o.isDirectory()) {
-        let d = _.resolve(t),
-          l = c ? await W(t) : t;
+        let d = path.resolve(t),
+          l = c ? await realpath(t) : t;
         if (this.fsw.closed) return;
         if (
           ((h = await this._handleDir(n.watchPath, o, s, i, r, n, l)),
@@ -788,9 +785,9 @@ class O {
           return;
         if (d !== l && l !== void 0) this.fsw._symlinkPaths.set(d, l);
       } else if (o.isSymbolicLink()) {
-        let d = c ? await W(t) : t;
+        let d = c ? await realpath(t) : t;
         if (this.fsw.closed) return;
-        let l = _.dirname(n.watchPath);
+        let l = path.dirname(n.watchPath);
         if (
           (this.fsw._getWatchedDir(l).add(n.watchPath),
           this.fsw._emit(y.ADD, n.watchPath, o),
@@ -798,7 +795,7 @@ class O {
           this.fsw.closed)
         )
           return;
-        if (d !== void 0) this.fsw._symlinkPaths.set(_.resolve(t), d);
+        if (d !== void 0) this.fsw._symlinkPaths.set(path.resolve(t), d);
       } else h = this._handleFile(n.watchPath, o, s);
       if ((a(), h)) this.fsw._addPathCloser(t, h);
       return !1;
@@ -828,9 +825,9 @@ function Jt(t) {
     return (s) => {
       if (t.path === s) return !0;
       if (t.recursive) {
-        let e = f.relative(t.path, s);
+        let e = path.relative(t.path, s);
         if (!e) return !1;
-        return !e.startsWith("..") && !f.isAbsolute(e);
+        return !e.startsWith("..") && !path.isAbsolute(e);
       }
       return !1;
     };
@@ -838,7 +835,7 @@ function Jt(t) {
 }
 function Qt(t) {
   if (typeof t !== "string") throw Error("string expected");
-  ((t = f.normalize(t)), (t = t.replace(/\\/g, "/")));
+  ((t = path.normalize(t)), (t = t.replace(/\\/g, "/")));
   let s = !1;
   if (t.startsWith("//")) s = !0;
   let e = /\/\//;
@@ -874,16 +871,16 @@ var nt = (t) => {
     if (e) s = H + s;
     return s;
   },
-  ct = (t) => ot(f.normalize(ot(t))),
+  ct = (t) => ot(path.normalize(ot(t))),
   at =
     (t = "") =>
     (s) => {
-      if (typeof s === "string") return ct(f.isAbsolute(s) ? s : f.join(t, s));
+      if (typeof s === "string") return ct(path.isAbsolute(s) ? s : path.join(t, s));
       else return s;
     },
   Zt = (t, s) => {
-    if (f.isAbsolute(t)) return t;
-    return f.join(s, t);
+    if (path.isAbsolute(t)) return t;
+    return path.join(s, t);
   },
   ts = Object.freeze(new Set());
 class lt {
@@ -901,9 +898,9 @@ class lt {
     if ((s.delete(t), s.size > 0)) return;
     let e = this.path;
     try {
-      await Yt(e);
+      await readdir(e);
     } catch (i) {
-      if (this._removeWatcher) this._removeWatcher(f.dirname(e), f.basename(e));
+      if (this._removeWatcher) this._removeWatcher(path.dirname(e), path.basename(e));
     }
   }
   has(t) {
@@ -932,7 +929,7 @@ class dt {
     let i = t;
     ((this.path = t = t.replace(qt, "")),
       (this.watchPath = i),
-      (this.fullWatchPath = f.resolve(i)),
+      (this.fullWatchPath = path.resolve(i)),
       (this.dirParts = []),
       this.dirParts.forEach((r) => {
         if (r.length > 1) r.pop();
@@ -941,7 +938,7 @@ class dt {
       (this.statMethod = s ? ss : es));
   }
   entryPath(t) {
-    return f.join(this.watchPath, f.relative(this.watchPath, t.fullPath));
+    return path.join(this.watchPath, path.relative(this.watchPath, t.fullPath));
   }
   filterPath(t) {
     let { stats: s } = t;
@@ -1044,7 +1041,7 @@ class z extends EventEmitter {
       ).then((a) => {
         if (this.closed) return;
         a.forEach((n) => {
-          if (n) this.add(f.dirname(n), f.basename(s || n));
+          if (n) this.add(path.dirname(n), path.basename(s || n));
         });
       }),
       this
@@ -1056,9 +1053,9 @@ class z extends EventEmitter {
       { cwd: e } = this.options;
     return (
       s.forEach((i) => {
-        if (!f.isAbsolute(i) && !this._closers.has(i)) {
-          if (e) i = f.join(e, i);
-          i = f.resolve(i);
+        if (!path.isAbsolute(i) && !this._closers.has(i)) {
+          if (e) i = path.join(e, i);
+          i = path.resolve(i);
         }
         if ((this._closePath(i), this._addIgnoredPath(i), this._watched.has(i)))
           this._addIgnoredPath({ path: i, recursive: !0 });
@@ -1100,7 +1097,7 @@ class z extends EventEmitter {
     let t = {};
     return (
       this._watched.forEach((s, e) => {
-        let r = (this.options.cwd ? f.relative(this.options.cwd, e) : e) || ht;
+        let r = (this.options.cwd ? path.relative(this.options.cwd, e) : e) || ht;
         t[r] = s.getChildren().sort();
       }),
       t
@@ -1112,8 +1109,8 @@ class z extends EventEmitter {
   async _emit(t, s, e) {
     if (this.closed) return;
     let i = this.options;
-    if (v) s = f.normalize(s);
-    if (i.cwd) s = f.relative(i.cwd, s);
+    if (v) s = path.normalize(s);
+    if (i.cwd) s = path.relative(i.cwd, s);
     let r = [s];
     if (e != null) r.push(e);
     let a = i.awaitWriteFinish,
@@ -1164,10 +1161,10 @@ class z extends EventEmitter {
       e === void 0 &&
       (t === u.ADD || t === u.ADD_DIR || t === u.CHANGE)
     ) {
-      let o = i.cwd ? f.join(i.cwd, s) : s,
+      let o = i.cwd ? path.join(i.cwd, s) : s,
         c;
       try {
-        c = await jt(o);
+        c = await stat(o);
       } catch (h) {}
       if (!c || this.closed) return;
       r.push(c);
@@ -1214,7 +1211,7 @@ class z extends EventEmitter {
     let a = r.pollInterval,
       n,
       o = t;
-    if (this.options.cwd && !f.isAbsolute(t)) o = f.join(this.options.cwd, t);
+    if (this.options.cwd && !path.isAbsolute(t)) o = path.join(this.options.cwd, t);
     let c = new Date(),
       h = this._pendingWrites;
     function d(l) {
@@ -1254,7 +1251,7 @@ class z extends EventEmitter {
     return new dt(t, this.options.followSymlinks, this);
   }
   _getWatchedDir(t) {
-    let s = f.resolve(t);
+    let s = path.resolve(t);
     if (!this._watched.has(s))
       this._watched.set(s, new lt(s, this._boundRemove));
     return this._watched.get(s);
@@ -1278,8 +1275,8 @@ class z extends EventEmitter {
       let r = i[i.length - 1];
       if (!r.expanded) {
         r.expanded = !0;
-        let l = f.join(r.directory, r.item),
-          m = f.resolve(l);
+        let l = path.join(r.directory, r.item),
+          m = path.resolve(l);
         if (
           ((r.path = l),
           (r.fullPath = m),
@@ -1313,7 +1310,7 @@ class z extends EventEmitter {
       if ((o.remove(r.item), this._symlinkPaths.has(n)))
         this._symlinkPaths.delete(n);
       let h = a;
-      if (this.options.cwd) h = f.relative(this.options.cwd, a);
+      if (this.options.cwd) h = path.relative(this.options.cwd, a);
       if (this.options.awaitWriteFinish && this._pendingWrites.has(h)) {
         if (this._pendingWrites.get(h).cancelWait() === u.ADD) continue;
       }
@@ -1325,8 +1322,8 @@ class z extends EventEmitter {
   }
   _closePath(t) {
     this._closeFile(t);
-    let s = f.dirname(t);
-    this._getWatchedDir(s).remove(f.basename(t));
+    let s = path.dirname(t);
+    this._getWatchedDir(s).remove(path.basename(t));
   }
   _closeFile(t) {
     let s = this._closers.get(t);

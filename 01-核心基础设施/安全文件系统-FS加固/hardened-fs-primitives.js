@@ -15,7 +15,7 @@ import { computeContentDigests } from "../../02-功能模块/目录同步-dir-sy
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { lstat } from "fs/promises";
-import { join as ae } from "path";
+import { join } from "path";
 var DEFAULT_MAX_SYNC_FILES = 1e5,
   MAX_SYNC_UPLOAD_BYTES = 104857600;
 function isSafePortablePath(e) {
@@ -23,7 +23,7 @@ function isSafePortablePath(e) {
 }
 async function getPathIdentity(e, r) {
   try {
-    let s = await lstat(ae(e, r), { bigint: !0 });
+    let s = await lstat(join(e, r), { bigint: !0 });
     return { path: r, identity: s.ino === 0n ? null : `${s.dev}:${s.ino}` };
   } catch {
     return { path: r, identity: null };
@@ -50,11 +50,10 @@ async function readFileWithDigests(e, r, s, i = null) {
     ? { ...computeContentDigests(o.content), content: o.content, mode: o.mode }
     : null;
 }
-import { close, constants as N, fstat } from "fs";
-import { mkdtemp, rm as ye, symlink } from "fs/promises";
+import { close, constants, fstat } from "fs";
+import { mkdtemp, rm, symlink } from "fs/promises";
 import { tmpdir } from "os";
 import { getSystemErrorName, promisify } from "util";
-import { constants as z } from "fs";
 function se(e) {
   switch (e) {
     case "ELOOP":
@@ -108,7 +107,7 @@ function le(e, r, s) {
 function Y(e, r) {
   return e.path.sep === "/" ? r : r.split(e.path.sep).join("/");
 }
-var READ_ONLY_NONBLOCK_FLAGS = z.O_RDONLY | z.O_NONBLOCK;
+var READ_ONLY_NONBLOCK_FLAGS = constants.O_RDONLY | constants.O_NONBLOCK;
 async function openVerifiedFile(e, r, s) {
   let i = await r.lstat(s);
   if (!i.isFile() || i.nlink > 1n) throw R("ELOOP");
@@ -215,8 +214,8 @@ var M = 536870912,
   Re = 2097152,
   Ie = 128,
   L = 16777216,
-  C = N.O_RDONLY | N.O_DIRECTORY | N.O_NOFOLLOW | L,
-  U = N.O_WRONLY | N.O_CREAT | N.O_EXCL | L,
+  C = constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW | L,
+  U = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | L,
   ne = 511;
 function F(e, r) {
   let s = e.split("/");
@@ -235,10 +234,10 @@ function G(e, r) {
   return { dirs: s.slice(0, -1), leaf: s.at(-1) ?? "" };
 }
 function V(e) {
-  if ((e & N.O_CREAT) !== 0) throw Error("anchored open never creates");
+  if ((e & constants.O_CREAT) !== 0) throw Error("anchored open never creates");
   return e;
 }
-var Pe = N.O_WRONLY | N.O_RDWR | N.O_APPEND | N.O_TRUNC;
+var Pe = constants.O_WRONLY | constants.O_RDWR | constants.O_APPEND | constants.O_TRUNC;
 function De(e) {
   return (e & Pe) !== 0;
 }
@@ -440,7 +439,7 @@ function ke(e, r, s) {
     closeDir: (t) => t.close(),
     create: async (t, c, f, d, u) =>
       J(
-        await i.open(o(t, c), U | N.O_NOFOLLOW, u),
+        await i.open(o(t, c), U | constants.O_NOFOLLOW, u),
         d,
         u,
         () => i.lstat(o(t, c), { bigint: !0 }).catch(() => null),
@@ -451,12 +450,12 @@ function ke(e, r, s) {
     unlink: (t, c) => i.unlink(o(t, c)),
     rmdir: (t, c) => i.rmdir(o(t, c)),
     lstat: (t, c) => i.lstat(o(t, c), { bigint: !0 }),
-    open: (t, c, f, d) => i.open(o(t, c), d | N.O_NOFOLLOW | L),
+    open: (t, c, f, d) => i.open(o(t, c), d | constants.O_NOFOLLOW | L),
     renameOut: (t, c, f, d) => i.rename(o(t, c), o(f.handle, d)),
     renameIn: (t, c, f, d) => i.rename(o(t.handle, c), o(f, d)),
     linkIn: (t, c, f, d) => i.link(o(t.handle, c), o(f, d)),
     statIn: (t, c) => i.lstat(o(t.handle, c), { bigint: !0 }),
-    openIn: (t, c, f) => i.open(o(t.handle, c), f | N.O_NOFOLLOW | L),
+    openIn: (t, c, f) => i.open(o(t.handle, c), f | constants.O_NOFOLLOW | L),
     unlinkIn: (t, c) => i.unlink(o(t.handle, c)),
   });
 }
@@ -549,14 +548,14 @@ async function We(e) {
       !0
     );
   } finally {
-    if (i !== null) await ye(i, { recursive: !0, force: !0 }).catch(() => {});
+    if (i !== null) await rm(i, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
-var B = N.O_RDONLY | Re | N.O_NONBLOCK;
+var B = constants.O_RDONLY | Re | constants.O_NONBLOCK;
 function Fe(e, r, s, i) {
   let { fs: o, path: t } = e,
     c = (d, u, m, p) =>
-      o.open(t.join(i, ...d, u), (m & ~N.O_NOFOLLOW) | M | L, p),
+      o.open(t.join(i, ...d, u), (m & ~constants.O_NOFOLLOW) | M | L, p),
     f = async (d, u, m) => {
       let p = r.openat(d, u, m | L);
       try {
@@ -593,7 +592,7 @@ function Fe(e, r, s, i) {
     linkIn: async (d, u, m, p) => r.linkat(d.handle.fd, u, m, p),
     statIn: (d, u) => f(d.handle.fd, u, B),
     openIn: async (d, u, m) => {
-      let p = await o.open(t.join(d.realPath, u), (m & ~N.O_NOFOLLOW) | M | L);
+      let p = await o.open(t.join(d.realPath, u), (m & ~constants.O_NOFOLLOW) | M | L);
       try {
         let [y, _] = await Promise.all([
           p.stat({ bigint: !0 }),
@@ -611,7 +610,7 @@ function Fe(e, r, s, i) {
     unlinkIn: async (d, u) => r.unlinkat(d.handle.fd, u),
   });
 }
-var Q = N.O_NOFOLLOW,
+var Q = constants.O_NOFOLLOW,
   Ce = 0;
 async function b(e, { gitRoot: r, realRoot: s }, i, o) {
   let { fs: t, path: c } = e,

@@ -10,14 +10,14 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isFlagPresent } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import { getLastGrapheme } from "../核心工具-日期与本地化/intl-text-utils.js";
-class u {
+class EarlyInputCapture {
   buffer = "";
   capturing = !1;
   readableHandler = null;
 }
-var f = new j(() => new u());
+var earlyInputCapture = new j(() => new EarlyInputCapture());
 function o() {
-  return f.of(B().host);
+  return earlyInputCapture.of(B().host);
 }
 function startCapturingEarlyInput() {
   let e = o();

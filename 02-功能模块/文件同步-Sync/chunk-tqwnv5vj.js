@@ -40,12 +40,11 @@ import { lstat, realpath } from "fs/promises";
 import {
   basename,
   dirname,
-  join as C,
-  posix as Te,
+  join,
+  posix,
   relative,
-  sep as D,
+  sep,
 } from "path";
-import { posix as x } from "path";
 var CONFLICTED_COPY_MARKER = "Claude's conflicted copy",
   MAX_CONFLICTED_COPY_ATTEMPTS = 100,
   Ee = 255,
@@ -72,20 +71,20 @@ function _e(e) {
   return `${t}-${r}-${a}`;
 }
 function buildConflictedCopyPath(e, t, r) {
-  let a = x.dirname(e),
-    i = x.basename(e),
-    o = x.extname(i),
+  let a = posix.dirname(e),
+    i = posix.basename(e),
+    o = posix.extname(i),
     c = Array.from(i.slice(0, i.length - o.length)),
     s = r > 0 ? ` (${r})` : "",
     d = ` (${CONFLICTED_COPY_MARKER} ${_e(t)})${s}${o}`,
     u = (l) => {
       let p = `${c.slice(0, l).join("")}${d}`;
-      return a === "." ? p : x.join(a, p);
+      return a === "." ? p : posix.join(a, p);
     },
     f = Array.from({ length: c.length }, (l, p) => c.length - p).find((l) => {
       let p = u(l);
       return (
-        Buffer.byteLength(x.basename(p), "utf8") <= Se &&
+        Buffer.byteLength(posix.basename(p), "utf8") <= Se &&
         checkSeedPath(p) === null &&
         !(isWindowsLikePlatform() && hasWindowsReservedPathComponent(p))
       );
@@ -209,7 +208,7 @@ async function me(e) {
 async function Le(e, t, r, a) {
   let i = await a(e, t, r);
   if (i !== null) return { kind: "present", digest: ke(i) };
-  return (await me(C(e, r))) ? { kind: "unreadable" } : { kind: "absent" };
+  return (await me(join(e, r))) ? { kind: "unreadable" } : { kind: "absent" };
 }
 async function Ne(e) {
   try {
@@ -306,9 +305,9 @@ async function Be(e, t, r, a = !1) {
   return (await getDestinationRefusalReason(e, t, r, a)) !== null;
 }
 async function getDestinationRefusalReason(e, t, r, a = !1) {
-  let i = C(e, r);
+  let i = join(e, r);
   try {
-    if (relUnderSyncDir(e, i).split(D).join("/") !== r) return "place";
+    if (relUnderSyncDir(e, i).split(sep).join("/") !== r) return "place";
   } catch {
     return "place";
   }
@@ -335,8 +334,8 @@ var Fe = new Set(
   }),
 );
 async function he(e, t, r, a = null) {
-  let i = relative(t, dirname(e)).split(D).filter(Boolean),
-    o = i.map((f, l) => C(t, ...i.slice(0, l + 1))),
+  let i = relative(t, dirname(e)).split(sep).filter(Boolean),
+    o = i.map((f, l) => join(t, ...i.slice(0, l + 1))),
     c = async (f) => {
       try {
         if ((await lstat(f)).isSymbolicLink()) return "link";
@@ -359,7 +358,7 @@ async function he(e, t, r, a = null) {
       l = relative(t, u);
     return (
       f !== "" &&
-      q(f, "directory", a !== null && f === l ? f.split(D).join("/") : null)
+      q(f, "directory", a !== null && f === l ? f.split(sep).join("/") : null)
     );
   } catch {
     return !1;
@@ -368,13 +367,13 @@ async function he(e, t, r, a = null) {
 function q(e, t, r = null) {
   return (
     escapesSyncRoot(e) ||
-    isRefusedSyncPath(e, D, t, r !== null && e.split(D).join("/") === r) ||
+    isRefusedSyncPath(e, sep, t, r !== null && e.split(sep).join("/") === r) ||
     (t === "file" && isSensitivePathAnySpelling(e))
   );
 }
 async function isGitRepositoryRoot(e) {
   try {
-    return !(await lstat(C(e, "HEAD"))).isDirectory();
+    return !(await lstat(join(e, "HEAD"))).isDirectory();
   } catch (t) {
     let r = A(t);
     return r !== "ENOENT" && r !== "ENOTDIR";
@@ -438,7 +437,7 @@ function Ue(e) {
   let r = `${Ge(basename(e.abs), Me)}.incoming-${process.hrtime.bigint().toString(36).slice(-8)}`;
   return {
     abs: e.abs.slice(0, -basename(e.abs).length) + r,
-    rel: e.rel.slice(0, -Te.basename(e.rel).length) + r,
+    rel: e.rel.slice(0, -posix.basename(e.rel).length) + r,
   };
 }
 function ve(e, t, r) {
@@ -521,9 +520,9 @@ async function applyPulledEntry({
       replacedUnkept: !1,
       ...N,
     }),
-    w = { abs: C(t, e.path), rel: e.path };
+    w = { abs: join(t, e.path), rel: e.path };
   try {
-    if (relUnderSyncDir(t, w.abs).split(D).join("/") !== w.rel) return h("failed");
+    if (relUnderSyncDir(t, w.abs).split(sep).join("/") !== w.rel) return h("failed");
   } catch {
     return h("failed");
   }
@@ -852,12 +851,12 @@ async function Je({
       path: r.path,
       now: d.now(),
       tryCandidate: async (L) => (
-        (p = await V(() => u(a, C(a, L), c, t, J(t, l)))),
+        (p = await V(() => u(a, join(a, L), c, t, J(t, l)))),
         p || (await f(a, i, L))?.sha256 === r.sha256
       ),
     });
   if (S === null) return null;
-  let m = { abs: C(a, S), rel: S };
+  let m = { abs: join(a, S), rel: S };
   if (p) await K(t, m, c, o ? m.rel : null);
   else await R(t, m.abs, o ? m.rel : null);
   if (!p || t.backend === "by_name") await pe(e, t, m.rel, l);

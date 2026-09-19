@@ -16,7 +16,7 @@
 
 import { readFileSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
-import { ROOT, SKIP, walkAll, short } from "./lib.mjs";
+import { ROOT, walkAll, shouldHaveIndex } from "./lib.mjs";
 
 const fm = JSON.parse(readFileSync(join(ROOT, "_index/file-map.json"), "utf8"));
 
@@ -24,26 +24,37 @@ let fail = 0;
 const bad = (m) => { console.log("  ✗ " + m); fail++; };
 
 const byPath = new Map();
+const ghosts = [];   // 索引里有、磁盘上没有 —— 与 missing 的修法完全不同
 for (const [key, v] of Object.entries(fm)) {
   if (byPath.has(v.path)) bad(`两条记录指向同一路径: ${v.path}（键 ${byPath.get(v.path)} 与 ${key}）`);
   byPath.set(v.path, key);
-  if (!existsSync(join(ROOT, v.path))) bad(`路径不存在: ${v.path}（键 ${key}）`);
+  if (!existsSync(join(ROOT, v.path))) { bad(`路径不存在: ${v.path}（键 ${key}）`); ghosts.push({ key, path: v.path }); }
 }
 
-// 索引只覆盖四个主分区：`cli.js`（真入口）与 `src/plugins/functionHooks/hooks-worker/`
-// （自带依赖的独立 bundle）本来就不在其中。
-const MAIN_TREES = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时"];
-const disk = walkAll(ROOT).filter(
-  (p) => p.endsWith(".js") && !p.endsWith(".original.js") &&
-    MAIN_TREES.some((t) => p.startsWith(join(ROOT, t) + "/")),
-);
-let missing = 0;
+// 索引覆盖五个主分区（`04-tools` 于 2026-09-18 成为独立工具分区时加入）：`cli.js`（真入口）
+// 与 `src/plugins/functionHooks/hooks-worker/`（自带依赖的独立 bundle）本来就不在其中。
+const disk = walkAll(ROOT).filter((p) => shouldHaveIndex(p, ROOT));
+const missing = [];
 for (const p of disk) {
   const rel = relative(ROOT, p);
-  if (!byPath.has(rel)) { bad(`磁盘上有、索引里没有: ${rel}`); missing++; }
+  if (!byPath.has(rel)) { bad(`磁盘上有、索引里没有: ${rel}`); missing.push(rel); }
 }
 
 const stale = Object.entries(fm).filter(([k, v]) => v.path.split("/").pop() !== k).length;
-console.log(`索引 ${Object.keys(fm).length} 条 · 磁盘 ${disk.length} 个 .js · 缺记录 ${missing} 条 · 键非文件名（正常）${stale} 条`);
+console.log(`索引 ${Object.keys(fm).length} 条 · 磁盘 ${disk.length} 个 .js · 缺记录 ${missing.length} 条 · 键非文件名（正常）${stale} 条`);
 console.log(fail ? `\n失败 ${fail} 项` : "\n索引与磁盘一致");
+
+// 失败时给出**能直接照做**的下一步。两类漂移的修法相反，混在一起提示等于没提示：
+// 漏记录要「补录」，幽灵记录要「改 path」，照错的那条做只会把索引改得更烂。
+if (missing.length) {
+  console.log(`\n磁盘上这 ${missing.length} 个 .js 没有索引记录。若是拆 chunk / 新写的文件，补录：`);
+  console.log(`  bun .analysis/move/add-index.mjs ${missing.map((m) => `"${m}"`).join(" ")}`);
+  console.log(`若它们本就不该有索引（*.original.js、独立 bundle），那是 shouldHaveIndex 的判据该改。`);
+}
+if (ghosts.length) {
+  console.log(`\n索引里有 ${ghosts.length} 条 path 在磁盘上找不到 —— 改名 / 搬家只做了一半（判定 [1]）：`);
+  console.log(`  · 文件还在、只是换了名：用 index-io.mjs 的 patchEntry 改 path，**别**用 JSON.stringify 整体重写`);
+  console.log(`  · 整个目录搬过：改用仓库根的 \`bun mv <源> <目标>\` 重做，它会把索引一起同步`);
+}
+
 process.exit(fail ? 1 : 0);

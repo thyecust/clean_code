@@ -104,13 +104,11 @@ import { reclaimSessionNameOnResume } from "../跨会话消息-UDS/chunk-9kzxq41
 import { CLAUDE_AGENT } from "../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import {
-  appendFile,
-  readdir,
   rename,
   rmdir,
 } from "fs/promises";
-import { basename, dirname as Fe, join as E, relative } from "path";
-class H {
+import { basename, dirname, join, relative } from "path";
+class SessionRecordingState {
   filePath = null;
   key = void 0;
   timestamp = 0;
@@ -137,9 +135,9 @@ function ne(e, o, t) {
     stamp: String(t),
   };
 }
-var ie = new Gt(() => new H());
+var sessionRecordingStates = new Gt(() => new SessionRecordingState());
 async function renameRecordingForSession(e, o) {
-  let t = ie.of(e),
+  let t = sessionRecordingStates.of(e),
     r = t.filePath;
   if (!r || t.timestamp === 0) return;
   let s = getProjectDir(he()),
@@ -148,7 +146,7 @@ async function renameRecordingForSession(e, o) {
   if (isHoverRestEnabled() && o !== void 0 && d !== void 0 && l !== void 0) {
     if (t.failed) return;
     let k = K(),
-      y = E(s, k, `${t.timestamp}.cast`);
+      y = join(s, k, `${t.timestamp}.cast`);
     if (r === y) return;
     let v = ne(l, k, t.timestamp),
       w = relative(s, r),
@@ -166,7 +164,7 @@ async function renameRecordingForSession(e, o) {
     await (t.recorder?.park(R) ?? R());
     return;
   }
-  let c = E(s, `${K()}-${t.timestamp}.cast`);
+  let c = join(s, `${K()}-${t.timestamp}.cast`);
   if (r === c) return;
   await t.recorder?.flush();
   let m = basename(r),
@@ -181,9 +179,9 @@ async function renameRecordingForSession(e, o) {
 }
 async function se(e, o, t) {
   (unwrapResult(await e.move(o, t)),
-    await rmdir(E(getProjectsDir(), o.projectKey, o.sessionId)).catch(() => {}));
+    await rmdir(join(getProjectsDir(), o.projectKey, o.sessionId)).catch(() => {}));
 }
-import { dirname as q, resolve, win32 as X } from "path";
+import { resolve, win32 } from "path";
 import { realpathSync, statSync } from "fs";
 function applyAgentFrontmatterHooks(e) {
   if (!e || !hasAgentFrontmatterHooks(e.hooks)) {
@@ -199,18 +197,18 @@ function applyAgentFrontmatterHooks(e) {
   if (o && !t) warnUntrustedAgentOrigin(e, "mainThread");
   yHt(void 0);
 }
-class U {
+class SessionRestoreState {
   restored = !1;
   markRestored() {
     this.restored = !0;
   }
 }
-var W = new j(() => new U());
+var sessionRestoreStates = new j(() => new SessionRestoreState());
 function markSessionRestored(e) {
-  W.of(e).markRestored();
+  sessionRestoreStates.of(e).markRestored();
 }
 function wasSessionRestored(e) {
-  return W.of(e).restored;
+  return sessionRestoreStates.of(e).restored;
 }
 function ue(e) {
   for (let o = e.length - 1; o >= 0; o--) {
@@ -322,7 +320,7 @@ async function loadSessionHomeAgentDefinitions(e, o) {
     An(t) ||
     gp(e) ||
     gp(t) ||
-    gp(X.normalize(e)) ||
+    gp(win32.normalize(e)) ||
     jf(e) ||
     jf(t) ||
     pl(e)
@@ -608,7 +606,7 @@ function formatWorktreeResumeWarning(e) {
   return `Could not verify your worktree ${stripControlCharacters(e.worktreePath)} this time, so this session is working in the current directory without worktree isolation. The worktree binding is kept and a later --resume will retry it. If this keeps happening, the worktree's git metadata may need repair.`;
 }
 function D(e) {
-  if (Xo(e) || gp(e) || gp(X.normalize(e)))
+  if (Xo(e) || gp(e) || gp(win32.normalize(e)))
     return (
       logForDebugging(
         "[sessionRestore] transcript path is a network/NT-namespace path \u2014 not chdir-ing",
@@ -746,7 +744,7 @@ function Se(e, o, t) {
     ) {
       if (!s) saveWorktreeState(null);
       if (c) {
-        let k = q(e.worktreePath),
+        let k = dirname(e.worktreePath),
           y = z(k) === "present" ? k : e.originalCwd;
         if (isSameRealPath(y, e.worktreePath))
           return {
@@ -869,7 +867,7 @@ async function restoreSessionFromTranscript(e, o, t) {
     o.forkSession,
   );
   if (s)
-    ($p(s, "resume", o.transcriptPath ? q(o.transcriptPath) : null),
+    ($p(s, "resume", o.transcriptPath ? dirname(o.transcriptPath) : null),
       await renameRecordingForSession(t.session, t.storageV5),
       await resetSessionFilePointer());
   if (d) {

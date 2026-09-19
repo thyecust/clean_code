@@ -25,9 +25,9 @@ import {
 } from "fs";
 import {
   lstat,
-  open as v,
+  open,
   rename,
-  stat as ot,
+  stat,
   unlink,
   writeFile,
 } from "fs/promises";
@@ -121,7 +121,7 @@ async function dt(t, n = !1) {
   if (!n && !(await K(t, !0))) return { kind: "unavailable" };
   let e;
   try {
-    e = await v(t, constants.O_RDONLY | (n ? 0 : constants.O_NOFOLLOW) | O_NONBLOCK);
+    e = await open(t, constants.O_RDONLY | (n ? 0 : constants.O_NOFOLLOW) | O_NONBLOCK);
   } catch (r) {
     return A(r) === "ENOENT" ? { kind: "absent" } : { kind: "unavailable" };
   }
@@ -143,7 +143,7 @@ async function ht(t, n, e = !1) {
   if (!e && !(await K(t, !0))) return !1;
   let r;
   try {
-    r = await v(
+    r = await open(
       t,
       constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | (e ? 0 : constants.O_NOFOLLOW) | O_NONBLOCK,
       n.mode,
@@ -225,7 +225,7 @@ async function writeNewFileExclusive(t, n, e, r = "darwin") {
 }
 async function mt(t, n, e = "darwin") {
   return G(t, e, async (r) => ({
-    fh: await v(r, e === "win32" ? "wx" : constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL, n),
+    fh: await open(r, e === "win32" ? "wx" : constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL, n),
     tmp: r,
   }));
 }
@@ -258,7 +258,7 @@ async function writeFileAtomicWithOptions(t, n, e) {
     N = async (s) => {
       let c = await dt(t, w === !0),
         m = c.kind === "snapshot" ? c : void 0,
-        f = await v(t, constants.O_WRONLY | constants.O_CREAT | S | O_NONBLOCK, a ?? d),
+        f = await open(t, constants.O_WRONLY | constants.O_CREAT | S | O_NONBLOCK, a ?? d),
         b;
       try {
         b = await f.stat();
@@ -346,7 +346,7 @@ async function writeFileAtomicWithOptions(t, n, e) {
       if (y) throw c;
       if (A(c) !== "EACCES") throw c;
       if (
-        !(await ot(t).then(
+        !(await stat(t).then(
           () => !0,
           () => !1,
         ))

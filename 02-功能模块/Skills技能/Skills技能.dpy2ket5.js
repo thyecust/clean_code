@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/
 import { getHostStateStore } from "../../01-核心基础设施/文件存储-原子写入/host-state-store.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { parseConfigInteger, isSafeMode, xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
+import { isSafeMode, xg } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -180,7 +180,7 @@ function registerBuiltinPlugins() {
     tn(import.meta.require("./SKILL_MD.1bkj5m4h.js")).registerPlugin();
 }
 import { access } from "fs/promises";
-import { join as rn } from "path";
+import { join } from "path";
 var et = 5000,
   an = 5000,
   ln = 5000,
@@ -222,7 +222,7 @@ async function Pe(e) {
   if (e == null) return null;
   let t = getBundledSkillExtractDir(ARTIFACT_CAPABILITIES_SKILL_NAME);
   try {
-    return (await Promise.all(e.files.map((o) => access(rn(t, o)))), e);
+    return (await Promise.all(e.files.map((o) => access(join(t, o)))), e);
   } catch {
     return null;
   }

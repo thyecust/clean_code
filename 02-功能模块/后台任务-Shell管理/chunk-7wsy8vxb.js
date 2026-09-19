@@ -38,7 +38,7 @@ import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { isAbsolute as bt } from "path";
+import { isAbsolute } from "path";
 var VALUE_TAKING_RESPAWN_FLAGS = new Set([
     "--exec",
     "--model",
@@ -594,7 +594,7 @@ var RosterSchema = createLazyValue(() =>
           editor: s().nullable().optional(),
           systemTheme: X(["dark", "light"]).optional(),
           tmuxSocket: Re()
-            .refine(bt)
+            .refine(isAbsolute)
             .optional()
             .catch(void 0),
         }).optional(),
@@ -623,17 +623,16 @@ var RosterSchema = createLazyValue(() =>
   }),
   DAEMON_LEASE_LABELS = ["cli-bg-dispatch", "claude agents"];
 import {
-  lstat as Et,
-  mkdir as At,
-  readFile as _t,
+  lstat,
+  mkdir,
+  readFile,
   rename,
-  rm as He,
+  rm,
 } from "fs/promises";
-import { dirname as xt } from "path";
-import { lstat as Rt } from "fs/promises";
+import { dirname } from "path";
 async function inspectRegularFileForRead(e) {
   try {
-    let t = await Rt(e);
+    let t = await lstat(e);
     return t.isFile()
       ? { kind: "proceed" }
       : { kind: "refused", symlink: t.isSymbolicLink() };
@@ -724,7 +723,7 @@ async function readRoster(e, t) {
   }
   let r;
   try {
-    let o = await Et(getRosterFilePath());
+    let o = await lstat(getRosterFilePath());
     if (!o.isFile() || o.size > Te) {
       if (!e?.silent)
         if (
@@ -741,10 +740,10 @@ async function readRoster(e, t) {
           o.isFile())
         )
           await me(void 0);
-        else await He(getRosterFilePath(), { recursive: !0, force: !0 }).catch((d) => logError(d));
+        else await rm(getRosterFilePath(), { recursive: !0, force: !0 }).catch((d) => logError(d));
       return { ...Y(), parseFailed: !0 };
     }
-    r = jsonParse(await _t(getRosterFilePath(), "utf8"));
+    r = jsonParse(await readFile(getRosterFilePath(), "utf8"));
   } catch (o) {
     if (W(o)) return Y();
     if (!e?.silent)
@@ -828,7 +827,7 @@ async function me(e) {
     );
 }
 async function Ot(e) {
-  await He(e, { recursive: !0, force: !0 }).catch((t) => logError(t));
+  await rm(e, { recursive: !0, force: !0 }).catch((t) => logError(t));
 }
 async function Ue(e, t, r, o) {
   if (!t?.silent)
@@ -979,7 +978,7 @@ async function Tt(e, t) {
     return;
   }
   let g = getRosterFilePath();
-  (await At(xt(g), { recursive: !0, mode: 448 }).catch(() => {}),
+  (await mkdir(dirname(g), { recursive: !0, mode: 448 }).catch(() => {}),
     await writeFileAtomic(g, jsonStringify(d, null, 2), 384).catch((p) => {
       let y = A(p);
       if (y && WW.has(y)) {
@@ -1010,18 +1009,11 @@ async function Ft(e) {
   return t.roster;
 }
 import {
-  lstat as ne,
-  mkdir as Fe,
   readdir,
-  readFile as be,
-  rm as ue,
-  stat as zr,
 } from "fs/promises";
 import {
   basename,
-  dirname as Mt,
-  isAbsolute as rt,
-  join as J,
+  join,
   relative,
 } from "path";
 function Xe(e) {
@@ -1183,7 +1175,7 @@ function Ee(e) {
   let t = sanitizeGroupName(e);
   return t && !isReservedGroupName(t) ? t : void 0;
 }
-class Ze {
+class JobStateCache {
   #e = new Map();
   #t = new Set();
   #n = new Set();
@@ -1231,12 +1223,12 @@ class Ze {
     return (this.#o.add(e), !0);
   }
 }
-var Qe = new j(() => new Ze());
-class et {
+var jobStateCaches = new j(() => new JobStateCache());
+class JobDraftStore {
   drafts = new Map();
   pins = new Map();
 }
-var jobDraftStore = new j(() => new et());
+var jobDraftStore = new j(() => new JobDraftStore());
 async function readJobDraftText(e, t, { cap: r, screens: o, screenKey: d, heal: g }) {
   if (o.get(d) !== "ok") {
     let w = await e.statMeta(t);
@@ -1335,7 +1327,7 @@ var Ae = createLazyValue(() =>
         .transform(
           de(
             "linkScanPath",
-            (e) => rt(e) && e.endsWith(".jsonl") && Xn(basename(e, ".jsonl")) !== null,
+            (e) => isAbsolute(e) && e.endsWith(".jsonl") && Xn(basename(e, ".jsonl")) !== null,
           ),
         )
         .optional(),
@@ -1456,7 +1448,7 @@ function getJobsDir() {
   return Xvn();
 }
 function getJobDir(e) {
-  return J(getJobsDir(), e);
+  return join(getJobsDir(), e);
 }
 function getOwnJobShortId() {
   let e = a.CLAUDE_JOB_DIR;
@@ -1475,7 +1467,7 @@ function jobStateKey(e) {
   return STORAGE_KEYS.job(e, [ee]);
 }
 function watchJobDirOnce(e, t) {
-  let r = J(getJobDir(e), ee),
+  let r = join(getJobDir(e), ee),
     o = !1,
     d = Number.NaN;
   function g(_) {
@@ -1488,7 +1480,7 @@ function watchJobDirOnce(e, t) {
     (f(), t());
   }
   function p() {
-    ne(r).then(
+    lstat(r).then(
       (_) => g(_.mtimeMs),
       () => g(-1),
     );
@@ -1540,7 +1532,7 @@ async function writeStateAtomic(e, t, r) {
           P !== void 0 ? { code: P } : {},
         );
       }
-    } else await writeFileAtomic(J(e, ee), jsonStringify(C, null, 2), 384);
+    } else await writeFileAtomic(join(e, ee), jsonStringify(C, null, 2), 384);
   } finally {
     (E.ownStateWriteDepth--, invalidateJobStateCache(e));
   }
@@ -1576,7 +1568,7 @@ function buildBridgeReattachEnv(e, t, r, o, d) {
   return g;
 }
 function N() {
-  return Qe.of(B().host);
+  return jobStateCaches.of(B().host);
 }
 function _e(e, t) {
   return t?.onReadFailure === "null" ? null : (e?.state ?? null);
@@ -1768,18 +1760,18 @@ async function readJobState(e, t) {
 }
 async function lt(e, t, r) {
   if (t !== void 0 && jobKeyFor(e, [ee]) !== void 0) return qt(t, e, r);
-  let o = J(e, ee),
-    d = J(e, "order"),
-    g = J(e, "stateOrder"),
-    p = J(e, "group"),
+  let o = join(e, ee),
+    d = join(e, "order"),
+    g = join(e, "stateOrder"),
+    p = join(e, "group"),
     y,
     w;
   try {
     let [_, C, F, E] = await Promise.all([
-      ne(o),
-      ne(d).catch(() => null),
-      ne(g).catch(() => null),
-      ne(p).catch(() => null),
+      lstat(o),
+      lstat(d).catch(() => null),
+      lstat(g).catch(() => null),
+      lstat(p).catch(() => null),
     ]);
     if (!_.isFile() || _.size > V) {
       let P = `rejected:${_.mtimeMs}:${_.size}`;
@@ -1814,10 +1806,10 @@ async function lt(e, t, r) {
   if (f?.mtimeKey === y) return (N().noteHit(e), f.state);
   try {
     let [_, C, F, E] = await Promise.all([
-        be(o, "utf-8"),
-        w.order ? be(d, "utf-8").catch(() => null) : Promise.resolve(null),
-        w.stateOrder ? be(g, "utf-8").catch(() => null) : Promise.resolve(null),
-        w.group ? be(p, "utf-8").catch(() => null) : Promise.resolve(null),
+        readFile(o, "utf-8"),
+        w.order ? readFile(d, "utf-8").catch(() => null) : Promise.resolve(null),
+        w.stateOrder ? readFile(g, "utf-8").catch(() => null) : Promise.resolve(null),
+        w.group ? readFile(p, "utf-8").catch(() => null) : Promise.resolve(null),
       ]),
       I = jsonParse(_),
       P = Ae().safeParse(I);
@@ -1873,18 +1865,18 @@ async function readJobStateAfterSettle(e, t) {
   return r;
 }
 function Q() {
-  return J(getJobsDir(), "pins.json");
+  return join(getJobsDir(), "pins.json");
 }
 var Vt = 5000;
 async function readPinnedJobIds(e) {
   if (e) return Xt(e);
   try {
-    let t = await ne(Q());
+    let t = await lstat(Q());
     if (!t.isFile() || t.size > V) {
       if (!t.isFile()) await ke();
       return new Set();
     }
-    return Be(await be(Q(), "utf-8"));
+    return Be(await readFile(Q(), "utf-8"));
   } catch (t) {
     if (W(t))
       return (
@@ -1920,12 +1912,12 @@ function Be(e) {
   return new Set(t.filter((r) => typeof r === "string"));
 }
 async function ke(e) {
-  let t = await ne(Q()).catch(() => {
+  let t = await lstat(Q()).catch(() => {
     return;
   });
   if (t === void 0 || (t.isFile() && !(e?.evenRegular && t.size > V)))
     return !1;
-  return (await ue(Q(), { recursive: !0, force: !0 }).catch(() => {}), !0);
+  return (await rm(Q(), { recursive: !0, force: !0 }).catch(() => {}), !0);
 }
 async function syncJobName(e, t, r, o, d) {
   let g = getJobDir(e),
@@ -2126,12 +2118,12 @@ async function appendRespawnFlag(e, t, r) {
   });
 }
 async function Ne(e, t) {
-  await ue(e, { force: !0 });
+  await rm(e, { force: !0 });
   let r = await writeNewFileExclusive(e, t);
   try {
     await renameWithRetry(r, e);
   } catch (o) {
-    throw (await ue(r, { force: !0 }).catch(() => {}), o);
+    throw (await rm(r, { force: !0 }).catch(() => {}), o);
   }
 }
 async function De(e, t, r) {
@@ -2153,17 +2145,17 @@ async function De(e, t, r) {
 async function writeSortOrder(e, t, r) {
   let o = isHoverRestEnabled() && r ? jobKeyFor(e, ["order"]) : void 0;
   if (r && o) await De(r, o, String(t));
-  else await Ne(J(e, "order"), String(t));
+  else await Ne(join(e, "order"), String(t));
   invalidateJobStateCache(e);
 }
 async function writeStateSortOrder(e, t, r) {
   let o = isHoverRestEnabled() && r ? jobKeyFor(e, ["stateOrder"]) : void 0;
   if (r && o) await De(r, o, String(t));
-  else await Ne(J(e, "stateOrder"), String(t));
+  else await Ne(join(e, "stateOrder"), String(t));
   invalidateJobStateCache(e);
 }
 async function writeJobGroup(e, t, r) {
-  let o = J(e, "group"),
+  let o = join(e, "group"),
     d = Ee(t),
     g = isHoverRestEnabled() && r ? jobKeyFor(e, ["group"]) : void 0;
   if (r && g)
@@ -2177,12 +2169,12 @@ async function writeJobGroup(e, t, r) {
         );
     }
   else if (d) await Ne(o, d);
-  else await ue(o, { force: !0 });
+  else await rm(o, { force: !0 });
   invalidateJobStateCache(e);
 }
 async function withSortOrderLock(e) {
-  let t = J(getJobsDir(), ".order");
-  await Fe(getJobsDir(), { recursive: !0 });
+  let t = join(getJobsDir(), ".order");
+  await mkdir(getJobsDir(), { recursive: !0 });
   await using r = await Cs(t, {
     realpath: !1,
     stale: 5000,
@@ -2203,7 +2195,7 @@ function writeJobPinned(e, t, r) {
   return pt.run("pins.json", async () => {
     if (isHoverRestEnabled() && r) return Yt(e, t, r);
     let o = Q();
-    await Fe(Mt(o), { recursive: !0 });
+    await mkdir(dirname(o), { recursive: !0 });
     await using d = await Cs(o, {
       realpath: !1,
       stale: Vt,
@@ -2219,7 +2211,7 @@ function writeJobPinned(e, t, r) {
     if (t) g.add(e);
     else
       (g.delete(e),
-        await ue(J(getJobDir(e), "order")).catch((p) => {
+        await rm(join(getJobDir(e), "order")).catch((p) => {
           if (!W(p)) throw p;
         }),
         invalidateJobStateCache(getJobDir(e)));
@@ -2256,7 +2248,7 @@ async function Yt(e, t, r) {
           { level: "warn" },
         );
     } else
-      await ue(J(getJobDir(e), "order")).catch((f) => {
+      await rm(join(getJobDir(e), "order")).catch((f) => {
         if (!W(f))
           logForDebugging(`[jobs] order sidecar release failed after unpin: ${l(f)}`, {
             level: "warn",
@@ -2279,7 +2271,7 @@ async function listJobs(e, t) {
         r
           .filter((p) => p.isDirectory())
           .map(async (p) => {
-            let y = await readJobState(J(getJobsDir(), p.name));
+            let y = await readJobState(join(getJobsDir(), p.name));
             return y ? { id: p.name, state: y } : null;
           }),
       ),
@@ -2475,8 +2467,8 @@ async function adoptRosterOrphans(e, t, r) {
         },
       );
     else
-      Fe(C, { recursive: !0 })
-        .then(() => writeNewFileAfterAbsenceCheck(J(C, "state.json"), jsonStringify(_), 384))
+      mkdir(C, { recursive: !0 })
+        .then(() => writeNewFileAfterAbsenceCheck(join(C, "state.json"), jsonStringify(_), 384))
         .then(() => logEvent("tengu_bg_roster_orphan_adopted", {}))
         .catch((E) => {
           if (A(E) !== "EEXIST") logJobWriteError(E);
@@ -2515,7 +2507,7 @@ function spawnOrigin(e) {
 function jobMatchesCwd(e, t) {
   if (e.backend === "remote") return !0;
   let r = relative(t, spawnOrigin(e));
-  return r.split(/[/\\]/, 1)[0] !== ".." && !rt(r);
+  return r.split(/[/\\]/, 1)[0] !== ".." && !isAbsolute(r);
 }
 function isLoopJob(e) {
   let t = (r) => r?.trim().toLowerCase().startsWith("/loop") ?? !1;

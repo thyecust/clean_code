@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-class e {
+class SessionFeatureCache {
   pinnedFeatureValues;
   maxSubagentSpawnDepthFromGrowthBook;
   decstbmRendererEnabled;
@@ -42,8 +42,8 @@ class e {
     for (let o of Object.keys(this)) this[o] = void 0;
   }
 }
-var t = new Gt(() => new e());
+var sessionFeatureCachesByHost = new Gt(() => new SessionFeatureCache());
 function getSessionFeatureCache() {
-  return t.of(B());
+  return sessionFeatureCachesByHost.of(B());
 }
 export { getSessionFeatureCache };

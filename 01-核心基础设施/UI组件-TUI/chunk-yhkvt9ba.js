@@ -17,7 +17,7 @@ import { Box, Text, useFocus, measureElement } from "../ANSI-样式-布局原语
 import { useKeybindings } from "../../02-功能模块/键位绑定-Keybindings/keybinding-hooks.js";
 import { BackgroundText } from "./background-text.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, re, De, dn, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, dn, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function wt(en) {

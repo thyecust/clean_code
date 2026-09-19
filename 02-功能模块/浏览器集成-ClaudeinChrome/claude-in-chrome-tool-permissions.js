@@ -13,7 +13,7 @@ import { executeBrowserToolCall } from "../图片-截图-ComputerUse/chunk-csvzw
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isAutoClassifierActive, effectiveModeForTool, sanitizeSessionName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isAutoClassifierActive, effectiveModeForTool } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -21,7 +21,7 @@ import { c2e, u2e } from "../../00-第三方库/https-proxy-agent/https-proxy-ag
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { getClaudeInChromeState, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./claude-in-chrome-host.js";
-import { forgetClassifierMetaLines, isAutoApprovableBrowserToolCall, getImageLimitsForModel, setTabsProvider, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { forgetClassifierMetaLines, isAutoApprovableBrowserToolCall, getImageLimitsForModel, setTabsProvider } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { stripReservedMetaKeys } from "../MCP客户端/mcp-tool-result-fields.js";
 import { getBrowserToolVerbPhrase } from "./browser-tool-verb-phrases.js";
 import { buildImageBlock } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";

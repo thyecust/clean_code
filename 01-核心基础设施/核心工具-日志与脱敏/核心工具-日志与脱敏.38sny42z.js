@@ -35,14 +35,14 @@ import { getClaudeConfigDir } from "../设置-配置/chunk-5ndhfaq9.js";
 import { writeToStderr } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { capitalize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import {
-  appendFile as Z,
-  mkdir as Re,
-  rename as De,
-  stat as Lt,
-  symlink as Pt,
-  unlink as J,
+  appendFile,
+  mkdir,
+  rename,
+  stat,
+  symlink,
+  unlink,
 } from "fs/promises";
-import { dirname, isAbsolute, join as v, resolve } from "path";
+import { dirname, isAbsolute, join, resolve } from "path";
 function createInvalidArgumentError(e, t) {
   return {
     code: "InvalidArgument",
@@ -251,13 +251,13 @@ class N {
     return this.#e.size;
   }
 }
-class ne {
+class CleanupRegistries {
   cleanup = new N();
   preExitFlush = new N();
 }
-var ze = new j(() => new ne());
+var cleanupRegistries = new j(() => new CleanupRegistries());
 function R() {
-  return bi(ze);
+  return bi(cleanupRegistries);
 }
 var CLEANUP_DRAIN_TIMEOUT_MS = 2000;
 function registerCleanup(e) {
@@ -338,23 +338,17 @@ function se(e, t) {
 }
 import * as l from "fs";
 import {
-  appendFile as Ye,
   chmod,
   copyFile,
-  link as qe,
+  link,
   lstat,
-  mkdir as et,
-  open as x,
+  open,
   readdir,
   readFile,
   readlink,
   realpath,
-  rename as it,
   rmdir,
-  rm as st,
-  stat as at,
-  symlink as ut,
-  unlink as dt,
+  rm,
 } from "fs/promises";
 import { homedir } from "os";
 import * as f from "path";
@@ -831,14 +825,14 @@ var fsSurface = {
     return l.existsSync(e);
   },
   async stat(e) {
-    return at(e);
+    return stat(e);
   },
   async lstat(e) {
     return lstat(e);
   },
   async openDirNoFollow(e) {
     await (
-      await x(e, l.constants.O_DIRECTORY | l.constants.O_NOFOLLOW)
+      await open(e, l.constants.O_DIRECTORY | l.constants.O_NOFOLLOW)
     ).close();
   },
   openDirNoFollowSync(e) {
@@ -852,17 +846,17 @@ var fsSurface = {
     return readdir(e, { withFileTypes: !0 });
   },
   async unlink(e) {
-    return dt(e);
+    return unlink(e);
   },
   async rmdir(e) {
     return rmdir(e);
   },
   async rm(e, t) {
-    return st(e, t);
+    return rm(e, t);
   },
   async mkdir(e, t) {
     try {
-      await et(e, { recursive: !0, ...t });
+      await mkdir(e, { recursive: !0, ...t });
     } catch (r) {
       if (A(r) !== "EEXIST") throw r;
     }
@@ -871,7 +865,7 @@ var fsSurface = {
     return readFile(e, { encoding: t.encoding });
   },
   async rename(e, t) {
-    return it(e, t);
+    return rename(e, t);
   },
   async realpath(e) {
     return zn(await realpath(e));
@@ -885,7 +879,7 @@ var fsSurface = {
   async appendFile(e, t, r) {
     if (r?.mode !== void 0)
       try {
-        let i = await x(e, "ax", r.mode);
+        let i = await open(e, "ax", r.mode);
         try {
           await i.appendFile(t);
         } finally {
@@ -895,13 +889,13 @@ var fsSurface = {
       } catch (i) {
         if (A(i) !== "EEXIST") throw i;
       }
-    return Ye(e, t);
+    return appendFile(e, t);
   },
   async symlink(e, t, r) {
-    return ut(e, t, r);
+    return symlink(e, t, r);
   },
   async link(e, t) {
-    return qe(e, t);
+    return link(e, t);
   },
   async chmod(e, t) {
     return chmod(e, t);
@@ -991,7 +985,7 @@ var fsSurface = {
   },
   async readFileBytes(e, t) {
     if (t === void 0) return readFile(e);
-    let r = await x(
+    let r = await open(
       e,
       l.constants.O_RDONLY |
         (l.constants.O_NONBLOCK ?? 0) |
@@ -1010,7 +1004,7 @@ var fsSurface = {
       if (r === 0) {
         if (!(await lstat(e)).isFile()) return null;
       }
-      let i = await x(e, l.constants.O_RDONLY | r);
+      let i = await open(e, l.constants.O_RDONLY | r);
       try {
         let o = await i.stat();
         if (!o.isFile() || o.size > t) return null;
@@ -1044,7 +1038,7 @@ function changeWorkingDirectory(e) {
   } catch {}
 }
 async function readBytesAtOffset(e, t, r) {
-  await using i = typeof e === "string" ? await x(e, "r") : null;
+  await using i = typeof e === "string" ? await open(e, "r") : null;
   let o = typeof e === "string" ? i : e,
     s = (await o.stat()).size;
   if (s <= t) return null;
@@ -1071,7 +1065,7 @@ async function readBytesFromFileHandle(e, t, r) {
   return Buffer.concat(o, s);
 }
 async function readTailBytes(e, t) {
-  await using r = typeof e === "string" ? await x(e, "r") : null;
+  await using r = typeof e === "string" ? await open(e, "r") : null;
   let i = typeof e === "string" ? r : e,
     o = (await i.stat()).size;
   if (o === 0) return { content: "", bytesRead: 0, bytesTotal: 0 };
@@ -1087,7 +1081,7 @@ async function readTailBytes(e, t) {
   return { content: u.toString("utf8", 0, d), bytesRead: d, bytesTotal: o };
 }
 async function* streamFileLines(e, t = 65536) {
-  let r = await x(e, "r"),
+  let r = await open(e, "r"),
     i = Buffer.alloc(t),
     o = 0,
     s = [],
@@ -1119,7 +1113,7 @@ async function* streamFileLines(e, t = 65536) {
   if (a > 0) yield s.length === 1 ? s[0] : Buffer.concat(s, a);
 }
 async function* streamFileLinesBackward(e) {
-  let r = await x(e, "r");
+  let r = await open(e, "r");
   try {
     let o = (await r.stat()).size,
       s = Buffer.alloc(0),
@@ -1618,11 +1612,11 @@ function Fe(e) {
 function _e() {}
 var It = { sessionId: "", fromBackend: !1 };
 function Le(e, t, r, i) {
-  let o = v(t, "debug"),
-    s = v(o, `${e.sessionId}.txt`),
+  let o = join(t, "debug"),
+    s = join(o, `${e.sessionId}.txt`),
     a;
   if (r === null) a = s;
-  else if (i !== null && r === i) a = v(i, `${e.sessionId}.txt`);
+  else if (i !== null && r === i) a = join(i, `${e.sessionId}.txt`);
   else a = r;
   let u = !e.fromBackend && a === s ? "v5" : "raw";
   return {
@@ -1749,7 +1743,7 @@ class Te {
       this.filePath ??
       (this.overrideDirectory !== null &&
       this.overrideDirectory === this.deps.env.CLAUDE_CODE_DEBUG_LOGS_DIR
-        ? v(this.overrideDirectory, `${this.deps.sessionId()}.txt`)
+        ? join(this.overrideDirectory, `${this.deps.sessionId()}.txt`)
         : null) ??
       this.resolvedLogPath ??
       this.deps.env.CLAUDE_CODE_DEBUG_LOGS_DIR ??
@@ -1757,7 +1751,7 @@ class Te {
     );
   }
   defaultLogPath(e = this.deps.sessionId()) {
-    return v(this.deps.configHomeDir(), "debug", `${e}.txt`);
+    return join(this.deps.configHomeDir(), "debug", `${e}.txt`);
   }
   learnedOverrideDirectory() {
     return this.overrideDirectory;
@@ -1845,7 +1839,7 @@ class Te {
         this.writtenBytes =
           o.ok && o.value.kind !== "absent" ? o.value.size : 0;
       } else
-        this.writtenBytes = await Lt(e)
+        this.writtenBytes = await stat(e)
           .then((o) => o.size)
           .catch(() => 0);
     else this.writtenBytes += t;
@@ -1865,11 +1859,11 @@ class Te {
         }
       } else
         try {
-          await De(e, o);
+          await rename(e, o);
         } catch (s) {
           if (!W(s))
-            (await J(o).catch(() => {}),
-              await De(e, o).catch(() => J(e).catch(() => {})));
+            (await unlink(o).catch(() => {}),
+              await rename(e, o).catch(() => unlink(e).catch(() => {})));
         }
       this.writtenBytes = 0;
     } finally {
@@ -1890,7 +1884,7 @@ class Te {
   }
   resolveDirToFile(e) {
     return (
-      (this.resolvedLogPath = v(e, `${this.deps.sessionId()}.txt`)),
+      (this.resolvedLogPath = join(e, `${this.deps.sessionId()}.txt`)),
       this.resolvedLogPath
     );
   }
@@ -1899,15 +1893,15 @@ class Te {
       await this.appendV5AndMark(this.storageV5, t, r);
       return;
     }
-    if (i) await Re(dirname(e.target), { recursive: !0 }).catch(() => {});
+    if (i) await mkdir(dirname(e.target), { recursive: !0 }).catch(() => {});
     let o = e;
     try {
-      await Z(e.target, r);
+      await appendFile(e.target, r);
     } catch (s) {
       if (!Nz(s)) throw s;
       if (this.storageV5 === void 0)
         ((o = { ...e, target: this.resolveDirToFile(e.target) }),
-          await Z(o.target, r));
+          await appendFile(o.target, r));
       else {
         if (
           ((this.overrideDirectory = e.target),
@@ -1917,9 +1911,9 @@ class Te {
           await this.appendV5AndMark(this.storageV5, t, r);
           return;
         }
-        await Re(dirname(o.target), { recursive: !0 }).catch(() => {});
+        await mkdir(dirname(o.target), { recursive: !0 }).catch(() => {});
         try {
-          await Z(o.target, r);
+          await appendFile(o.target, r);
         } catch {
           return;
         }
@@ -1986,7 +1980,7 @@ class Te {
             else {
               let u = (p, g) => {
                   try {
-                    getFsSurface().appendFileSync(v(o, `${p}.txt`), g);
+                    getFsSurface().appendFileSync(join(o, `${p}.txt`), g);
                   } catch {}
                 },
                 d = i[0]?.sessionId,
@@ -2097,12 +2091,12 @@ class Te {
   async updateLatestSymlink() {
     try {
       let e = this.logPath(),
-        t = v(dirname(e), "latest");
-      (await J(t).catch(() => {}), await Pt(e, t));
+        t = join(dirname(e), "latest");
+      (await unlink(t).catch(() => {}), await symlink(e, t));
     } catch {}
   }
 }
-class Ne {
+class DebugLogState {
   instance = void 0;
   init = {};
   setInstance(e) {
@@ -2112,9 +2106,9 @@ class Ne {
     this.init = e;
   }
 }
-var Ut = new j(() => new Ne());
+var debugLogState = new j(() => new DebugLogState());
 function _() {
-  return bi(Ut);
+  return bi(debugLogState);
 }
 function Q(e, t) {
   return new Te({

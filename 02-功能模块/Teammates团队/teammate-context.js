@@ -30,7 +30,7 @@ function getParentSessionId() {
   let t = n();
   return t.dynamicTeamContext?.parentSessionId ?? t.cliParentSessionId;
 }
-class g {
+class TeammateIdentities {
   cliParentSessionId = void 0;
   dynamicTeamContext = null;
   isChildSessionMarkerAmbientInTmux = f(x);
@@ -44,7 +44,7 @@ class g {
     this.isChildSessionMarkerAmbientInTmux = f(e);
   }
 }
-var teammateIdentities = new j(() => new g());
+var teammateIdentities = new j(() => new TeammateIdentities());
 function n() {
   return teammateIdentities.of(B().host);
 }

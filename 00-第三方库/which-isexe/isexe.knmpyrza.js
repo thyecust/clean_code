@@ -570,7 +570,7 @@ var de = globalThis.process,
   { onExit: cz, load: fi, unload: pi } = Wn(V(de) ? new et(de) : new Je());
 var In = toESM(_xt(), 1);
 import { Buffer as No } from "buffer";
-import Mo from "path";
+import path from "path";
 import De from "child_process";
 import se from "process";
 function be(e) {
@@ -586,7 +586,6 @@ function be(e) {
   return e;
 }
 import Z from "process";
-import L from "path";
 import { fileURLToPath } from "url";
 function Y(e = {}) {
   let { env: t = process.env, platform: r = "darwin" } = e;
@@ -605,22 +604,22 @@ var Cr = ({
     addExecPath: s = !0,
   } = {}) => {
     let c = e instanceof URL ? fileURLToPath(e) : e,
-      d = L.resolve(c),
+      d = path.resolve(c),
       l = [];
     if (r) Er(l, d);
     if (s) wr(l, o, d);
-    return [...l, t].join(L.delimiter);
+    return [...l, t].join(path.delimiter);
   },
   Er = (e, t) => {
     let r;
     while (r !== t)
-      (e.push(L.join(t, "node_modules/.bin")),
+      (e.push(path.join(t, "node_modules/.bin")),
         (r = t),
-        (t = L.resolve(t, "..")));
+        (t = path.resolve(t, "..")));
   },
   wr = (e, t, r) => {
     let o = t instanceof URL ? fileURLToPath(t) : t;
-    e.push(L.resolve(r, o, ".."));
+    e.push(path.resolve(r, o, ".."));
   },
   Kt = ({ env: e = Z.env, ...t } = {}) => {
     e = { ...e };
@@ -688,7 +687,7 @@ zt.callCount = (e) => {
 };
 var Wt = zt;
 import Dr from "process";
-import { constants as Fr } from "os";
+import { constants } from "os";
 var qt = () => {
     let e = Ee - Ht + 1;
     return Array.from({ length: e }, Rr);
@@ -702,7 +701,6 @@ var qt = () => {
   }),
   Ht = 34,
   Ee = 64;
-import { constants as _r } from "os";
 var Vt = [
   {
     name: "SIGHUP",
@@ -989,7 +987,7 @@ var we = () => {
   }) => {
     let {
         signals: { [e]: d },
-      } = _r,
+      } = constants,
       l = d !== void 0;
     return {
       name: e,
@@ -1056,7 +1054,7 @@ var Gr = () => {
     };
   },
   Mr = (e, t) => {
-    let r = t.find(({ name: o }) => Fr.signals[o] === e);
+    let r = t.find(({ name: o }) => constants.signals[o] === e);
     if (r !== void 0) return r;
     return t.find((o) => o.number === e);
   },
@@ -1208,7 +1206,7 @@ var zr = 5000,
     });
   };
 import { createWriteStream } from "fs";
-import { ChildProcess as Zr } from "child_process";
+import { ChildProcess } from "child_process";
 function ee(e) {
   return e !== null && typeof e === "object" && typeof e.pipe === "function";
 }
@@ -1220,7 +1218,7 @@ function Te(e) {
     typeof e._writableState === "object"
   );
 }
-var Qr = (e) => e instanceof Zr && typeof e.then === "function",
+var Qr = (e) => e instanceof ChildProcess && typeof e.then === "function",
   Pe = (e, t, r) => {
     if (typeof r === "string") return (e[t].pipe(createWriteStream(r)), e);
     if (Te(r)) return (e[t].pipe(r), e);
@@ -1237,7 +1235,7 @@ var Qr = (e) => e instanceof Zr && typeof e.then === "function",
     if (e.stderr !== null) e.pipeStderr = Pe.bind(void 0, e, "stderr");
     if (e.all !== void 0) e.pipeAll = Pe.bind(void 0, e, "all");
   };
-import { createReadStream, readFileSync as Co } from "fs";
+import { createReadStream, readFileSync } from "fs";
 import { setTimeout as Eo } from "timers/promises";
 var M = async (
     e,
@@ -1453,7 +1451,7 @@ var gn = toESM(mn(), 1),
   },
   wo = ({ input: e, inputFile: t }) => {
     if (typeof t !== "string") return e;
-    return (hn(e), Co(t));
+    return (hn(e), readFileSync(t));
   },
   yn = (e) => {
     let t = wo(e);
@@ -1543,7 +1541,6 @@ var vo = (async () => {})().constructor.prototype,
         });
     });
 import { Buffer as Oo } from "buffer";
-import { ChildProcess as Ao } from "child_process";
 var Tn = (e, t = []) => {
     if (!Array.isArray(t)) return [e];
     return [e, ...t];
@@ -1563,7 +1560,7 @@ var En = (e) => {
     let t = typeof e;
     if (t === "string") return e;
     if (t === "number") return String(e);
-    if (t === "object" && e !== null && !(e instanceof Ao) && "stdout" in e) {
+    if (t === "object" && e !== null && !(e instanceof ChildProcess) && "stdout" in e) {
       let r = typeof e.stdout;
       if (r === "string") return e.stdout;
       if (Oo.isBuffer(e.stdout)) return e.stdout.toString();
@@ -1639,7 +1636,7 @@ var Do = 1e8,
       }),
       (r.env = Uo(r)),
       (r.stdio = Yt(r)),
-      se.platform === "win32" && Mo.basename(e, ".exe") === "cmd")
+      se.platform === "win32" && path.basename(e, ".exe") === "cmd")
     )
       t.unshift("/q");
     return { file: e, args: t, options: r, parsed: o };
@@ -1812,7 +1809,6 @@ function jo(e) {
 }
 import {
   mkdirSync,
-  readFileSync as G,
   rmdirSync,
   statSync,
   writeFileSync,
@@ -1840,7 +1836,7 @@ function Jcr(e, t) {
   if (t !== void 0) F.subscribeRefresh = t;
   return F.register(e);
 }
-class Fn {
+class ToolMemoryCgroupState {
   dir = void 0;
   layout = void 0;
   limit = 0;
@@ -1849,9 +1845,9 @@ class Fn {
   pendingUnsubscribe = void 0;
   oomKillsSeen = void 0;
 }
-var T = new j(() => new Fn());
+var toolMemoryCgroupState = new j(() => new ToolMemoryCgroupState());
 function ze() {
-  let e = bi(T);
+  let e = bi(toolMemoryCgroupState);
   if (e.dir !== void 0) return e.dir ?? void 0;
   let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") {
@@ -1866,7 +1862,7 @@ function ze() {
   let o = ci(r);
   if (o === void 0 && F.read("tengu_tool_memory_cgroup", !1) !== !0) return;
   try {
-    let s = oi(G("/proc/self/cgroup", "utf8"));
+    let s = oi(readFileSync("/proc/self/cgroup", "utf8"));
     if (!s) throw Error("no memory cgroup hierarchy");
     let c = ui(o, totalmem());
     if (c === void 0) {
@@ -1900,7 +1896,7 @@ function ze() {
 function B(e) {
   if (ze() === void 0) return;
   if (e !== "shell" && Gn().has(e)) return;
-  let t = bi(T),
+  let t = bi(toolMemoryCgroupState),
     r = Ho(t);
   if (r === void 0) return;
   if ((jn(t), !t.activatedClasses.has(e)))
@@ -1909,7 +1905,7 @@ function B(e) {
   return r;
 }
 function Qcr(e) {
-  return typeof bi(T).dir === "string" && (e === "shell" || !Gn().has(e));
+  return typeof bi(toolMemoryCgroupState).dir === "string" && (e === "shell" || !Gn().has(e));
 }
 function Ho(
   e,
@@ -1990,7 +1986,7 @@ function yxt(e, t, r) {
   };
 }
 function exe() {
-  return bi(T).dir === void 0;
+  return bi(toolMemoryCgroupState).dir === void 0;
 }
 var Zo = 64,
   Sxt = {
@@ -2003,7 +1999,7 @@ function Qie(e, t, r, o = Sxt) {
   try {
     if (!t) return;
     ze();
-    let s = bi(T);
+    let s = bi(toolMemoryCgroupState);
     if (s.dir === null) return;
     let c = o.readStarttime(t);
     if (c === void 0) return;
@@ -2023,7 +2019,7 @@ function Qie(e, t, r, o = Sxt) {
   }
 }
 function Qo(e = Sxt) {
-  let t = bi(T);
+  let t = bi(toolMemoryCgroupState);
   try {
     if ((ze(), t.dir === void 0)) {
       Nn(t, e);
@@ -2048,7 +2044,7 @@ function Ln(e, { cls: t, starttime: r, shouldStayUncapped: o }, s) {
     let d = posix.join(c, "cgroup.procs");
     s.writeFileSync(d, String(e));
     let l = 1,
-      p = bi(T).layout;
+      p = bi(toolMemoryCgroupState).layout;
     if (p !== void 0 && !p.reuse) l += Mn(e, p.selfDir, d, s, "attached");
     logForDebugging(
       `tool cgroup: late-attached ${t} pid ${e} (${l} process${l === 1 ? "" : "es"})`,
@@ -2063,14 +2059,14 @@ function Nn(e, t) {
 }
 function Jo(e) {
   try {
-    return getProcStartTime(G(`/proc/${e}/stat`, "utf8"));
+    return getProcStartTime(readFileSync(`/proc/${e}/stat`, "utf8"));
   } catch {
     return;
   }
 }
 function ei(e) {
   try {
-    let t = G(`/proc/${e}/stat`, "utf8"),
+    let t = readFileSync(`/proc/${e}/stat`, "utf8"),
       r = getProcParentPid(t),
       o = getProcStartTime(t);
     return r === void 0 || o === void 0 ? void 0 : { ppid: r, starttime: o };
@@ -2079,7 +2075,7 @@ function ei(e) {
   }
 }
 function ti(e) {
-  return G(posix.join(e, "cgroup.procs"), "utf8")
+  return readFileSync(posix.join(e, "cgroup.procs"), "utf8")
     .split(
       `
 `,
@@ -2095,7 +2091,7 @@ function We(e) {
   return posix.join(e.dir, e.v2 ? "memory.events" : "memory.oom_control");
 }
 function K(e) {
-  return G(e, "utf8");
+  return readFileSync(e, "utf8");
 }
 function qe(e, t = K) {
   try {
@@ -2105,12 +2101,12 @@ function qe(e, t = K) {
   }
 }
 function SPn(e = K) {
-  let { dir: t, layout: r } = bi(T);
+  let { dir: t, layout: r } = bi(toolMemoryCgroupState);
   if (!t || r === void 0) return;
   return qe(We(r), e);
 }
 function Zcr(e, t = K) {
-  let r = bi(T),
+  let r = bi(toolMemoryCgroupState),
     o = e ?? r.oomKillsSeen,
     s = SPn(t);
   return (jn(r, t, s), o === void 0 || s === void 0 ? void 0 : s > o);
@@ -2137,7 +2133,7 @@ function jn(e, t = K, r) {
 }
 function eur(e, t = K) {
   let r = B(e),
-    o = bi(T).layout;
+    o = bi(toolMemoryCgroupState).layout;
   if (r === void 0 || o === void 0) return;
   let s = We(o);
   return () => qe(s, t);
@@ -2149,7 +2145,7 @@ function tur(e, t) {
 }
 function bxt(e, t, r = Sxt) {
   try {
-    let o = bi(T);
+    let o = bi(toolMemoryCgroupState);
     if (o.dir === void 0) {
       if (o.pendingPids.get(e)?.starttime !== t) return !1;
       return (
@@ -2276,7 +2272,7 @@ function ii(e) {
   return t.v2 ? { dir: posix.join(s, Wo), create: !0 } : { dir: s, create: !1 };
 }
 var Bn = {
-  readSelfCgroup: () => G("/proc/self/cgroup", "utf8"),
+  readSelfCgroup: () => readFileSync("/proc/self/cgroup", "utf8"),
   mkdirSync: mkdirSync,
   writeFileSync: writeFileSync,
 };

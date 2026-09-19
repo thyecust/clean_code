@@ -20,10 +20,10 @@ import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME } from "../Teammates团队/share-onboarding-guide-tool.js";
 import { isOnboardingGuideSharingEnabled } from "../Teammates团队/onboarding-guide-api.js";
-import { readFile as L } from "fs/promises";
-import { basename, join as x } from "path";
-import { readdir, readFile as C, stat as _ } from "fs/promises";
-import { extname, join as E } from "path";
+import { readFile } from "fs/promises";
+import { basename, join } from "path";
+import { readdir, stat } from "fs/promises";
+import { extname } from "path";
 var T = 52428800,
   S = 200,
   g = 60,
@@ -57,9 +57,9 @@ async function w(u, a) {
     p = (
       await Promise.all(
         d.map(async (r) => {
-          let l = E(u, r);
+          let l = join(u, r);
           try {
-            let o = await _(l);
+            let o = await stat(l);
             if (!o.isFile() || o.mtimeMs < m || o.size > T) return null;
             return l;
           } catch (o) {
@@ -72,7 +72,7 @@ async function w(u, a) {
   for (let r of p) {
     let l;
     try {
-      l = await C(r, "utf-8");
+      l = await readFile(r, "utf-8");
     } catch (e) {
       if (Rt(e)) continue;
       throw e;
@@ -138,7 +138,7 @@ function j(u) {
 }
 async function B(u) {
   try {
-    let a = await L(x(u, ".mcp.json"), "utf8"),
+    let a = await readFile(join(u, ".mcp.json"), "utf8"),
       t = jsonParse(a);
     if (
       t &&

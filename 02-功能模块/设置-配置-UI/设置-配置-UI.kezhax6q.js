@@ -380,7 +380,7 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
       label: "Version",
       value: `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}${getBuildRefName()}`,
     },
-    ...[],
+    
     { label: "Session name", value: H },
     { label: v === s ? "Cloud session ID" : "Session ID", value: s },
     ...(v !== void 0 && v !== s
@@ -1312,7 +1312,7 @@ var _d = {
       "teammateMode",
     ],
     Internal: [
-      ...[],
+      
       "snipEnabled",
       "snipDebug",
       "doneMeansMerged",
@@ -5075,12 +5075,12 @@ function Ty(s) {
 }
 import { spawn } from "child_process";
 import { mkdir, unlink, writeFile } from "fs/promises";
-import { join as Om } from "path";
+import { join } from "path";
 async function Lm(s, c) {
   try {
-    let m = Om(getClaudeTempDir(), "screenshots");
+    let m = join(getClaudeTempDir(), "screenshots");
     await mkdir(m, { recursive: !0, mode: 448 });
-    let T = Om(m, `screenshot-${Date.now()}.png`),
+    let T = join(m, `screenshot-${Date.now()}.png`),
       { ansiToPng: R } = await import("../图片-截图-ComputerUse/ansiToPng.5cwtw2dv.js"),
       v = R(s, c);
     await writeFile(T, v);
@@ -5180,8 +5180,7 @@ function Ry(s, c, m = 5000) {
     (R.once("exit", (B) => A(B)), R.once("error", () => A(null)), R.unref());
   });
 }
-import { basename, join as Ao, sep as Gm } from "path";
-import { join as Iy } from "path";
+import { basename, sep } from "path";
 var Ko = 5,
   _y = 1,
   $i = 5,
@@ -5200,7 +5199,7 @@ async function Fm(s) {
   }
 }
 function Um() {
-  return Iy(getClaudeConfigDir(), Py);
+  return join(getClaudeConfigDir(), Py);
 }
 function Mn() {
   return {
@@ -5567,7 +5566,7 @@ async function Ts(s, c = {}, m, T) {
         Re = [];
       for (let fe of X) if (isTranscriptMessage(fe)) Re.push(fe);
       if (Re.length === 0) continue;
-      let Ie = I.includes(`${Gm}subagents${Gm}`),
+      let Ie = I.includes(`${sep}subagents${sep}`),
         qe = Ie ? Re : Re.filter((fe) => !fe.isSidechain);
       if (qe.length === 0) continue;
       let ke = qe[0],
@@ -5685,7 +5684,7 @@ async function zm(s) {
     if (W(A)) return { files: [] };
     throw A;
   }
-  let R = T.filter((A) => A.isDirectory()).map((A) => Ao(c, A.name));
+  let R = T.filter((A) => A.isDirectory()).map((A) => join(c, A.name));
   return {
     files: (
       await Promise.all(
@@ -5693,12 +5692,12 @@ async function zm(s) {
           try {
             let H = await m.readdir(A),
               B = H.filter((j) => j.isFile() && j.name.endsWith(".jsonl")).map(
-                (j) => Ao(A, j.name),
+                (j) => join(A, j.name),
               ),
               Y = H.filter((j) => j.isDirectory()),
               G = await Promise.all(
                 Y.map(async (j) => {
-                  let O = Ao(A, j.name, "subagents");
+                  let O = join(A, j.name, "subagents");
                   try {
                     return (await m.readdir(O))
                       .filter(
@@ -5707,7 +5706,7 @@ async function zm(s) {
                           Z.name.endsWith(".jsonl") &&
                           Z.name.startsWith("agent-"),
                       )
-                      .map((Z) => Ao(O, Z.name));
+                      .map((Z) => join(O, Z.name));
                   } catch {
                     return [];
                   }
@@ -5760,7 +5759,7 @@ async function Fy(s, c) {
     files: (
       await Promise.all(
         [...A].map(async (G) => {
-          let j = Ao(c, G),
+          let j = join(c, G),
             O = [],
             q = new Set(),
             Z = new Set(),
@@ -5777,7 +5776,7 @@ async function Fy(s, c) {
                     R(I.key.sessionId)
                   ) {
                     q.add(I.key.sessionId);
-                    let X = Ao(j, `${I.key.sessionId}.jsonl`);
+                    let X = join(j, `${I.key.sessionId}.jsonl`);
                     if ((O.push(X), I.mtimeMs !== void 0)) m.set(X, I.mtimeMs);
                   } else if (
                     I.kind === "scope" &&
@@ -5803,7 +5802,7 @@ async function Fy(s, c) {
           let se = getFsSurface(),
             ce = await Promise.all(
               [...Z].map(async (K) => {
-                let I = Ao(j, K, "subagents");
+                let I = join(j, K, "subagents");
                 try {
                   return (await se.readdir(I))
                     .filter(
@@ -5812,7 +5811,7 @@ async function Fy(s, c) {
                         J.name.endsWith(".jsonl") &&
                         J.name.startsWith("agent-"),
                     )
-                    .map((J) => Ao(I, J.name));
+                    .map((J) => join(I, J.name));
                 } catch {
                   return [];
                 }

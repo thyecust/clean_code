@@ -158,7 +158,7 @@ import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
 import { getWorkflowTranscriptDir } from "../编排-Workflow/workflow-snapshots.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
-import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, re, De, E, vr, dn, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { asMcpSdkClient } from "../MCP客户端/mcp-client-type-casts.js";
 import { createFieldAccessor, createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";
@@ -308,27 +308,27 @@ import { createHash, randomBytes } from "crypto";
 import { constants } from "fs";
 import {
   copyFile,
-  link as on,
+  link,
   mkdir,
   readdir,
   readFile,
   realpath,
-  rm as Er,
+  rm,
   rmdir,
-  stat as rn,
+  stat,
   symlink,
   unlink,
   lstat,
   readlink,
-  open as dt,
+  open,
 } from "fs/promises";
 import {
   basename,
   dirname,
   isAbsolute,
-  join as Ae,
+  join,
   relative,
-  sep as Jt,
+  sep,
 } from "path";
 var STALE_THRESHOLD_MS = 120000,
   CLOCK_SKEW_ALLOWANCE_MS = 60000,
@@ -466,7 +466,7 @@ async function detachAndSerializeShell(t, o) {
       if ((await lstat(s)).isSymbolicLink()) {
         let D = await readlink(s);
         if (Xo(D) || li(D)) throw Error("network-spelled symlink target");
-        let O = isAbsolute(D) ? D : Ae(dirname(s), D);
+        let O = isAbsolute(D) ? D : join(dirname(s), D);
         if (Xo(O) || li(O)) throw Error("network-spelled symlink hop");
         if (resolveSymlinkAncestrySync(fsSurface, O) !== void 0)
           throw Error("symlink target traverses a junction to remote UNC");
@@ -477,16 +477,16 @@ async function detachAndSerializeShell(t, o) {
         T = await lstat(w);
       c = !0;
       let L = await realpath(l).catch(() => l);
-      if (!w.startsWith(L + Jt)) {
+      if (!w.startsWith(L + sep)) {
         if (
           !(
             await Promise.all([getResolvedClaudeTempDir(), ...[]].map((x) => realpath(x).catch(() => null)))
           )
             .filter((x) => x !== null)
-            .some((x) => w.startsWith(x + Jt))
+            .some((x) => w.startsWith(x + sep))
         )
           return await k("its output resolves outside the task-output tree");
-        let U = Ae(l, "rerooted", `${t.id}.output`),
+        let U = join(l, "rerooted", `${t.id}.output`),
           H;
         try {
           H = await pinWriteTarget(U, [U], { createParents: !0, leaf: "replace" });
@@ -497,7 +497,7 @@ async function detachAndSerializeShell(t, o) {
         try {
           if (!T.isFile()) return await k("gate target is not a regular file");
           if (T.nlink !== 1) return await k("gate target has another name");
-          let x = await dt(
+          let x = await open(
             w,
             getCurrentPlatform() === "windows" ? "r" : constants.O_RDONLY | (constants.O_NONBLOCK ?? 0) | O_NOFOLLOW_NONBLOCK_FLAGS,
           );
@@ -522,7 +522,7 @@ async function detachAndSerializeShell(t, o) {
                 (await H.recheckBeforeWrite(),
                   (j =
                     getCurrentPlatform() === "windows"
-                      ? await dt(W, "wx")
+                      ? await open(W, "wx")
                       : await openNoSymlinkTraversal(
                           W,
                           constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
@@ -807,7 +807,7 @@ async function Ur(t, o) {
   return Buffer.from(s.value).toString("utf8");
 }
 async function writeAdoptJson(t, o, r = {}, s) {
-  let l = Ae(t, "adopt.json"),
+  let l = join(t, "adopt.json"),
     k = basename(t),
     c = isHoverRestEnabled() && s !== void 0 && isValidPathSegment(k) && t === getJobDir(k) ? s : void 0,
     v = o;
@@ -852,7 +852,7 @@ async function writeAdoptJson(t, o, r = {}, s) {
 }
 async function readAndConsumeAdoptJson(t, o = {}) {
   if (!t) return null;
-  let r = Ae(t, "adopt.json"),
+  let r = join(t, "adopt.json"),
     s = `${r}.${process.pid}`,
     l = Date.now() + (o.waitMs ?? 0),
     k = !1;
@@ -1043,7 +1043,7 @@ async function Gr(t, o, r, s) {
   return { method: "copy", fallbackCode: l, identity: k };
 }
 async function Vr(t, o, r) {
-  let s = await dt(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
+  let s = await open(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
   try {
     let l = await s.stat();
     if (!l.isFile() || l.dev !== r.dev || l.ino !== r.ino)
@@ -1051,7 +1051,7 @@ async function Vr(t, o, r) {
         Error("adopted file copy source is not the validated inode"),
         { code: "ADOPT_IDENTITY_MISMATCH" },
       );
-    let k = await dt(o, "wx", DEFAULT_OPEN_FILE_MODE),
+    let k = await open(o, "wx", DEFAULT_OPEN_FILE_MODE),
       c = !1;
     try {
       let v = Buffer.allocUnsafe($r);
@@ -1130,7 +1130,7 @@ async function Xt(t, o, r, s, l) {
     ? { method: "kept", created: null }
     : { ...T, created: v === "created" ? w : null };
 }
-async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = on } = {}) {
+async function linkAdoptedAgentTranscript(t, { storageV5: o, linkFn: r = link } = {}) {
   if (o === void 0) return qr(t);
   try {
     let s = await Yr(t, r);
@@ -1156,7 +1156,7 @@ async function qr(t) {
   if (!t.transcriptPath) return {};
   let o = getAgentTranscriptPath(oo(t.agentId)),
     r = (c) => c.replace(/\.jsonl$/, ".meta.json");
-  await rn(r(t.transcriptPath));
+  await stat(r(t.transcriptPath));
   let s = null,
     l,
     k = getForkedSkillSidecarPaths(t.transcriptPath);
@@ -1281,7 +1281,7 @@ async function Yr(t, o) {
   let T = await realpath(dirname(r)).catch(() => {
     return;
   });
-  if (T !== void 0 && Ae(T, basename(r)) === t.transcriptPath)
+  if (T !== void 0 && join(T, basename(r)) === t.transcriptPath)
     return { forkedSkillNameFromSidecar: v, method: "noop" };
   if ((await mkdir(dirname(r), { recursive: !0 }), c))
     (await unlink(c.fork.provenanceMarker).catch(() => {}),
@@ -1338,11 +1338,11 @@ var Jr = /^agent-[\w-]+\.(?:jsonl|meta\.json)$/,
 function gn(t, o) {
   let r = relative(t, o);
   if (r === "" || r.startsWith("..") || isAbsolute(r)) return null;
-  let s = r.split(Jt);
+  let s = r.split(sep);
   if (s.length < 3 || s[2] !== "subagents") return null;
-  return { session: Ae(s[0], s[1]), depth: s.length };
+  return { session: join(s[0], s[1]), depth: s.length };
 }
-async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = on } = {}) {
+async function relinkAdoptedAgentSymlinks({ storageV5: t, linkFn: o = link } = {}) {
   if (t === void 0) return;
   try {
     await ei(getSessionSubagentsDir(), o);
@@ -1367,7 +1367,7 @@ async function ei(t, o) {
     let Y = Qr.exec(K.name);
     if (Y) {
       if (Math.abs(s - Number(Y[1])) > Xr)
-        await unlink(Ae(t, K.name)).catch(() => {});
+        await unlink(join(t, K.name)).catch(() => {});
       continue;
     }
     if (K.isSymbolicLink() && Jr.test(K.name)) l.push(K.name);
@@ -1467,7 +1467,7 @@ var at = 65536,
   ti = createLazyValue(() => nt({ agentType: le() })),
   oi = createLazyValue(() => nt({ agentId: le() }));
 async function hn(t, o, r) {
-  let s = await dt(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
+  let s = await open(t, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS);
   try {
     let l = await s.stat();
     if (l.dev !== o.dev || l.ino !== o.ino)
@@ -1544,7 +1544,7 @@ function ni(t, o) {
   return !1;
 }
 async function Qo(t, o, r, s, { besideDir: l } = {}) {
-  let k = Ae(t, o),
+  let k = join(t, o),
     c = await readlink(k);
   if (!isAbsolute(c) || basename(c) !== o || hasNetworkPathSpelling(c)) return "unexpected target spelling";
   let v;
@@ -1569,7 +1569,7 @@ async function Qo(t, o, r, s, { besideDir: l } = {}) {
   return { linkPath: k, real: w, gate: v };
 }
 async function ri(t, o) {
-  let r = Ae(t, o),
+  let r = join(t, o),
     s;
   try {
     s = await lstat(r);
@@ -1595,7 +1595,7 @@ async function linkAdoptedWorkflowDir(t) {
     })) === t.transcriptDir
   )
     return;
-  (await rn(Ae(t.transcriptDir, "journal.jsonl")),
+  (await stat(join(t.transcriptDir, "journal.jsonl")),
     await mkdir(dirname(o), { recursive: !0 }));
   try {
     await unlink(o);
@@ -1604,7 +1604,7 @@ async function linkAdoptedWorkflowDir(t) {
       try {
         await rmdir(o);
       } catch (l) {
-        if (A(l) === "ENOTEMPTY") await Er(o, { recursive: !0, force: !0 });
+        if (A(l) === "ENOTEMPTY") await rm(o, { recursive: !0, force: !0 });
       }
   }
   await symlink(t.transcriptDir, o, void 0);

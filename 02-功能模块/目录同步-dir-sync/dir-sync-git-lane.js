@@ -24,12 +24,12 @@ import {
   isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { runDirSyncGit, DEFAULT_MAX_BUNDLE_BYTES } from "../工作树-Git/dir-sync-git-repository.js";
-import { basename, dirname, isAbsolute, join as p } from "path";
+import { join } from "path";
 var R = "side.git",
   m = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/,
   g = /^[a-z][a-z0-9-]{0,31}(?:\/[a-z0-9][a-z0-9_-]{0,63})?$/;
 function getSideGitDirPath(o) {
-  return p(o, CLOUD_SNAPSHOTS_DIR_NAME, R);
+  return join(o, CLOUD_SNAPSHOTS_DIR_NAME, R);
 }
 function buildSessionRefName(o, a) {
   let e = `${CLAUDE_REF_PREFIX}${o}/${a}`;

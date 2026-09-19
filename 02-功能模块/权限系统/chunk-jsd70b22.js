@@ -489,7 +489,7 @@ var FILE_PERMISSION_DIALOG = defineDialog({
   ),
   default: { behavior: "cancelled" },
 });
-import { basename as Co, posix, relative } from "path";
+import { basename, posix, relative } from "path";
 var vo = new Set(["date-time"]);
 function So(e) {
   let r = e?.properties;
@@ -863,7 +863,7 @@ function Ce(e, r) {
   return sanitizeForDisplay(r ? e : relative(getCwd(), e));
 }
 function ke(e, r) {
-  return sanitizeForDisplay(r ? posix.basename(e) : Co(e));
+  return sanitizeForDisplay(r ? posix.basename(e) : basename(e));
 }
 async function Fo(e) {
   let { tool: r, input: o, remoteWorkspace: t, remoteOldContent: s } = e;
@@ -1303,8 +1303,7 @@ async function Ie(e) {
     }),
   });
 }
-import { randomUUID as Wo } from "crypto";
-import { basename as qo } from "path";
+import { randomUUID } from "crypto";
 function lo(e, r, o, t) {
   let s = t === "single",
     k = computeStructuredPatchFromContents({ filePath: e, oldContent: r, newContent: o, singleHunk: s });
@@ -1513,8 +1512,8 @@ function po(e) {
       resolveOnce: w,
     } = e,
     { filePath: b, edits: p, ideName: F, ideClient: A } = R,
-    D = Wo().slice(0, 6),
-    v = `\u273B [Claude Code] ${qo(b)} (${D}) \u29C9`,
+    D = randomUUID().slice(0, 6),
+    v = `\u273B [Claude Code] ${basename(b)} (${D}) \u29C9`,
     T = !1;
   function x() {
     if (T) return;
@@ -1579,7 +1578,6 @@ function po(e) {
     { closeTab: x }
   );
 }
-import { randomUUID as Vo } from "crypto";
 function zo(e, r) {
   if (r.length === 0) return;
   if (e.toolUseContext.forRemoteExecution === !0 || isPluginSteeredAgent(e.toolUseContext))
@@ -1618,7 +1616,7 @@ function uo(e) {
     A = F ? void 0 : c,
     D = F ? void 0 : _,
     { setClassifierApprovals: v } = r,
-    T = A ? Vo() : void 0,
+    T = A ? randomUUID() : void 0,
     x,
     M,
     E;
@@ -1837,7 +1835,7 @@ var fo = null,
   De = import.meta.require("../编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool,
   ho = import.meta.require("../编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
   bo = import.meta.require("../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js"),
-  Qo = import.meta.require("../工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
+  Qo = import.meta.require("../../04-tools/MonitorTool.js").MonitorTool,
   ko =
     "The request this approval was for had already been withdrawn; the answer applied to nothing.";
 function J(e) {
@@ -1850,7 +1848,7 @@ var Go = [
   J({ matches: (e) => e === enterPlanModeTool, dialog: ENTER_PLAN_MODE_PERMISSION_DIALOG, build: buildBasePermissionDescriptor }),
   J({ matches: (e) => e === exitPlanModeTool, dialog: EXIT_PLAN_MODE_PERMISSION_DIALOG, build: to }),
   J({ matches: (e) => e === SkillTool, dialog: SKILL_PERMISSION_DIALOG, build: eo }),
-  ...[],
+  
   J({ matches: (e) => e.name === POWERSHELL_TOOL_NAME, dialog: POWERSHELL_PERMISSION_DIALOG, build: oo }),
   J({ matches: (e) => e === Qo, dialog: MONITOR_PERMISSION_DIALOG, build: Ke }),
   ...(fo !== null && go !== null
@@ -2619,7 +2617,7 @@ function Jo(e) {
   }
   return !1;
 }
-class Do {
+class PermissionContextSetterStore {
   permissionContextSetter = null;
   registerSetter(e) {
     this.permissionContextSetter = e;
@@ -2628,7 +2626,7 @@ class Do {
     this.permissionContextSetter = null;
   }
 }
-var permissionContextSetterStore = new Gt(() => new Do());
+var permissionContextSetterStore = new Gt(() => new PermissionContextSetterStore());
 export {
   runCoordinatorAutomatedPermissionCheck,
   ASK_USER_QUESTION_PERMISSION_DIALOG,

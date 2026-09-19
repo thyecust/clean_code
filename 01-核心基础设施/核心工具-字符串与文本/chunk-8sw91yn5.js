@@ -45,7 +45,7 @@ import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter } from "../核心工具-日期与本地化/intl-text-utils.js";
 import { countMatching, dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
-import { join as We } from "path";
+import { join } from "path";
 function buildAttributionHeader(e, t, r, o, i) {
   let l = getAPIProvider();
   if (
@@ -86,7 +86,7 @@ function buildAttributionHeader(e, t, r, o, i) {
 function hasClaudeAIOAuthInferenceScope(e) {
   return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(CLAUDE_AI_INFERENCE_SCOPE));
 }
-class H {
+class MonitoringNoticeStore {
   notice = null;
   changed = Le();
   replaceNotice(e) {
@@ -101,9 +101,9 @@ class H {
     ((this.notice = e), this.changed.emit(this.notice));
   }
 }
-var me = new j(() => new H());
+var monitoringNoticeStores = new j(() => new MonitoringNoticeStore());
 function R() {
-  return me.of(B().host);
+  return monitoringNoticeStores.of(B().host);
 }
 function K(e) {
   R().replaceNotice(e);
@@ -890,7 +890,7 @@ function getPolicyCacheRevision() {
   return g().cacheRevision;
 }
 function getCachePath() {
-  return We(getClaudeConfigDir(), Ve);
+  return join(getClaudeConfigDir(), Ve);
 }
 function isPolicyLimitsEligible() {
   return getPolicyLimitsIneligibleReason() === void 0;
@@ -971,8 +971,8 @@ var Ge = [
     ["zdr", "allow_local_checkpoint_commit"],
     ["hipaa", "allow_mycelium"],
     ["zdr", "allow_mycelium"],
-    ...[],
-    ...[],
+    
+    
   ],
   Ye = new Set([
     "allow_product_feedback",
@@ -987,7 +987,7 @@ var Ge = [
     "allow_send_file",
     "allow_heap_dump",
     "allow_local_checkpoint_commit",
-    ...[],
+    
     "allow_usage_transcript_scan",
     "allow_skill_doctor_transcript_scan",
   ]),

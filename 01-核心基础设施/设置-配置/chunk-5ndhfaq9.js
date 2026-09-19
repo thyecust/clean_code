@@ -39,7 +39,7 @@ function parseNumericValue(e) {
   return r.length <= 32 && c.test(r) ? parseInt(r.replace(E, ""), 10) : NaN;
 }
 import { homedir } from "os";
-import { basename, dirname, join as i, resolve } from "path";
+import { basename, dirname, join, resolve } from "path";
 var d = [
   ["claude-3-5-sonnet", "VERTEX_REGION_CLAUDE_3_5_SONNET"],
   ["claude-3-7-sonnet", "VERTEX_REGION_CLAUDE_3_7_SONNET"],
@@ -62,12 +62,12 @@ var d = [
 function s() {
   return process.env.CLAUDE_CONFIG_DIR;
 }
-var getClaudeConfigDir = rs(() => (s() ?? i(homedir(), ".claude")).normalize("NFC"), s);
+var getClaudeConfigDir = rs(() => (s() ?? join(homedir(), ".claude")).normalize("NFC"), s);
 function isSameAsConfigDir(e) {
   return resolve(getClaudeConfigDir()) === resolve(e);
 }
 function getTeamsDir() {
-  return i(getClaudeConfigDir(), "teams");
+  return join(getClaudeConfigDir(), "teams");
 }
 function _() {
   return process.env.CLAUDE_CODE_PROJECT_DIR_NAME;
@@ -91,7 +91,7 @@ function p(e) {
   let n = resolve(e),
     r = dirname(n),
     o = RS(r) ?? r;
-  return zn(i(o, basename(n)));
+  return zn(join(o, basename(n)));
 }
 function hasNodeOption(e) {
   let n = process.env.NODE_OPTIONS;

@@ -99,7 +99,7 @@ class d {
     } catch {}
   }
 }
-class l {
+class BridgeHostState {
   inbound = new n();
   receipts = new s();
   outbound = new o();
@@ -108,8 +108,8 @@ class l {
   mailbox = new i();
   taskList = new d();
 }
-var m = new j(() => new l());
+var bridgeHostStates = new j(() => new BridgeHostState());
 function getBridgeHostState() {
-  return m.of(B().host);
+  return bridgeHostStates.of(B().host);
 }
 export { isUuidString, createMessageEnvelope, getBridgeHostState };

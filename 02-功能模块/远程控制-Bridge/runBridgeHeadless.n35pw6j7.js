@@ -91,7 +91,7 @@ import { getClientUserAgent } from "../../01-核心基础设施/HTTP-网络层/u
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
 import { homedir, hostname } from "os";
-import { basename, join as zn, resolve } from "path";
+import { basename, join, resolve } from "path";
 class Le extends Error {
   status;
   errorType;
@@ -427,10 +427,9 @@ import { createHash } from "crypto";
 import {
   lstat,
   mkdtemp,
-  rm as tn,
+  rm,
   writeFile,
 } from "fs/promises";
-import { join as Qt } from "path";
 var Fr = /^[a-zA-Z0-9_-]{1,64}$/;
 function dr(e, t = CLAUDE_CODE_REMOTE_SERVER_NAME) {
   if (!("tools" in e) || e.tools === void 0) return [];
@@ -468,8 +467,7 @@ function dr(e, t = CLAUDE_CODE_REMOTE_SERVER_NAME) {
 }
 import { spawn } from "child_process";
 import { createWriteStream } from "fs";
-import { rm as qr } from "fs/promises";
-import { dirname, join as lr } from "path";
+import { dirname } from "path";
 import { createInterface } from "readline";
 var Gr = 10,
   zr = 10;
@@ -594,11 +592,11 @@ function Jt(e) {
         let j = e.debugFile.lastIndexOf(".");
         if (j > 0) p = `${e.debugFile.slice(0, j)}-${d}${e.debugFile.slice(j)}`;
         else p = `${e.debugFile}-${d}`;
-      } else if (e.verbose) p = lr(getClaudeTempDir(), `bridge-session-${d}.log`);
+      } else if (e.verbose) p = join(getClaudeTempDir(), `bridge-session-${d}.log`);
       let r = null,
         C;
       if (e.debugFile)
-        ((C = lr(dirname(e.debugFile), `bridge-transcript-${d}.jsonl`)),
+        ((C = join(dirname(e.debugFile), `bridge-transcript-${d}.jsonl`)),
           (r = createWriteStream(C, { flags: "a" })),
           r.on("error", (j) => {
             (e.onDebug(`[bridge:session] Transcript write error: ${j.message}`),
@@ -637,7 +635,7 @@ function Jt(e) {
           return (
             (N = void 0),
             j
-              ? qr(j, { recursive: !0, force: !0 }).catch(() => {})
+              ? rm(j, { recursive: !0, force: !0 }).catch(() => {})
               : Promise.resolve()
           );
         },
@@ -1015,13 +1013,13 @@ async function pn(e, t) {
   try {
     let d;
     if (e.mcpConfigJson) {
-      let r = Qt(o, an);
+      let r = join(o, an);
       (await writeFile(r, e.mcpConfigJson, { flag: "wx", mode: 384 }),
         (d = { path: r, ingressUrl: t.apiBaseUrl }));
     }
     let p;
     if (e.appendSystemPrompt) {
-      let r = Qt(o, dn),
+      let r = join(o, dn),
         C = Buffer.from(e.appendSystemPrompt, "utf8");
       (await writeFile(r, C, { flag: "wx", mode: 384 }),
         (p = { path: r, sha256: createHash("sha256").update(C).digest("hex") }));
@@ -1050,7 +1048,7 @@ async function gn(e) {
         )
           throw Error("bridge spawn root has unexpected owner or mode");
       }
-      let p = await mkdtemp(Qt(o, `${Rt(e)}-`)),
+      let p = await mkdtemp(join(o, `${Rt(e)}-`)),
         r = await lstat(o).catch(() => null);
       if (r?.dev !== d.dev || r.ino !== d.ino)
         throw (
@@ -1063,7 +1061,7 @@ async function gn(e) {
     }
 }
 async function Zt(e) {
-  await tn(e, { recursive: !0, force: !0 }).catch(() => {});
+  await rm(e, { recursive: !0, force: !0 }).catch(() => {});
 }
 async function hr(e) {
   if (e?.dir) await Zt(e.dir);
@@ -1532,9 +1530,8 @@ function yr(e) {
   }
   return { signal: d, wake: o };
 }
-import { readdir, readFile, stat as hn } from "fs/promises";
+import { readdir, readFile, stat } from "fs/promises";
 import { release } from "os";
-import { join as vn } from "path";
 var yn = 1500,
   $r = 262144,
   En = 32,
@@ -1784,7 +1781,7 @@ async function Ln(e) {
   if (o.length === 0) return;
   let d = o.includes("Xcode.app") ? "Xcode.app" : o[0],
     p = await Rr(
-      vn(Er, d, "Contents", "version.plist"),
+      join(Er, d, "Contents", "version.plist"),
       "CFBundleShortVersionString",
     );
   e.xcode = p === void 0 ? "xcode" : `xcode@${p}`;
@@ -1813,7 +1810,7 @@ async function jn(e) {
 }
 async function Tr(e) {
   try {
-    return (await hn(e)).isDirectory();
+    return (await stat(e)).isDirectory();
   } catch {
     return !1;
   }
@@ -2745,7 +2742,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             if (ve > 0)
               bt = `${e.debugFile.slice(0, ve)}-${mt}${e.debugFile.slice(ve)}`;
             else bt = `${e.debugFile}-${mt}`;
-          } else if (e.verbose) bt = zn(getClaudeTempDir(), `bridge-session-${mt}.log`);
+          } else if (e.verbose) bt = join(getClaudeTempDir(), `bridge-session-${mt}.log`);
           if (bt) r.logVerbose(`Debug log: ${bt}`);
           (r.addSession(ke, buildClaudeAiSessionUrl(ke, e.sessionIngressUrl, { from: "cli" })),
             nt(),

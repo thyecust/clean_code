@@ -17,7 +17,7 @@ import { BASE58_SLUG_PATTERN, slugToUuid } from "../../01-核心基础设施/核
 import { matchDataIdAttribute } from "../图表-Mermaid/chunk-743atbtj.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { randomUUID as ee } from "crypto";
+import { randomUUID } from "crypto";
 class y {
   #e = new Map();
   #t = new Set();
@@ -409,7 +409,7 @@ function le() {
     approvedCopySources: new Map(),
     gatedThumbnailHrefs: new Map(),
     approvalStashEvicted: !1,
-    publishObservationNonce: ee(),
+    publishObservationNonce: randomUUID(),
     consumedPublishApprovals: new Set(),
     readDeliveries: new Map(),
     pendingHandoverReads: new Map(),
@@ -457,12 +457,12 @@ function stopArtifactSupervisor(e) {
     (clearTimeout(e.timer), (e.timer = void 0));
   (delete e.lease, delete e.renewable, delete e.wake);
 }
-class W {
+class ArtifactStateStore {
   current = void 0;
 }
-var de = new Gt(() => new W());
+var artifactStateStores = new Gt(() => new ArtifactStateStore());
 function v() {
-  return de.of(B());
+  return artifactStateStores.of(B());
 }
 function getArtifactState() {
   let e = v();
@@ -700,7 +700,6 @@ function getAttributeValue(e, t) {
   let r = t.toLowerCase();
   return e.attrs?.find((i) => i.name.toLowerCase() === r)?.value;
 }
-import { randomUUID as fe } from "crypto";
 var me = "decision",
   he = "deliverables",
   Se = /(?:`{3,}|~{3,})[ \t]*(?:decision|deliverables)/,
@@ -1037,7 +1036,7 @@ function extractWorkshopDecisions(e, t, r = renderDecisionItem) {
     c += d.raw.length;
   }
   if (o.length === 0) return i;
-  let u = fe(),
+  let u = randomUUID(),
     m = "",
     g = 0,
     h = [];

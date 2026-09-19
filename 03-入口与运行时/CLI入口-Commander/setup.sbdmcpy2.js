@@ -127,11 +127,11 @@ async function se(e, o) {
   if (S !== void 0) await _(S, o);
 }
 import { constants } from "fs";
-import { open as ne } from "fs/promises";
+import { open } from "fs/promises";
 import { isatty } from "tty";
 async function W() {
   try {
-    return (await (await ne("/dev/tty", constants.O_RDWR | constants.O_NOCTTY)).close(), !0);
+    return (await (await open("/dev/tty", constants.O_RDWR | constants.O_NOCTTY)).close(), !0);
   } catch {
     return !1;
   }
@@ -170,9 +170,9 @@ function le() {
     } catch {}
   return (logForDebugging("[bg-ctty] no libc candidate exports login_tty"), null);
 }
-import { copyFile, stat as me } from "fs/promises";
+import { copyFile, stat } from "fs/promises";
 import { homedir } from "os";
-import { join as de } from "path";
+import { join } from "path";
 async function R(e) {
   await saveGlobalConfig((o) => ({ ...o, iterm2SetupInProgress: !1 }), e);
 }
@@ -184,7 +184,7 @@ function ue() {
   };
 }
 function fe() {
-  return de(homedir(), "Library", "Preferences", "com.googlecode.iterm2.plist");
+  return join(homedir(), "Library", "Preferences", "com.googlecode.iterm2.plist");
 }
 async function V(e) {
   let { inProgress: o, backupPath: r } = ue();
@@ -197,7 +197,7 @@ async function V(e) {
   )
     return (await R(e), { status: "no_backup" });
   try {
-    await me(r);
+    await stat(r);
   } catch {
     return (await R(e), { status: "no_backup" });
   }
@@ -616,16 +616,16 @@ function be({
 }) {
   return !e && !o && !r && !c && m;
 }
-class re {
+class RecallIndexPrewarmState {
   fired = !1;
   claim() {
     if (this.fired) return !1;
     return ((this.fired = !0), !0);
   }
 }
-var we = new j(() => new re());
+var recallIndexPrewarmState = new j(() => new RecallIndexPrewarmState());
 function maybePrewarmRecallIndex(e) {
-  if (!we.of(e.host).claim()) return;
+  if (!recallIndexPrewarmState.of(e.host).claim()) return;
   if (Nn() || !checkHasTrustDialogAccepted()) return;
   (async () => {
     let [o, r] = await Promise.all([

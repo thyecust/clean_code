@@ -39,40 +39,37 @@ import { isJsonRpcRequest, SdkMcpServerTransport } from "../../02-功能模块/M
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { execFile } from "child_process";
-import { randomUUID as Hs } from "crypto";
-import { createReadStream, realpathSync } from "fs";
+import { randomUUID } from "crypto";
+import { realpathSync } from "fs";
 import {
   mkdir,
-  readdir,
-  readFile as zs,
-  rm as Ws,
-  writeFile as Kt,
+  readFile,
+  rm,
+  writeFile,
 } from "fs/promises";
 import { createRequire } from "module";
-import { homedir as et, tmpdir } from "os";
+import { homedir, tmpdir } from "os";
 import {
   dirname,
   isAbsolute,
-  join as D,
+  join,
   relative,
   resolve,
-  sep as Ht,
+  sep,
 } from "path";
 import { fileURLToPath } from "url";
 import { spawn } from "child_process";
-import { existsSync as gs } from "fs";
+import { existsSync } from "fs";
 import { createInterface } from "readline";
 import { StringDecoder } from "string_decoder";
-import { randomUUID as ds } from "crypto";
-import { join as mt } from "path";
-class gt {
+class SdkDebugLogState {
   debugFilePath = void 0;
   initPromise = null;
   logStem = null;
 }
-var us = new j(() => new gt());
+var sdkDebugLogState = new j(() => new SdkDebugLogState());
 function ht() {
-  return us.of(B().host);
+  return sdkDebugLogState.of(B().host);
 }
 function St(e) {
   if (e.initPromise) return e.initPromise;
@@ -82,10 +79,10 @@ function St(e) {
       (e.initPromise = Promise.resolve()),
       e.initPromise
     );
-  let t = mt(getClaudeConfigDir(), "debug");
+  let t = join(getClaudeConfigDir(), "debug");
   return (
-    (e.logStem = `sdk-${ds()}`),
-    (e.debugFilePath = mt(t, `${e.logStem}.txt`)),
+    (e.logStem = `sdk-${randomUUID()}`),
+    (e.debugFilePath = join(t, `${e.logStem}.txt`)),
     process.stderr.write(`SDK debug logs: ${e.debugFilePath}
 `),
     (e.initPromise = getFileStorage()
@@ -808,7 +805,7 @@ function vs(e) {
 function Es(e, t) {
   let r = t ? "native binary" : "executable",
     o = redactSecretsInText(e);
-  if (gs(e))
+  if (existsSync(e))
     return {
       message: t
         ? `Claude Code native binary at ${o} exists but failed to launch. This usually means the binary does not match this system's libc \u2014 e.g. spawning a musl-linked binary on a glibc Linux host fails because the musl dynamic loader (/lib/ld-musl-*) is missing. Specify a matching binary with options.pathToClaudeCodeExecutable.`
@@ -851,7 +848,6 @@ function _s(e) {
 function Cs(e) {
   return typeof Reflect.get(e, "unref") === "function";
 }
-import { existsSync as Rs } from "fs";
 var Y = "@anthropic-ai/claude-agent-sdk";
 function Ts() {
   return !1;
@@ -859,7 +855,7 @@ function Ts() {
 function _t(e, t = {}) {
   let r = t.platform ?? "darwin",
     o = t.arch ?? "arm64",
-    d = t.exists ?? Rs,
+    d = t.exists ?? existsSync,
     p = t.preferMusl ?? Ts(),
     f = process.env.SDK_NATIVE_BIN ?? "claude",
     g = r === "win32" ? ".exe" : "",
@@ -2146,16 +2142,11 @@ class Qe {
 var De = toESM(otelApiModule(), 1);
 import {
   copyFile,
-  readFile as Ns,
-  rm as xt,
-  writeFile as At,
 } from "fs/promises";
-import { homedir as Mt } from "os";
-import { join as Xe } from "path";
 function Ot(e) {
   return {
-    globalConfig: Xe(e || Mt(), ".claude.json"),
-    userSettings: Xe(e || Xe(Mt(), ".claude"), "settings.json"),
+    globalConfig: join(e || homedir(), ".claude.json"),
+    userSettings: join(e || join(homedir(), ".claude"), "settings.json"),
   };
 }
 function Ye(e, t, r, o) {
@@ -2164,12 +2155,12 @@ function Ye(e, t, r, o) {
 async function Me(e, t, r, o) {
   if (o) return Ks(o, e, t, r);
   try {
-    if (r) await At(t, r(await Ns(e)), { mode: 384 });
+    if (r) await writeFile(t, r(await readFile(e)), { mode: 384 });
     else await copyFile(e, t);
   } catch (d) {
     if (A(d) === void 0) throw d;
     if (!W(d))
-      (await xt(t, { force: !0 }).catch(() => {}),
+      (await rm(t, { force: !0 }).catch(() => {}),
         logForDebugging(`sessionStore resume: skipping ${e} (${A(d)})`));
   }
 }
@@ -2188,11 +2179,11 @@ async function Ks({ backend: e, key: t }, r, o, d) {
   if (!f?.found) return;
   let g = Buffer.from(f.value);
   try {
-    await At(o, d ? d(g) : g, { mode: 384 });
+    await writeFile(o, d ? d(g) : g, { mode: 384 });
   } catch (h) {
     if (A(h) === void 0) throw h;
     if (!W(h))
-      (await xt(o, { force: !0 }).catch(() => {}),
+      (await rm(o, { force: !0 }).catch(() => {}),
         logForDebugging(`sessionStore resume: skipping ${r} (${A(h)})`));
   }
 }
@@ -2249,7 +2240,7 @@ async function Zs(e, t) {
     if (o?.claudeAiOauth?.refreshToken)
       (delete o.claudeAiOauth.refreshToken, (r = jsonStringify(o)));
   } catch {}
-  await Kt(t, r, { mode: 384 });
+  await writeFile(t, r, { mode: 384 });
 }
 function er() {
   let e = getKeychainServiceName(CREDENTIALS_SUFFIX);
@@ -2271,17 +2262,17 @@ async function tr(e, t, r, o, d = 60000, p) {
       `SessionStore.load() timed out after ${d}ms for session ${t}`,
     );
   if (!g || g.length === 0) return;
-  let h = D(tmpdir(), `claude-resume-${Hs()}`);
+  let h = join(tmpdir(), `claude-resume-${randomUUID()}`);
   try {
-    let w = D(h, "projects", f);
+    let w = join(h, "projects", f);
     await mkdir(w, { recursive: !0, mode: 448 });
-    let k = D(w, `${t}.jsonl`);
+    let k = join(w, `${t}.jsonl`);
     await writeEntriesToJsonlFile(k, g);
     let S = o?.CLAUDE_CONFIG_DIR ?? process.env.CLAUDE_CONFIG_DIR,
-      C = S ?? D(et(), ".claude"),
+      C = S ?? join(homedir(), ".claude"),
       _;
     try {
-      _ = await zs(D(C, ".credentials.json"), "utf-8");
+      _ = await readFile(join(C, ".credentials.json"), "utf-8");
     } catch (V) {
       if (!W(V)) throw V;
     }
@@ -2291,27 +2282,27 @@ async function tr(e, t, r, o, d = 60000, p) {
       !(o ?? process.env).CLAUDE_CODE_OAUTH_TOKEN
     )
       _ = (await er()) ?? _;
-    await Zs(_, D(h, ".credentials.json"));
+    await Zs(_, join(h, ".credentials.json"));
     let U = Ot(a.CLAUDE_CONFIG_DIR),
-      E = D(S ?? et(), ".claude.json");
+      E = join(S ?? homedir(), ".claude.json");
     await Me(
       E,
-      D(h, ".claude.json"),
+      join(h, ".claude.json"),
       void 0,
       Ye(p, E, U.globalConfig, STORAGE_KEYS.globalConfig()),
     );
-    let T = D(C, "settings.json");
+    let T = join(C, "settings.json");
     if (
       (await Me(
         T,
-        D(h, "settings.json"),
+        join(h, "settings.json"),
         Lt,
         Ye(p, T, U.userSettings, STORAGE_KEYS.userSettings()),
       ),
-      await Me(D(C, "cowork_settings.json"), D(h, "cowork_settings.json"), Lt),
+      await Me(join(C, "cowork_settings.json"), join(h, "cowork_settings.json"), Lt),
       e.listSubkeys)
     )
-      await sr(e, { projectKey: f, sessionId: t }, D(w, t), d);
+      await sr(e, { projectKey: f, sessionId: t }, join(w, t), d);
     return h;
   } catch (w) {
     throw (await Wt(h), w);
@@ -2329,7 +2320,7 @@ async function sr(e, t, r, o) {
       !p ||
       isAbsolute(p) ||
       p.split(/[\\/]/).includes("..") ||
-      !f.startsWith(r + Ht)
+      !f.startsWith(r + sep)
     ) {
       logForDebugging(`[SessionStore] skipping unsafe subpath from listSubkeys: ${p}`, {
         level: "warn",
@@ -2353,7 +2344,7 @@ async function sr(e, t, r, o) {
         S = resolve(r, p + ".meta.json");
       await mkdir(dirname(S), { recursive: !0 });
       let { type: C, ..._ } = k;
-      await Kt(S, jsonStringify(_), { mode: 384 });
+      await writeFile(S, jsonStringify(_), { mode: 384 });
     }
   }
 }
@@ -2600,7 +2591,7 @@ function Gt(e, t) {
     },
     Be = new _e(ft, r, Q, Se, E, pt, dt, ls, ye, rt, nt, q);
   if (O) {
-    let I = () => D(P.CLAUDE_CONFIG_DIR ?? D(et(), ".claude"), "projects"),
+    let I = () => join(P.CLAUDE_CONFIG_DIR ?? join(homedir(), ".claude"), "projects"),
       L = Fe === "eager",
       G = new Qe(
         async (X, qe) => {
@@ -2648,7 +2639,7 @@ var rr = new Set(["EBUSY", "EMFILE", "ENFILE", "ENOTEMPTY", "EPERM"]);
 async function Wt(e) {
   for (let t = 0; ; t++)
     try {
-      return await Ws(e, { recursive: !0, force: !0 });
+      return await rm(e, { recursive: !0, force: !0 });
     } catch (r) {
       if (t >= 4 || !rr.has(A(r) ?? "")) return;
       await sleep((t + 1) * 100);
@@ -2743,7 +2734,7 @@ function ar(e) {
 }
 function Nt(e, t) {
   let r = relative(t, e),
-    o = r.split(Ht);
+    o = r.split(sep);
   if (o[0] === ".." || isAbsolute(r)) return null;
   if (o.length < 2) return null;
   let d = o[0],

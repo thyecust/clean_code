@@ -23,7 +23,7 @@ import {
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodePoints, truncateToCodeUnits, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
-import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
+import { antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getComplianceTaints } from "../核心工具-未归类/compliance-taints-store.js";
 import { BRIEF_ENFORCE_SENTINEL } from "../核心工具-未归类/chunk-q599wyee.js";
 import { DASH_CHARS_CLASS, buildConfusableTagScrubPattern, buildChannelSourceTagPattern, buildModelLayerTagPattern, LEAD_HEX_ID_SYMBOL, LEAD_SPAN_SYMBOL, buildBracketedLeadScrubPattern } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -790,7 +790,7 @@ function listScopeFrom(t) {
   return e === "shared" || e === "all" ? e : "mine";
 }
 var D = [COWRITTEN_ARTIFACT_HTML_TAG, ARTIFACT_FILE_CONTENT_TAG, ARTIFACT_ORIGIN_NOTES_TAG, ARTIFACT_TYPE_INSTRUCTIONS_TAG].map((t) => t.replaceAll("-", "_"));
-class W {
+class ArtifactTagPatterns {
   #t;
   #e;
   #n;
@@ -844,7 +844,7 @@ class W {
     );
   }
 }
-var artifactTagPatterns = new j(() => new W());
+var artifactTagPatterns = new j(() => new ArtifactTagPatterns());
 function q() {
   return artifactTagPatterns.of(B().host);
 }

@@ -3527,7 +3527,7 @@ var gi = toESM(Xs(), 1);
 import Kf from "http";
 import Xf from "https";
 import yi from "http2";
-import bi from "util";
+import util from "util";
 import { resolve } from "path";
 import ye from "zlib";
 var ve = "1.15.2";
@@ -3556,10 +3556,9 @@ function Mr(e, t, r) {
   }
   throw new y("Unsupported protocol " + o, y.ERR_NOT_SUPPORT);
 }
-import se from "stream";
-import Bf from "stream";
+import stream from "stream";
 var Hr = Symbol("internals");
-class Ys extends Bf.Transform {
+class Ys extends stream.Transform {
   constructor(e) {
     e = u.toFlatObject(
       e,
@@ -3662,8 +3661,7 @@ class Ys extends Bf.Transform {
 }
 var zr = Ys;
 import { EventEmitter } from "events";
-import Df from "util";
-import { Readable as Uf } from "stream";
+import { Readable } from "stream";
 var { asyncIterator: Qs } = Symbol,
   Nf = async function* (e) {
     if (e.stream) yield* e.stream();
@@ -3676,7 +3674,7 @@ var qf = O.ALPHABET.ALPHA_DIGIT + "-_",
   pt =
     typeof TextEncoder === "function"
       ? new TextEncoder()
-      : new Df.TextEncoder(),
+      : new util.TextEncoder(),
   Te = `\r
 `,
   If = pt.encode(Te),
@@ -3735,7 +3733,7 @@ var jf = (e, t, r) => {
     if (Number.isFinite(l)) c["Content-Length"] = l;
     return (
       t && t(c),
-      Uf.from(
+      Readable.from(
         (async function* () {
           for (let p of f) (yield i, yield* p.encode());
           yield a;
@@ -3744,8 +3742,7 @@ var jf = (e, t, r) => {
     );
   },
   ei = jf;
-import Mf from "stream";
-class ti extends Mf.Transform {
+class ti extends stream.Transform {
   __transform(e, t, r) {
     (this.push(e), r());
   }
@@ -4002,7 +3999,7 @@ class Ei {
       let f = r.length;
       for (let c = 0; c < f; c++) {
         let [p, d] = r[c];
-        if (!p.destroyed && !p.closed && bi.isDeepStrictEqual(d, t)) return p;
+        if (!p.destroyed && !p.closed && util.isDeepStrictEqual(d, t)) return p;
       }
     }
     let n = yi.connect(e, t),
@@ -4197,8 +4194,8 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
             return;
           }
           let { data: C } = x;
-          if (C instanceof se.Readable || C instanceof se.Duplex) {
-            let B = se.finished(C, () => {
+          if (C instanceof stream.Readable || C instanceof stream.Duplex) {
+            let B = stream.finished(C, () => {
               (B(), k());
             });
           } else k();
@@ -4235,7 +4232,7 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
           }
           if (d === "text") {
             if (((x = x.toString(b)), !b || b === "utf8")) x = u.stripBOM(x);
-          } else if (d === "stream") x = se.Readable.from(x);
+          } else if (d === "stream") x = stream.Readable.from(x);
           return ue(n, o, {
             data: x,
             status: 200,
@@ -4268,13 +4265,13 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
         ) {
           if ((D.set(a.getHeaders()), !D.hasContentLength()))
             try {
-              let x = await bi.promisify(a.getLength).call(a);
+              let x = await util.promisify(a.getLength).call(a);
               Number.isFinite(x) && x >= 0 && D.setContentLength(x);
             } catch (x) {}
         } else if (u.isBlob(a) || u.isFile(a))
           (a.size && D.setContentType(a.type || "application/octet-stream"),
             D.setContentLength(a.size || 0),
-            (a = se.Readable.from(kt(a))));
+            (a = stream.Readable.from(kt(a))));
         else if (a && !u.isStream(a)) {
           if (Buffer.isBuffer(a));
           else if (u.isArrayBuffer(a)) a = Buffer.from(new Uint8Array(a));
@@ -4303,8 +4300,8 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
         if (u.isArray(ce)) ((ae = ce[0]), (Z = ce[1]));
         else ae = Z = ce;
         if (a && (Pe || ae)) {
-          if (!u.isStream(a)) a = se.Readable.from(a, { objectMode: !1 });
-          ((a = se.pipeline(
+          if (!u.isStream(a)) a = stream.Readable.from(a, { objectMode: !1 });
+          ((a = stream.pipeline(
             [a, new zr({ maxRate: u.toFiniteNumber(ae) })],
             u.noop,
           )),
@@ -4430,7 +4427,7 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
                       delete R.headers["content-encoding"]);
               }
             }
-            P = C.length > 1 ? se.pipeline(C, u.noop) : C[0];
+            P = C.length > 1 ? stream.pipeline(C, u.noop) : C[0];
             let fe = {
               status: R.statusCode,
               statusText: R.statusMessage,
@@ -4455,7 +4452,7 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
                     yield en;
                   }
                 }
-                P = se.Readable.from(Ge(), { objectMode: !1 });
+                P = stream.Readable.from(Ge(), { objectMode: !1 });
               }
               ((fe.data = P), ue(n, o, fe));
             } else {
@@ -4578,10 +4575,10 @@ var ol = typeof process < "u" && u.kindOf(process) === "process",
           if (t.maxBodyLength > -1 && t.maxRedirects === 0) {
             let B = t.maxBodyLength,
               P = 0;
-            ((C = se.pipeline(
+            ((C = stream.pipeline(
               [
                 a,
-                new se.Transform({
+                new stream.Transform({
                   transform(K, fe, q) {
                     if (((P += K.length), P > B))
                       return q(

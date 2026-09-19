@@ -708,7 +708,7 @@ var bc = createLazyValue(() =>
       .catch(void 0),
   }),
 );
-class zi {
+class OrgMemoryWriteGrantState {
   grantedStores = null;
   grantedModes = null;
   mirrorPresent = !1;
@@ -780,9 +780,9 @@ class zi {
       else logFeatureSad("org_memory_writes", "downgraded");
   }
 }
-var _c = new j(() => new zi());
+var orgMemoryWriteGrantStates = new j(() => new OrgMemoryWriteGrantState());
 function Fe() {
-  return _c.of(B().host);
+  return orgMemoryWriteGrantStates.of(B().host);
 }
 function normalizeStorePath(e) {
   return e.replace(/\/+$/, "");
@@ -1016,7 +1016,7 @@ function yn(e, t) {
     logForDebugging(`org-memory decision ${t}: listener threw: ${l(r)}`, { level: "error" });
   }
 }
-class Ji {
+class OrgMemoryDecisionState {
   decision = { state: "undecided" };
   servedIdentity = null;
   settleDeadlineConsumed = !1;
@@ -1144,9 +1144,9 @@ class Ji {
     );
   }
 }
-var xc = new j(() => new Ji());
+var orgMemoryDecisionStates = new j(() => new OrgMemoryDecisionState());
 function Ze() {
-  return xc.of(B().host);
+  return orgMemoryDecisionStates.of(B().host);
 }
 function onOrgMemoryDecisionShrink(e) {
   return Ze().shrunk.subscribe(e);
@@ -1314,7 +1314,7 @@ function is(e, t) {
     { ...getMemoryHostRequestOptions(), credentials: t, timeout: Tc, validateStatus: () => !0 },
   );
 }
-class ss {
+class OrgMemoryCredentialCache {
   cached = null;
   inflightMint = null;
   lastMintSelectionDegraded = !1;
@@ -1579,9 +1579,9 @@ class ss {
       Qi());
   }
 }
-var Cc = new j(() => new ss());
+var orgMemoryCredentialCaches = new j(() => new OrgMemoryCredentialCache());
 function Jn() {
-  return Cc.of(B().host);
+  return orgMemoryCredentialCaches.of(B().host);
 }
 function wasLastMintSelectionDegraded() {
   return Jn().lastMintSelectionDegraded;
@@ -1606,7 +1606,7 @@ var FIRST_STORE_PULL_WAIT_DEADLINE_MS = 2500;
 function eo() {
   return Boolean(process.env.CLAUDE_MEMORY_STORES?.trim());
 }
-class as {
+class FirstStorePullState {
   settled = !1;
   racePromise = null;
   raceSettled = !1;
@@ -1634,9 +1634,9 @@ class as {
     await Promise.race([this.racePromise, sleep(FIRST_STORE_PULL_WAIT_DEADLINE_MS, e)]);
   }
 }
-var Mc = new j(() => new as());
+var firstStorePullStates = new j(() => new FirstStorePullState());
 function Pn() {
-  return Mc.of(B().host);
+  return firstStorePullStates.of(B().host);
 }
 function settleFirstStorePull() {
   Pn().settle();
@@ -1650,7 +1650,7 @@ function waitForFirstStorePull(e) {
 function firstStorePullPending() {
   return Pn().isPending();
 }
-import { join as gs } from "path";
+import { join } from "path";
 function isFocusModeEnabled() {
   let e = getInitialSettings().viewMode;
   return e ? e === "focus" : (getGlobalConfig().briefTranscript ?? !1);
@@ -1846,7 +1846,7 @@ var zc = createLazyValue(() =>
   ),
   Gc = createLazyValue(() => c({ entries: fe(s(), se()) }));
 function bs() {
-  return gs(getClaudeConfigDir(), "cache", ys);
+  return join(getClaudeConfigDir(), "cache", ys);
 }
 var _s = STORAGE_KEYS.cache("org-memory-discovery", ys);
 async function ws(e) {
@@ -1902,7 +1902,7 @@ async function Ss(e, t, r) {
       return;
     }
     let d = getFileStorage();
-    (await d.mkdir(gs(getClaudeConfigDir(), "cache")),
+    (await d.mkdir(join(getClaudeConfigDir(), "cache")),
       await d.atomicWrite(bs(), jsonStringify({ entries: o })));
   } catch (o) {
     logForDebugging(`org-memory-discovery: cache write failed: ${l(o)}`);
@@ -2042,7 +2042,7 @@ function er(e) {
 }
 var Zc = 3600000,
   Xc = 15000;
-class vs {
+class OrgMemoryDiscoveryState {
   lastPickerData = null;
   discoveryGeneration = 0;
   grantMissingEmitted = !1;
@@ -2608,9 +2608,9 @@ class vs {
     );
   }
 }
-var Qc = new j(() => new vs());
+var orgMemoryDiscoveryStates = new j(() => new OrgMemoryDiscoveryState());
 function Lt() {
-  return Qc.of(B().host);
+  return orgMemoryDiscoveryStates.of(B().host);
 }
 function clearOrgMemoryDiscoveryCaches() {
   Lt().clearCaches();
@@ -6742,19 +6742,16 @@ function Vu(e) {
 }
 var dn = toESM(nodeIgnoreModule(), 1);
 import { randomBytes } from "crypto";
-import { homedir as Yn } from "os";
+import { homedir } from "os";
 import {
-  basename as pp,
-  dirname as hp,
-  isAbsolute as Zl,
-  join as Ne,
-  normalize as ze,
-  posix as st,
-  resolve as yp,
-  sep as Re,
+  basename,
+  dirname,
+  isAbsolute,
+  normalize,
+  posix,
+  resolve,
+  sep,
 } from "path";
-import { join as ut, normalize as bf, sep as ct } from "path";
-import { join as No } from "path";
 function So() {
   return Qs(!1);
 }
@@ -7882,7 +7879,7 @@ function isSharedMemoryServedViaTools() {
 }
 var ca = 5000,
   zd = 60000;
-class da {
+class MemoryPromptIndexCache {
   current = null;
   entriesFor(e, t, r) {
     let o =
@@ -7900,7 +7897,7 @@ class da {
     return this.current.entries;
   }
 }
-var Gd = new j(() => new da());
+var memoryPromptIndexCaches = new j(() => new MemoryPromptIndexCache());
 async function fa(e = ca, t = {}) {
   let r;
   try {
@@ -7927,7 +7924,7 @@ async function fa(e = ca, t = {}) {
   let L = [Js() ?? "", ...d.map((x) => `${x.path} ${x.mode} ${x.promptIndex}`)]
     .join(`
 `);
-  return Gd.of(B().host).entriesFor(L, d.length, _);
+  return memoryPromptIndexCaches.of(B().host).entriesFor(L, d.length, _);
 }
 async function ma(e, t, r) {
   let o = e.promptIndex;
@@ -7969,7 +7966,6 @@ async function readStorePromptIndex(e, t = {}) {
   return r === null ? null : { content: r.content, promptIndex: r.promptIndex };
 }
 import { readdir } from "fs/promises";
-import { sep as zt } from "path";
 function getMemoryProjectKey(e) {
   let t = pa(e);
   if (t?.length !== 2 || t[1] !== "memory") return;
@@ -7987,9 +7983,9 @@ function parseMemoryStoreBase(e, t) {
     : { projectKey: r.projectKey, baseRelPath: r.relPath };
 }
 function resolveMemoryStorageKey(e, t, r) {
-  let o = t.endsWith(zt) ? t : t + zt;
+  let o = t.endsWith(sep) ? t : t + sep;
   if (!r.startsWith(o)) return;
-  let d = r.slice(o.length).split(zt);
+  let d = r.slice(o.length).split(sep);
   if (!d.every(isValidPathSegment)) return;
   let p = STORAGE_KEYS.memory(e.projectKey, [...e.baseRelPath, ...d]);
   return validateStorageKey(p) === void 0 ? p : void 0;
@@ -8002,11 +7998,11 @@ function buildMemoryStorageNamespace(e) {
   };
 }
 function pa(e) {
-  let t = getProjectsDir() + zt;
+  let t = getProjectsDir() + sep;
   if (!e.startsWith(t)) return;
   let r = e.slice(t.length);
-  while (r.endsWith(zt)) r = r.slice(0, -zt.length);
-  return r.split(zt);
+  while (r.endsWith(sep)) r = r.slice(0, -sep.length);
+  return r.split(sep);
 }
 function parseTeamMemoryLocation(e) {
   let t = pa(e);
@@ -8265,7 +8261,7 @@ function xa(e) {
       }));
   return d;
 }
-class Ra {
+class PromptFlagCache {
   bashFirstSessionAssignment = rs(ba);
   bashFirstSessionAssignmentCompiledOnly = rs(ba);
   preReadLineDropped = rs(La);
@@ -8277,11 +8273,10 @@ class Ra {
   promptModelSwapsLogged = new Set();
   unusableWritingOverrideTold = !1;
 }
-var af = new j(() => new Ra());
+var promptFlagCaches = new j(() => new PromptFlagCache());
 function an() {
-  return af.of(B().host);
+  return promptFlagCaches.of(B().host);
 }
-import { join as Ta } from "path";
 function Aa(e) {
   let {
       autoDir: t,
@@ -8297,8 +8292,8 @@ function Aa(e) {
       r && _
         ? _.map((re) =>
             re.mode === "ro"
-              ? `\`${Ta(r, re.mount)}\` (read-only \u2014 do not write there)`
-              : `\`${Ta(r, re.mount, getMemoryDirPrefix(re.promptIndex)).replace(/[/\\]+$/, "")}\``,
+              ? `\`${join(r, re.mount)}\` (read-only \u2014 do not write there)`
+              : `\`${join(r, re.mount, getMemoryDirPrefix(re.promptIndex)).replace(/[/\\]+$/, "")}\``,
           )
         : r
           ? [`\`${r}\``]
@@ -8376,13 +8371,6 @@ ${Tn}`
 `);
 }
 import { lstat, realpath } from "fs/promises";
-import {
-  basename as cf,
-  dirname as Io,
-  join as cn,
-  resolve as Ma,
-  sep as $n,
-} from "path";
 class PathTraversalError extends Error {
   constructor(e) {
     super(e);
@@ -8422,9 +8410,9 @@ function assertSafePathKey(e) {
 }
 function hasTeamMemoryStore() {
   if (!isAutoMemoryEnabled()) return !1;
-  return uf.of(B().host).hasTeamStore();
+  return teamMemoryStorePresences.of(B().host).hasTeamStore();
 }
-class Oa {
+class TeamMemoryStorePresence {
   raw = void 0;
   valid = !1;
   hasTeamStore() {
@@ -8440,21 +8428,21 @@ class Oa {
     return this.valid;
   }
 }
-var uf = new j(() => new Oa());
+var teamMemoryStorePresences = new j(() => new TeamMemoryStorePresence());
 function getTeamMemoryDir() {
-  return (cn(getAutoMemPath(), TEAM_MEMORY_DIR_NAME) + $n).normalize("NFC");
+  return (join(getAutoMemPath(), TEAM_MEMORY_DIR_NAME) + sep).normalize("NFC");
 }
 function getMemoryStoreDir(e) {
-  return e.scope === "user" ? getAutoMemPath() : (cn(getTeamMemoryDir(), e.mount) + $n).normalize("NFC");
+  return e.scope === "user" ? getAutoMemPath() : (join(getTeamMemoryDir(), e.mount) + sep).normalize("NFC");
 }
 function getMemoryStoreEntryPath(e, t) {
-  return cn(getMemoryStoreDir(e), ...t.split("/"));
+  return join(getMemoryStoreDir(e), ...t.split("/"));
 }
 var Da = (e) => e.replace(/[/\\]+$/, "");
 async function resolveAutoMemPath(...e) {
   let t = Da(getAutoMemPath()),
-    r = await realpath(Io(t));
-  return cn(r, cf(t), ...e);
+    r = await realpath(dirname(t));
+  return join(r, basename(t), ...e);
 }
 async function checkPathContainment(e, ...t) {
   try {
@@ -8469,10 +8457,10 @@ async function checkPathContainment(e, ...t) {
 async function resolveRealPathSafely(e) {
   let t = [],
     r = e;
-  for (let o = Io(r); r !== o; o = Io(r))
+  for (let o = dirname(r); r !== o; o = dirname(r))
     try {
       let d = await realpath(r);
-      return t.length === 0 ? d : cn(d, ...t.reverse());
+      return t.length === 0 ? d : join(d, ...t.reverse());
     } catch (d) {
       let p = A(d);
       if (p === "ENOENT")
@@ -8488,7 +8476,7 @@ async function resolveRealPathSafely(e) {
         throw new PathTraversalError(`Symlink loop detected in path: "${r}"`);
       else if (p !== "ENOTDIR" && p !== "ENAMETOOLONG")
         throw new Ia(`Cannot verify path containment (${p}): "${r}"`, p);
-      (t.push(r.slice(o.length + $n.length)), (r = o));
+      (t.push(r.slice(o.length + sep.length)), (r = o));
     }
   return e;
 }
@@ -8502,18 +8490,18 @@ async function df(e) {
     return !1;
   }
   if (e === t) return !0;
-  return e.startsWith(t + $n);
+  return e.startsWith(t + sep);
 }
 function isWithinTeamMemoryDir(e) {
-  let t = normalizePathForCompare(Ma(e)),
+  let t = normalizePathForCompare(resolve(e)),
     r = normalizePathForCompare(getTeamMemoryDir());
-  return t + $n === r || t.startsWith(r);
+  return t + sep === r || t.startsWith(r);
 }
 async function resolveTeamMemoryKey(e) {
   assertSafePathKey(e);
   let t = getTeamMemoryDir(),
-    r = cn(t, e),
-    o = Ma(r);
+    r = join(t, e),
+    o = resolve(r);
   if (!o.startsWith(t))
     throw new PathTraversalError(`Key escapes team memory directory: "${e}"`);
   let d = await resolveRealPathSafely(o);
@@ -8599,7 +8587,6 @@ ${r}`,
 
 `);
 }
-import { join as xr, sep as pf } from "path";
 function Fa(e, t = !1) {
   let r = getAutoMemPath(),
     o = getTeamMemoryDir(),
@@ -8664,10 +8651,10 @@ function Fa(e, t = !1) {
 }
 function Wa(e, t, r, o = !1) {
   let d = getTeamMemoryDir(),
-    p = (le) => (xr(d, le) + pf).normalize("NFC"),
+    p = (le) => (join(d, le) + sep).normalize("NFC"),
     _ = (le) => {
       let ge = getMemoryDirPrefix(le.promptIndex);
-      return ge ? xr(d, le.mount, ge).normalize("NFC") : p(le.mount);
+      return ge ? join(d, le.mount, ge).normalize("NFC") : p(le.mount);
     },
     L = e.map(_),
     x = t.map((le) => p(le.mount)),
@@ -8694,7 +8681,7 @@ These directories already exist \u2014 write to them directly with the Write too
     J = k
       ? `\`${E}\``
       : `the appropriate team directory (${L.map((le) => `\`${le}\``).join(" or ")})`,
-    te = (le) => xr(d, le.mount, V(le)).normalize("NFC"),
+    te = (le) => join(d, le.mount, V(le)).normalize("NFC"),
     ie = k
       ? te(e[0])
       : `the index file in that same directory (${e.map((le) => `\`${te(le)}\``).join(", ")})`,
@@ -8729,7 +8716,7 @@ These directories already exist \u2014 write to them directly with the Write too
       Xe = ge.find((Vn) => beforeFirst(Vn, "/") === "channel") ?? ge[0];
     if (Xe === void 0) continue;
     Se.push(
-      xr(d, le.mount, ...Xe.split("/"), "<skill-name>", "SKILL.md").normalize(
+      join(d, le.mount, ...Xe.split("/"), "<skill-name>", "SKILL.md").normalize(
         "NFC",
       ),
     );
@@ -9128,7 +9115,7 @@ ${_}`;
         : [];
     for (let le of Ae)
       await Je(
-        No(xe ?? re, le.mount, le.mode === "rw" ? getMemoryDirPrefix(le.promptIndex) : ""),
+        join(xe ?? re, le.mount, le.mode === "rw" ? getMemoryDirPrefix(le.promptIndex) : ""),
       );
     if (
       (Qe(re, {
@@ -9167,10 +9154,10 @@ ${_}`;
         }),
         Ae = x.filter((ge) => ge.scope === "team" && ge.mode === "rw"),
         le = x.filter((ge) => ge.scope === "team" && ge.mode === "ro");
-      for (let ge of [...Ae, ...le]) await Je(No(Se, ge.mount));
+      for (let ge of [...Ae, ...le]) await Je(join(Se, ge.mount));
       for (let ge of Ae) {
         let Xe = getMemoryDirPrefix(ge.promptIndex);
-        if (Xe) await Je(No(Se, ge.mount, Xe));
+        if (Xe) await Je(join(Se, ge.mount, Xe));
       }
       if (
         (Qe(re, { memory_type: S("auto") }),
@@ -9267,43 +9254,43 @@ function ja(e) {
 function _f(e) {
   if (process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR)
     return (
-      ut(
+      join(
         process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR,
         "projects",
         sanitizePath(findCanonicalGitRoot(sn()) ?? sn()),
         "agent-memory-local",
         e,
-      ) + ct
+      ) + sep
     );
-  return ut(getCwd(), ".claude", "agent-memory-local", e) + ct;
+  return join(getCwd(), ".claude", "agent-memory-local", e) + sep;
 }
 function getAgentMemoryDir(e, t) {
   let r = ja(e);
   switch (t) {
     case "project":
-      return ut(getCwd(), ".claude", "agent-memory", r) + ct;
+      return join(getCwd(), ".claude", "agent-memory", r) + sep;
     case "local":
       return _f(r);
     case "user":
-      return ut(getMemoryBaseDir(), "agent-memory", r) + ct;
+      return join(getMemoryBaseDir(), "agent-memory", r) + sep;
   }
 }
 function wf(e) {
-  let t = ut(getMemoryBaseDir(), "agent-memory") + ct;
+  let t = join(getMemoryBaseDir(), "agent-memory") + sep;
   if (e.startsWith(t)) return t;
-  let r = ut(getCwd(), ".claude", "agent-memory") + ct;
+  let r = join(getCwd(), ".claude", "agent-memory") + sep;
   if (e.startsWith(r)) return r;
   if (process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR) {
-    let d = ut(process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR, "projects") + ct;
-    if (e.includes(ct + "agent-memory-local" + ct) && e.startsWith(d)) return d;
+    let d = join(process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR, "projects") + sep;
+    if (e.includes(sep + "agent-memory-local" + sep) && e.startsWith(d)) return d;
     return null;
   }
-  let o = ut(getCwd(), ".claude", "agent-memory-local") + ct;
+  let o = join(getCwd(), ".claude", "agent-memory-local") + sep;
   if (e.startsWith(o)) return o;
   return null;
 }
 function isAgentMemoryPath(e) {
-  let t = bf(e),
+  let t = normalize(e),
     r = wf(t);
   return r !== null && !hasReservedPathSegment(t, r);
 }
@@ -9337,7 +9324,7 @@ function buildAgentMemoryPrompt(e, t, r, o) {
   );
 }
 function Lf(e, t) {
-  if (t !== "user" || ut(getMemoryBaseDir(), "agent-memory") !== ut(getClaudeConfigDir(), "agent-memory"))
+  if (t !== "user" || join(getMemoryBaseDir(), "agent-memory") !== join(getClaudeConfigDir(), "agent-memory"))
     return;
   return STORAGE_KEYS.agentMemory(ja(e), [MEMORY_INDEX_FILE_NAME]);
 }
@@ -9352,13 +9339,6 @@ async function readPrimedAgentMemory(e, t) {
   return d !== void 0 && d.found ? d.value : "";
 }
 import { mkdir, writeFile } from "fs/promises";
-import {
-  basename as vf,
-  dirname as kf,
-  join as Ef,
-  resolve as Rf,
-  sep as Tf,
-} from "path";
 var MAX_WORKFLOW_SCRIPT_BYTES = 524288,
   MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES = 1048576;
 function slugifyWorkflowName(e) {
@@ -9370,14 +9350,14 @@ function slugifyWorkflowName(e) {
   );
 }
 function vr() {
-  return Ef(getProjectDir(getCwd()), K(), "workflows", "scripts") + Tf;
+  return join(getProjectDir(getCwd()), K(), "workflows", "scripts") + sep;
 }
 function Af(e, t) {
   return `${vr()}${slugifyWorkflowName(e)}-${t}.js`;
 }
 function Cf() {
   let e = getProjectDir(getCwd());
-  return kf(e) === getProjectsDir() ? vf(e) : void 0;
+  return dirname(e) === getProjectsDir() ? basename(e) : void 0;
 }
 function persistWorkflowScript(e, t, r, o) {
   let d = vr(),
@@ -9412,7 +9392,7 @@ function persistWorkflowScript(e, t, r, o) {
   );
 }
 async function readWorkflowScriptFile(e) {
-  let t = Rf(getCwd(), e),
+  let t = resolve(getCwd(), e),
     r = getWorkflowScriptPathError(e, t);
   if (r !== null) return { error: r };
   try {
@@ -9431,11 +9411,7 @@ function getWorkflowScriptPathError(e, t) {
     : null;
 }
 import {
-  basename as Mf,
-  isAbsolute as If,
-  join as dt,
-  relative as Of,
-  sep as Nf,
+  relative,
 } from "path";
 var MANIFEST_FILE_NAME = "manifest.json",
   MARKETPLACES_FILE_NAME = ".marketplaces.json",
@@ -9505,7 +9481,7 @@ function getOrgIdFromBucketId(e) {
 }
 var Wf = ".bucket-";
 function getSyncMarkerPath(e, t) {
-  return dt(e, `${Wf}${t}`);
+  return join(e, `${Wf}${t}`);
 }
 function redactSkillBucketId(e) {
   let t = jo(e);
@@ -9525,9 +9501,9 @@ function Ha(e) {
   return t;
 }
 function Bf(e, t) {
-  let r = dt(t, e),
-    o = Of(t, r);
-  if (!o || If(o) || o === ".." || o.startsWith(`..${Nf}`))
+  let r = join(t, e),
+    o = relative(t, r);
+  if (!o || isAbsolute(o) || o === ".." || o.startsWith(`..${sep}`))
     throw Error("synced item name escapes the sync root");
   return r;
 }
@@ -9573,7 +9549,7 @@ function validateSyncedItemName(e, t) {
 }
 function getSyncedItemPathForGeneration(e, t, r) {
   let o = validateSyncedItemName(e, r);
-  return t <= 1 ? o : dt(r, `${Mf(o)}~g${t}`);
+  return t <= 1 ? o : join(r, `${basename(o)}~g${t}`);
 }
 function resolveSyncedItemPath(e, t) {
   let r = Ha(e),
@@ -9600,13 +9576,13 @@ function za(e) {
     )
   );
 }
-var SYNCED_SKILLS_DIR_PATH = dt("skills", SYNCED_DIR_NAME),
-  SKILLS_TRASH_DIR_PATH = dt("skills", TRASH_DIR_NAME),
-  SKILLS_STAGING_DIR_PATH = dt("skills", STAGING_DIR_NAME),
-  SYNCED_SKILLS_STAGING_DIR_PATH = dt(SYNCED_SKILLS_DIR_PATH, STAGING_DIR_NAME),
-  SYNCED_PLUGINS_DIR_PATH = dt("plugins", SYNCED_DIR_NAME),
-  PLUGINS_TRASH_DIR_PATH = dt("plugins", TRASH_DIR_NAME),
-  SYNCED_PLUGINS_STAGING_DIR_PATH = dt(SYNCED_PLUGINS_DIR_PATH, STAGING_DIR_NAME);
+var SYNCED_SKILLS_DIR_PATH = join("skills", SYNCED_DIR_NAME),
+  SKILLS_TRASH_DIR_PATH = join("skills", TRASH_DIR_NAME),
+  SKILLS_STAGING_DIR_PATH = join("skills", STAGING_DIR_NAME),
+  SYNCED_SKILLS_STAGING_DIR_PATH = join(SYNCED_SKILLS_DIR_PATH, STAGING_DIR_NAME),
+  SYNCED_PLUGINS_DIR_PATH = join("plugins", SYNCED_DIR_NAME),
+  PLUGINS_TRASH_DIR_PATH = join("plugins", TRASH_DIR_NAME),
+  SYNCED_PLUGINS_STAGING_DIR_PATH = join(SYNCED_PLUGINS_DIR_PATH, STAGING_DIR_NAME);
 class Ya {
   availability = () => !1;
   register(e) {
@@ -9696,21 +9672,12 @@ function filterCompilableIgnorePatterns(e, t) {
 function splitNonEmptyLines(e) {
   return e.split(/\r?\n/).filter(Boolean);
 }
-import { open as Hf, opendir } from "fs/promises";
-import { homedir as Vf } from "os";
-import {
-  dirname as qf,
-  isAbsolute as Kf,
-  join as Wn,
-  relative as Ja,
-  resolve as Ho,
-  sep as Pa,
-} from "path";
+import { open, opendir } from "fs/promises";
 var Zf = 32,
   Yo = 4096;
 async function el(e) {
-  let t = Wn(e, ".git", "worktrees"),
-    r = await em(t, Wn(e, ".git"));
+  let t = join(e, ".git", "worktrees"),
+    r = await em(t, join(e, ".git"));
   if (r.length === 0) return [];
   let o = await Fn(e);
   if (o === null) return [];
@@ -9721,7 +9688,7 @@ async function el(e) {
   let _ = zn(p),
     L = await Fn(_),
     x = L === null || L === _ ? [_] : [_, L],
-    k = await Promise.all(r.map((C) => tm(Wn(t, C), Wn(d, C)))),
+    k = await Promise.all(r.map((C) => tm(join(t, C), join(d, C)))),
     E = [];
   for (let C of k) {
     if (C === null || !Xf(C)) continue;
@@ -9752,8 +9719,8 @@ function Bn(e, t) {
     o = r ? normalizePathForComparison(e) : e,
     d = r ? normalizePathForComparison(t) : t;
   if (o === d) return !0;
-  let p = Ja(o, d);
-  return p !== "" && p !== ".." && !p.startsWith(`..${Pa}`) && !Kf(p);
+  let p = relative(o, d);
+  return p !== "" && p !== ".." && !p.startsWith(`..${sep}`) && !isAbsolute(p);
 }
 var Jf = [
   ["Library"],
@@ -9770,9 +9737,9 @@ function isPathInsideSystemDirectory(e, t) {
     d = r ? normalizePathForComparison(e) : e;
   return t.some((p) => {
     if (!Bn(p, e)) return !1;
-    let _ = Ja(r ? normalizePathForComparison(p) : p, d);
+    let _ = relative(r ? normalizePathForComparison(p) : p, d);
     if (_ === "") return !0;
-    let L = _.split(Pa);
+    let L = _.split(sep);
     if (L[0].startsWith(".")) return !0;
     return Jf.some((x) =>
       x.every((k, E) => L[E] !== void 0 && o(L[E]) === o(k)),
@@ -9781,7 +9748,7 @@ function isPathInsideSystemDirectory(e, t) {
 }
 function Pf() {
   try {
-    let e = Vf();
+    let e = homedir();
     return e === "" ? null : e;
   } catch {
     return null;
@@ -9815,11 +9782,11 @@ async function em(e, t) {
   }
 }
 async function tm(e, t) {
-  let r = Wn(e, "gitdir");
+  let r = join(e, "gitdir");
   if (pointerFileIsSuspect(r, e)) return null;
   let o;
   try {
-    let d = await Hf(r, "r");
+    let d = await open(r, "r");
     try {
       let p = Buffer.alloc(Yo),
         { bytesRead: _ } = await d.read(p, 0, Yo, 0);
@@ -9832,12 +9799,11 @@ async function tm(e, t) {
     if (!Kd(d)) logError(d);
     return null;
   }
-  if (li(o) || li(Ho(e, o)) || li(Ho(t, o)) || ac(o, e) || rawPointerPathIsUnsafe(o, e))
+  if (li(o) || li(resolve(e, o)) || li(resolve(t, o)) || ac(o, e) || rawPointerPathIsUnsafe(o, e))
     return null;
   if (e !== t && (ac(o, t) || rawPointerPathIsUnsafe(o, t))) return null;
-  return zn(qf(Ho(t, o)));
+  return zn(dirname(resolve(t, o)));
 }
-import { homedir as nm } from "os";
 var ui = new Set(["program", "list", "pipeline", "redirected_statement"]),
   Ar = new Set([
     "&&",
@@ -12376,7 +12342,7 @@ function Cr(e, t, r) {
     return p;
   }
   if (o === "HOME") {
-    let _ = nm();
+    let _ = homedir();
     if (!r && (_ === "" || nl.test(_))) return Ee(e);
     return _;
   }
@@ -14987,7 +14953,6 @@ function areCommandFlagsSafe(e, t, r, o) {
   }
   return !0;
 }
-import { posix as Ym } from "path";
 function isPermissionRuleCanonical(e) {
   let t = parsePermissionRule(formatPermissionRule(e));
   return t.toolName === e.toolName && t.ruleContent === e.ruleContent;
@@ -15040,7 +15005,7 @@ function Bm(e = {}) {
 }
 function getGitTrackedSettingsSources(e) {
   let t = he(),
-    r = Um.of(B().host),
+    r = gitTrackedSettingsTrackers.of(B().host),
     o = isLocalSettingsGitTracked({ onIndeterminate: "tracked" });
   if (o && checkHasTrustDialogAccepted()) {
     if ((r.markTracked(t), !r.persistIssued(t) && isLocalSettingsGitTrackedInIndex()))
@@ -15050,7 +15015,7 @@ function getGitTrackedSettingsSources(e) {
     ? ["projectSettings", "localSettings"]
     : ["projectSettings"];
 }
-class Cl {
+class GitTrackedSettingsTracker {
   tracked = new Set();
   persisted = new Set();
   isTracked(e) {
@@ -15066,7 +15031,7 @@ class Cl {
     this.persisted.add(e);
   }
 }
-var Um = new j(() => new Cl());
+var gitTrackedSettingsTrackers = new j(() => new GitTrackedSettingsTracker());
 function jm() {
   return getGlobalConfig().projects?.[getWorkspacePersistedTrustKey()]?.localSettingsSeenGitTracked === !0;
 }
@@ -15149,7 +15114,7 @@ function hasRepoSettingsRequiringTrust() {
   let { gateProject: e, gateLocal: t } = getSettingsTrustGates();
   return (e && Al("projectSettings")) || (t && Al("localSettings"));
 }
-class Ml {
+class FirstTimeKeyTracker {
   warned = new Set();
   firstTimeFor(e) {
     if (this.warned.has(e)) return !1;
@@ -15159,12 +15124,12 @@ class Ml {
     this.warned.clear();
   }
 }
-var Il = new j(() => new Ml());
+var firstTimeKeyTrackers = new j(() => new FirstTimeKeyTracker());
 function isFirstTimeForKey(e) {
-  return Il.of(B().host).firstTimeFor(e);
+  return firstTimeKeyTrackers.of(B().host).firstTimeFor(e);
 }
 function Ol(e, t, r) {
-  if (!Il.of(B().host).firstTimeFor(e)) return;
+  if (!firstTimeKeyTrackers.of(B().host).firstTimeFor(e)) return;
   if (
     (logForDebugging(
       `Dropped ${t} project-scoped ${e} entr${t === 1 ? "y" : "ies"} \u2014 workspace not yet trusted`,
@@ -15700,7 +15665,7 @@ function buildDirectoryReadRuleUpdate(e, t = "session") {
   let r = toPosixPath(e);
   if (r === "/") return;
   let o = escapeGlobSpecials(r, { escapeGlobs: !0 }),
-    d = Ym.isAbsolute(r)
+    d = posix.isAbsolute(r)
       ? `/${o}/**`
       : o.startsWith("\\")
         ? `./${o}/**`
@@ -15712,8 +15677,7 @@ function buildDirectoryReadRuleUpdate(e, t = "session") {
     destination: t,
   };
 }
-import { join as Jm, sep as _i } from "path";
-class Nl {
+class PathCacheStore {
   claudeTempDir = void 0;
   childProcessTmpDir = void 0;
   bundledSkillsRoot = void 0;
@@ -15736,9 +15700,9 @@ class Nl {
       this.canonicalHomedirByHome.clear());
   }
 }
-var Qm = new j(() => new Nl());
+var pathCacheStores = new j(() => new PathCacheStore());
 function getPathCacheStore() {
-  return Qm.of(B().host);
+  return pathCacheStores.of(B().host);
 }
 function getResolvedClaudeTempDir() {
   let e = getPathCacheStore();
@@ -15749,7 +15713,7 @@ function getResolvedClaudeTempDir() {
   try {
     o = r.realpathSync(t);
   } catch {}
-  return ((e.claudeTempDir = o + _i), e.claudeTempDir);
+  return ((e.claudeTempDir = o + sep), e.claudeTempDir);
 }
 function getResolvedChildProcessTmpDir() {
   let e = getPathCacheStore();
@@ -15760,13 +15724,13 @@ function getResolvedChildProcessTmpDir() {
   try {
     o = r.realpathSync(t);
   } catch {}
-  return ((e.childProcessTmpDir = o + _i), e.childProcessTmpDir);
+  return ((e.childProcessTmpDir = o + sep), e.childProcessTmpDir);
 }
 function getCurrentProjectTempDir() {
   return getProjectTempDirForPath(he());
 }
 function getProjectTempDirForPath(e) {
-  return Jm(getResolvedClaudeTempDir(), sanitizePath(e)) + _i;
+  return join(getResolvedClaudeTempDir(), sanitizePath(e)) + sep;
 }
 function realpathIfResolvable(e) {
   if (Xo(e) || li(e) || resolveSymlinkAncestrySync(fsSurface, e) !== void 0) return e;
@@ -16356,16 +16320,16 @@ function bp(e) {
   let t = resolvePath(e),
     r = normalizeCaseForComparison(t),
     o = [
-      { dir: resolvePath(Ne(he(), ".claude", "skills")), prefix: "/.claude/skills/" },
-      { dir: resolvePath(Ne(Yn(), ".claude", "skills")), prefix: "~/.claude/skills/" },
+      { dir: resolvePath(join(he(), ".claude", "skills")), prefix: "/.claude/skills/" },
+      { dir: resolvePath(join(homedir(), ".claude", "skills")), prefix: "~/.claude/skills/" },
     ];
   for (let { dir: d, prefix: p } of o) {
     let _ = normalizeCaseForComparison(d);
-    for (let L of [Re, "/"])
+    for (let L of [sep, "/"])
       if (r.startsWith(_ + L.toLowerCase())) {
         let x = t.slice(d.length + L.length),
           k = x.indexOf("/"),
-          E = Re === "\\" ? x.indexOf("\\") : -1,
+          E = sep === "\\" ? x.indexOf("\\") : -1,
           C = k === -1 ? E : E === -1 ? k : Math.min(k, E);
         if (C <= 0) return null;
         let D = x.slice(0, C);
@@ -16381,14 +16345,14 @@ function bp(e) {
   }
   return null;
 }
-var Oe = st.sep;
+var Oe = posix.sep;
 function relativePath(e, t) {
   if (getCurrentPlatform() === "windows") {
     let r = convertWindowsPathToUnix(e),
       o = convertWindowsPathToUnix(t);
-    return st.relative(r, o);
+    return posix.relative(r, o);
   }
-  return st.relative(e, t);
+  return posix.relative(e, t);
 }
 function toPosixPath(e) {
   if (getCurrentPlatform() === "windows") return convertWindowsPathToUnix(e);
@@ -16396,32 +16360,32 @@ function toPosixPath(e) {
 }
 function _p() {
   let e = SETTINGS_SOURCE_ORDER.map((t) => getSettingsFilePathForSource(t)).filter((t) => t !== void 0);
-  if (getCurrentPlatform() === "wsl" && getWslInheritsWindowsSettings()) e.push(Ne(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"));
+  if (getCurrentPlatform() === "wsl" && getWslInheritsWindowsSettings()) e.push(join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"));
   return e;
 }
 function isClaudeSettingsPath(e) {
   let t = resolvePath(e),
     r = normalizeCaseForComparison(t);
   if (
-    r.endsWith(`${Re}.claude${Re}settings.json`) ||
-    r.endsWith(`${Re}.claude${Re}settings.local.json`)
+    r.endsWith(`${sep}.claude${sep}settings.json`) ||
+    r.endsWith(`${sep}.claude${sep}settings.local.json`)
   )
     return !0;
   return _p().some((o) => normalizeCaseForComparison(o) === r);
 }
 function wp(e) {
   if (isClaudeSettingsPath(e)) return !0;
-  let t = Ne(he(), ".claude", "commands"),
-    r = Ne(he(), ".claude", "agents"),
-    o = Ne(he(), ".claude", "skills");
+  let t = join(he(), ".claude", "commands"),
+    r = join(he(), ".claude", "agents"),
+    o = join(he(), ".claude", "skills");
   return pathInWorkingPath(e, t) || pathInWorkingPath(e, r) || pathInWorkingPath(e, o);
 }
 function Ql(e, t) {
   let r = peekPlanSlug();
   if (!r) return !1;
-  let o = ze(e);
-  if (hp(o) !== ze(getPlansDirectory())) return !1;
-  let d = pp(o);
+  let o = normalize(e);
+  if (dirname(o) !== normalize(getPlansDirectory())) return !1;
+  let d = basename(o);
   return (
     d === `${r}.md` ||
     (d === `${r}.workshop.md` && t?.includeWorkshopDoc === !0 && isRegisteredFeatureAvailable()) ||
@@ -16429,13 +16393,13 @@ function Ql(e, t) {
   );
 }
 function Lp(e) {
-  let t = ze(e);
+  let t = normalize(e);
   return t.startsWith(vr()) && t.endsWith(".js");
 }
 function Sp(e, t = getCwd()) {
   let r = ll(t),
-    o = ze(e);
-  return o === r || o.startsWith(r + Re);
+    o = normalize(e);
+  return o === r || o.startsWith(r + sep);
 }
 function isScratchpadEnabled() {
   if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_scratch", !1)) return !0;
@@ -16452,7 +16416,7 @@ function getBundledSkillsRoot() {
   if (e.bundledSkillsRoot !== void 0) return e.bundledSkillsRoot;
   let t = randomBytes(16).toString("hex");
   return (
-    (e.bundledSkillsRoot = Ne(
+    (e.bundledSkillsRoot = join(
       getResolvedClaudeTempDir(),
       "bundled-skills",
       {
@@ -16479,7 +16443,7 @@ function getScratchpadDir(e = K()) {
   if (r !== void 0) return r;
   let o;
   try {
-    o = Ne(getCurrentProjectTempDir(), e, "scratchpad");
+    o = join(getCurrentProjectTempDir(), e, "scratchpad");
   } catch {
     o = null;
   }
@@ -16495,9 +16459,9 @@ function Jl(e) {
   if (!isScratchpadEnabled()) return null;
   let t = getScratchpadDir();
   if (t === null) return null;
-  let r = normalizeCaseForComparison(ze(e)),
+  let r = normalizeCaseForComparison(normalize(e)),
     o = normalizeCaseForComparison(t);
-  return { comparePath: r, compareDir: o, prefix: o + Re };
+  return { comparePath: r, compareDir: o, prefix: o + sep };
 }
 function isScratchpadPath(e) {
   let t = Jl(e);
@@ -16516,50 +16480,50 @@ function isScratchpadDisplayPath(e) {
   );
 }
 function isWorkshopDisplayPath(e) {
-  let t = ze(Zl(e) ? e : yp(getCwd(), e));
+  let t = normalize(isAbsolute(e) ? e : resolve(getCwd(), e));
   return isWorkshopFile(e) && !hasReservedPathSegment(t, "", DANGEROUS_FILES_LC);
 }
 function xp(e) {
-  let t = [xi(Ne(e, "seed-admin"))];
+  let t = [xi(join(e, "seed-admin"))];
   try {
     let r = getFsSurface().realpathSync(e);
-    t.push(xi(Ne(r, "seed-admin")));
+    t.push(xi(join(r, "seed-admin")));
   } catch {}
   return dedupe(t);
 }
 function xi(e) {
-  return ze(e).split(Re).map(normalizePathSegment).join(Re);
+  return normalize(e).split(sep).map(normalizePathSegment).join(sep);
 }
 function ki(e) {
   let t = xi(e);
-  return xp(getClaudeConfigDir()).some((r) => t === r || t.startsWith(r + Re));
+  return xp(getClaudeConfigDir()).some((r) => t === r || t.startsWith(r + sep));
 }
 function Pl(e) {
-  let t = normalizeCaseForComparison(ze(e)),
-    r = normalizeCaseForComparison(Ne(getClaudeConfigDir(), "jobs") + Re);
+  let t = normalizeCaseForComparison(normalize(e)),
+    r = normalizeCaseForComparison(join(getClaudeConfigDir(), "jobs") + sep);
   if (!t.startsWith(r)) return !1;
-  let d = t.slice(r.length).split(Re);
+  let d = t.slice(r.length).split(sep);
   return d.length === 2 && d[1].startsWith("adopt.json");
 }
 function Ri(e) {
   let t = a.CLAUDE_CODE_HOST_CREDS_FILE;
   if (!t) return !1;
   let o = t.replace(getCurrentPlatform() === "windows" ? /[\\/]+$/ : /\/+$/, "") || t,
-    d = normalizeCaseForComparison(ze(e));
-  return expandPathAliases(o).some((p) => normalizeCaseForComparison(ze(p)) === d);
+    d = normalizeCaseForComparison(normalize(e));
+  return expandPathAliases(o).some((p) => normalizeCaseForComparison(normalize(p)) === d);
 }
 function Ti(e) {
   let t = getProfileStoreDenyPaths();
   if (t === null) return !1;
-  let r = normalizeCaseForComparison(ze(e));
+  let r = normalizeCaseForComparison(normalize(e));
   if (
     t.dirs.some((o) => {
-      let d = normalizeCaseForComparison(ze(o));
-      return r === d || r.startsWith(d + Re);
+      let d = normalizeCaseForComparison(normalize(o));
+      return r === d || r.startsWith(d + sep);
     })
   )
     return !0;
-  return t.files.some((o) => expandPathAliases(o).some((d) => normalizeCaseForComparison(ze(d)) === r));
+  return t.files.some((o) => expandPathAliases(o).some((d) => normalizeCaseForComparison(normalize(d)) === r));
 }
 var Ai = {
     behavior: "deny",
@@ -16617,10 +16581,10 @@ function rc(e) {
   if (a.CLAUDE_CODE_SESSION_KIND !== "bg") return !1;
   let t = process.env.CLAUDE_JOB_DIR;
   if (!t) return !1;
-  let r = Ne(getClaudeConfigDir(), "jobs") + Re,
-    o = ze(t);
+  let r = join(getClaudeConfigDir(), "jobs") + sep,
+    o = normalize(t);
   if (!o.startsWith(r)) return !1;
-  let d = o + Re + "tmp" + Re;
+  let d = o + sep + "tmp" + sep;
   if (!normalizeCaseForComparison(e).startsWith(normalizeCaseForComparison(d))) return !1;
   return !hasReservedPathSegment(e, d, DANGEROUS_FILES_LC);
 }
@@ -16643,7 +16607,7 @@ function isUntrustedAutomountPath(e, t) {
 function oc(e) {
   let t = 0;
   for (let r of getResolvedWorkingDirPaths(he())) {
-    let o = resolvePath(r).split(Re);
+    let o = resolvePath(r).split(sep);
     if (o.length > 1 && o.at(-1) === "") o.pop();
     let d = 0;
     while (
@@ -16668,7 +16632,7 @@ function oc(e) {
   return t;
 }
 function Hl(e) {
-  let t = resolvePath(e).split(Re),
+  let t = resolvePath(e).split(sep),
     r = oc(t),
     o = 0;
   for (let d = r; d < t.length; d++) if (normalizePathSegment(t[d]) === ".claude") o++;
@@ -16676,14 +16640,14 @@ function Hl(e) {
 }
 function vp(e, t) {
   let r = t.startsWith("~/.claude/")
-    ? Yn()
+    ? homedir()
     : t.startsWith("/.claude/")
       ? he()
       : null;
   if (r === null) return !1;
-  let o = resolvePath(Ne(r, ".claude")).split(Re);
+  let o = resolvePath(join(r, ".claude")).split(sep);
   if (o.length > 1 && o.at(-1) === "") o.pop();
-  let d = resolvePath(e).split(Re);
+  let d = resolvePath(e).split(sep);
   for (let p = 0; p < o.length; p++)
     if (
       d[p] !== o[p] &&
@@ -16700,7 +16664,7 @@ function vp(e, t) {
 }
 function kp(e, t, r) {
   let o = resolvePath(e),
-    d = o.split(Re),
+    d = o.split(sep),
     p = d.at(-1);
   if (
     !Dr(o) &&
@@ -16914,7 +16878,7 @@ function pathInWorkingPath(
     D = r ? relativePath(normalizeCaseForComparison(C), normalizeCaseForComparison(E)) : relativePath(C, E);
   if (D === "") return !0;
   if (containsPathTraversal(D)) return !1;
-  return !st.isAbsolute(D);
+  return !posix.isAbsolute(D);
 }
 function rootPathForSource(e) {
   switch (e) {
@@ -16934,10 +16898,10 @@ function rootPathForSource(e) {
   }
 }
 function Ur(e) {
-  return st.join(Oe, e);
+  return posix.join(Oe, e);
 }
 function Yl({ patternRoot: e, pattern: t, rootPath: r }) {
-  let o = st.join(e, t),
+  let o = posix.join(e, t),
     d = normalizeCaseForComparison(e),
     p = normalizeCaseForComparison(r);
   if (d === p) return [Ur(t)];
@@ -16945,13 +16909,13 @@ function Yl({ patternRoot: e, pattern: t, rootPath: r }) {
     let _ = o.slice(r.length);
     return [Ur(_)];
   } else {
-    let _ = st.relative(p, d);
+    let _ = posix.relative(p, d);
     if (!_ || _.startsWith(`..${Oe}`) || _ === "..") {
-      let L = st.relative(d, p);
+      let L = posix.relative(d, p);
       if (!L || L === ".." || L.startsWith(`..${Oe}`)) return [];
       return Rp(t, L.split(Oe)).map(Ur);
     } else {
-      let L = st.join(_, t);
+      let L = posix.join(_, t);
       return [Ur(L)];
     }
   }
@@ -16989,7 +16953,7 @@ function Rp(e, t) {
 }
 function jr(e) {
   if (getCurrentPlatform() !== "windows") return e;
-  let t = st.normalize(toPosixPath(e));
+  let t = posix.normalize(toPosixPath(e));
   return t.length > 1 && t.endsWith("/") ? t.slice(0, -1) : t;
 }
 function normalizePatternsToPath(e, t) {
@@ -17028,7 +16992,7 @@ function Vl(e, t, r) {
     p = t.split(Oe).filter((E) => E !== "" && E !== "."),
     _ = p.findIndex((E) => /[*?[{]/.test(E)),
     L = _ === -1 ? Math.max(0, p.length - 1) : _,
-    x = st.join(e, ...p.slice(0, L)),
+    x = posix.join(e, ...p.slice(0, L)),
     k = r.get(x);
   if (k === void 0)
     ((k = jr(resolvePathInfo(getFsSurface(), getCurrentPlatform() === "windows" ? convertUnixPathToWindows(x) : x).resolvedPath)),
@@ -17067,7 +17031,7 @@ function patternWithRootFor(e, t) {
       root: `${o}:\\`,
     };
   } else if (e.startsWith(`~${Oe}`))
-    return { relativePattern: e.slice(1), root: Yn().normalize("NFC") };
+    return { relativePattern: e.slice(1), root: homedir().normalize("NFC") };
   else if (e.startsWith(Oe)) return { relativePattern: e, root: t };
   let r = e;
   if (e.startsWith(`.${Oe}`)) r = e.slice(2);
@@ -17127,7 +17091,7 @@ function Yr(e, t, r) {
       o !== null
         ? {
             rules: o,
-            key: [t, r, getCurrentPlatform(), Yn(), getClaudeConfigDir(), q1() ?? "", he()].join("\x00"),
+            key: [t, r, getCurrentPlatform(), homedir(), getClaudeConfigDir(), q1() ?? "", he()].join("\x00"),
           }
         : null;
   if (d !== null) {
@@ -17194,7 +17158,7 @@ function denyFoldVariantPaths(e, t, r = () => [], o = !1) {
 }
 function denyRuleMatchingAnywhere(e, t, r) {
   let o = resolvePath(e);
-  if (Zl(e) || e.startsWith("~")) return matchingRuleForInput(o, t, r, "deny");
+  if (isAbsolute(e) || e.startsWith("~")) return matchingRuleForInput(o, t, r, "deny");
   let d = e.split(/[\\/]+/).filter((x) => x !== "" && x !== ".");
   while (d[0] === "..") d.shift();
   if (d.length === 0) return null;
@@ -17301,7 +17265,7 @@ function Cp() {
 }
 function normalizeTrustedSymlink(e) {
   for (let [t, r] of Cp())
-    if (e === t || e.startsWith(t + Re)) return r + e.slice(t.length);
+    if (e === t || e.startsWith(t + sep)) return r + e.slice(t.length);
   return e;
 }
 function Ip(e) {
@@ -17441,12 +17405,12 @@ function readAutoAllowedForMutation(e, t, r, o) {
 function $p() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_playful_lobster", !0);
 }
-class lc {
+class PlayfulLobsterLoggedPaths {
   loggedPaths = new Set();
 }
-var Fp = new j(() => new lc());
+var playfulLobsterLoggedPaths = new j(() => new PlayfulLobsterLoggedPaths());
 function cc() {
-  return Fp.of(B().host).loggedPaths;
+  return playfulLobsterLoggedPaths.of(B().host).loggedPaths;
 }
 var Wp = 256;
 function uc(e) {
@@ -17755,10 +17719,10 @@ function generateSuggestions(e, t, r, o) {
     : [];
 }
 function normalizeInternalPathRoot(e) {
-  for (let t of [getCwd(), he(), sn(), getClaudeConfigDir(), getMemoryBaseDir(), Yn()])
+  for (let t of [getCwd(), he(), sn(), getClaudeConfigDir(), getMemoryBaseDir(), homedir()])
     for (let r of getResolvedWorkingDirPaths(t)) {
       if (r === t) continue;
-      if (e === r || e.startsWith(r + Re)) return t + e.slice(r.length);
+      if (e === r || e.startsWith(r + sep)) return t + e.slice(r.length);
     }
   return normalizeTrustedSymlink(e);
 }
@@ -17790,7 +17754,7 @@ function checkEditableInternalPath(e, t, r, o) {
     if (r.some(Ti)) return Ai;
     return dc(r, (p, _) => checkEditableInternalPath(p, _, void 0, o), t);
   }
-  let d = ze(e);
+  let d = normalize(e);
   if (Ql(d, { includeWorkshopDoc: o?.permissionMode === "plan" }))
     return De(t, "Plan files for current session are allowed for writing");
   if (!o?.restricted && Lp(d))
@@ -17812,7 +17776,7 @@ function checkEditableInternalPath(e, t, r, o) {
     return De(t, "Agent memory files are allowed for writing");
   if (isAutoMemPath(d) && AS()) return ec;
   if (!o?.restricted && !hasAutoMemPathOverride() && d.endsWith(".md") && isAutoMemPathSafeForCarveout(d)) return De(t, AUTO_MEM_WRITE_ALLOW_REASON);
-  if (!o?.restricted && d === Ne(he(), ".claude", "launch.json"))
+  if (!o?.restricted && d === join(he(), ".claude", "launch.json"))
     return De(t, "Preview launch config is allowed for writing");
   if (Pl(d)) return tc;
   if (ki(d)) return Mi;
@@ -17822,7 +17786,7 @@ function checkEditableInternalPath(e, t, r, o) {
 }
 function checkReadableInternalPath(e, t, r, o) {
   if (r && r.length > 0) return dc(r, (F, V) => checkReadableInternalPath(F, V, void 0, o), t);
-  let d = ze(e);
+  let d = normalize(e);
   if (isAutoMemPath(d) && AS())
     return {
       behavior: "deny",
@@ -17839,7 +17803,7 @@ function checkReadableInternalPath(e, t, r, o) {
   if (Ql(d, { includeWorkshopDoc: !0 }))
     return De(t, "Plan files for current session are allowed for reading");
   let p = getCurrentToolResultsDir(),
-    _ = p.endsWith(Re) ? p : p + Re;
+    _ = p.endsWith(sep) ? p : p + sep;
   if (d === p || d.startsWith(_))
     return De(t, "Tool result files are allowed for reading");
   if (isScratchpadPath(d))
@@ -17860,22 +17824,22 @@ function checkReadableInternalPath(e, t, r, o) {
   if (!k && isAgentMemoryPath(d)) return De(t, "Agent memory files are allowed for reading");
   if (!x && isAutoMemPathSafeForCarveout(d) && !(o?.blockOutsideReads && isAutoMemPathFromRepoSettings()))
     return De(t, "auto memory files are allowed for reading");
-  let E = Ne(getClaudeConfigDir(), "tasks") + Re;
+  let E = join(getClaudeConfigDir(), "tasks") + sep;
   if (!k && (d === E.slice(0, -1) || d.startsWith(E)))
     return De(t, "Task files are allowed for reading");
-  let C = Ne(getClaudeConfigDir(), "teams") + Re;
+  let C = join(getClaudeConfigDir(), "teams") + sep;
   if (!k && (d === C.slice(0, -1) || d.startsWith(C)))
     return De(t, "Team files are allowed for reading");
   if (o?.readBlockFence && !o.restricted) {
-    if (d === Ne(getClaudeConfigDir(), "CLAUDE.md"))
+    if (d === join(getClaudeConfigDir(), "CLAUDE.md"))
       return De(t, "The user memory file is allowed for reading");
     for (let F of ["skills", "plugins", "rules", "agents", "commands"]) {
-      let V = Ne(getClaudeConfigDir(), F) + Re;
+      let V = join(getClaudeConfigDir(), F) + sep;
       if (d === V.slice(0, -1) || d.startsWith(V))
         return De(t, `User ${F} files are allowed for reading`);
     }
   }
-  let D = getBundledSkillsRoot() + Re;
+  let D = getBundledSkillsRoot() + sep;
   if (!o?.remoteSurface && d.startsWith(D))
     return De(t, "Bundled skill reference files are allowed for reading");
   return { behavior: "passthrough", message: "" };
@@ -17907,9 +17871,9 @@ function Up() {
       } catch {}
     },
     d = resolvePath(getClaudeConfigDir());
-  o(Ne(d, "skills"));
+  o(join(d, "skills"));
   try {
-    o(Ne(t.realpathSync(d), "skills"));
+    o(join(t.realpathSync(d), "skills"));
   } catch {}
   return (
     (e.userSkillsBaseSpellingsFolded = [...r]),

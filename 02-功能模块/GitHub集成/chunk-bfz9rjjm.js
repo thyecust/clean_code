@@ -7,13 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未归类/host-claim-registry.js";
-import { uee, Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { useAppStateSelector } from "../../01-核心基础设施/核心工具-未归类/app-state-context.js";
 import { formatPrUrlWithTemplate } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";

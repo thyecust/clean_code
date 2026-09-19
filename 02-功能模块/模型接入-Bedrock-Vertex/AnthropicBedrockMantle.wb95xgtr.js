@@ -22,7 +22,7 @@ import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操�
 var j = toESM(fetchHttpHandlerModule(), 1),
   K = toESM(nu(), 1),
   D = toESM(lhe(), 1);
-import le from "assert";
+import assert from "assert";
 var v = (e) => {
   if (e instanceof Error) return e;
   if (typeof e === "object" && e !== null) {
@@ -60,7 +60,7 @@ var de = (e) =>
         );
       }),
   F = async (e, t) => {
-    le(e.method, "Expected request method property to be set");
+    assert(e.method, "Expected request method property to be set");
     let r;
     if (t.awsAccessKey && t.awsSecretKey)
       r = {
@@ -611,7 +611,6 @@ function Be(e) {
 var re = toESM(fetchHttpHandlerModule(), 1),
   oe = toESM(nu(), 1),
   ne = toESM(lhe(), 1);
-import He from "assert";
 var $e = (e, t) =>
     import("../../01-核心基础设施/核心工具-未归类/fromIni.7gtjb5bg.js")
       .then(({ fromNodeProviderChain: r }) =>
@@ -632,7 +631,7 @@ var $e = (e, t) =>
         );
       }),
   se = async (e, t) => {
-    He(e.method, "Expected request method property to be set");
+    assert(e.method, "Expected request method property to be set");
     let r;
     if (t.awsAccessKey && t.awsSecretAccessKey)
       r = {

@@ -160,7 +160,7 @@ function finalizePermissionPromptToolResult(t, e, r, o, l = e, d = !1) {
       turnAbortControllerOf(o.abortController).abort());
   return { ...t, decisionReason: p, decideLocation: "ask-path" };
 }
-import { randomUUID as M } from "crypto";
+import { randomUUID } from "crypto";
 var _e = "tengu_cinder_swift";
 function j() {
   return getFeatureValue_CACHED_MAY_BE_STALE(_e, "off") === "interrupt";
@@ -185,7 +185,6 @@ function x(t, e, r) {
   );
   return (o.unref(), () => clearTimeout(o));
 }
-import { randomUUID as Re } from "crypto";
 function B(t, e) {
   try {
     return t.getToolUseSummary?.(e) ?? t.getActivityDescription?.(e) ?? "";
@@ -281,7 +280,7 @@ function re(t) {
         y.abort();
       };
     R.addEventListener("abort", I, { once: !0 });
-    let U = Re(),
+    let U = randomUUID(),
       W = getForegroundSubagentId(o.agentContext),
       J,
       D;
@@ -1242,7 +1241,7 @@ class StructuredIO {
     t,
     e,
     r,
-    { requestId: o = M(), forwarded: l = !1, deviceHook: d = !1 } = {},
+    { requestId: o = randomUUID(), forwarded: l = !1, deviceHook: d = !1 } = {},
   ) {
     let p = { type: "control_request", request_id: o, request: t },
       f = !l && isHumanInputRequest(p);
@@ -1302,7 +1301,7 @@ class StructuredIO {
       decision_reason_type: l?.type,
       decision_reason: getDecisionReasonText(l),
       message: o.message,
-      uuid: M(),
+      uuid: randomUUID(),
       session_id: K(),
     });
   }
@@ -1369,7 +1368,7 @@ class StructuredIO {
     };
   }
   sendDeviceHookCallback(t) {
-    let e = M(),
+    let e = randomUUID(),
       r = this.trackDeviceRequest(e, "hook", (p) => ue(p) !== null),
       o = new AbortController(),
       l = t.signal ? AbortSignal.any([t.signal, o.signal]) : o.signal,
@@ -1473,7 +1472,7 @@ class StructuredIO {
     return r;
   }
   sendServedCallRequest(t) {
-    let e = M();
+    let e = randomUUID();
     if (this.inputClosed) {
       let p = Promise.reject(new zi("Stream closed"));
       return (
@@ -1564,7 +1563,7 @@ class StructuredIO {
       if (r?.signal?.aborted) return { behavior: "cancelled" };
       return getNeverResolvingPromise();
     }
-    let o = M(),
+    let o = randomUUID(),
       l = buildPendingActionDetail(t, e, o, r?.toolUseId);
     (this.publishedPendingActionDetails.set(o, l),
       this.sessionState.notifyStateChanged("requires_action", l),
@@ -1656,7 +1655,7 @@ class StructuredIO {
                 display_name: formatToolDisplayName(SANDBOX_NETWORK_ACCESS_TOOL_NAME),
                 input: { host: d },
                 permission_suggestions: [p],
-                tool_use_id: M(),
+                tool_use_id: randomUUID(),
                 description: `Allow network connection to ${d}?`,
               },
               permissionResultSchema(),

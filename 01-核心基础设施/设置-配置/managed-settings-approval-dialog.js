@@ -23,7 +23,7 @@ import { ConfirmPrompt } from "../UI组件-TUI/confirm-prompt.js";
 import { PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
 import { InputGuide } from "../UI组件-TUI/input-guide.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();

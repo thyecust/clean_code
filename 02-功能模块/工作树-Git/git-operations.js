@@ -23,13 +23,9 @@ import { spawn } from "child_process";
 import {
   lstat,
   mkdir,
-  open as Ft,
-  readdir,
-  readFile,
   realpath,
-  rm as Be,
+  rm,
   rmdir,
-  stat as Bt,
   unlink,
   writeFile,
 } from "fs/promises";
@@ -37,9 +33,8 @@ import {
   basename,
   dirname,
   isAbsolute,
-  join as G,
-  resolve,
-  sep as Ye,
+  join,
+  sep,
 } from "path";
 var fe = 50;
 function Re(e) {
@@ -337,7 +332,7 @@ async function mt(e, t) {
     return (
       await p(e, e.repoPath, [
         "--git-dir",
-        G(e.repoPath, ".git"),
+        join(e.repoPath, ".git"),
         "remote",
         "set-url",
         "origin",
@@ -345,7 +340,7 @@ async function mt(e, t) {
       ]),
       await p(e, e.repoPath, [
         "--git-dir",
-        G(e.repoPath, ".git"),
+        join(e.repoPath, ".git"),
         "config",
         "--unset-all",
         "remote.origin.pushurl",
@@ -374,7 +369,7 @@ async function mt(e, t) {
 async function $e(e) {
   await p(e, e.repoPath, [
     "--git-dir",
-    G(e.repoPath, ".git"),
+    join(e.repoPath, ".git"),
     "config",
     "--replace-all",
     "remote.origin.fetch",
@@ -642,7 +637,7 @@ async function _t(e, { base: t, target: n }) {
         e.onDebug(`[byoc:git] Standby stray clean-up: refusing path '${g}'`);
         continue;
       }
-      let d = G(h, g);
+      let d = join(h, g);
       try {
         if ((await realpath(dirname(d))) !== dirname(d)) {
           e.onDebug(
@@ -659,7 +654,7 @@ async function _t(e, { base: t, target: n }) {
       }
     }
     for (let g of [...m].sort((d, _) => _.length - d.length))
-      for (let d = g; d !== h && d.startsWith(h + Ye); d = dirname(d))
+      for (let d = g; d !== h && d.startsWith(h + sep); d = dirname(d))
         try {
           await rmdir(d);
         } catch {
@@ -1196,12 +1191,12 @@ function resolveCanonicalRepoPath(e, t) {
   if (t.type === "test-file") {
     let r = basename(t.repo);
     if (!r || r === "." || r === "..") return "";
-    return G(e, r);
+    return join(e, r);
   }
   let n = t.repo.split("/").filter((r) => r.length > 0);
   if (n.length === 0) return "";
   for (let r of n) if (r === "." || r === "..") return "";
-  return G(e, ...n);
+  return join(e, ...n);
 }
 function repoSlugToDirName(e) {
   let t = e.repo.split("/").filter((n) => n.length > 0);
@@ -1227,7 +1222,7 @@ async function addSessionWorktree(e) {
     w;
   try {
     w = (
-      await p(u, n, ["--git-dir", G(n, ".git"), "rev-parse", "HEAD"])
+      await p(u, n, ["--git-dir", join(n, ".git"), "rev-parse", "HEAD"])
     ).trim();
   } catch (h) {
     if (s?.aborted) throw h;
@@ -1235,7 +1230,7 @@ async function addSessionWorktree(e) {
   if (w === c) {
     let h = (await p(u, n, ["rev-parse", "--absolute-git-dir"])).trim();
     (await writeFile(
-      G(h, "FETCH_HEAD"),
+      join(h, "FETCH_HEAD"),
       `${c}
 `,
     ).catch(() => {}),
@@ -1250,7 +1245,7 @@ async function addSessionWorktree(e) {
       : `[byoc:git] Clearing ${n} before worktree add`,
   ),
     await raceWithTimeout(
-      Be(n, { recursive: !0, force: !0 }),
+      rm(n, { recursive: !0, force: !0 }),
       GIT_WORKTREE_TIMEOUT_MS,
       `[runner:stuck] rm ${n} (check NFS/CSI mount health)`,
     ).catch((h) => {
@@ -1262,7 +1257,7 @@ async function addSessionWorktree(e) {
     await p(u, t, ["worktree", "add", "--detach", n, c]));
   let T = (await p(u, n, ["rev-parse", "--absolute-git-dir"])).trim();
   (await writeFile(
-    G(T, "FETCH_HEAD"),
+    join(T, "FETCH_HEAD"),
     `${c}
 `,
   ),

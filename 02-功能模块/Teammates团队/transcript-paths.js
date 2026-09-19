@@ -14,14 +14,14 @@ import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/ch
 import { getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { readdir } from "fs/promises";
-import { basename, dirname, join as o } from "path";
+import { basename, dirname, join } from "path";
 function getProjectsDir() {
-  return o(getClaudeConfigDir(), "projects");
+  return join(getClaudeConfigDir(), "projects");
 }
 function getProjectKeyFromDir(t) {
   return dirname(t) === getProjectsDir() ? basename(t) : void 0;
 }
-class c {
+class TranscriptPathsState {
   projectDirCache = new Map();
   agentTranscriptSubdirs = new Map();
   cacheProjectDir(t, e) {
@@ -37,32 +37,32 @@ class c {
     this.agentTranscriptSubdirs.delete(t);
   }
 }
-var g = new j(() => new c());
+var transcriptPathsState = new j(() => new TranscriptPathsState());
 function getProjectDir(t) {
-  let e = g.of(B().host),
+  let e = transcriptPathsState.of(B().host),
     n = e.projectDirCache.get(t);
   if (n !== void 0) return n;
-  let r = o(getProjectsDir(), getProjectKey(t));
+  let r = join(getProjectsDir(), getProjectKey(t));
   return (e.cacheProjectDir(t, r), r);
 }
 function getSessionTranscriptPath() {
   let t = fy() ?? getProjectDir(he());
-  return o(t, `${K()}.jsonl`);
+  return join(t, `${K()}.jsonl`);
 }
 function setAgentTranscriptSubdir(t, e) {
-  g.of(B().host).setAgentTranscriptSubdir(t, e);
+  transcriptPathsState.of(B().host).setAgentTranscriptSubdir(t, e);
 }
 function clearAgentTranscriptSubdir(t) {
-  g.of(B().host).clearAgentTranscriptSubdir(t);
+  transcriptPathsState.of(B().host).clearAgentTranscriptSubdir(t);
 }
 function getSessionSubagentsDir() {
   let t = fy() ?? getProjectDir(he());
-  return o(t, K(), "subagents");
+  return join(t, K(), "subagents");
 }
 function getAgentTranscriptPath(t) {
-  let e = g.of(B().host).agentTranscriptSubdirs.get(t),
-    n = e ? o(getSessionSubagentsDir(), e) : getSessionSubagentsDir();
-  return o(n, `agent-${t}.jsonl`);
+  let e = transcriptPathsState.of(B().host).agentTranscriptSubdirs.get(t),
+    n = e ? join(getSessionSubagentsDir(), e) : getSessionSubagentsDir();
+  return join(n, `agent-${t}.jsonl`);
 }
 async function listAgentIds(t) {
   let e = fy() ?? getProjectDir(he()),

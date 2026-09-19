@@ -164,11 +164,11 @@ import {
   basename,
   dirname,
   isAbsolute,
-  join as u,
+  join,
   parse,
   relative,
   resolve,
-  sep as H,
+  sep,
 } from "path";
 function parseAccountOnHoldApiError(e) {
   if (
@@ -186,7 +186,7 @@ function isNoRefreshAvailableError(e) {
   );
 }
 var me = ["ANTHROPIC_FEDERATION_RULE_ID", "ANTHROPIC_ORGANIZATION_ID"];
-class W {
+class ProfileAuthCache {
   precedenceSource = { filled: !1 };
   authType = { filled: !1 };
   accountInfo = { filled: !1 };
@@ -194,9 +194,9 @@ class W {
   settingsBearerRejected = !1;
   primedFiles = void 0;
 }
-var d = new j(() => new W());
+var profileAuthCaches = new j(() => new ProfileAuthCache());
 function getAuthPrecedenceSource() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.precedenceSource.filled) return e.precedenceSource.value;
   let r = xe();
   return ((e.precedenceSource = { filled: !0, value: r }), r);
@@ -220,7 +220,7 @@ function xe() {
   return null;
 }
 function resetProfileAuthCache() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   ((e.precedenceSource = { filled: !1 }),
     (e.authType = { filled: !1 }),
     (e.profileStoreDenyPaths = { filled: !1 }),
@@ -228,13 +228,13 @@ function resetProfileAuthCache() {
     clearCachedAccountInfo());
 }
 function clearCachedAccountInfo() {
-  d.of(B().host).accountInfo = { filled: !1 };
+  profileAuthCaches.of(B().host).accountInfo = { filled: !1 };
 }
 function isProfileAuthSelected() {
   return getAuthPrecedenceSource() !== null;
 }
 function getProfileAuthType() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.authType.filled) return e.authType.value;
   let r = ge();
   return ((e.authType = { filled: !0, value: r }), r);
@@ -256,7 +256,7 @@ function isClaudeAiLoginShadowingProfile() {
   return getAuthPrecedenceSource() === "profile-implicit" && getProfileAuthType() === "user_oauth";
 }
 function getProfileAccountInfo() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.accountInfo.filled) return e.accountInfo.value;
   let r = he();
   return ((e.accountInfo = { filled: !0, value: r }), r);
@@ -315,7 +315,7 @@ function getProfileBaseUrl() {
         e === "profile-explicit"
           ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
           : getActiveProfileName(r),
-      o = g(u(r, "configs", `${t}.json`));
+      o = g(join(r, "configs", `${t}.json`));
     if (o === null) return;
     let s = JSON.parse(o);
     return typeof s.base_url === "string" && s.base_url.trim()
@@ -326,13 +326,13 @@ function getProfileBaseUrl() {
   }
 }
 function isSettingsBearerRejected() {
-  return d.of(B().host).settingsBearerRejected;
+  return profileAuthCaches.of(B().host).settingsBearerRejected;
 }
 function setSettingsBearerRejected(e) {
-  d.of(B().host).settingsBearerRejected = e;
+  profileAuthCaches.of(B().host).settingsBearerRejected = e;
 }
 function getProfileStoreDenyPaths() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.profileStoreDenyPaths.filled) return e.profileStoreDenyPaths.value;
   let { value: r, complete: t } = _e();
   if (t) e.profileStoreDenyPaths = { filled: !0, value: r };
@@ -346,8 +346,8 @@ function _e() {
     let t = resolve(e);
     r = N(t)
       ? {
-          dirs: [u(t, "configs"), u(t, "credentials")],
-          files: [u(t, "active_config")],
+          dirs: [join(t, "configs"), join(t, "credentials")],
+          files: [join(t, "active_config")],
         }
       : { dirs: [t], files: [] };
     let s = process.env.ANTHROPIC_PROFILE?.trim() || getActiveProfileName(e),
@@ -355,7 +355,7 @@ function _e() {
     if (typeof i !== "string" || !i.trim()) return { value: r, complete: !0 };
     let f = dedupe(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
       (p) =>
-        !r.dirs.some((y) => p === y || p.startsWith(y + H)) &&
+        !r.dirs.some((y) => p === y || p.startsWith(y + sep)) &&
         !r.files.includes(p) &&
         !N(p),
     );
@@ -374,10 +374,10 @@ function _e() {
   }
 }
 function getActiveProfileName(e) {
-  return g(u(e, "active_config"))?.trim() || "default";
+  return g(join(e, "active_config"))?.trim() || "default";
 }
 function O(e, r) {
-  let t = g(u(e, "configs", `${r}.json`));
+  let t = g(join(e, "configs", `${r}.json`));
   if (t === null) return null;
   let o;
   try {
@@ -393,14 +393,14 @@ function O(e, r) {
 }
 function I(e, r, t) {
   if (t === void 0) {
-    let o = g(u(e, "configs", `${r}.json`));
+    let o = g(join(e, "configs", `${r}.json`));
     if (o !== null)
       try {
         t = JSON.parse(o);
       } catch {}
   }
   return (
-    t?.authentication?.credentials_path ?? u(e, "credentials", `${r}.json`)
+    t?.authentication?.credentials_path ?? join(e, "credentials", `${r}.json`)
   );
 }
 function getAnthropicConfigDir() {
@@ -411,9 +411,9 @@ function G() {
     r = e.ANTHROPIC_CONFIG_DIR?.trim();
   if (r) return { dir: r, space: "userNamed" };
   let t = e.XDG_CONFIG_HOME?.trim();
-  if (t) return { dir: u(t, "anthropic"), space: "home" };
+  if (t) return { dir: join(t, "anthropic"), space: "home" };
   let o = e.HOME?.trim();
-  return o ? { dir: u(o, ".config", "anthropic"), space: "home" } : null;
+  return o ? { dir: join(o, ".config", "anthropic"), space: "home" } : null;
 }
 function V() {
   return process.env.ANTHROPIC_PROFILE?.trim();
@@ -425,7 +425,7 @@ function N(e) {
   let r = U(e);
   if (r === parse(r).root) return !0;
   let t = relative(r, U(getFsSurface().cwd())),
-    o = t.split(H)[0];
+    o = t.split(sep)[0];
   return t === "" || (o !== ".." && !isAbsolute(t));
 }
 function U(e) {
@@ -433,15 +433,15 @@ function U(e) {
     t = "";
   for (;;)
     try {
-      r = u(realpathSync.native(r), t);
+      r = join(realpathSync.native(r), t);
       break;
     } catch {
       let o = dirname(r);
       if (o === r) {
-        r = u(r, t);
+        r = join(r, t);
         break;
       }
-      ((t = t ? u(basename(r), t) : basename(r)), (r = o));
+      ((t = t ? join(basename(r), t) : basename(r)), (r = o));
     }
   return r.toLowerCase();
 }
@@ -453,7 +453,7 @@ function ye(e) {
   }
 }
 function g(e) {
-  let r = d.of(B().host).primedFiles;
+  let r = profileAuthCaches.of(B().host).primedFiles;
   if (r !== void 0 && r.has(e)) return r.get(e) ?? null;
   try {
     return readFileSync(e, "utf-8");
@@ -463,7 +463,7 @@ function g(e) {
   }
 }
 async function primeProfileReadAhead(e) {
-  let r = d.of(B().host),
+  let r = profileAuthCaches.of(B().host),
     t = G();
   if (r.precedenceSource.filled || t === null) return;
   let { dir: o, space: s } = t,
@@ -490,8 +490,8 @@ async function primeProfileReadAhead(e) {
     },
     p = V();
   if (!p && q()) return;
-  let y = p || (await f(u(o, "active_config")))?.trim() || "default";
-  (await f(u(o, "configs", `${y}.json`)), (r.primedFiles = i));
+  let y = p || (await f(join(o, "active_config")))?.trim() || "default";
+  (await f(join(o, "configs", `${y}.json`)), (r.primedFiles = i));
   try {
     (getAuthPrecedenceSource(), getProfileAuthType());
   } catch (x) {
@@ -566,7 +566,7 @@ function normalizeUrlSchemeToHttp(e) {
   else if (e.protocol === "ws:") e.protocol = "http:";
   return e;
 }
-class K {
+class McpClientState {
   reconnect = null;
   toggle = null;
   isDisabled = null;
@@ -622,9 +622,9 @@ class K {
   cachedAdopt = Le();
   cachedDialFailed = Le();
 }
-var Ce = new j(() => new K());
+var mcpClientStates = new j(() => new McpClientState());
 function getMcpClientState() {
-  return Ce.of(B().host);
+  return mcpClientStates.of(B().host);
 }
 function markConfigAsCliOwned(e, r) {
   let t = getMcpClientState();

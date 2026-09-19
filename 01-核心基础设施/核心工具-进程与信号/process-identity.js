@@ -13,7 +13,7 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { resolveCommandInPath } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrowWithCwd } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
-import { getProcStartTime, getProcState, isExitedProcessState } from "./linux-proc-stat.js";
+import { getProcState, isExitedProcessState } from "./linux-proc-stat.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 function getEnvVarCaseInsensitive(e, t) {
   if (t in e) return e[t];
@@ -216,7 +216,7 @@ class g {
   }
 }
 var ownProcStartMemo = new g();
-class h {
+class ProcessStartTimeCache {
   #e = new Map();
   get(e) {
     return this.#e.get(e);
@@ -225,7 +225,7 @@ class h {
     this.#e.set(e, t);
   }
 }
-var T = new j(() => new h());
+var processStartTimeCaches = new j(() => new ProcessStartTimeCache());
 function ownProcStart() {
   return ownProcStartMemo.token ?? ownProcStartMemo.set(getProcessStartTime(process.pid));
 }
@@ -245,7 +245,7 @@ var x = 60000,
   C = 5000;
 async function getProcessStartTimeAsync(e, t) {
   let n = Date.now(),
-    r = T.of(B().host);
+    r = processStartTimeCaches.of(B().host);
   if (t?.env !== void 0) return m(e, t.env);
   if (!t?.skipCache) {
     let a = r.get(e),

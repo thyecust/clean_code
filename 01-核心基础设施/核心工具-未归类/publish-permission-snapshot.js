@@ -17,7 +17,7 @@ var e = {
   additionalWorkingDirectories: new Map(),
   launchedInAutoMode: !1,
 };
-class t {
+class PermissionSnapshot {
   snapshot = e;
   get() {
     return this.snapshot;
@@ -43,9 +43,9 @@ class t {
     this.snapshot = e;
   }
 }
-var i = new j(() => new t());
+var permissionSnapshotsByHost = new j(() => new PermissionSnapshot());
 function r() {
-  return i.of(B().host);
+  return permissionSnapshotsByHost.of(B().host);
 }
 function publishPermissionSnapshot(o) {
   r().publish(o);

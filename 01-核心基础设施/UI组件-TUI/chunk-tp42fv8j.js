@@ -23,7 +23,7 @@ import { getKeybindingChord } from "../../03-入口与运行时/核心应用-Age
 import { NO_ANIMATION_INDEX, useReducedMotion } from "./reduced-motion.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getThemeColor } from "./theme-color.js";
-import { E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { hasClipboardImage } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { MEMO_CACHE_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();

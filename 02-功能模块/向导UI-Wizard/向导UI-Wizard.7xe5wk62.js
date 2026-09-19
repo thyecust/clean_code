@@ -16,7 +16,7 @@ import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { InputGuide } from "../../01-核心基础设施/UI组件-TUI/input-guide.js";
 import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, re, De, E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function Bt(Xt) {

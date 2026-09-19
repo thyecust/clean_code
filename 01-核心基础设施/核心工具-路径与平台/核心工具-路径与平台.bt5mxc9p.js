@@ -151,7 +151,7 @@ function registerWriteQueueDrain(e) {
 function drainRegisteredWriteQueues() {
   return lt.drainAll();
 }
-import { basename, dirname as pe, join as fe, resolve } from "path";
+import { basename, dirname, join, resolve } from "path";
 import {
   appendFile,
   mkdir,
@@ -159,7 +159,7 @@ import {
   writeFile,
 } from "fs/promises";
 import { homedir } from "os";
-import { dirname as Jn, isAbsolute, join as Me } from "path";
+import { isAbsolute } from "path";
 async function isPathGitIgnored(e, t) {
   let { code: r } = await execFileNoThrowWithCwd("git", ["check-ignore", "--", e], {
     preserveOutputOnError: !1,
@@ -175,12 +175,12 @@ async function Xn(e) {
     ),
     o = r === 0 ? t.trim() : "";
   if (o) {
-    if (o === "~" || o.startsWith("~/")) return Me(homedir(), o.slice(2));
+    if (o === "~" || o.startsWith("~/")) return join(homedir(), o.slice(2));
     if (isAbsolute(o)) return o;
   }
   let d = a.XDG_CONFIG_HOME;
-  if (d && isAbsolute(d)) return Me(d, "git", "ignore");
-  return Me(homedir(), ".config", "git", "ignore");
+  if (d && isAbsolute(d)) return join(d, "git", "ignore");
+  return join(homedir(), ".config", "git", "ignore");
 }
 async function addGlobalGitignoreEntry(e, t = getCwd()) {
   try {
@@ -190,7 +190,7 @@ async function addGlobalGitignoreEntry(e, t = getCwd()) {
       d = r.endsWith("/") ? `${r}sample-file.txt` : r;
     if (await isPathGitIgnored(d, t)) return { written: !1, effective: !0 };
     let _ = await Xn(t),
-      p = Jn(_);
+      p = dirname(_);
     await mkdir(p, { recursive: !0 });
     try {
       if ((await readFile(_, { encoding: "utf-8" })).includes(o)) {
@@ -265,9 +265,8 @@ function consumeInternalWrite(e, t) {
 function clearInternalWrites() {
   getHostSettingsStore().internalWrites.clear();
 }
-import { join as J } from "path";
 var Z = Object.freeze({ settings: {}, errors: [] });
-class mt {
+class MdmSettingsStore {
   mdm = null;
   hkcu = null;
   wslInherits = !1;
@@ -306,9 +305,9 @@ class mt {
       (this.loadPromise = null));
   }
 }
-var Zn = new j(() => new mt());
+var mdmSettingsStores = new j(() => new MdmSettingsStore());
 function te() {
-  return Zn.of(B().host);
+  return mdmSettingsStores.of(B().host);
 }
 function Qn(e) {
   te().startLoad(e);
@@ -514,12 +513,12 @@ async function readWslManagedSettingsSnapshot(e) {
   if (!isRunningOnWsl() || !te().wslInherits) return "";
   let t = [];
   try {
-    t.push(await Se(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"), e));
+    t.push(await Se(join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"), e));
   } catch (r) {
     t.push(Ue(r));
   }
   try {
-    let r = J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
+    let r = join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
       o = (await ke(r, e))
         .filter(
           (d) =>
@@ -531,7 +530,7 @@ async function readWslManagedSettingsSnapshot(e) {
         .sort();
     for (let d of o)
       try {
-        t.push(`${d}\x00${await Se(J(r, d), e)}`);
+        t.push(`${d}\x00${await Se(join(r, d), e)}`);
       } catch (_) {
         t.push(`${d}\x00${Ue(_)}`);
       }
@@ -563,8 +562,8 @@ async function sr(e) {
     if (!isRecord(E)) return (t.push(createUnparsableSettingsError(_)), !1);
     return E.wslInheritsWindowsSettings === !0;
   }
-  if (await r(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"))) return { flag: !0, records: t };
-  let o = J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
+  if (await r(join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"))) return { flag: !0, records: t };
+  let o = join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
     d;
   try {
     d = await ke(o, e);
@@ -577,17 +576,17 @@ async function sr(e) {
       (_.isFile() || _.isSymbolicLink()) &&
       _.name.endsWith(".json") &&
       !_.name.startsWith(".") &&
-      (await r(J(o, _.name)))
+      (await r(join(o, _.name)))
     )
       return { flag: !0, records: t };
   return { flag: !1, records: t };
 }
 async function Et(e, t) {
   try {
-    if (await St(J(e, "managed-settings.json"), t)) return !0;
+    if (await St(join(e, "managed-settings.json"), t)) return !0;
   } catch {}
   try {
-    let r = J(e, "managed-settings.d"),
+    let r = join(e, "managed-settings.d"),
       o = await ke(r, t);
     for (let d of o) {
       if (
@@ -597,14 +596,13 @@ async function Et(e, t) {
       )
         continue;
       try {
-        if (await St(J(r, d.name), t)) return !0;
+        if (await St(join(r, d.name), t)) return !0;
       } catch {}
     }
   } catch {}
   return !1;
 }
-import { posix, win32 as gn } from "path";
-import { win32 as yt } from "path";
+import { posix, win32 } from "path";
 var Pt = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"],
   Ot = "C:\\Windows",
   Ee = "C:\\Program Files",
@@ -708,7 +706,7 @@ function It(e, t) {
       return (Rt(r, Rr, Pr, (o) => o), (r.PATH = Ar), (r.LC_ALL = "C"), r);
     case "pwsh": {
       Rt(r, hr, mr, (d) => d.toUpperCase());
-      let o = yt.dirname(t.file);
+      let o = win32.dirname(t.file);
       if (
         ((r.PSModulePath = fr(o)),
         (r[Ke] = r.PSModulePath),
@@ -724,7 +722,7 @@ function It(e, t) {
   }
 }
 function Nt(e) {
-  return getCurrentPlatform() === "windows" ? yt.dirname(e.file) : "/";
+  return getCurrentPlatform() === "windows" ? win32.dirname(e.file) : "/";
 }
 function Ct(e) {
   if (e.script != null) {
@@ -2806,7 +2804,7 @@ async function ki(e, t, r) {
   if (!r || p.input !== void 0) L = Nt(p);
   else if (e.path === void 0)
     return { error: "remote-armed helper has no path", code: "bad_path" };
-  else L = (o === "win32" ? gn : posix).dirname(e.path);
+  else L = (o === "win32" ? win32 : posix).dirname(e.path);
   let U = process.env,
     x = r ? an(Cn?.() ?? U, o) : U,
     {
@@ -2892,7 +2890,7 @@ function Dn(e, t, r, o) {
   return getInlinePolicyHelperConfigError(e, t === "win32" ? "windows" : "linux");
 }
 function Gi(e, t, r, o) {
-  let d = t === "win32" ? gn : posix;
+  let d = t === "win32" ? win32 : posix;
   if (typeof e !== "string") return "path must be a string";
   if (!d.isAbsolute(e)) return `path must be absolute: ${e}`;
   if (t === "win32") {
@@ -3073,7 +3071,7 @@ function createPolicySettingsSeedSource(e, t, r, o) {
 async function reseedUserSettingsFile(e, t, r) {
   return reseedSettingsFileLayer(t, createUserSettingsSeedSource(e, r));
 }
-class $n {
+class LegacyLocalSettingsProbe {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
@@ -3084,7 +3082,7 @@ class $n {
     this.firedSites.clear();
   }
 }
-var legacyLocalSettingsProbes = new j(() => new $n());
+var legacyLocalSettingsProbes = new j(() => new LegacyLocalSettingsProbe());
 function parseSettingsFile(e, t, r) {
   return parseSettingsFileCached(e, getHostSettingsStore(), t, r);
 }
@@ -3336,13 +3334,13 @@ function getSettingsWithErrors() {
 }
 function getManagedFileSettingsPresence() {
   for (let e of getManagedSettingsDirs(getWslInheritsWindowsSettings())) {
-    let { settings: t } = parseSettingsFile(fe(e, "managed-settings.json"), void 0, !0),
+    let { settings: t } = parseSettingsFile(join(e, "managed-settings.json"), void 0, !0),
       r = t !== null && hasSettingsContent(t),
       o = !1;
     try {
-      let d = fe(e, "managed-settings.d"),
+      let d = join(e, "managed-settings.d"),
         _ = (E) => {
-          let { settings: O } = parseSettingsFile(fe(d, E), void 0, !0);
+          let { settings: O } = parseSettingsFile(join(d, E), void 0, !0);
           return O !== null && hasSettingsContent(O);
         },
         p = getHostSettingsStore().primedFolderListing(d);
@@ -3559,7 +3557,7 @@ async function Xi(e, t, r, o, d) {
       }
       return { error: null };
     }
-    await getFsSurface().mkdir(pe(r));
+    await getFsSurface().mkdir(dirname(r));
     let x = mergeWith(N || {}, U, (C, F, K, ce) => {
       if (F === void 0 && ce && typeof K === "string") {
         delete ce[K];
@@ -3584,13 +3582,13 @@ async function Xi(e, t, r, o, d) {
           "settings storageV5 write failed",
         );
     } else {
-      let C = isConfigDirPath(pe(r));
+      let C = isConfigDirPath(dirname(r));
       await writeFileAndFlush(r, w, {
         encoding: "utf-8",
         allowSymlink: e === "userSettings" || C,
         checkParentDir:
           (e === "projectSettings" || e === "localSettings") && !C,
-        stagingDir: fe(pe(r), ATOMIC_WRITE_STAGING_DIR_NAME),
+        stagingDir: join(dirname(r), ATOMIC_WRITE_STAGING_DIR_NAME),
       });
     }
     if ((invalidateAllSettings(), _)) O = Zi(r, w);
@@ -3701,7 +3699,7 @@ async function Mn(e) {
   if (jsonStringify(O) === jsonStringify(_)) return { changed: !1, error: null };
   try {
     markInternalWrite(t);
-    let I = isConfigDirPath(pe(t));
+    let I = isConfigDirPath(dirname(t));
     return (
       await writeFileAndFlush(
         t,
@@ -3712,7 +3710,7 @@ async function Mn(e) {
           encoding: "utf-8",
           allowSymlink: I,
           checkParentDir: !I,
-          stagingDir: fe(pe(t), ATOMIC_WRITE_STAGING_DIR_NAME),
+          stagingDir: join(dirname(t), ATOMIC_WRITE_STAGING_DIR_NAME),
         },
       ),
       invalidateAllSettings(),

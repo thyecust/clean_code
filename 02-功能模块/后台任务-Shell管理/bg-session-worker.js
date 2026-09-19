@@ -97,22 +97,19 @@ import { createBackendHandle, createTranscriptSource } from "../../01-核心基�
 import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { isExitedProcessState } from "../../01-核心基础设施/核心工具-进程与信号/linux-proc-stat.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { randomBytes as Re } from "crypto";
+import { randomBytes } from "crypto";
 import { unlinkSync } from "fs";
 import {
-  mkdir as Pt,
-  open as Ot,
+  mkdir,
+  open,
   readdir,
-  unlink as X,
+  unlink,
 } from "fs/promises";
 import { connect } from "net";
-import { join as pe } from "path";
-import { randomBytes as de } from "crypto";
+import { join } from "path";
 import { statSync } from "fs";
 import {
   access,
-  mkdir as et,
-  unlink as ce,
   writeFile,
 } from "fs/promises";
 import { basename, dirname } from "path";
@@ -192,8 +189,8 @@ function Se(e, t) {
     }
   );
 }
-import { rename, unlink as oe } from "fs/promises";
-import { Socket as ot } from "net";
+import { rename } from "fs/promises";
+import { Socket } from "net";
 import { StringDecoder } from "string_decoder";
 var Oe = [50, 100, 250, 500, 1000, 2000],
   Ne = 30,
@@ -327,7 +324,7 @@ function ae(e, t, r) {
       }
     } else if (E.ctrl.t === "hello") {
       if (G) ((se = !0), v.end(), (ee = ""));
-      else oe(getPtyLateOutputPath(e)).catch(() => {});
+      else unlink(getPtyLateOutputPath(e)).catch(() => {});
       if (
         ((G = !0),
         (C = E.ctrl.replPid),
@@ -363,7 +360,7 @@ function ae(e, t, r) {
   }
   function De() {
     if (w) return;
-    let E = new ot(),
+    let E = new Socket(),
       I = !1;
     (E.on("error", (O) => {
       ((Te = A(O) === "ENOENT"), me());
@@ -402,7 +399,7 @@ ${Y}`,
                 );
             })
             .catch(() => {})
-            .finally(() => oe(L).catch(() => {})),
+            .finally(() => unlink(L).catch(() => {})),
           Q(encodeControlFrame({ t: "pong" })),
           o)
         )
@@ -426,7 +423,7 @@ ${Y}`,
           .then((I) => I ?? "")
           .then((I) => {
             if (!G && I.length > 0) g.emit(I.replaceAll(DAEMON_DETACH_APC, ""));
-            (oe(getPtyLateOutputPath(e)).catch(() => {}), ge("connect"));
+            (unlink(getPtyLateOutputPath(e)).catch(() => {}), ge("connect"));
           }));
       return;
     }
@@ -459,7 +456,7 @@ ${Y}`,
           .then((O) => O ?? "")
           .then((O) => {
             if (!G && O.length > 0) g.emit(O.replaceAll(DAEMON_DETACH_APC, ""));
-            oe(getPtyLateOutputPath(e)).catch(() => {});
+            unlink(getPtyLateOutputPath(e)).catch(() => {});
             let L = getLauncherArgv().length > 0,
               x = (V, Y) => {
                 if (!L) {
@@ -593,7 +590,6 @@ function lt(e) {
   for (let r = t; r > 0; r--) if (e.endsWith(DAEMON_DETACH_APC.slice(0, r))) return r;
   return 0;
 }
-import { Socket as ut } from "net";
 var Ve = [100, 250, 500, 1000, 2000],
   Be = 30;
 function He(e, t, r, s, p) {
@@ -604,7 +600,7 @@ function He(e, t, r, s, p) {
     m;
   function k() {
     if (o) return;
-    let _ = new ut(),
+    let _ = new Socket(),
       w = !1;
     (_.on("error", () => v()),
       _.once("close", () => {
@@ -877,7 +873,7 @@ async function Ee(e, t) {
   let r = getCredentialFilePath(e);
   try {
     return (
-      await et(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
+      await mkdir(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
       await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
@@ -891,7 +887,7 @@ async function Ae(e, t) {
   let r = getTokensFilePath(e);
   try {
     return (
-      await et(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
+      await mkdir(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
       await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
@@ -1016,8 +1012,8 @@ class BgSessionWorker {
   rv;
   rvSockPath;
   ptySockPath;
-  rvAuth = de(16).toString("hex");
-  ptyAuth = de(16).toString("hex");
+  rvAuth = randomBytes(16).toString("hex");
+  ptyAuth = randomBytes(16).toString("hex");
   authRekeyFired = !1;
   authRekeyCount = 0;
   pendingAuthRekey;
@@ -1635,8 +1631,8 @@ class BgSessionWorker {
   }
   socketAuth() {
     return (
-      (this.rvAuth ??= de(16).toString("hex")),
-      (this.ptyAuth ??= de(16).toString("hex")),
+      (this.rvAuth ??= randomBytes(16).toString("hex")),
+      (this.ptyAuth ??= randomBytes(16).toString("hex")),
       { rvAuth: this.rvAuth, ptyAuth: this.ptyAuth }
     );
   }
@@ -2110,8 +2106,8 @@ class BgSessionWorker {
         ]);
       else
         await Promise.all([
-          o ? ce(o).catch(() => {}) : void 0,
-          d ? ce(d).catch(() => {}) : void 0,
+          o ? unlink(o).catch(() => {}) : void 0,
+          d ? unlink(d).catch(() => {}) : void 0,
         ]);
       if (this.record.outcome) return;
       if (A(R) === NOT_OWNED_ERROR_CODE) {
@@ -2126,7 +2122,7 @@ class BgSessionWorker {
       }
       return this.scheduleRespawn(l(R));
     }
-    await ce(getPtyHostStderrPath(this.ptySockPath ?? getPtySocketPath(r.short))).catch(() => {});
+    await unlink(getPtyHostStderrPath(this.ptySockPath ?? getPtySocketPath(r.short))).catch(() => {});
     let c = r.launch.mode === "resume" ? r.launch.sessionId : void 0,
       g = !1,
       m = !1,
@@ -2164,7 +2160,7 @@ class BgSessionWorker {
       if (o)
         if (this.credentials)
           this.credentials.discardSpentCredentialFile(o).catch(() => {});
-        else ce(o).catch(() => {});
+        else unlink(o).catch(() => {});
       return;
     }
     if (m)
@@ -2903,7 +2899,7 @@ async function Nt() {
   let t = a.CLAUDE_BG_SOCKET_TOKENS_PATH;
   if ((delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH, !t)) return e;
   let r = await readSocketTokenFile(t);
-  if ((await X(t).catch(() => {}), !r?.claimAuth))
+  if ((await unlink(t).catch(() => {}), !r?.claimAuth))
     logForDebugging("[bg-spare] tokens file unreadable; claim gate degraded", {
       level: "warn",
     });
@@ -2926,16 +2922,16 @@ async function spawnSpare(e) {
   return (
     (e.launcherNotRunnableEpisode.logged = !1),
     withFeatureTelemetry("daemon_bg_spare_refill", async () => {
-      let t = Re(4).toString("hex"),
+      let t = randomBytes(4).toString("hex"),
         r = getSparePtySocketPath(t),
         s = getSpareClaimSocketPath(t),
-        p = Re(16).toString("hex"),
-        d = Re(16).toString("hex");
-      await Pt(getSparePtyDir(), { recursive: !0, mode: 448 }).catch(() => {});
+        p = randomBytes(16).toString("hex"),
+        d = randomBytes(16).toString("hex");
+      await mkdir(getSparePtyDir(), { recursive: !0, mode: 448 }).catch(() => {});
       let o = await Ae(`spare-${t}`, { ptyAuth: p, claimAuth: d });
-      (await X(r).catch(() => {}), await X(s).catch(() => {}));
+      (await unlink(r).catch(() => {}), await unlink(s).catch(() => {}));
       let { cmd: c, prefixArgs: g } = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
-        m = await Ot(getPtyHostStderrPath(r), "w").catch(() => null),
+        m = await open(getPtyHostStderrPath(r), "w").catch(() => null),
         k = eur("agent"),
         v = k?.(),
         _;
@@ -2969,7 +2965,7 @@ async function spawnSpare(e) {
         if (o)
           if (isHoverRestEnabled() && e.credentials !== void 0)
             e.credentials.discardSpentCredentialFile(o).catch(() => {});
-          else X(o).catch(() => {});
+          else unlink(o).catch(() => {});
         throw D;
       } finally {
         await m?.close().catch(() => {});
@@ -3009,10 +3005,10 @@ async function spawnSpare(e) {
           let B = Date.now(),
             T = k?.(),
             U = D !== 0 && v !== void 0 && T !== void 0 && T > v;
-          if ((X(r).catch(() => {}), X(s).catch(() => {}), o))
+          if ((unlink(r).catch(() => {}), unlink(s).catch(() => {}), o))
             if (isHoverRestEnabled() && e.credentials !== void 0)
               e.credentials.discardSpentCredentialFile(o).catch(() => {});
-            else X(o).catch(() => {});
+            else unlink(o).catch(() => {});
           let N = ((await readBoundedFile(getPtyHostStderrPath(r), 1048576)) ?? "").slice(0, 2000).trim();
           if (N.length > 0)
             logForDebugging(
@@ -3020,7 +3016,7 @@ async function spawnSpare(e) {
 ${N}`,
               { level: "warn" },
             );
-          (X(getPtyHostStderrPath(r)).catch(() => {}), X(getPtyLateOutputPath(r)).catch(() => {}));
+          (unlink(getPtyHostStderrPath(r)).catch(() => {}), unlink(getPtyLateOutputPath(r)).catch(() => {}));
           let R = B - w.startedAt,
             C =
               !y &&
@@ -3151,12 +3147,12 @@ async function reapOrphanSpares(e, t) {
     p = 0;
   for (let d of s) {
     if (!d.endsWith(".pty.sock")) continue;
-    let o = pe(getSparePtyDir(), d);
+    let o = join(getSparePtyDir(), d);
     if (r.has(o)) continue;
     p++;
     let c = connect(o);
     (c.on("error", () => {
-      X(o).catch(() => {});
+      unlink(o).catch(() => {});
     }),
       c.once("connect", () => {
         (c.resume(),
@@ -3171,11 +3167,11 @@ async function reapOrphanSpares(e, t) {
     );
     if (o) {
       let c = d.slice(0, -o.length);
-      if (!s.includes(c)) X(pe(getSparePtyDir(), d)).catch(() => {});
+      if (!s.includes(c)) unlink(join(getSparePtyDir(), d)).catch(() => {});
     }
     if (d.endsWith(".claim.sock")) {
-      let c = pe(getSparePtyDir(), `${d.slice(0, -11)}.pty.sock`);
-      if (!r.has(c)) X(pe(getSparePtyDir(), d)).catch(() => {});
+      let c = join(getSparePtyDir(), `${d.slice(0, -11)}.pty.sock`);
+      if (!r.has(c)) unlink(join(getSparePtyDir(), d)).catch(() => {});
     }
   }
   if (p) t(`bg orphan-spare reap: ${p}`);

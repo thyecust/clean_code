@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
-import { join as o } from "path";
+import { join } from "path";
 function getDaemonJsonPath() {
-  return o(getClaudeConfigDir(), "daemon.json");
+  return join(getClaudeConfigDir(), "daemon.json");
 }
 function getDaemonLogPath() {
-  return o(getClaudeConfigDir(), "daemon.log");
+  return join(getClaudeConfigDir(), "daemon.log");
 }
 export { getDaemonJsonPath, getDaemonLogPath };

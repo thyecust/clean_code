@@ -12,8 +12,7 @@ import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { getProcessStartTimeAsync } from "./process-identity.js";
 import { killProcessTree } from "./kill-process-tree.js";
-import { readFile } from "fs/promises";
-class n {
+class DeadProbeAdoptTickState {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
@@ -24,9 +23,9 @@ class n {
     this.firedSites.clear();
   }
 }
-var l = new j(() => new n());
+var deadProbeAdoptTickState = new j(() => new DeadProbeAdoptTickState());
 function f() {
-  return l.of(B().host);
+  return deadProbeAdoptTickState.of(B().host);
 }
 function fireDeadProbeAdoptTick(e) {
   f().fire(e);

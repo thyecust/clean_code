@@ -157,8 +157,8 @@ function expandKeybindingBlocks(e) {
   return r;
 }
 import { readFileSync } from "fs";
-import { readFile, stat as Ie } from "fs/promises";
-import { dirname, join as Oe } from "path";
+import { readFile, stat } from "fs/promises";
+import { dirname, join } from "path";
 var B = getCurrentPlatform(),
   le = B === "windows" || B === "wsl",
   de = le ? "alt+v" : "ctrl+v",
@@ -1151,7 +1151,7 @@ function R(e, r) {
     logEvent("tengu_custom_keybindings_loaded", { user_binding_count: r }));
 }
 function getKeybindingsConfigPath() {
-  return Oe(getClaudeConfigDir(), "keybindings.json");
+  return join(getClaudeConfigDir(), "keybindings.json");
 }
 var KEYBINDINGS_STORAGE_KEY = STORAGE_KEYS.state("keybindings");
 function L() {
@@ -1485,7 +1485,7 @@ async function startKeybindingsWatcher(e) {
   let r = getKeybindingsConfigPath(),
     t = dirname(r);
   try {
-    if (!(await Ie(t)).isDirectory()) {
+    if (!(await stat(t)).isDirectory()) {
       (logForDebugging(`[keybindings] Not watching: ${t} is not a directory`),
         logFeatureSad("keybinding_watcher_init", "watch_dir_inaccessible"));
       return;

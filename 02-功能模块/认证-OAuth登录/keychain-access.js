@@ -12,11 +12,11 @@ import { getClaudeConfigDir } from "../../01-核心基础设施/设置-配置/ch
 import { getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { createHash } from "crypto";
 import { homedir, userInfo } from "os";
-import { join as l } from "path";
+import { join } from "path";
 var CREDENTIALS_SUFFIX = "-credentials";
 function getSecureStorageDir() {
   let n = process.env.CLAUDE_SECURESTORAGE_CONFIG_DIR;
-  if (n !== void 0) return (n || l(homedir(), ".claude")).normalize("NFC");
+  if (n !== void 0) return (n || join(homedir(), ".claude")).normalize("NFC");
   return getClaudeConfigDir();
 }
 function getKeychainServiceName(n = "") {
@@ -38,7 +38,7 @@ function getKeychainAccountName() {
   return n;
 }
 var KEYCHAIN_CACHE_TTL_MS = 30000;
-class i {
+class KeychainState {
   cache = { data: null, cachedAt: 0 };
   generation = 0;
   readInFlight = null;
@@ -46,9 +46,9 @@ class i {
   lastKnown = null;
   legacyApiKeyPrefetch = null;
 }
-var d = new j(() => new i());
+var keychainState = new j(() => new KeychainState());
 function getKeychainState() {
-  return d.of(B().host);
+  return keychainState.of(B().host);
 }
 var KEYCHAIN_READ_FAILURE_BACKOFF_MS = 1000;
 function invalidateKeychainCache() {

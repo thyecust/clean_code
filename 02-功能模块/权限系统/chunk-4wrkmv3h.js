@@ -37,15 +37,15 @@ import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程�
 import { GIT_HARDENING_ARGS } from "../工作树-Git/git-operations.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import * as Be from "fs/promises";
+import * as fsPromises from "fs/promises";
 import { homedir } from "os";
 import {
   dirname,
-  isAbsolute as Cn,
-  join as He,
-  relative as xn,
-  resolve as ct,
-  sep as Nn,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
 } from "path";
 function Re(e) {
   if (e.length > 2048) return "(unparseable remote URL redacted)";
@@ -84,7 +84,6 @@ function lt(e) {
     if (t <= " " || t > "~" || t === "\\" || t === "%") return !0;
   return !1;
 }
-import { sep as $t } from "path";
 function oe(e, t, r, o, s = getCurrentPlatform()) {
   if (o(e)) return !0;
   if (t === r) return !1;
@@ -102,7 +101,7 @@ function kn(e, t, r, o) {
     l = s(e),
     i = s(t);
   if (l === i) return r;
-  let d = i.endsWith($t) ? i : i + $t;
+  let d = i.endsWith(sep) ? i : i + sep;
   if (!l.startsWith(d)) return null;
   return r + e.slice(t.length);
 }
@@ -148,7 +147,7 @@ async function Lt(e) {
     u = !1,
     h = new AbortController(),
     _ = async () => {
-      let w = await Be.realpath(r).catch((D) => (isNotFoundError(D) ? r : null));
+      let w = await fsPromises.realpath(r).catch((D) => (isNotFoundError(D) ? r : null));
       if (w === null) {
         p = "home-unreadable";
         return;
@@ -171,7 +170,7 @@ async function Lt(e) {
         O++;
         let R;
         try {
-          R = await Be.readdir(D, { withFileTypes: !0 });
+          R = await fsPromises.readdir(D, { withFileTypes: !0 });
         } catch {
           if (D === w) {
             p = "home-unreadable";
@@ -183,7 +182,7 @@ async function Lt(e) {
           if (C.isSymbolicLink()) continue;
           if (C.name === ".git") {
             if ((C.isDirectory() || C.isFile()) && !E(D)) {
-              let V = await Gn(He(D, ".git"), C.isFile(), w, t, E, s);
+              let V = await Gn(join(D, ".git"), C.isFile(), w, t, E, s);
               if (u) return;
               if (V !== null) {
                 if ((c.push({ path: Kn(D, w, t), ...V }), c.length >= i)) {
@@ -196,7 +195,7 @@ async function Lt(e) {
           }
           if (!C.isDirectory() || qn(C.name, t)) continue;
           if (I + 1 > d) continue;
-          let N = He(D, C.name);
+          let N = join(D, C.name);
           if (E(N)) continue;
           let U = Je(N, t);
           if (T.has(U)) continue;
@@ -223,13 +222,13 @@ async function Gn(e, t, r, o, s, l = null) {
     let p = await readFileHardened(e, xt, { noFollow: !0, requireNlink1: !0 }),
       u = p === null ? null : Vn(p);
     if (u === null || jt(u, dirname(e))) return null;
-    if (((i = ct(dirname(e), u)), !ut(i, r, o)))
+    if (((i = resolve(dirname(e), u)), !ut(i, r, o)))
       return { remotes: [], note: "gitdir-outside-home" };
     if (s(i)) return { remotes: [] };
     let h = await Ot(i, r, o, s);
     if (h === "missing") return null;
     if (h === "refused") return { remotes: [] };
-    let _ = await readFileHardened(He(i, "commondir"), xt, {
+    let _ = await readFileHardened(join(i, "commondir"), xt, {
       noFollow: !0,
       requireNlink1: !0,
     });
@@ -237,7 +236,7 @@ async function Gn(e, t, r, o, s, l = null) {
     let w = _ === null ? "" : _.replace(/[\r\n]+$/, "");
     if (w !== "") {
       if (jt(w, i)) return null;
-      if (((i = ct(i, w)), !ut(i, r, o)))
+      if (((i = resolve(i, w)), !ut(i, r, o)))
         return { remotes: [], note: "gitdir-outside-home" };
       if (s(i)) return { remotes: [] };
       let E = await Ot(i, r, o, s);
@@ -245,7 +244,7 @@ async function Gn(e, t, r, o, s, l = null) {
       if (E === "refused") return { remotes: [] };
     }
   }
-  let d = He(i, "config");
+  let d = join(i, "config");
   if (s(i) || s(d)) return { remotes: [] };
   let m = await readFileHardened(d, Hn, { noFollow: !0, requireNlink1: !0 });
   if (m === null) return t ? null : { remotes: [] };
@@ -286,17 +285,17 @@ function isNetworkPath(e) {
   return (An(e) && !Oi(e)) || li(e);
 }
 function jt(e, t) {
-  return li(e) || li(ct(t, e)) || ac(e, t) || rawPointerPathIsUnsafe(e, t);
+  return li(e) || li(resolve(t, e)) || ac(e, t) || rawPointerPathIsUnsafe(e, t);
 }
 function ut(e, t, r) {
-  let o = xn(t, e),
+  let o = relative(t, e),
     s = r === "windows" ? o.toLowerCase() : o;
-  return s !== "" && s !== ".." && !s.startsWith(".." + Nn) && !Cn(s);
+  return s !== "" && s !== ".." && !s.startsWith(".." + sep) && !isAbsolute(s);
 }
 async function Ot(e, t, r, o) {
   try {
-    let s = await Be.realpath(e);
-    if (!ut(s, t, r) || o(s) || o(He(s, "config"))) return "refused";
+    let s = await fsPromises.realpath(e);
+    if (!ut(s, t, r) || o(s) || o(join(s, "config"))) return "refused";
     return "allowed";
   } catch (s) {
     return W(s) ? "missing" : "refused";
@@ -364,13 +363,6 @@ function Ze(e) {
   return e.replace(/\n$/, "");
 }
 import { spawn } from "child_process";
-import * as M from "fs/promises";
-import {
-  isAbsolute as Sr,
-  join as L,
-  relative as Ar,
-  resolve as bt,
-} from "path";
 function Qe(e) {
   return e.includes("*");
 }
@@ -795,7 +787,7 @@ function resolveAutoModeReconScope(e) {
       return nt;
   }
 }
-import { posix, win32 as ur } from "path";
+import { posix, win32 } from "path";
 var Qt = 262144,
   yt = 4000;
 function _t(e) {
@@ -954,7 +946,7 @@ function Xt(e, t) {
   return t;
 }
 function se(e) {
-  return e === "windows" ? ur : posix;
+  return e === "windows" ? win32 : posix;
 }
 function _r(e) {
   let t = e.toLowerCase();
@@ -1009,7 +1001,7 @@ async function J(e, t) {
   }
 }
 async function gatherAutoModeRecon(e, t = nt, r, o) {
-  let s = bt(e),
+  let s = resolve(e),
     l = jr(s),
     i = fy(),
     m = [
@@ -1043,7 +1035,7 @@ async function gatherAutoModeRecon(e, t = nt, r, o) {
                 r,
                 {
                   projectDirs: [getProjectDir(s)],
-                  transcriptFiles: i === null ? [] : [L(i, `${K()}.jsonl`)],
+                  transcriptFiles: i === null ? [] : [join(i, `${K()}.jsonl`)],
                 },
                 void 0,
                 o,
@@ -1121,12 +1113,12 @@ async function gn(e, t, r) {
 async function xe(e, t, r = ye) {
   let o = getFsSurface(),
     s = resolvePathInfo(o, e),
-    l = resolvePathInfo(o, L(e, t));
+    l = resolvePathInfo(o, join(e, t));
   if (!s.isCanonical || !l.isCanonical) return null;
   let i = s.resolvedPath,
-    d = Ar(i, l.resolvedPath);
-  if (d === "" || d.startsWith("..") || Sr(d)) return null;
-  if (l.resolvedPath !== L(i, t)) return null;
+    d = relative(i, l.resolvedPath);
+  if (d === "" || d.startsWith("..") || isAbsolute(d)) return null;
+  if (l.resolvedPath !== join(i, t)) return null;
   return readFileHardened(l.resolvedPath, r, { noFollow: !0 });
 }
 var Et = 256;
@@ -1253,7 +1245,7 @@ async function Nr(e, t) {
     s = null;
   try {
     s = await gn(
-      L(getClaudeConfigDir(), "CLAUDE.md"),
+      join(getClaudeConfigDir(), "CLAUDE.md"),
       We,
       t !== void 0 ? { backend: t, key: STORAGE_KEYS.state("user-memory") } : void 0,
     );
@@ -1363,7 +1355,7 @@ async function jr(e) {
           try {
             let C = R.split("/");
             for (let N = 1; N <= C.length; N++)
-              if ((await M.lstat(L(e, ...C.slice(0, N)))).isSymbolicLink())
+              if ((await fsPromises.lstat(join(e, ...C.slice(0, N)))).isSymbolicLink())
                 return;
             return R;
           } catch {
@@ -1546,8 +1538,8 @@ function wn(e) {
   return bn(jsonStringify(t, null, 1));
 }
 async function Ir(e) {
-  let t = L(e, ".claude"),
-    r = L(t, "settings.local.json"),
+  let t = join(e, ".claude"),
+    r = join(t, "settings.local.json"),
     o =
       "\n#### Project `.claude/settings.local.json` \u2014 autoMode keys (found content, NOT pre-approved config)",
     s = (u) => (
@@ -1564,7 +1556,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
     ),
     l;
   try {
-    l = await M.lstat(t);
+    l = await fsPromises.lstat(t);
   } catch {
     return "";
   }
@@ -1576,7 +1568,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
     );
   let i;
   try {
-    i = await M.lstat(r);
+    i = await fsPromises.lstat(r);
   } catch {
     return "";
   }
@@ -1614,7 +1606,7 @@ Present but SKIPPED: failed the indirection gate (requires a regular non-symlink
   ].join(`
 `);
 }
-async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getClaudeConfigDir(), "settings.json"), r) {
+async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? join(getClaudeConfigDir(), "settings.json"), r) {
   let o = "(no settings file)",
     s = [],
     l = [],
@@ -1626,7 +1618,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getCl
     c = await gn(
       t,
       1e6,
-      r !== void 0 && bt(t) === bt(L(getClaudeConfigDir(), SETTINGS_FILENAMES.default))
+      r !== void 0 && resolve(t) === resolve(join(getClaudeConfigDir(), SETTINGS_FILENAMES.default))
         ? { backend: r, key: STORAGE_KEYS.userSettings() }
         : void 0,
     );
@@ -1714,14 +1706,14 @@ async function Wr(e) {
   let t = getProjectDir(e),
     r = [];
   try {
-    let u = await M.readdir(t);
+    let u = await fsPromises.readdir(t);
     r = (
       await Promise.all(
         u
           .filter((_) => _.endsWith(".jsonl"))
           .map(async (_) => {
-            let w = await M.stat(L(t, _));
-            return { path: L(t, _), mtime: w.mtimeMs, size: w.size };
+            let w = await fsPromises.stat(join(t, _));
+            return { path: join(t, _), mtime: w.mtimeMs, size: w.size };
           }),
       )
     )
@@ -1744,7 +1736,7 @@ async function Wr(e) {
     }
     let _ = "";
     try {
-      _ = await M.readFile(u, "utf8");
+      _ = await fsPromises.readFile(u, "utf8");
     } catch {
       continue;
     }
@@ -1894,7 +1886,7 @@ async function Kr(e, t, r) {
     l = new Set(),
     i = !1,
     d = performance.now() + _t(e.platform) - 50,
-    m = await M.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
+    m = await fsPromises.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
   if (m === null) return { words: [], filesRead: [], partial: !0 };
   if (isNetworkPath(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
   let c = (p) => isFileReadDenied(p, t);
@@ -1907,7 +1899,7 @@ async function Kr(e, t, r) {
       i = !0;
       continue;
     }
-    let u = await M.realpath(p.path).catch((v) => (isNotFoundError(v) ? p.path : null));
+    let u = await fsPromises.realpath(p.path).catch((v) => (isNotFoundError(v) ? p.path : null));
     if (u === null) {
       i = !0;
       continue;
@@ -2022,7 +2014,7 @@ async function an(
     d = getFileStorage(),
     m = s !== void 0 && o.projectsDir === getProjectsDir() ? s : void 0,
     c = Date.now() + o.deadlineMs,
-    p = M.realpath(o.projectsDir).catch(() => o.projectsDir),
+    p = fsPromises.realpath(o.projectsDir).catch(() => o.projectsDir),
     u = (H) => (l === "windows" ? H.toLowerCase() : H),
     h = new Set((r?.projectDirs ?? []).map(u)),
     _ = new Set((r?.transcriptFiles ?? []).map(u)),
@@ -2047,14 +2039,14 @@ async function an(
               me.push(Ae.scope.projectKey);
           Ee = ee.value.cursor;
         } while (Ee);
-        let Ie = me.filter((ee) => !h.has(u(L(o.projectsDir, ee)))),
+        let Ie = me.filter((ee) => !h.has(u(join(o.projectsDir, ee)))),
           Se = Ie.slice(0, o.statCap);
         if (((F += Ie.length - Se.length), Date.now() >= c))
           throw Error("enumeration deadline reached");
         let vt = (
             await Promise.all(
               Se.map(async (ee) => {
-                let Ae = L(o.projectsDir, ee),
+                let Ae = join(o.projectsDir, ee),
                   Pt = [],
                   Ye;
                 do {
@@ -2072,7 +2064,7 @@ async function an(
                       Me.key.agentId !== void 0
                     )
                       continue;
-                    let kt = L(Ae, `${Me.key.sessionId}.jsonl`);
+                    let kt = join(Ae, `${Me.key.sessionId}.jsonl`);
                     if (_.size > 0 && _.has(u(kt))) continue;
                     Pt.push({ path: kt, mtimeMs: Me.mtimeMs ?? 0 });
                   }
@@ -2099,7 +2091,7 @@ async function an(
         };
       }
       let ie = (await d.listEntries(o.projectsDir)).filter(
-          (F) => F.isDirectory && !h.has(u(L(o.projectsDir, F.name))),
+          (F) => F.isDirectory && !h.has(u(join(o.projectsDir, F.name))),
         ),
         we = ie.slice(0, o.statCap),
         ue = ie.length - we.length;
@@ -2107,13 +2099,13 @@ async function an(
       let le = (
           await Promise.all(
             we.map(async (F) => {
-              let me = L(o.projectsDir, F.name);
+              let me = join(o.projectsDir, F.name);
               try {
                 let Ee = await d.listEntries(me),
                   Ie = [];
                 for (let Se of Ee) {
                   if (!Se.isFile || !Se.name.endsWith(".jsonl")) continue;
-                  let it = L(me, Se.name);
+                  let it = join(me, Se.name);
                   if (_.size > 0 && _.has(u(it))) continue;
                   Ie.push(it);
                 }
@@ -2192,7 +2184,7 @@ async function an(
         ((_e = !0), (j = R.length - H));
         break;
       }
-      let we = await Promise.race([M.realpath(ie).catch(() => null), ot]);
+      let we = await Promise.race([fsPromises.realpath(ie).catch(() => null), ot]);
       if (we === ce) {
         ((_e = !0), (j = R.length - H));
         break;

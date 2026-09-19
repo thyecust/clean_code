@@ -18,8 +18,8 @@ import { createLazyValue } from "../../01-核心基础设施/核心工具-并发
 import { listGitWorktrees, getProjectsDir, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { isSafeBridgeId } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { mkdir, readFile, stat as _, unlink } from "fs/promises";
-import { dirname, join as I } from "path";
+import { mkdir, readFile, stat, unlink } from "fs/promises";
+import { dirname, join } from "path";
 var S = 50,
   R = 14400000,
   PERSISTED_SESSION_RESUME_WINDOW_MS = 900000,
@@ -45,7 +45,7 @@ var MAX_POINTER_ACTIVE_SESSION_IDS = 64,
     }),
   );
 function g(e) {
-  return I(getProjectsDir(), getProjectKey(e), "bridge-pointer.json");
+  return join(getProjectsDir(), getProjectKey(e), "bridge-pointer.json");
 }
 function P(e) {
   let r = getProjectKey(e);
@@ -90,7 +90,7 @@ async function readBridgePointer(e, r, t) {
       (o = Buffer.from(d.value.items[0].value).toString("utf8")));
   } else
     try {
-      ((l = (await _(i)).mtimeMs), (o = await readFile(i, "utf8")));
+      ((l = (await stat(i)).mtimeMs), (o = await readFile(i, "utf8")));
     } catch {
       return null;
     }

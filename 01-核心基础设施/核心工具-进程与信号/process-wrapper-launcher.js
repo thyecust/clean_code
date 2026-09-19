@@ -12,12 +12,12 @@ import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日�
 import { getLocalBinDir } from "../核心工具-路径与平台/user-directories.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { constants, statSync } from "fs";
-import { access, stat as g } from "fs/promises";
-import { isAbsolute, join as w } from "path";
+import { access, stat } from "fs/promises";
+import { isAbsolute, join } from "path";
 var PROCESS_WRAPPER_ENV_VAR = "CLAUDE_CODE_PROCESS_WRAPPER",
   FAST_CRASH_WINDOW_MS = 12000,
   c = { argv: [], error: null, platformIgnored: !1, record: "" };
-class f {
+class ProcessWrapperState {
   memoRaw = void 0;
   memoState = c;
   getState() {
@@ -42,9 +42,9 @@ class f {
     return this.memoState;
   }
 }
-var S = new j(() => new f());
+var processWrapperStates = new j(() => new ProcessWrapperState());
 function getProcessWrapperState() {
-  return S.of(B().host).getState();
+  return processWrapperStates.of(B().host).getState();
 }
 function getLauncherArgv() {
   return getProcessWrapperState().argv;
@@ -61,7 +61,7 @@ async function isLauncherRunnable() {
 }
 async function isExecutableFile(r) {
   try {
-    if (!(await g(r)).isFile()) return !1;
+    if (!(await stat(r)).isFile()) return !1;
     return (await access(r, constants.X_OK), !0);
   } catch {
     return !1;
@@ -94,7 +94,7 @@ function v(r) {
       "the value is set but contains no launcher \u2014 unset the variable to run without one, or set it to the absolute path of your launcher",
     );
   let s = e[0];
-  if (s === process.execPath || s === w(getLocalBinDir(), "claude"))
+  if (s === process.execPath || s === join(getLocalBinDir(), "claude"))
     return i(
       `launcher \`${s}\` is Claude Code's own launch path \u2014 point ${PROCESS_WRAPPER_ENV_VAR} at your launcher, not at claude`,
     );

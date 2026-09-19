@@ -1524,15 +1524,15 @@ var WEB_FETCH_TOOL_NAME = "WebFetch",
 function Bn(e) {
   return `This cloud session's network access follows the "Allow network egress" setting for Cowork in claude.ai, not an environment allowlist. To allow direct artifact reads here, an organization admin (or the user, on an individual plan) can turn that setting on and either allow all domains or add ${e} to its additional allowed domains.`;
 }
-class $s {
+class AgentProxyEndpoint {
   endpoint = void 0;
   set(e) {
     this.endpoint = e;
   }
 }
-var Uc = new j(() => new $s());
+var agentProxyEndpoints = new j(() => new AgentProxyEndpoint());
 function Ls() {
-  return Uc.of(B().host);
+  return agentProxyEndpoints.of(B().host);
 }
 function setAgentProxyEndpoint(e) {
   Ls().set(e);
@@ -1572,7 +1572,7 @@ function Ms(e) {
     }) !== void 0
   );
 }
-class Ns {
+class ProxyAgentCache {
   builtFor = void 0;
   agent = void 0;
   warnedMalformed = void 0;
@@ -1594,12 +1594,12 @@ class Ns {
       ));
   }
 }
-var Yc = new j(() => new Ns());
+var proxyAgentCaches = new j(() => new ProxyAgentCache());
 function Is() {
   if (!isAnthropicHostedEnvironment()) return;
   let e = a.CCR_AGENT_PROXY_FRAME_HOSTS;
   if (e === void 0) return;
-  let t = Yc.of(B().host),
+  let t = proxyAgentCaches.of(B().host),
     r = Gc(e);
   if (r === void 0) {
     t.warnMalformedOnce(e);
@@ -1700,7 +1700,7 @@ var FRAME_FAMILY_BOOT = S("boot"),
     ...bt(FRAME_FAMILY_SUBSCRIPTIONS, ["POST /subscribe/{slug}", "POST /unsubscribe/{slug}"]),
     ...bt(S("delete"), ["DELETE /{slug}"]),
     ...bt(S("favorites"), ["POST /favorite/{slug}", "DELETE /favorite/{slug}"]),
-    ...[],
+    
   ].sort((e, t) => Ds(e) - Ds(t));
 function bt(e, t) {
   return t.map((r) => {
@@ -3154,15 +3154,15 @@ function mergeCapabilities(e, t) {
   return { capabilities: p ? d : e, widened: p, conflict: _ };
 }
 var NO_PIN_VERSION_SENTINEL = "0.0.0";
-class vo {
+class SessionHostServers {
   served = void 0;
 }
-var xo = new Gt(() => new vo());
+var sessionHostServers = new Gt(() => new SessionHostServers());
 function setSessionHostServers(e, t) {
-  xo.of(e).served = t;
+  sessionHostServers.of(e).served = t;
 }
 function getSessionHostServers(e) {
-  return xo.peek(e)?.served;
+  return sessionHostServers.peek(e)?.served;
 }
 function isCapabilityFeatureEnabled(e, t, r) {
   let o = e.features;
@@ -3425,23 +3425,22 @@ function sanitizeDisplayText(e, t) {
 }
 import { randomUUID } from "crypto";
 import {
-  lstat as Co,
+  lstat,
   mkdir,
-  realpath as er,
-  rm as ti,
+  realpath,
+  rm,
   unlink,
   writeFile,
 } from "fs/promises";
-import Xe from "path";
-import { lstat as Qr, open as od, realpath as Po } from "fs/promises";
-import * as vt from "path";
-import { constants as Zr } from "fs";
+import path from "path";
+import { open } from "fs/promises";
+import { constants } from "fs";
 function getSafeReadOpenFlags() {
-  return Zr.O_RDONLY | getNoFollowOpenFlags();
+  return constants.O_RDONLY | getNoFollowOpenFlags();
 }
 function getNoFollowOpenFlags() {
   if (getCurrentPlatform() === "windows") return 0;
-  return Zr.O_NOFOLLOW | Zr.O_NONBLOCK;
+  return constants.O_NOFOLLOW | constants.O_NONBLOCK;
 }
 var SUPPORTED_BINARY_TARGETS = [
   "aarch64-apple-darwin",
@@ -3479,15 +3478,15 @@ function stripBinaryTargetSuffix(e, t) {
   return;
 }
 async function isExistingDirectory(e) {
-  return (await Qr(e).catch(() => null))?.isDirectory() === !0;
+  return (await lstat(e).catch(() => null))?.isDirectory() === !0;
 }
 async function checkContainedDirectory(e, t) {
   let r = e;
-  for (let _ of vt.relative(e, t).split(vt.sep).filter(Boolean)) {
-    r = vt.join(r, _);
+  for (let _ of path.relative(e, t).split(path.sep).filter(Boolean)) {
+    r = path.join(r, _);
     let w;
     try {
-      w = await Qr(r);
+      w = await lstat(r);
     } catch (E) {
       let R = A(E);
       return R === "ENOENT" || R === "ENOTDIR" ? "absent" : "refused";
@@ -3496,19 +3495,19 @@ async function checkContainedDirectory(e, t) {
       return w.isSymbolicLink() ? "refused" : "not-a-directory";
   }
   let [o, d] = await Promise.all([
-    Po(e).catch(() => null),
-    Po(t).catch(() => null),
+    realpath(e).catch(() => null),
+    realpath(t).catch(() => null),
   ]);
   if (o === null || d === null) return "refused";
-  let p = vt.relative(o, d);
-  return !p.startsWith("..") && !vt.isAbsolute(p) ? "ok" : "refused";
+  let p = path.relative(o, d);
+  return !p.startsWith("..") && !path.isAbsolute(p) ? "ok" : "refused";
 }
 async function readOptionalFileContent(e) {
   let t = await readTextFileCapped(e);
   return t.kind === "ok" ? t.content : void 0;
 }
 async function readTextFileCapped(e) {
-  let t = await Qr(e).catch((o) => {
+  let t = await lstat(e).catch((o) => {
     let d = A(o);
     if (d === "ENOENT" || d === "ENOTDIR") return null;
     throw o;
@@ -3517,7 +3516,7 @@ async function readTextFileCapped(e) {
   if (!t.isFile()) return { kind: "refused" };
   let r;
   try {
-    if (((r = await od(e, getSafeReadOpenFlags())), !(await r.stat()).isFile()))
+    if (((r = await open(e, getSafeReadOpenFlags())), !(await r.stat()).isFile()))
       return { kind: "refused" };
     let d = Buffer.alloc(MAX_PLUGIN_FILE_BYTES + 1),
       p = 0;
@@ -3545,32 +3544,32 @@ async function $o(e, t, r) {
       err: `not an artifact slug: ${d}`,
     };
   let p = `${ARTIFACT_STUB_URL_PREFIX}${d}`,
-    _ = Xe.join(e, d),
-    w = Xe.dirname(e),
-    E = await Co(w).catch(() => null);
-  if (E === null || !E.isDirectory() || (await er(w).catch(() => null)) !== w)
+    _ = path.join(e, d),
+    w = path.dirname(e),
+    E = await lstat(w).catch(() => null);
+  if (E === null || !E.isDirectory() || (await realpath(w).catch(() => null)) !== w)
     return {
       url: null,
       slug: null,
       version: null,
       err: "the stub publish directory is not inside a real directory",
     };
-  (await ei(e), await ei(_), await writeFileExclusive(Xe.join(_, "index.html"), t));
+  (await ei(e), await ei(_), await writeFileExclusive(path.join(_, "index.html"), t));
   for (let [V, J] of [
     ["thumbnail.img", r.thumbnail],
     ["thumbnail_dark.img", r.thumbnailDark],
   ])
-    if (J !== void 0) await writeFileExclusive(Xe.join(_, V), J);
-    else await ti(Xe.join(_, V), { recursive: !0, force: !0 });
-  let R = Xe.join(_, "files");
+    if (J !== void 0) await writeFileExclusive(path.join(_, V), J);
+    else await rm(path.join(_, V), { recursive: !0, force: !0 });
+  let R = path.join(_, "files");
   await ei(R);
-  let C = await er(R),
+  let C = await realpath(R),
     M = [],
-    D = (V) => V === C || V.startsWith(C + Xe.sep),
+    D = (V) => V === C || V.startsWith(C + path.sep),
     F = async (V) => {
-      let J = Xe.resolve(R, V);
-      if (!J.startsWith(R + Xe.sep)) return null;
-      if (hasReservedPathSegment(J, R + Xe.sep, DANGEROUS_FILES_LC))
+      let J = path.resolve(R, V);
+      if (!J.startsWith(R + path.sep)) return null;
+      if (hasReservedPathSegment(J, R + path.sep, DANGEROUS_FILES_LC))
         return (
           M.push({
             path: V,
@@ -3579,16 +3578,16 @@ async function $o(e, t, r) {
           }),
           null
         );
-      for (let U = Xe.dirname(J); ; U = Xe.dirname(U))
+      for (let U = path.dirname(J); ; U = path.dirname(U))
         try {
-          return D(await er(U)) ? J : null;
+          return D(await realpath(U)) ? J : null;
         } catch (te) {
           if (!W(te) || U === R) throw te;
         }
     },
     I = async (V) => {
       try {
-        return D(await er(Xe.dirname(V)));
+        return D(await realpath(path.dirname(V)));
       } catch (J) {
         if (W(J)) return "absent";
         throw J;
@@ -3617,7 +3616,7 @@ async function $o(e, t, r) {
     try {
       let J = await F(V.path);
       if (J === null) continue;
-      if ((await mkdir(Xe.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
+      if ((await mkdir(path.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
         continue;
       await writeFileExclusive(J, V.content);
     } catch (J) {
@@ -3659,14 +3658,14 @@ async function $o(e, t, r) {
     publishedAtMs: Date.now(),
   };
   return (
-    await writeFileExclusive(Xe.join(_, "manifest.json"), jsonStringify(ue, null, 2)),
+    await writeFileExclusive(path.join(_, "manifest.json"), jsonStringify(ue, null, 2)),
     { url: p, slug: d, version: "1", err: null }
   );
 }
 async function readArtifactStubFavicon(e, t) {
   if (!ARTIFACT_SLUG_RE.test(t)) return;
   try {
-    let r = await readOptionalFileContent(Xe.join(e, t, "manifest.json")),
+    let r = await readOptionalFileContent(path.join(e, t, "manifest.json")),
       o = r === void 0 ? void 0 : jsonParse(r);
     return isRecord(o) ? o.favicon : void 0;
   } catch {
@@ -3675,14 +3674,14 @@ async function readArtifactStubFavicon(e, t) {
 }
 async function ei(e) {
   try {
-    if (!(await Co(e)).isDirectory()) await ti(e, { force: !0 });
+    if (!(await lstat(e)).isDirectory()) await rm(e, { force: !0 });
   } catch (t) {
     if (!W(t)) throw t;
   }
   await mkdir(e, { recursive: !0 });
 }
 async function writeFileExclusive(e, t) {
-  (await ti(e, { recursive: !0, force: !0 }), await writeFile(e, t, { flag: "wx" }));
+  (await rm(e, { recursive: !0, force: !0 }), await writeFile(e, t, { flag: "wx" }));
 }
 var LIVE_DOC_ARTIFACT_KIND = "live-doc",
   LIVE_DOC_INDEX_PATH = "index.html";
@@ -11219,11 +11218,8 @@ function getDenyReasonHeader(e) {
   return El(e, "x-deny-reason", /^[a-z0-9_]+$/);
 }
 import {
-  lstat as Rl,
-  open as eh,
   readlink,
-  realpath as zi,
-  stat as nh,
+  stat,
 } from "fs/promises";
 async function readExactBytesFromHandle(e, t) {
   let r = Buffer.alloc(t + 1),
@@ -11235,14 +11231,13 @@ async function readExactBytesFromHandle(e, t) {
   }
   return o === t ? r.subarray(0, t) : null;
 }
-import { constants as Ui } from "fs";
 import {
   dirname,
   isAbsolute,
-  join as On,
+  join,
   normalize,
   relative,
-  sep as pt,
+  sep,
 } from "path";
 function Qt(e) {
   return Xo(e) || Dr(e);
@@ -11341,13 +11336,13 @@ function validateThumbnailHref(e) {
   return { rel: t.nfc };
 }
 function isPathWithinAnyRoot(e, t, r) {
-  return e === t || e.startsWith(t + pt) || e === r || e.startsWith(r + pt);
+  return e === t || e.startsWith(t + sep) || e === r || e.startsWith(r + sep);
 }
 function replacePathRootPrefix(e, t, r) {
   let o = Sr(normalize(t));
   if (o === r) return e;
   if (e === o) return r;
-  return e.startsWith(o + pt) ? r + e.slice(o.length) : e;
+  return e.startsWith(o + sep) ? r + e.slice(o.length) : e;
 }
 function Sr(e) {
   let t = e.replace(/\/+$/, "");
@@ -11355,14 +11350,14 @@ function Sr(e) {
 }
 function resolvePathWithinBase(e, t) {
   if (Qt(e)) return null;
-  if (e === "~" || e.startsWith(`~${pt}`) || e.startsWith("~/")) return null;
+  if (e === "~" || e.startsWith(`~${sep}`) || e.startsWith("~/")) return null;
   if (isAbsolute(e)) {
     let o = normalize(e);
     return Qt(o) ? null : o;
   }
   let r = normalize(e);
-  if (r === ".." || r.startsWith(`..${pt}`)) return null;
-  return On(t, r);
+  if (r === ".." || r.startsWith(`..${sep}`)) return null;
+  return join(t, r);
 }
 async function isSymlinkChainUnsafe(e) {
   let t = Sr(e);
@@ -11375,19 +11370,19 @@ async function isSymlinkChainUnsafe(e) {
     }
     if (ac(o, dirname(t))) return !0;
     if (o.split(/\/+/).includes("..")) return !0;
-    if (((t = Sr(isAbsolute(o) ? normalize(o) : On(dirname(t), o))), Qt(t))) return !0;
+    if (((t = Sr(isAbsolute(o) ? normalize(o) : join(dirname(t), o))), Qt(t))) return !0;
   }
   return !0;
 }
 async function oh(e, t, r) {
-  let o = await zi(e);
+  let o = await realpath(e);
   if (t === void 0) return { realCwd: o, realRoot: o, lexRoot: normalize(e) };
   if (Qt(t))
     return {
       errMsg: `root: ${JSON.stringify(t)} is a network path \u2014 the publish base must lie within the working directory`,
     };
   let d = normalize(t);
-  if (!isAbsolute(d) && (d === ".." || d.startsWith(`..${pt}`)))
+  if (!isAbsolute(d) && (d === ".." || d.startsWith(`..${sep}`)))
     return {
       errMsg:
         `root: ${JSON.stringify(t)} escapes the working directory \u2014 ` +
@@ -11397,7 +11392,7 @@ async function oh(e, t, r) {
     return {
       errMsg: `root: ${JSON.stringify(t)} is outside the working directory \u2014 pass a working-directory-relative path`,
     };
-  let p = isAbsolute(d) ? d : On(o, d),
+  let p = isAbsolute(d) ? d : join(o, d),
     _ = r?.denyPath?.(p, !1, t);
   if (_ !== void 0) return { errMsg: _ };
   if (await isSymlinkChainUnsafe(p))
@@ -11406,7 +11401,7 @@ async function oh(e, t, r) {
     };
   let w;
   try {
-    w = await zi(p);
+    w = await realpath(p);
   } catch {
     return { errMsg: `root: ${JSON.stringify(t)} not found` };
   }
@@ -11414,7 +11409,7 @@ async function oh(e, t, r) {
     return {
       errMsg: `root: ${JSON.stringify(t)} resolves to a network path \u2014 the publish base must lie within the working directory`,
     };
-  if (w !== o && !w.startsWith(o + pt))
+  if (w !== o && !w.startsWith(o + sep))
     return {
       errMsg:
         `root: ${JSON.stringify(t)} resolves outside the working ` +
@@ -11422,13 +11417,13 @@ async function oh(e, t, r) {
     };
   let E;
   try {
-    E = await nh(w);
+    E = await stat(w);
   } catch {
     return { errMsg: `root: ${JSON.stringify(t)} not found` };
   }
   if (!E.isDirectory())
     return { errMsg: `root: ${JSON.stringify(t)} is not a directory` };
-  let R = Sr(isAbsolute(d) ? d : On(normalize(e), d));
+  let R = Sr(isAbsolute(d) ? d : join(normalize(e), d));
   return { realCwd: o, realRoot: w, lexRoot: R };
 }
 async function resolvePublishFileManifest(e, t, r, o) {
@@ -11467,12 +11462,12 @@ async function resolvePublishFileManifest(e, t, r, o) {
       return {
         errMsg: `files: ${JSON.stringify(I)} is a network path \u2014 only files under the working directory can be published`,
       };
-    if (I === "~" || I.startsWith(`~${pt}`) || I.startsWith("~/"))
+    if (I === "~" || I.startsWith(`~${sep}`) || I.startsWith("~/"))
       return {
         errMsg: `files: ${JSON.stringify(I)} \u2014 "~" is not expanded here; pass a base-relative or absolute path`,
       };
     let N = isAbsolute(I) ? void 0 : normalize(I);
-    if (N !== void 0 && (N === ".." || N.startsWith(`..${pt}`)))
+    if (N !== void 0 && (N === ".." || N.startsWith(`..${sep}`)))
       return {
         errMsg:
           `files: ${JSON.stringify(I)} escapes the publish base \u2014 ` +
@@ -11488,9 +11483,9 @@ async function resolvePublishFileManifest(e, t, r, o) {
     let ue = o?.denyPath?.(ae, !1, I);
     if (ue !== void 0) return { errMsg: ue };
     if (w !== _) {
-      let re = N ?? (ae.startsWith(_ + pt) ? relative(_, ae) : void 0);
+      let re = N ?? (ae.startsWith(_ + sep) ? relative(_, ae) : void 0);
       if (re !== void 0) {
-        let ce = o?.denyPath?.(On(w, re), !0, I);
+        let ce = o?.denyPath?.(join(w, re), !0, I);
         if (ce !== void 0) return { errMsg: ce };
       }
     }
@@ -11500,7 +11495,7 @@ async function resolvePublishFileManifest(e, t, r, o) {
       };
     let V;
     try {
-      V = await zi(ae);
+      V = await realpath(ae);
     } catch (re) {
       return {
         errMsg: `files: ${JSON.stringify(I)} not found`,
@@ -11511,7 +11506,7 @@ async function resolvePublishFileManifest(e, t, r, o) {
       return {
         errMsg: `files: ${JSON.stringify(I)} resolves to a network path \u2014 only files under the working directory can be published`,
       };
-    if (V !== p && !V.startsWith(p + pt))
+    if (V !== p && !V.startsWith(p + sep))
       return {
         errMsg:
           `files: ${JSON.stringify(I)} resolves outside the working ` +
@@ -11522,7 +11517,7 @@ async function resolvePublishFileManifest(e, t, r, o) {
       if (re !== void 0) return { errMsg: re };
     }
     try {
-      let re = await Rl(V);
+      let re = await lstat(V);
       if (re.isSymbolicLink())
         return {
           errMsg: `files: ${JSON.stringify(I)} changed to a symlink after it was checked \u2014 retry the publish`,
@@ -11537,7 +11532,7 @@ async function resolvePublishFileManifest(e, t, r, o) {
     }
     let J;
     try {
-      J = await eh(V, Ui.O_RDONLY | (Ui.O_NOFOLLOW | Ui.O_NONBLOCK));
+      J = await open(V, constants.O_RDONLY | (constants.O_NOFOLLOW | constants.O_NONBLOCK));
     } catch (re) {
       if (re?.code === "ELOOP")
         return {
@@ -11551,7 +11546,7 @@ async function resolvePublishFileManifest(e, t, r, o) {
     let U, te;
     try {
       try {
-        if ((await Rl(V)).isSymbolicLink())
+        if ((await lstat(V)).isSymbolicLink())
           return {
             errMsg: `files: ${JSON.stringify(I)} changed to a symlink after it was checked \u2014 retry the publish`,
           };

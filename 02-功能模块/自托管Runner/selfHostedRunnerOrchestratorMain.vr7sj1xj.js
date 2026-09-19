@@ -41,29 +41,27 @@ import { constants } from "fs";
 import {
   access,
   mkdir,
-  readFile as ze,
-  stat as Qe,
+  readFile,
+  stat,
 } from "fs/promises";
 import { createServer } from "http";
 import { hostname } from "os";
-import { join as Je, resolve } from "path";
+import { join, resolve } from "path";
 import { spawn } from "child_process";
 import { randomBytes } from "crypto";
 import {
-  open as be,
+  open,
   readdir,
-  stat as Re,
   unlink,
   writeFile,
 } from "fs/promises";
 import { tmpdir } from "os";
-import { join as V } from "path";
 var P = 5000,
   $e = 512,
   ye = 300000;
 async function ve(e, t) {
-  let r = V(tmpdir(), `${e}-${randomBytes(6).toString("hex")}`),
-    o = await be(r, "wx", 384);
+  let r = join(tmpdir(), `${e}-${randomBytes(6).toString("hex")}`),
+    o = await open(r, "wx", 384);
   try {
     await o.writeFile(t);
   } catch (d) {
@@ -74,7 +72,7 @@ async function ve(e, t) {
   return r;
 }
 async function Ne(e, t, r, o, d) {
-  let n = V(e, t.jti);
+  let n = join(e, t.jti);
   try {
     (await writeFile(`${n}.jwt`, r, { mode: 384 }),
       await writeFile(`${n}.json`, jsonStringify(t, null, 2), { mode: 384 }),
@@ -88,8 +86,8 @@ async function Ne(e, t, r, o, d) {
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jwt|json|stderr)$/;
     for (let c of await readdir(e)) {
       if (!w.test(c)) continue;
-      let p = V(e, c),
-        a = await Re(p).catch(() => null);
+      let p = join(e, c),
+        a = await stat(p).catch(() => null);
       if (a?.isFile() && a.mtimeMs < s) await unlink(p).catch(() => {});
     }
   } catch (s) {
@@ -332,7 +330,6 @@ async function ne(e) {
     durationMs: Date.now() - r,
   };
 }
-import { readFile as Oe } from "fs/promises";
 var He = "/v1/code/scm-connectors/{provider}/{id}/tunnel",
   oe = 4003,
   Ce = 30000,
@@ -647,7 +644,7 @@ function le(e, t, r, o) {
     if (w) return;
     if (((a = null), !k))
       raceWithTimeout(
-        Oe(e.caFile, "utf8"),
+        readFile(e.caFile, "utf8"),
         Ue,
         `--scm-connector-ca-file read from ${e.caFile}`,
       )
@@ -934,10 +931,10 @@ async function ut(e) {
     throw Error(
       "orchestrator requires --hooks-dir (or SELF_HOSTED_RUNNER_HOOKS_DIR) \u2014 no spawn-runner hook directory configured",
     );
-  let t = Je(e, "spawn-runner"),
+  let t = join(e, "spawn-runner"),
     r;
   try {
-    r = await raceWithTimeout(Qe(t), 5000, `stat ${t}`);
+    r = await raceWithTimeout(stat(t), 5000, `stat ${t}`);
   } catch (o) {
     throw Error(
       `spawn-runner hook not found at ${t} \u2014 the orchestrator cannot start without it (${l(o)})`,
@@ -1617,7 +1614,7 @@ async function Et(e) {
   if (e.poolSecretFile)
     return (
       await raceWithTimeout(
-        ze(e.poolSecretFile, { encoding: "utf-8" }),
+        readFile(e.poolSecretFile, { encoding: "utf-8" }),
         Ze,
         `environment-secret read from ${e.poolSecretFile}`,
       )

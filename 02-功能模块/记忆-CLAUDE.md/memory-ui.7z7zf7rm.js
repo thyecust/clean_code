@@ -500,23 +500,23 @@ function Ot(Xn) {
 }
 F();
 import { mkdir } from "fs/promises";
-import { join as xt } from "path";
+import { join } from "path";
 var ze = `${MEMORY_LIST_TOOL_NAME} / ${MEMORY_READ_TOOL_NAME} / ${MEMORY_WRITE_TOOL_NAME}`,
   to = 80,
   Yo =
     /[\u2039\u203A\uFF1C\uFF1E\uFE64\uFE65\u3008\u3009\u2329\u232A\u27E8\u27E9\u02C2\u02C3]/g,
   Ko = 20000,
   Xo = 120000;
-class no {
+class OrgMemorySwitchEpoch {
   latest = 0;
   begin() {
     return ++this.latest;
   }
 }
-var Jo = new Gt(() => new no());
+var orgMemorySwitchEpochs = new Gt(() => new OrgMemorySwitchEpoch());
 async function ro(w, b) {
   try {
-    let M = Jo.of(w),
+    let M = orgMemorySwitchEpochs.of(w),
       k = M.begin(),
       R = b === "project" ? getStoredOrgMemorySelection() : null,
       P = getOrgMemoryIdentity(),
@@ -832,7 +832,7 @@ function un(w) {
 function ao(w) {
   return findGitRoot(w) !== null;
 }
-class co {
+class OrgMemoryRowsMemo {
   promise = null;
   rowsOnce(w) {
     return ((this.promise ??= w()), this.promise);
@@ -841,7 +841,7 @@ class co {
     this.promise = null;
   }
 }
-var rt = new Gt(() => new co());
+var orgMemoryRowsMemos = new Gt(() => new OrgMemoryRowsMemo());
 var Ae = "__open_folder__";
 function fn(w, b, M) {
   return w.rowsOnce(async () => {
@@ -870,7 +870,7 @@ function fn(w, b, M) {
         .filter((I) => I.scope === "team")
         .map((I) => ({
           mount: I.mount,
-          dir: xt(getTeamMemoryDir(), I.mount),
+          dir: join(getTeamMemoryDir(), I.mount),
           description:
             W !== void 0 && normalizeStorePath(I.path) === normalizeStorePath(W.path)
               ? I.mode === "rw" && getGrantedStoreMode(I.path) === "rw" && canWriteOrgMemory()
@@ -897,7 +897,7 @@ var Pt = "__org_memory_project_picker__",
 function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
   let R = w.project.originalCwd,
     P = sessionStateStore.of(w.host),
-    j = rt.of(w),
+    j = orgMemoryRowsMemos.of(w),
     { storageV5: W, credentials: V } = useStorageV5Context(),
     B = kn(getSessionMemoryFiles(w, !1, W, V)),
     I = isAutoMemoryEnabled() || isSafeMode(),
@@ -936,8 +936,8 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                     : "signed out \u2014 next session decides fresh",
               }
             : null,
-    mt = xt(getClaudeConfigDir(), "CLAUDE.md"),
-    Ke = xt(R, "CLAUDE.md"),
+    mt = join(getClaudeConfigDir(), "CLAUDE.md"),
+    Ke = join(R, "CLAUDE.md"),
     ho = B.some((S) => S.path === mt),
     yo = B.some((S) => S.path === Ke),
     wo = [
@@ -1501,7 +1501,7 @@ var si = async (w, b) => {
   }
   return (
     clearMemoryFilesForSession(b.session),
-    rt.of(b.session).reset(),
+    orgMemoryRowsMemos.of(b.session).reset(),
     await getSessionMemoryFiles(b.session, !1, b.storageV5, b.credentials),
     e(bn, { session: b.session, onDone: w })
   );

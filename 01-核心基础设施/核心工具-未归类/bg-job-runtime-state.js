@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-class t {
+class BgJobRuntimeState {
   inFlightSnapshot = { tasks: 0, queued: 0, kinds: [], items: [] };
   inFlightSnapshotChanged = Le();
   pendingStructuredResult = void 0;
@@ -34,8 +34,8 @@ class t {
       }));
   }
 }
-var e = new j(() => new t());
+var bgJobRuntimeStatesByHost = new j(() => new BgJobRuntimeState());
 function getBgJobRuntimeState() {
-  return e.of(B().host);
+  return bgJobRuntimeStatesByHost.of(B().host);
 }
 export { getBgJobRuntimeState };

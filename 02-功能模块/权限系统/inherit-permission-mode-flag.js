@@ -15,12 +15,12 @@ var r = "--inherit-permission-mode";
 function s(e) {
   return e === r || e.startsWith(`${r}=`);
 }
-class m {
+class InheritPermissionModeFlag {
   mode;
 }
-var u = new j(() => new m());
+var inheritPermissionModeFlagsByHost = new j(() => new InheritPermissionModeFlag());
 function f() {
-  return u.of(B().host);
+  return inheritPermissionModeFlagsByHost.of(B().host);
 }
 function applyInheritPermissionMode({ inheritPermissionModeCli: e, resolvedMode: n, storageV5: i }) {
   if (!e) return;

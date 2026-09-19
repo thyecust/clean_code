@@ -28,7 +28,7 @@ import { getSessionEffortLevel, formatEffortSuffix } from "../权限系统/chunk
 import { getLowPriorityCopy, getRateLimitTypeLabel, getStatusPageHint, isInProcessTeammateTask, isLiveBackgroundTask, summarizeRecentActivities } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSpinnerFrames, getSpinnerPingPongFrames, quantizeToEighth, getPulseProgress, interpolateColor, formatRgbColor, parseRgbColor } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { DotSeparatedList } from "../../01-核心基础设施/核心工具-未归类/chunk-ff1hq6qq.js";
-import { useRenderHook, useRenderInput, ansiPrimitives, StatusRow, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
+import { ansiPrimitives, StatusRow, jA } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { shouldExcludeDefaultTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
 import { activeTimeTracker } from "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import { ToolResultRow } from "../../01-核心基础设施/UI组件-TUI/tool-result-row.js";

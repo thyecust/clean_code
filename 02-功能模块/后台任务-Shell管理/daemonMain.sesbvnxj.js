@@ -147,16 +147,16 @@ import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-�
 import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { spawn as Br } from "child_process";
-import { open as Or, rm as Lr } from "fs/promises";
+import { spawn } from "child_process";
+import { open, rm } from "fs/promises";
 import { homedir } from "os";
 import { dirname, resolve } from "path";
 import { createWriteStream } from "fs";
-import { rename as rt, stat as Ft, unlink as nt } from "fs/promises";
+import { rename, stat, unlink } from "fs/promises";
 var ot = 10485760;
 async function Le(t) {
   let e = process.stdout.isTTY,
-    o = await Ft(t)
+    o = await stat(t)
       .then((d) => d.size)
       .catch(() => 0);
   if (o > ot) (await st(t), (o = 0));
@@ -208,42 +208,33 @@ function at(t) {
 async function st(t) {
   let e = `${t}.1`;
   try {
-    await rt(t, e);
+    await rename(t, e);
   } catch (o) {
     if (W(o)) return;
-    (await nt(e).catch(() => {}),
-      await rt(t, e).catch(() => nt(t).catch(() => {})));
+    (await unlink(e).catch(() => {}),
+      await rename(t, e).catch(() => unlink(t).catch(() => {})));
   }
 }
-import { realpath, stat as Rr } from "fs/promises";
+import { realpath } from "fs/promises";
 import {
-  access as Qe,
-  lstat as Qt,
-  mkdir as je,
-  readdir as er,
-  rm as Fe,
-  unlink as te,
+  access,
+  lstat,
+  mkdir,
+  readdir,
   writeFile,
 } from "fs/promises";
 import { freemem } from "os";
-import { basename as Ve, join as yt } from "path";
-import { once as Ht } from "events";
+import { basename, join } from "path";
+import { once } from "events";
 import {
-  lstat as Gt,
-  mkdir as dt,
-  readdir as Kt,
   readFile,
-  rename as zt,
-  rm as lt,
-  unlink as ct,
 } from "fs/promises";
-import { basename as Ie, join as Ne } from "path";
 var Yt = 86400000,
   ze = 262144;
 async function xe(t, e) {
-  (await dt(getRejectedDispatchDir(), { recursive: !0, mode: 448 }).catch(() => {}),
-    await zt(t, Ne(getRejectedDispatchDir(), Ie(t))).catch(() => ct(t).catch(() => {})),
-    Te(Ie(t), e));
+  (await mkdir(getRejectedDispatchDir(), { recursive: !0, mode: 448 }).catch(() => {}),
+    await rename(t, join(getRejectedDispatchDir(), basename(t))).catch(() => unlink(t).catch(() => {})),
+    Te(basename(t), e));
 }
 function Te(t, e) {
   (logForDebugging(`[bg-dispatch] rejected ${t}: ${e}`, { level: "warn" }),
@@ -255,7 +246,7 @@ function ut(t) {
 async function ft(t, e) {
   let o;
   try {
-    o = await Gt(t);
+    o = await lstat(t);
   } catch (p) {
     if (W(p)) return;
     return (
@@ -267,8 +258,8 @@ async function ft(t, e) {
     return (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"), xe(t, S("symlink")));
   if (!o.isFile()) {
     (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
-      logForDebugging(`[bg-dispatch] removed non-regular ${Ie(t)}`, { level: "warn" }),
-      await lt(t, { recursive: !0, force: !0 }).catch(() => {}));
+      logForDebugging(`[bg-dispatch] removed non-regular ${basename(t)}`, { level: "warn" }),
+      await rm(t, { recursive: !0, force: !0 }).catch(() => {}));
     return;
   }
   if (o.size > ze)
@@ -285,7 +276,7 @@ async function ft(t, e) {
   }
   let a = mt(r);
   if (!a.ok) return xe(t, a.reason);
-  (e(a.dispatch), logFeatureOk("daemon_bg_dispatch_ingest"), await ct(t).catch(() => {}));
+  (e(a.dispatch), logFeatureOk("daemon_bg_dispatch_ingest"), await unlink(t).catch(() => {}));
 }
 var gt = { namespace: "daemon", relPath: ["dispatch"] };
 async function Jt(t) {
@@ -295,7 +286,7 @@ async function Jt(t) {
     });
     return;
   }
-  await dt(getDispatchDir(), { recursive: !0, mode: 448 }).catch(() => {});
+  await mkdir(getDispatchDir(), { recursive: !0, mode: 448 }).catch(() => {});
 }
 function mt(t) {
   let e,
@@ -327,7 +318,7 @@ function mt(t) {
   return { ok: !0, dispatch: r.data };
 }
 async function Ye(t) {
-  await lt(Ne(getDispatchDir(), t), { recursive: !0, force: !0 }).catch(() => {});
+  await rm(join(getDispatchDir(), t), { recursive: !0, force: !0 }).catch(() => {});
 }
 async function ht(t) {
   (logFeatureBad("daemon_bg_dispatch_ingest", "not_a_file"),
@@ -346,7 +337,7 @@ async function Ke(t, e, o, r) {
 }
 async function wt(t, e, o) {
   let r = STORAGE_KEYS.daemon(["dispatch", e]),
-    a = await inspectRegularFileForRead(Ne(getDispatchDir(), e));
+    a = await inspectRegularFileForRead(join(getDispatchDir(), e));
   if (a.kind === "refused") {
     if (a.symlink) {
       (logFeatureBad("daemon_bg_dispatch_ingest", "symlink"),
@@ -436,14 +427,14 @@ async function qt(t, e) {
   }
   let o;
   try {
-    o = await Kt(getDispatchDir());
+    o = await readdir(getDispatchDir());
   } catch (r) {
     if (W(r)) return;
     throw r;
   }
   for (let r of o) {
     if (Ue(r)) continue;
-    await ft(Ne(getDispatchDir(), r), t);
+    await ft(join(getDispatchDir(), r), t);
   }
 }
 function _t(t) {
@@ -464,14 +455,14 @@ async function Zt(t, e) {
       depth: 0,
       usePolling: r,
       interval: 100,
-      ignored: (p) => _t(Ie(p)) || Ie(p) === "rejected",
+      ignored: (p) => _t(basename(p)) || basename(p) === "rejected",
       ...(o === "windows" && {
         awaitWriteFinish: { stabilityThreshold: 50, pollInterval: 20 },
       }),
     });
   return (
     a.on("add", (p) => {
-      (isHoverRestEnabled() && e !== void 0 ? Xt(e, Ie(p), t) : ft(p, t)).catch((w) =>
+      (isHoverRestEnabled() && e !== void 0 ? Xt(e, basename(p), t) : ft(p, t)).catch((w) =>
         logForDebugging(`[bg-dispatch] ${w}`, { level: "error" }),
       );
     }),
@@ -481,7 +472,7 @@ async function Zt(t, e) {
           errno: Jr(p) ?? S("unknown"),
         }));
     }),
-    await withTimeout(Ht(a, "ready"), 5000, "chokidar ready").catch((p) =>
+    await withTimeout(once(a, "ready"), 5000, "chokidar ready").catch((p) =>
       logForDebugging(`[bg-dispatch] watcher ready wait: ${p}`),
     ),
     await qt(t, e).catch((p) => {
@@ -581,7 +572,7 @@ async function St(t, e = {}) {
           let le = ee;
           if (T === 0 && !K) {
             try {
-              await withTimeout(Qe(m.cwd), vt, `bg: cwd probe timed out for ${m.short}`);
+              await withTimeout(access(m.cwd), vt, `bg: cwd probe timed out for ${m.short}`);
             } catch (c) {
               le = W(c);
             }
@@ -590,7 +581,7 @@ async function St(t, e = {}) {
           if (le && !a.has(m.short) && T > 0) {
             try {
               (await withTimeout(
-                Qe(m.cwd),
+                access(m.cwd),
                 vt,
                 `bg: cwd re-probe timed out for ${m.short}`,
               ),
@@ -643,7 +634,7 @@ async function St(t, e = {}) {
             let c = de.isKilling || de.isRetiring || de.record.outcome;
             if (ce && !isProviderManagedByHost(de.dispatch))
               if (e.storageV5) await deleteHostManagedMarker(e.storageV5, m.short);
-              else await te(getHostManagedMarkerPath(m.short)).catch(() => {});
+              else await unlink(getHostManagedMarkerPath(m.short)).catch(() => {});
             if (
               (t(
                 c
@@ -660,7 +651,7 @@ async function St(t, e = {}) {
           }
           if (!isProviderManagedByHost(m))
             if (e.storageV5) deleteHostManagedMarker(e.storageV5, m.short);
-            else te(getHostManagedMarkerPath(m.short)).catch(() => {});
+            else unlink(getHostManagedMarkerPath(m.short)).catch(() => {});
           let { lowMem: me, level: Se } = getLowMemoryStatus();
           if (me && a.size > 0) {
             let c = Date.now() - re;
@@ -807,8 +798,8 @@ async function St(t, e = {}) {
           getCurrentPlatform() === "windows"
             ? [fr(e.storageV5)]
             : [
-                je(getRendezvousDir(), { recursive: !0, mode: 448 }).catch(() => {}),
-                je(getPtySocketDir(), { recursive: !0, mode: 448 }).catch(() => {}),
+                mkdir(getRendezvousDir(), { recursive: !0, mode: 448 }).catch(() => {}),
+                mkdir(getPtySocketDir(), { recursive: !0, mode: 448 }).catch(() => {}),
               ],
         ),
         pruneStaleDaemonDirs());
@@ -914,25 +905,25 @@ async function St(t, e = {}) {
                 e.credentials
                   .discardSpentCredentialFile(getTokensFilePath(m))
                   .catch(() => {});
-              else te(getTokensFilePath(m)).catch(() => {});
+              else unlink(getTokensFilePath(m)).catch(() => {});
               if (getCurrentPlatform() === "windows")
                 if (e.storageV5) et(e.storageV5, m, T.ptySock);
                 else
-                  (te(getPtyPidFilePath(m)).catch(() => {}),
-                    te(getPtyHostStderrPath(getPtySocketPath(m))).catch(() => {}),
-                    te(getPtyLateOutputPath(getPtySocketPath(m))).catch(() => {}),
-                    te(getPtyExecExitPath(T.ptySock ?? getPtySocketPath(m))).catch(() => {}));
+                  (unlink(getPtyPidFilePath(m)).catch(() => {}),
+                    unlink(getPtyHostStderrPath(getPtySocketPath(m))).catch(() => {}),
+                    unlink(getPtyLateOutputPath(getPtySocketPath(m))).catch(() => {}),
+                    unlink(getPtyExecExitPath(T.ptySock ?? getPtySocketPath(m))).catch(() => {}));
               else {
                 if (e.credentials)
                   e.credentials
                     .discardSpentCredentialFile(getCredentialFilePath(m))
                     .catch(() => {});
-                else te(getCredentialFilePath(m)).catch(() => {});
-                if ((te(T.rendezvousSock).catch(() => {}), T.ptySock)) {
-                  (te(T.ptySock).catch(() => {}),
-                    te(getPtyHostStderrPath(T.ptySock)).catch(() => {}),
-                    te(getPtyLateOutputPath(T.ptySock)).catch(() => {}),
-                    te(getPtyExecExitPath(T.ptySock)).catch(() => {}),
+                else unlink(getCredentialFilePath(m)).catch(() => {});
+                if ((unlink(T.rendezvousSock).catch(() => {}), T.ptySock)) {
+                  (unlink(T.ptySock).catch(() => {}),
+                    unlink(getPtyHostStderrPath(T.ptySock)).catch(() => {}),
+                    unlink(getPtyLateOutputPath(T.ptySock)).catch(() => {}),
+                    unlink(getPtyExecExitPath(T.ptySock)).catch(() => {}),
                     await reapDetachedRepl(T.replPid, T.replProcStart));
                   try {
                     process.kill(T.pid, 0);
@@ -1214,7 +1205,7 @@ async function St(t, e = {}) {
               !m?.skipPathCleanup &&
               getCurrentPlatform() !== "windows")
           )
-            await Fe(getDaemonRuntimeDir(), { recursive: !0, force: !0 }).catch(() => {});
+            await rm(getDaemonRuntimeDir(), { recursive: !0, force: !0 }).catch(() => {});
         },
       };
     };
@@ -1261,7 +1252,7 @@ function qe(t, e, o, r, a, p) {
                 ),
               ),
             ).catch((v) => logError(v))
-          : Fe(d, { recursive: !0, force: !0 }).catch((v) => logError(v)),
+          : rm(d, { recursive: !0, force: !0 }).catch((v) => logError(v)),
       );
     else if (w === "killed" && e.isHandoffKill)
       logEvent("tengu_bg_handoff_settle", { jobSessionId: sanitizeAnalyticsId(e.record.sessionId) });
@@ -1298,13 +1289,13 @@ function qe(t, e, o, r, a, p) {
                         return;
                       },
                     );
-                return Qe(yt(d, "state.json")).then(
+                return access(join(d, "state.json")).then(
                   () => {
                     return;
                   },
                   (N) =>
                     A(N) === "ENOENT"
-                      ? Fe(d, { recursive: !0, force: !0 }).catch((O) => logError(O))
+                      ? rm(d, { recursive: !0, force: !0 }).catch((O) => logError(O))
                       : void 0,
                 );
               }
@@ -1375,7 +1366,7 @@ function qe(t, e, o, r, a, p) {
     else
       ue(
         r,
-        te(getTokensFilePath(e.record.short)).catch(() => {}),
+        unlink(getTokensFilePath(e.record.short)).catch(() => {}),
       );
     let E = e.rosterEntry();
     if (getCurrentPlatform() === "windows")
@@ -1383,19 +1374,19 @@ function qe(t, e, o, r, a, p) {
       else
         (ue(
           r,
-          te(getPtyPidFilePath(e.record.short)).catch(() => {}),
+          unlink(getPtyPidFilePath(e.record.short)).catch(() => {}),
         ),
           ue(
             r,
-            te(getPtyHostStderrPath(getPtySocketPath(e.record.short))).catch(() => {}),
+            unlink(getPtyHostStderrPath(getPtySocketPath(e.record.short))).catch(() => {}),
           ),
           ue(
             r,
-            te(getPtyLateOutputPath(getPtySocketPath(e.record.short))).catch(() => {}),
+            unlink(getPtyLateOutputPath(getPtySocketPath(e.record.short))).catch(() => {}),
           ),
           ue(
             r,
-            te(getPtyExecExitPath(E.ptySock ?? getPtySocketPath(e.record.short))).catch(() => {}),
+            unlink(getPtyExecExitPath(E.ptySock ?? getPtySocketPath(e.record.short))).catch(() => {}),
           ));
     else {
       if (p.credentials)
@@ -1408,30 +1399,30 @@ function qe(t, e, o, r, a, p) {
       else
         ue(
           r,
-          te(getCredentialFilePath(e.record.short)).catch(() => {}),
+          unlink(getCredentialFilePath(e.record.short)).catch(() => {}),
         );
       if (
         (ue(
           r,
-          te(E.rendezvousSock).catch(() => {}),
+          unlink(E.rendezvousSock).catch(() => {}),
         ),
         E.ptySock)
       )
         (ue(
           r,
-          te(E.ptySock).catch(() => {}),
+          unlink(E.ptySock).catch(() => {}),
         ),
           ue(
             r,
-            te(getPtyHostStderrPath(E.ptySock)).catch(() => {}),
+            unlink(getPtyHostStderrPath(E.ptySock)).catch(() => {}),
           ),
           ue(
             r,
-            te(getPtyLateOutputPath(E.ptySock)).catch(() => {}),
+            unlink(getPtyLateOutputPath(E.ptySock)).catch(() => {}),
           ),
           ue(
             r,
-            te(getPtyExecExitPath(E.ptySock)).catch(() => {}),
+            unlink(getPtyExecExitPath(E.ptySock)).catch(() => {}),
           ));
     }
     if (e.dispatch.launch.mode === "exec" && w !== "killed") {
@@ -1495,7 +1486,7 @@ function qe(t, e, o, r, a, p) {
 async function cr(t, e, o = {}) {
   let r = getCurrentPlatform() === "windows",
     [a, p] = r ? [getPtyPidDir(), ".pid"] : [getPtySocketDir(), ".sock"],
-    w = r && o.storageV5 ? await listPtyPidFiles(o.storageV5) : await er(a).catch(() => []),
+    w = r && o.storageV5 ? await listPtyPidFiles(o.storageV5) : await readdir(a).catch(() => []),
     d = new Set(w.filter((D) => D.endsWith(p))),
     k = 0;
   for (let D of w) {
@@ -1512,7 +1503,7 @@ async function cr(t, e, o = {}) {
         if (N && !d.has(N))
           if (r && o.storageV5)
             o.storageV5.delete(STORAGE_KEYS.daemon(["pty-pids", D])).catch(() => {});
-          else te(yt(a, D)).catch(() => {});
+          else unlink(join(a, D)).catch(() => {});
       }
       continue;
     }
@@ -1532,17 +1523,17 @@ async function cr(t, e, o = {}) {
           { resumable: "wake-only" },
           o.storageV5,
         ),
-          te(s).catch(() => {}),
-          te(C).catch(() => {}));
+          unlink(s).catch(() => {}),
+          unlink(C).catch(() => {}));
         return;
       }
       let N = () => {
         if (o.storageV5) et(o.storageV5, _, void 0);
         else
-          (te(B).catch(() => {}),
-            te(v).catch(() => {}),
-            te(s).catch(() => {}),
-            te(C).catch(() => {}));
+          (unlink(B).catch(() => {}),
+            unlink(v).catch(() => {}),
+            unlink(s).catch(() => {}),
+            unlink(C).catch(() => {}));
       };
       if (E) {
         (writeReapedTerminalState(
@@ -1581,7 +1572,7 @@ async function pr(t) {
     await ensureHostManagedScope(t);
     return;
   }
-  await je(getHostManagedDir(), { recursive: !0, mode: 448 });
+  await mkdir(getHostManagedDir(), { recursive: !0, mode: 448 });
 }
 async function fr(t) {
   if (isHoverRestEnabled() && t !== void 0) {
@@ -1590,16 +1581,16 @@ async function fr(t) {
     });
     return;
   }
-  await je(getPtyPidDir(), { recursive: !0 }).catch(() => {});
+  await mkdir(getPtyPidDir(), { recursive: !0 }).catch(() => {});
 }
 async function et(t, e, o) {
-  for (let r of [Ve(getPtyPidFilePath(e)), Ve(getPtyHostStderrPath(getPtySocketPath(e))), Ve(getPtyLateOutputPath(getPtySocketPath(e))), Ve(getPtyExecExitPath(o ?? getPtySocketPath(e)))])
+  for (let r of [basename(getPtyPidFilePath(e)), basename(getPtyHostStderrPath(getPtySocketPath(e))), basename(getPtyLateOutputPath(getPtySocketPath(e))), basename(getPtyExecExitPath(o ?? getPtySocketPath(e)))])
     await t.delete(STORAGE_KEYS.daemon(["pty-pids", r])).catch(() => {});
 }
 async function gr(t) {
-  let e = await Qt(t).catch(() => null);
+  let e = await lstat(t).catch(() => null);
   if (e === null || e.isDirectory()) return !1;
-  return (await Fe(t, { recursive: !0, force: !0 }), !0);
+  return (await rm(t, { recursive: !0, force: !0 }), !0);
 }
 async function bt(t, e, o, r) {
   if (await gr(o)) return;
@@ -1628,8 +1619,6 @@ function Ze(t, e, o, r) {
 function ue(t, e) {
   (t.add(e), e.finally(() => t.delete(e)));
 }
-import { spawn as hr } from "child_process";
-import { access as wr } from "fs/promises";
 import { createInterface } from "readline";
 var _r = 60000,
   kr = 5000,
@@ -1719,7 +1708,7 @@ class Ge {
     let e = Date.now();
     this.spawnedAt = e;
     let o = applyProcessWrapper(this.invocation),
-      r = hr(o.cmd, [...o.prefixArgs, "--daemon-worker", this.kind], {
+      r = spawn(o.cmd, [...o.prefixArgs, "--daemon-worker", this.kind], {
         stdio: this.authManager
           ? ["pipe", "pipe", "pipe", "ipc"]
           : ["pipe", "pipe", "pipe"],
@@ -1862,7 +1851,7 @@ class Ge {
     }
     if (t !== 0 || r < _r) {
       if ((this.consecutiveCrashes++, getLauncherArgv().length > 0))
-        wr(this.invocation.target)
+        access(this.invocation.target)
           .catch(() => findInstalledVersionBinary())
           .then((w) => {
             if (typeof w === "string" && w && w !== this.invocation.target)
@@ -2052,7 +2041,7 @@ var Ar = 60000,
 async function At(t) {
   try {
     let e = await realpath(t),
-      o = await Rr(e);
+      o = await stat(e);
     return { target: e, mtimeMs: o.mtimeMs };
   } catch (e) {
     if (W(e)) return null;
@@ -3508,7 +3497,7 @@ async function en(t, e, o, r) {
         stderr_captured: d.length > 0,
       });
   }
-  if (p) Lr(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
+  if (p) rm(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
   if (a)
     (logError(`daemon: upgrade self-respawn failed: ${l(a)}`),
       await logFirstPartyEventAsync("tengu_bg_daemon_spawn_failed", {
@@ -3520,7 +3509,7 @@ async function en(t, e, o, r) {
 }
 async function tn(t, e) {
   {
-    let w = Br("tail", ["-f", t], { stdio: "inherit", ...Bs("helper") });
+    let w = spawn("tail", ["-f", t], { stdio: "inherit", ...Bs("helper") });
     await new Promise((d) => {
       (w.on("exit", (k) => {
         if (k) process.exitCode = k;
@@ -3538,7 +3527,7 @@ async function tn(t, e) {
   }
   let o;
   try {
-    o = await Or(t, "r");
+    o = await open(t, "r");
   } catch (w) {
     (U(`cannot open ${t}: ${l(w)}`), process.exit(1));
   }

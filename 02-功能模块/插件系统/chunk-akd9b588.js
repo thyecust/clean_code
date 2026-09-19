@@ -97,8 +97,8 @@ function resolvePluginIdentity(e, t) {
     marketplace: u,
   };
 }
-import { readFile as Je, unlink } from "fs/promises";
-import { join as je } from "path";
+import { readFile, unlink } from "fs/promises";
+import { join } from "path";
 var he = 1,
   Qe = "plugin-catalog-cache.json",
   Z =
@@ -134,7 +134,7 @@ var he = 1,
   ),
   nt = createLazyValue(() => c({ version: T(), fetchedAt: s(), catalog: Ae() }));
 function Ne() {
-  return je(getPluginsDir(), Qe);
+  return join(getPluginsDir(), Qe);
 }
 async function at(e) {
   let t = Ne(),
@@ -148,7 +148,7 @@ async function at(e) {
     let i = o.value;
     return Buffer.from(i.buffer, i.byteOffset, i.byteLength).toString("utf-8");
   }
-  return await Je(t, { encoding: "utf-8" });
+  return await readFile(t, { encoding: "utf-8" });
 }
 async function st(e) {
   try {
@@ -187,7 +187,7 @@ async function rt(e, t) {
         return;
       }
     } else (await getFsSurface().mkdir(getPluginsDir()), await writeFileAtomic(a, jsonStringify(e), 384));
-    await unlink(je(getPluginsDir(), "install-counts-cache.json")).catch(() => {});
+    await unlink(join(getPluginsDir(), "install-counts-cache.json")).catch(() => {});
   } catch (a) {
     logForDebugging(`Failed to save plugin catalog cache: ${l(a)}`, { level: "error" });
   }
@@ -204,7 +204,7 @@ async function ot() {
     throw (logPluginRemoteFetch("plugin_catalog", Z, "failure", performance.now() - e, classifyNetworkErrorKind(t)), t);
   }
 }
-class xe {
+class PluginCatalogCache {
   promise;
   load(e) {
     return (this.promise ??= e());
@@ -213,9 +213,9 @@ class xe {
     this.promise = void 0;
   }
 }
-var it = new j(() => new xe());
+var pluginCatalogCache = new j(() => new PluginCatalogCache());
 function Me(e) {
-  let t = it.of(B().host);
+  let t = pluginCatalogCache.of(B().host);
   return t.load(async () => {
     let a = await st(e);
     if (a) return (logPluginRemoteFetch("plugin_catalog", Z, "cache_hit", 0), a.catalog);
@@ -283,8 +283,7 @@ function formatCompactCount(e) {
 import {
   lstat,
   readdir,
-  readFile as $e,
-  stat as ze,
+  stat,
 } from "fs/promises";
 import * as h from "path";
 var ct = new Set([
@@ -433,7 +432,7 @@ async function ht(e) {
   let t = h.resolve(e),
     a;
   try {
-    a = await $e(t, { encoding: "utf-8" });
+    a = await readFile(t, { encoding: "utf-8" });
   } catch (r) {
     let o = A(r),
       i;
@@ -488,7 +487,7 @@ async function He(e, t) {
         )
           return;
         try {
-          return await ze(h.resolve(C, y));
+          return await stat(h.resolve(C, y));
         } catch (S) {
           let R = A(S);
           a.push({
@@ -669,7 +668,7 @@ async function kt(e) {
     r = h.resolve(e),
     o;
   try {
-    o = await $e(r, { encoding: "utf-8" });
+    o = await readFile(r, { encoding: "utf-8" });
   } catch (d) {
     let g = A(d),
       P;
@@ -1617,7 +1616,7 @@ async function Et(e) {
   let t = h.resolve(e),
     a = null;
   try {
-    a = await ze(t);
+    a = await stat(t);
   } catch (o) {
     if (!W(o)) throw o;
   }
@@ -1653,7 +1652,7 @@ async function Et(e) {
       return ye(e);
     case "unknown": {
       try {
-        let o = await $e(t, { encoding: "utf-8" }),
+        let o = await readFile(t, { encoding: "utf-8" }),
           i = jsonParse(cs(o));
         if (Array.isArray(i.plugins)) return ye(e);
       } catch (o) {
@@ -1787,13 +1786,11 @@ async function Rt(e) {
   return (C(t, R), k);
 }
 var Ye = toESM(pg(), 1);
-import { readFile as Ge, stat as jt } from "fs/promises";
 import {
   dirname,
-  join as ue,
   relative,
   resolve,
-  sep as Ue,
+  sep,
 } from "path";
 async function buildPluginTagPlan(e, t = {}) {
   let a = [],
@@ -1952,7 +1949,7 @@ async function Tt(e) {
   let t = resolve(e),
     a;
   try {
-    a = await jt(t);
+    a = await stat(t);
   } catch (o) {
     return {
       ok: !1,
@@ -1962,13 +1959,13 @@ async function Tt(e) {
   let r = a.isFile()
     ? [[dirname(dirname(t)), t]]
     : [
-        [t, ue(t, ".claude-plugin", "plugin.json")],
-        [dirname(t), ue(t, "plugin.json")],
+        [t, join(t, ".claude-plugin", "plugin.json")],
+        [dirname(t), join(t, "plugin.json")],
       ];
   for (let [o, i] of r) {
     let f;
     try {
-      f = await Ge(i, { encoding: "utf-8" });
+      f = await readFile(i, { encoding: "utf-8" });
     } catch (k) {
       if (W(k)) continue;
       return { ok: !1, error: `Cannot read ${i}: ${l(k)}` };
@@ -1988,14 +1985,14 @@ async function Tt(e) {
   }
   return {
     ok: !1,
-    error: `No plugin manifest found. Expected ${ue(t, ".claude-plugin", "plugin.json")}.`,
+    error: `No plugin manifest found. Expected ${join(t, ".claude-plugin", "plugin.json")}.`,
   };
 }
 async function At(e, t) {
   let a = findGitRoot(e) ?? void 0,
     r = e;
   for (;;) {
-    let o = ue(r, ".claude-plugin", "marketplace.json"),
+    let o = join(r, ".claude-plugin", "marketplace.json"),
       i = await Nt(o);
     if (i) {
       for (let [u, k] of i.plugins.entries())
@@ -2010,7 +2007,7 @@ async function At(e, t) {
 async function Nt(e) {
   let t;
   try {
-    t = await Ge(e, { encoding: "utf-8" });
+    t = await readFile(e, { encoding: "utf-8" });
   } catch (o) {
     if (W(o)) return;
     return;
@@ -2034,7 +2031,7 @@ function xt(e, t, a, r) {
 function Mt(e, t) {
   let a = (r) => {
     let o = resolve(r);
-    return o.endsWith(Ue) ? o.slice(0, -Ue.length) : o;
+    return o.endsWith(sep) ? o.slice(0, -sep.length) : o;
   };
   return a(e) === a(t);
 }

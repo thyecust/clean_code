@@ -42,7 +42,7 @@ import { getCurrentPlatform } from "../核心工具-路径与平台/platform-det
 import { createHash } from "crypto";
 import { release } from "os";
 import { homedir } from "os";
-import { sep as j } from "path";
+import { sep } from "path";
 var f = "<user-code>";
 function H() {
   try {
@@ -74,7 +74,7 @@ function G(e) {
   if (y(n)) return C(n);
   if (n.startsWith("/snapshot/")) n = n.slice(10);
   let t = H();
-  if (t && n.startsWith(t + j)) n = "~" + n.slice(t.length);
+  if (t && n.startsWith(t + sep)) n = "~" + n.slice(t.length);
   return n;
 }
 var Y = ["src/", "packages/"];

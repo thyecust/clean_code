@@ -78,7 +78,7 @@ async function getPluginArgumentCompletions(a, n, r) {
       case "install":
       case "i": {
         if (n.includes("/") || n.includes("\\")) return [];
-        return c(await f(g.of(B().host), r), n);
+        return c(await f(pluginArgumentCompletionsCache.of(B().host), r), n);
       }
       case "list":
       case "ls":
@@ -105,7 +105,7 @@ async function getPluginArgumentCompletions(a, n, r) {
   }
   return [];
 }
-class d {
+class PluginArgumentCompletionsCache {
   key = null;
   candidates = [];
   get(a) {
@@ -115,7 +115,7 @@ class d {
     ((this.key = a), (this.candidates = n));
   }
 }
-var g = new j(() => new d());
+var pluginArgumentCompletionsCache = new j(() => new PluginArgumentCompletionsCache());
 async function f(a, n) {
   let r = await getKnownMarketplacesOrEmpty(n),
     l = Object.keys(r).sort(),

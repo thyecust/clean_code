@@ -574,7 +574,7 @@ function createSettingsViewModel(l) {
           },
         ]
       : []),
-    ...[],
+    
     {
       id: "tips",
       label: "Show tips",
@@ -1154,7 +1154,7 @@ function createSettingsViewModel(l) {
               ]
             : []),
         ]),
-    ...[],
+    
     Me
       ? {
           id: "autoUpdatesChannel",
@@ -1555,9 +1555,9 @@ function createSettingsViewModel(l) {
           },
         ]
       : []),
-    ...[],
+    
     ...(isBridgeEnabled(), []),
-    ...[],
+    
     ...(ke
       ? [
           {

@@ -93,18 +93,18 @@ import {
   realpath,
   unlink,
 } from "fs/promises";
-import { createServer, Socket as je } from "net";
+import { createServer, Socket } from "net";
 import {
   basename,
   dirname,
   isAbsolute,
-  join as U,
+  join,
   normalize,
   resolve,
 } from "path";
 var Pe = 500,
   Ne = 32;
-class ye {
+class PeerSelfVerdictCache {
   verdicts = new Map();
   lookup(e) {
     let t = this.verdicts.get(e);
@@ -119,7 +119,7 @@ class ye {
     this.verdicts.set(e, t);
   }
 }
-var Le = new j(() => new ye()),
+var peerSelfVerdictCaches = new j(() => new PeerSelfVerdictCache()),
   Ke = {
     readAncestors: async (e) => {
       let { ancestors: t, readFailed: i, truncated: r } = await getAncestorPidsCheckedAsync(e);
@@ -148,7 +148,7 @@ async function We(e, t = Ke) {
   }
   if (i === void 0) return "no-evidence";
   let r = `${e}:${i}`,
-    d = Le.of(B().host),
+    d = peerSelfVerdictCaches.of(B().host),
     s = d.lookup(r);
   if (s !== void 0) return s ? "self" : "not-self";
   let w;
@@ -178,7 +178,7 @@ async function _e(e) {
   return i === "self" || (i === "no-evidence" && e.childTokenPresented);
 }
 var ne = 30000;
-class we {
+class UdsMessagingStateStore {
   activeSocketPath = void 0;
   connectedClients = new Set();
   onEnqueue = null;
@@ -239,7 +239,7 @@ function getUdsStartFailureDetail(e) {
       return;
   }
 }
-var udsMessagingStateStore = new j(() => new we());
+var udsMessagingStateStore = new j(() => new UdsMessagingStateStore());
 function c() {
   return udsMessagingStateStore.of(B().host);
 }
@@ -791,14 +791,14 @@ function getUdsMessagingSocketPath() {
 var z = 103;
 function getDefaultUdsSocketPath() {
   let e = a.XDG_RUNTIME_DIR || getTempBaseDir(),
-    t = resolve(U(e, "cc-socks", `${process.pid}.sock`));
+    t = resolve(join(e, "cc-socks", `${process.pid}.sock`));
   if (Buffer.byteLength(t) <= z) return t;
   return getPerUidFallbackUdsSocketPath();
 }
 function getPerUidFallbackUdsSocketPath(e = process.getuid?.() ?? 0) {
   let t = a.TERMUX_VERSION ? a.PREFIX : void 0,
-    i = t ? U(t, "tmp") : "/tmp";
-  return U(i, `cc-socks-${e}`, `${process.pid}.sock`);
+    i = t ? join(t, "tmp") : "/tmp";
+  return join(i, `cc-socks-${e}`, `${process.pid}.sock`);
 }
 async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   for (let o of c().connectedClients) o.destroy();
@@ -835,7 +835,7 @@ function sn(e, t, i, r) {
 }
 function ge(e) {
   return new Promise((t) => {
-    let i = new je(),
+    let i = new Socket(),
       r = (d) => {
         (i.destroy(), t(d));
       };
@@ -860,9 +860,9 @@ function te(e, t) {
 function rn(e) {
   let t = `${e.replace(/\.sock$/, "")}-${randomBytes(4).toString("hex")}.sock`;
   if (Buffer.byteLength(t) <= z) return t;
-  let i = U(e, ".."),
-    r = z - Buffer.byteLength(U(i, ".sock"));
-  return U(i, `${randomBytes(8).toString("hex").slice(0, Math.max(1, r))}.sock`);
+  let i = join(e, ".."),
+    r = z - Buffer.byteLength(join(i, ".sock"));
+  return join(i, `${randomBytes(8).toString("hex").slice(0, Math.max(1, r))}.sock`);
 }
 async function on(e) {
   let t = `${basename(e).replace(/\.sock$/, "")}-`,
@@ -875,7 +875,7 @@ async function on(e) {
   for (let r of i) {
     if (!r.startsWith(t) || !/^[0-9a-f]{8}\.sock$/.test(r.slice(t.length)))
       continue;
-    let d = U(dirname(e), r);
+    let d = join(dirname(e), r);
     if ((await ge(d)) === "live") continue;
     try {
       (await unlink(d), logForDebugging(`[uds-messaging] Reaped stale moved-aside socket ${d}`));
@@ -1133,7 +1133,7 @@ async function Ae(e) {
   let w = getSystemDirAllowlist(),
     o = async (h, M) => {
       try {
-        let v = M.isSymbolicLink() ? U(await realpath(dirname(h)), basename(h)) : await realpath(h),
+        let v = M.isSymbolicLink() ? join(await realpath(dirname(h)), basename(h)) : await realpath(h),
           x = await lstat(v);
         return x.dev === M.dev && x.ino === M.ino ? v : void 0;
       } catch {
@@ -1430,7 +1430,7 @@ async function gn(e, t, i = {}) {
     } catch (p) {
       let E = fn(p) ? await getCurrentUid() : void 0,
         u = E === void 0 ? void 0 : resolve(getPerUidFallbackUdsSocketPath(E)),
-        _ = u === void 0 ? void 0 : U(u, "..");
+        _ = u === void 0 ? void 0 : join(u, "..");
       if (u === void 0 || _ === void 0 || _ === o) return $e(o, p, Ce(p));
       let k = xe(p);
       logForDebugging(

@@ -49,9 +49,9 @@ function V(o) {
     { key: STORAGE_KEYS.state("daemon-config"), offset: 0, length: DAEMON_CONFIG_MAX_BYTES + 1 },
   ]);
 }
-import { readFile as re } from "fs/promises";
-import { join as oe } from "path";
-import { readFile as Y, stat as Z } from "fs/promises";
+import { readFile } from "fs/promises";
+import { join } from "path";
+import { stat } from "fs/promises";
 import { dirname } from "path";
 async function D(o, t) {
   let e = o ?? getDaemonJsonPath(),
@@ -59,12 +59,12 @@ async function D(o, t) {
   if (isHoverRestEnabled() && t !== void 0 && e === getDaemonJsonPath()) r = await te(t, e);
   else
     try {
-      let u = await Z(e);
+      let u = await stat(e);
       if (!u.isFile() || u.size > DAEMON_CONFIG_MAX_BYTES)
         throw Error(
           `${e} is not a regular file (or exceeds 1MiB); refusing read-modify-write`,
         );
-      r = await Y(e, "utf8");
+      r = await readFile(e, "utf8");
     } catch (u) {
       if (!W(u)) throw u;
     }
@@ -175,7 +175,7 @@ var ne = 1000,
     }).strict(),
   );
 function z() {
-  return oe(getClaudeConfigDir(), "daemon.scheduled.status.json");
+  return join(getClaudeConfigDir(), "daemon.scheduled.status.json");
 }
 function N() {
   return STORAGE_KEYS.state("scheduled-status");
@@ -215,7 +215,7 @@ async function readScheduledStatus(o) {
     t = u.value;
   } else
     try {
-      t = await re(z(), "utf8");
+      t = await readFile(z(), "utf8");
     } catch {
       return null;
     }

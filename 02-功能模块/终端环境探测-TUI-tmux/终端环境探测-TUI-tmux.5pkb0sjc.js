@@ -70,7 +70,7 @@ function u() {
   if (getCurrentPlatform() !== "windows") return !1;
   return Boolean(a.SSH_CONNECTION || a.SSH_CLIENT || a.SSH_TTY);
 }
-class c {
+class TuiTrialState {
   latched = !1;
   mode = void 0;
   persisted = !1;
@@ -83,9 +83,9 @@ class c {
       a.unset("CLAUDE_CODE_TUI_TRIAL"));
   }
 }
-var x = new j(() => new c());
+var tuiTrialStates = new j(() => new TuiTrialState());
 function getTuiTrialState() {
-  return x.of(B().host);
+  return tuiTrialStates.of(B().host);
 }
 function latchTuiTrialFromEnv() {
   getTuiTrialState().latchFromEnv();
@@ -256,7 +256,7 @@ function getMouseMode() {
     return a.CLAUDE_CODE_DISABLE_MOUSE_CLICKS ? "scroll" : "full";
   return "full";
 }
-class _ {
+class MouseObservedState {
   observed = !1;
   changed = Le();
   subscribe = this.changed.subscribe;
@@ -268,15 +268,15 @@ class _ {
     ((this.observed = !0), this.changed.emit());
   }
 }
-var i = new j(() => new _());
+var mouseObservedStates = new j(() => new MouseObservedState());
 function markMouseObserved() {
-  i.of(B().host).note();
+  mouseObservedStates.of(B().host).note();
 }
 function hasMouseObserved() {
-  return i.of(B().host).hasObserved;
+  return mouseObservedStates.of(B().host).hasObserved;
 }
 function subscribeMouseObserved(e) {
-  return i.of(B().host).subscribe(e);
+  return mouseObservedStates.of(B().host).subscribe(e);
 }
 function isFullscreenActive(e = defaultFullscreenState) {
   return ld() && shouldUseFullscreen(e);

@@ -17,7 +17,7 @@ import { ToolResultRow } from "./tool-result-row.js";
 import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatHyperlink } from "../核心工具-字符串与文本/format-hyperlink.js";
-import { Qt, De, V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { formatToolResultPreview } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 F();

@@ -64,7 +64,7 @@ import {
   fstatSync,
   lstatSync,
   openSync,
-  read as de,
+  read,
   realpathSync,
 } from "fs";
 import { extname } from "path";
@@ -179,7 +179,7 @@ function isSymlink(e) {
     return !0;
   }
 }
-var J = promisify(de);
+var J = promisify(read);
 async function readApprovedLocalFile(e, r, s, u) {
   let t = r,
     o =

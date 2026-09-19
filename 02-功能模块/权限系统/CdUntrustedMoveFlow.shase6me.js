@@ -48,9 +48,9 @@ import { getGatingSettingsErrors } from "../../01-核心基础设施/设置-配�
 import { C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { resolve as so } from "path";
+import { resolve } from "path";
 F();
-import { join as le, resolve as ao } from "path";
+import { join } from "path";
 function de(s, { backstop: a = !1 } = {}) {
   return (
     s.allowRules.sources.length > 0 ||
@@ -67,11 +67,11 @@ function ge() {
   };
 }
 function Oe(s) {
-  let a = ao(s),
+  let a = resolve(s),
     l = resolveLocalSettingsStoreRoot(a, findCanonicalGitRootUncached),
-    c = parseSettingsFileUncached(le(a, ".claude", "settings.json")).settings,
-    u = le(l, ".claude", "settings.local.json"),
-    h = le(a, ".claude", "settings.local.json"),
+    c = parseSettingsFileUncached(join(a, ".claude", "settings.json")).settings,
+    u = join(l, ".claude", "settings.local.json"),
+    h = join(a, ".claude", "settings.local.json"),
     v = [parseSettingsFileUncached(u).settings, ...(h === u ? [] : [parseSettingsFileUncached(h).settings])].filter(
       (S) => S !== null,
     ),
@@ -534,7 +534,7 @@ async function ut(s, a, l) {
       onComplete: (m) => void w(i.modelMessage, m),
     });
   }
-  let g = findCanonicalGitRootUncached(so(h)),
+  let g = findCanonicalGitRootUncached(resolve(h)),
     G;
   try {
     G = Oe(h);
@@ -546,7 +546,7 @@ async function ut(s, a, l) {
   }
   return e(CdUntrustedMoveFlow, {
     directory: h,
-    trustRoot: g != null && g !== so(h) ? g : void 0,
+    trustRoot: g != null && g !== resolve(h) ? g : void 0,
     disclosures: G,
     onConfirm: async () => (
       await recordDirectoryTrust(h, a.storageV5).catch((i) => {

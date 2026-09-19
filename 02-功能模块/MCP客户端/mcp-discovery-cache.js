@@ -115,7 +115,7 @@ function Ee() {
 }
 var Ne = 4096,
   et = 1024,
-  tt = new j(() => new ke());
+  tt = new j(() => new PresentedCredentialLog());
 function getPresentedCredentialLog() {
   return tt.of(B().host);
 }
@@ -130,7 +130,7 @@ function encodeBasicAuth(e, t) {
 function rt() {
   return getDiscoveryCacheOffLatch() !== void 0;
 }
-class ke {
+class PresentedCredentialLog {
   seen = new Set();
   off = !1;
   incomplete = !1;
@@ -165,12 +165,11 @@ class ke {
     );
   }
 }
-import { createHash as pe } from "crypto";
-import { basename, join as U } from "path";
+import { createHash } from "crypto";
+import { basename, join } from "path";
 import {
   createCipheriv,
   createDecipheriv,
-  createHash as ot,
   randomBytes,
 } from "crypto";
 var Pe = 32,
@@ -231,7 +230,7 @@ function Te(e, t) {
   );
 }
 function ee(e) {
-  return ot("sha256")
+  return createHash("sha256")
     .update(e, "utf8")
     .digest()
     .subarray(0, Oe)
@@ -414,7 +413,7 @@ function Ue(e) {
   return;
 }
 function I() {
-  return U(getClaudeConfigDir(), "mcp-discovery-cache");
+  return join(getClaudeConfigDir(), "mcp-discovery-cache");
 }
 async function St(e, t) {
   if (!isDiscoveryCacheEligible(t)) return !1;
@@ -430,7 +429,7 @@ async function Ve(e, t) {
   if (!o) return { kind: "degenerate" };
   return {
     kind: "resolved",
-    hash: pe("sha256").update(o).digest("hex").slice(0, 16),
+    hash: createHash("sha256").update(o).digest("hex").slice(0, 16),
   };
 }
 async function Dt(e, t) {
@@ -453,7 +452,7 @@ async function kt(e, t) {
   let o = [r.token];
   if (t.type === "http" || t.type === "sse") o.push(i);
   return {
-    fingerprint: pe("sha256").update(o.join("\x00")).digest("hex"),
+    fingerprint: createHash("sha256").update(o.join("\x00")).digest("hex"),
     grantToken: i,
   };
 }
@@ -476,7 +475,7 @@ function he(e, t, r) {
       DD_SOURCEMAP_GROUP: "darwin",
     }.VERSION ?? "unknown",
   ].join("\x00");
-  return `${pe("sha256").update(i).digest("hex").slice(0, 32)}.json`;
+  return `${createHash("sha256").update(i).digest("hex").slice(0, 32)}.json`;
 }
 var Ct = /^[0-9a-f]{16}\0/;
 function evictMemoizedDiscoveryCachePaths(e) {
@@ -513,7 +512,7 @@ async function _(e, t) {
     let S = await kt(e, t);
     if (S === void 0) return;
     return {
-      path: U(I(), he(r, S.fingerprint, i)),
+      path: join(I(), he(r, S.fingerprint, i)),
       grantToken: S.grantToken,
       fingerprint: S.fingerprint,
       cacheKey: r,
@@ -1265,7 +1264,7 @@ async function qe(e, t) {
     i = await Pt(R());
   for (let o of i) {
     if (!o.endsWith(".json")) continue;
-    let d = U(I(), o);
+    let d = join(I(), o);
     try {
       let p;
       try {
@@ -1309,7 +1308,7 @@ function Ft(e, t, r) {
     let p = [];
     for (let u of r) {
       let h = u;
-      for (let w of MCP_DISCOVERY_ERAS) (p.push(P(U(i, he(u, d, w)), e, h)), (h = void 0));
+      for (let w of MCP_DISCOVERY_ERAS) (p.push(P(join(i, he(u, d, w)), e, h)), (h = void 0));
     }
     (await Promise.all(p), (o = !0));
   }).then(() => o);
@@ -1354,7 +1353,7 @@ async function deleteDiscoveryCacheEntry(e, t) {
     }
     let i = x(e, t),
       o = I(),
-      d = new Set(MCP_DISCOVERY_ERAS.map((u) => U(o, he(i, r.fingerprint, u)))),
+      d = new Set(MCP_DISCOVERY_ERAS.map((u) => join(o, he(i, r.fingerprint, u)))),
       p = [P(r.path, e, i)];
     for (let u of d) if (u !== r.path) p.push(P(u, e, void 0));
     (await Promise.all(p), await Ke(e, t));

@@ -919,15 +919,15 @@ function deleteCommentCensusEntry(e) {
   ve().delete(e);
 }
 var He = 180000;
-class io {
+class SessionUserBusyState {
   busy = !1;
   busySince = 0;
   idleWaiters = new Set();
   valveTimer = null;
 }
-var ei = new Gt(() => new io());
+var sessionUserBusyStates = new Gt(() => new SessionUserBusyState());
 function ct() {
-  return ei.of(B());
+  return sessionUserBusyStates.of(B());
 }
 function ao(e) {
   if (e.valveTimer !== null)
@@ -1384,7 +1384,7 @@ function stripGoneJobHolderFields(e, t) {
     } else o.set(r, i);
   return n ? o : e;
 }
-import { createHash, randomUUID as or } from "crypto";
+import { createHash, randomUUID } from "crypto";
 function getAlwaysAllowRuleDestination() {
   return isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv()) ? "userSettings" : "session";
 }
@@ -2009,7 +2009,6 @@ function $o(e, t) {
   if (n === e) return { ok: !1, reason: "noop" };
   return { ok: !0, content: n };
 }
-import { randomUUID as zi } from "crypto";
 function Wo() {
   let e = getArtifactState().autoReact;
   return (
@@ -2027,7 +2026,7 @@ var Xi = createLazyValue(() => c({ lane: X(["act", "pipeline"]) })),
 async function Bo(e) {
   if (ke()) return "pipeline";
   if (getAgentDepth(e.context.agentContext) >= getMaxSubagentSpawnDepth()) return "pipeline";
-  let t = zi().slice(0, 8),
+  let t = randomUUID().slice(0, 8),
     n = Ji,
     o = [];
   for (let d = e.thread.comments.length - 1; d >= 0 && n > 0; d--) {
@@ -2235,9 +2234,9 @@ async function ra(e) {
   }
   return n ? null : t;
 }
-import { writeFile, rm as sa, mkdtemp } from "fs/promises";
+import { writeFile, rm, mkdtemp } from "fs/promises";
 import { tmpdir } from "os";
-import { join as Go } from "path";
+import { join } from "path";
 var ht = null;
 function gt(e) {
   return ht != null && ht.isProbedLivePage(e);
@@ -4557,7 +4556,7 @@ ${j}`,
 }
 var Jo = "[which page of the artifact this thread is on could not be read]";
 function wt() {
-  return `U${or().replace(/-/g, "").slice(0, 12)}`;
+  return `U${randomUUID().replace(/-/g, "").slice(0, 12)}`;
 }
 async function Rt(e) {
   let { thread: t, context: n } = e,
@@ -5432,7 +5431,7 @@ async function xs(e) {
       declareAnswersSummon: d,
       continuesReplyId: l,
     } = e,
-    p = `autoedit-${i}-${getArtifactState().autoReact.postSeq++}-${or()}`,
+    p = `autoedit-${i}-${getArtifactState().autoReact.postSeq++}-${randomUUID()}`,
     S,
     R = null,
     w = !1,
@@ -5443,7 +5442,7 @@ async function xs(e) {
     P,
     D;
   try {
-    ((P = await mkdtemp(Go(tmpdir(), "autoedit-"))), (D = Go(P, "artifact.html")));
+    ((P = await mkdtemp(join(tmpdir(), "autoedit-"))), (D = join(P, "artifact.html")));
     let W = {
       file_path: D,
       url: o,
@@ -5510,7 +5509,7 @@ async function xs(e) {
     R = "publish pipeline error";
   } finally {
     if (S !== void 0) yo(S);
-    if (P !== void 0) await sa(P, { recursive: !0, force: !0 }).catch(() => {});
+    if (P !== void 0) await rm(P, { recursive: !0, force: !0 }).catch(() => {});
     if (D !== void 0) unlinkPath(D);
   }
   if (!w) {

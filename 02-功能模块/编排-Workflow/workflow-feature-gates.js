@@ -17,14 +17,14 @@ function areWorkflowsDisabledBySettings() {
     a.CLAUDE_CODE_DISABLE_WORKFLOWS || getMergedSettings()?.settings.disableWorkflows === !0
   );
 }
-class t {
+class WorkflowFeatureGates {
   cached = void 0;
   resolve() {
     if (this.cached !== void 0) return this.cached;
     return ((this.cached = i()), this.cached);
   }
 }
-var n = new j(() => new t());
+var workflowFeatureGates = new j(() => new WorkflowFeatureGates());
 function areWorkflowsEnabled() {
   if (areWorkflowsDisabledBySettings()) return !1;
   if (!isWorkflowsAllowedByPolicy()) return !1;
@@ -50,7 +50,7 @@ function shouldSkipWorkflowWarmup() {
   return a.CLAUDE_CODE_WORKFLOWS === !1 || !getFeatureValue_CACHED_MAY_BE_STALE("tengu_workflows_enabled", !0);
 }
 function o() {
-  return n.of(B().host).resolve();
+  return workflowFeatureGates.of(B().host).resolve();
 }
 function i() {
   if (a.CLAUDE_CODE_WORKFLOWS === !0) {

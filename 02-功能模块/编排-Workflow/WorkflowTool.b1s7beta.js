@@ -89,7 +89,7 @@ import {
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
-import { basename as st, resolve } from "path";
+import { basename, resolve } from "path";
 var yt = [
   "autopilot",
   "bugfix",
@@ -260,7 +260,7 @@ function jr(e) {
     return "non-stringifiable error";
   }
 }
-class pr {
+class WorkflowWorld {
   rows = [];
   rules = new Map();
   fired = new Set();
@@ -681,7 +681,7 @@ class pr {
   }
 }
 var tr = ["user", "model", "stop", "runaway", "pause"];
-import * as Mr from "vm";
+import * as vm from "vm";
 async function nr(e, r) {
   let t;
   try {
@@ -855,7 +855,7 @@ function Vr(e) {
         (e.registerTimers(_e),
           (H = createChildWorkflowVmContext(o, de, ye, _e)),
           (le = H.errorInfo),
-          _e.bindVMInvoke(Mr.runInContext("(fn => { fn() })", H.childCtx)));
+          _e.bindVMInvoke(vm.runInContext("(fn => { fn() })", H.childCtx)));
         for (let [Me, Ae] of [
           ["parallel", o.hooks.parallel],
           ["pipeline", o.hooks.pipeline],
@@ -973,7 +973,6 @@ function Vr(e) {
   }
   return { workflow: U, cut: B };
 }
-import * as Ke from "vm";
 function Ct(e) {
   return Array.isArray(e);
 }
@@ -1012,7 +1011,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     } = e.vmBoundary,
     { vmContext: F, hooks: B } = e,
     U = makeVmErrorExtractor(F),
-    j = Ke.runInContext("(p => { p.then(undefined, () => {}) })", F),
+    j = vm.runInContext("(p => { p.then(undefined, () => {}) })", F),
     J = { by: "script", in: t, memo: "chain" },
     N = J;
   function ne(P, C) {
@@ -1026,7 +1025,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
   }
   let q = { in: t },
     Y = (P, C) => (xt(C) ? q : { in: P.in }),
-    be = Ke.runInContext(
+    be = vm.runInContext(
       "(() => { const freeze = Object.freeze; return (put, read, on, retract, agent, workflow) => freeze({ put, read, on, retract, agent, workflow }) })()",
       F,
     );
@@ -1165,7 +1164,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     });
   }
   let Ae = wrapAsyncHostFunction(async (P) => P),
-    Fe = Ke.runInContext(
+    Fe = vm.runInContext(
       "(() => { const P = Promise; return () => new P(() => {}) })()",
       F,
     );
@@ -1317,7 +1316,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
       enumerable: !0,
       configurable: !1,
     }),
-    Ke.runInContext("delete globalThis.eval", F),
+    vm.runInContext("delete globalThis.eval", F),
     {
       as(P, C) {
         return ne({ by: P, in: t, memo: "none" }, C);
@@ -2066,7 +2065,7 @@ function br(e) {
   return r.length === 1 ? r[0] : void 0;
 }
 import { appendFile, mkdir, readFile } from "fs/promises";
-import { basename as qr, dirname, join as Vt } from "path";
+import { dirname, join } from "path";
 var Bt = createLazyValue(() => {
     let e = vx().nonnegative();
     return Ko("k", [
@@ -2096,13 +2095,13 @@ var Bt = createLazyValue(() => {
   Ut = 4194304;
 function Xr() {
   let e = fy() ?? getProjectDir(he());
-  return Vt(e, K(), Gr);
+  return join(e, K(), Gr);
 }
 function Zr(e) {
   let r = dirname(e),
     t = getProjectKeyFromDir(dirname(r));
-  if (t === void 0 || qr(e) !== Gr) return;
-  let d = STORAGE_KEYS.sessionJournal(t, qr(r), "world");
+  if (t === void 0 || basename(e) !== Gr) return;
+  let d = STORAGE_KEYS.sessionJournal(t, basename(r), "world");
   return validateStorageKey(d) === void 0 ? d : void 0;
 }
 function Qr(e, r, t) {
@@ -2316,24 +2315,24 @@ function tt(e, r) {
   }
   return (e.restore(a), a.length);
 }
-var nt = new Gt(() => new pr());
+var workflowWorlds = new Gt(() => new WorkflowWorld());
 function vr(e) {
-  return nt.of(e);
+  return workflowWorlds.of(e);
 }
-class ot {
+class WorkflowWorldOpenState {
   opened;
   unsubscribe;
 }
-var Rr = new Gt(() => new ot()),
+var workflowWorldOpenStates = new Gt(() => new WorkflowWorldOpenState()),
   Ht = new Gt(() => new Map());
 function Sr(e, r) {
-  let t = Rr.of(e);
+  let t = workflowWorldOpenStates.of(e);
   if (t.opened) return t.opened;
   if (t.unsubscribe === void 0) {
     let d = K();
     t.unsubscribe = sc((o, a) => {
       if (a === "cd" || a === "hydrate" || o === d) return;
-      (t.unsubscribe?.(), Rr.drop(e), nt.drop(e));
+      (t.unsubscribe?.(), workflowWorldOpenStates.drop(e), workflowWorlds.drop(e));
     });
   }
   return (
@@ -2364,7 +2363,7 @@ function Sr(e, r) {
       } catch (x) {
         ((I = !0), logForDebugging(`world journal replay failed: ${x}`, { level: "warn" }));
       }
-      if (Rr.peek(e) !== t) return Sr(e, r);
+      if (workflowWorldOpenStates.peek(e) !== t) return Sr(e, r);
       if (!_) {
         if (
           (logFeatureSad("workflow_journal", I ? "replay_failed" : "not_whole"),
@@ -2739,7 +2738,7 @@ name: ${e.name}`;
       let r = e ? qe(e) : void 0;
       if (r && ke()) return `workflow ${r.runId} \xB7 ${br(r) ?? "?"}`;
       if (e?.scriptPath) {
-        let t = st(stripInvisibleCharacters(e.scriptPath));
+        let t = basename(stripInvisibleCharacters(e.scriptPath));
         return e.script ? `${t} \xB7 ${Le(e.script)}` : t;
       }
       if (e?.name)
@@ -2872,7 +2871,7 @@ name: ${e.name}`;
       if (t && d) return d.renderRunOp(t, r);
       if (e.scriptPath) {
         let o = stripInvisibleCharacters(e.scriptPath),
-          a = r ? o : st(o);
+          a = r ? o : basename(o);
         if (!e.script) return a;
         return r
           ? `${o}

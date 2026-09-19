@@ -22,7 +22,7 @@ import { getSettingsForSource } from "../核心工具-路径与平台/核心工�
 import { se, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { constants } from "fs";
-import { open as G, realpath } from "fs/promises";
+import { open, realpath } from "fs/promises";
 import { isAbsolute } from "path";
 var ORG_TIP_ID_PREFIX = "org-tip:",
   CUSTOM_TIP_ID_PREFIX = "custom-tip-",
@@ -53,7 +53,7 @@ var Q = createLazyValue(() => $e([v(se()), c({ tips: v(se()) }).transform((e) =>
 async function V(e) {
   try {
     let t = getCurrentPlatform() === "windows" ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK,
-      i = await G(await realpath(e), constants.O_RDONLY | t),
+      i = await open(await realpath(e), constants.O_RDONLY | t),
       r;
     try {
       let d = await i.stat();
@@ -119,7 +119,7 @@ async function V(e) {
     );
   }
 }
-class C {
+class SpinnerTipsOverrideFileCache {
   #e = new Map();
   get size() {
     return this.#e.size;
@@ -134,7 +134,7 @@ class C {
     return (this.#e.set(e, i), i);
   }
 }
-var ee = new j(() => new C());
+var spinnerTipsOverrideFileCache = new j(() => new SpinnerTipsOverrideFileCache());
 function te() {
   if (getRemoteManagedSettingsSyncFromCache()?.spinnerTipsOverride?.tipsFile)
     return (
@@ -207,7 +207,7 @@ async function getOverrideSpinnerTips(e) {
         `spinnerTipsOverride.tipsFile/label in ${s} are ignored; set them in user or managed settings`,
         { level: "warn" },
       );
-  let u = d ? (await ee.of(e).read(d)).entries : [],
+  let u = d ? (await spinnerTipsOverrideFileCache.of(e).read(d)).entries : [],
     g = new Set(),
     T = [],
     S = (s, o, p, _, M) => {

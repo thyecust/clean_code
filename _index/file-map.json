@@ -315,8 +315,8 @@
   "confidence": "low"
  },
  "chunk-123wryak.js": {
-  "path": "02-功能模块/设计同步/设计同步.123wryak.js",
-  "module": "设计同步",
+  "path": "04-tools/DesignSyncTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 36.5,
   "confidence": "high"
@@ -882,8 +882,8 @@
   "confidence": "high"
  },
  "chunk-2nwears6.js": {
-  "path": "02-功能模块/制品发布-Artifact/ARTIFACT_ADDON_TOOLS.2nwears6.js",
-  "module": "制品发布 / Artifact",
+  "path": "04-tools/ArtifactAddonTools.js",
+  "module": "工具",
   "tier": 2,
   "kb": 15.1,
   "confidence": "high"
@@ -1127,8 +1127,8 @@
   "confidence": "high"
  },
  "chunk-3h3nj5kh.js": {
-  "path": "02-功能模块/定时任务-Cron/CronListTool.3h3nj5kh.js",
-  "module": "定时任务 / Cron",
+  "path": "04-tools/CronListTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 5.1,
   "confidence": "high"
@@ -1491,8 +1491,8 @@
   "confidence": "medium"
  },
  "chunk-4z5z1s3c.js": {
-  "path": "02-功能模块/MCP连接器-Connector/SearchMcpRegistryTool.4z5z1s3c.js",
-  "module": "MCP 连接器 / Connector",
+  "path": "04-tools/SearchMcpRegistryTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
@@ -1547,8 +1547,8 @@
   "confidence": "high"
  },
  "chunk-54hpaec5.js": {
-  "path": "02-功能模块/自托管Runner/SELF_HOSTED_RUNNER_TOOLS.54hpaec5.js",
-  "module": "自托管 Runner",
+  "path": "04-tools/SelfHostedRunnerTools.js",
+  "module": "工具",
   "tier": 2,
   "kb": 20.0,
   "confidence": "high"
@@ -1855,8 +1855,8 @@
   "confidence": "high"
  },
  "chunk-5x9mh6vy.js": {
-  "path": "02-功能模块/制品发布-Artifact/ArtifactTool.5x9mh6vy.js",
-  "module": "制品发布 / Artifact",
+  "path": "04-tools/ArtifactTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 7.9,
   "confidence": "high"
@@ -2177,8 +2177,8 @@
   "confidence": "low"
  },
  "chunk-6tpbhye8.js": {
-  "path": "02-功能模块/工具Design-MCP/工具Design-MCP.6tpbhye8.js",
-  "module": "工具 Design-MCP",
+  "path": "04-tools/DesignTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 66.6,
   "confidence": "high"
@@ -2870,8 +2870,8 @@
   "confidence": "low"
  },
  "chunk-981fw9dy.js": {
-  "path": "02-功能模块/工具Monitor/工具Monitor.981fw9dy.js",
-  "module": "工具: Monitor",
+  "path": "04-tools/MonitorTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 17.9,
   "confidence": "high"
@@ -4214,15 +4214,15 @@
   "confidence": "high"
  },
  "chunk-dmke67yf.js": {
-  "path": "02-功能模块/工具Project/工具Project.dmke67yf.js",
-  "module": "工具: Project",
+  "path": "04-tools/ProjectsTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 26.1,
   "confidence": "high"
  },
  "chunk-dmme15m7.js": {
-  "path": "02-功能模块/跨会话消息-UDS/SendFileTool.dmme15m7.js",
-  "module": "跨会话消息 / UDS",
+  "path": "04-tools/SendFileTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 29.7,
   "confidence": "medium"
@@ -4242,8 +4242,8 @@
   "confidence": "medium"
  },
  "chunk-dr5cd8kh.js": {
-  "path": "02-功能模块/工具RemoteTrigger/工具RemoteTrigger.dr5cd8kh.js",
-  "module": "工具: RemoteTrigger",
+  "path": "04-tools/RemoteTriggerTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 23.1,
   "confidence": "high"
@@ -4473,8 +4473,8 @@
   "confidence": "high"
  },
  "chunk-ejjkr3qb.js": {
-  "path": "02-功能模块/Teammates团队/SendMessageTool.ejjkr3qb.js",
-  "module": "Teammates 团队",
+  "path": "04-tools/SendMessageTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 100.3,
   "confidence": "high"
@@ -4823,8 +4823,8 @@
   "confidence": "high"
  },
  "chunk-fzc9qmkz.js": {
-  "path": "02-功能模块/远程控制-Bridge/PushNotificationTool.fzc9qmkz.js",
-  "module": "远程控制 / Bridge",
+  "path": "04-tools/PushNotificationTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 7.8,
   "confidence": "low"
@@ -4893,8 +4893,8 @@
   "confidence": "high"
  },
  "chunk-g6fxeqj3.js": {
-  "path": "02-功能模块/图表-Mermaid/SendUserFileTool.g6fxeqj3.js",
-  "module": "图表 / Mermaid",
+  "path": "04-tools/SendUserFileTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 8.8,
   "confidence": "low"
@@ -5061,8 +5061,8 @@
   "confidence": "high"
  },
  "chunk-gs6mjdq6.js": {
-  "path": "02-功能模块/目标模式-Goal/目标模式-Goal.gs6mjdq6.js",
-  "module": "目标模式 / Goal",
+  "path": "04-tools/ProposeGoalTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 11.0,
   "confidence": "high"
@@ -5082,8 +5082,8 @@
   "confidence": "low"
  },
  "chunk-gvnv2w95.js": {
-  "path": "02-功能模块/浏览器集成-ClaudeinChrome/BROWSER_ENABLE_STUB_TOOLS.gvnv2w95.js",
-  "module": "浏览器集成 / ClaudeinChrome",
+  "path": "04-tools/BrowserEnableStubTools.js",
+  "module": "工具",
   "tier": 2,
   "kb": 5.7,
   "confidence": "high"
@@ -5761,8 +5761,8 @@
   "confidence": "low"
  },
  "chunk-k1x233hx.js": {
-  "path": "02-功能模块/定时任务-Cron/CronDeleteTool.k1x233hx.js",
-  "module": "定时任务 / Cron",
+  "path": "04-tools/CronDeleteTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 4.8,
   "confidence": "high"
@@ -6062,8 +6062,8 @@
   "confidence": "high"
  },
  "chunk-kxmaf32p.js": {
-  "path": "02-功能模块/MCP连接器-Connector/SuggestConnectorsTool.kxmaf32p.js",
-  "module": "MCP 连接器 / Connector",
+  "path": "04-tools/SuggestConnectorsTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 5.0,
   "confidence": "medium"
@@ -7742,8 +7742,8 @@
   "confidence": "low"
  },
  "chunk-s74271c8.js": {
-  "path": "02-功能模块/自主会话-循环/自主会话-循环.s74271c8.js",
-  "module": "自主会话 / 循环",
+  "path": "04-tools/EndConversationTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 9.9,
   "confidence": "medium"
@@ -7994,8 +7994,8 @@
   "confidence": "low"
  },
  "chunk-sy5sraqa.js": {
-  "path": "02-功能模块/Skills技能/ProposeSkillsTool.sy5sraqa.js",
-  "module": "Skills 技能",
+  "path": "04-tools/ProposeSkillsTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 14.0,
   "confidence": "medium"
@@ -8701,8 +8701,8 @@
   "confidence": "medium"
  },
  "chunk-vxzz8tyy.js": {
-  "path": "02-功能模块/Teammates团队/CronCreateTool.vxzz8tyy.js",
-  "module": "Teammates 团队",
+  "path": "04-tools/CronCreateTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 6.9,
   "confidence": "low"
@@ -8921,8 +8921,43 @@
   "path": "03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js",
   "module": "核心应用 / Agent 循环",
   "tier": 3,
-  "kb": 7729.3,
+  "kb": 1866,
   "confidence": "medium"
+ },
+ "execution-core.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/execution-core.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 4863.8,
+  "confidence": "high"
+ },
+ "standalone-tools.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/standalone-tools.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 854.2,
+  "confidence": "high"
+ },
+ "createTranscriptParser.Ryr.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 49,
+  "confidence": "high"
+ },
+ "hook-helper.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/hook-helper.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 29.4,
+  "confidence": "high"
+ },
+ "bundled-cjs-libraries.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 913.1,
+  "confidence": "high"
  },
  "chunk-wnn25q3j.js": {
   "path": "02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js",
@@ -9149,8 +9184,8 @@
   "confidence": "low"
  },
  "chunk-xbgcrjmm.js": {
-  "path": "02-功能模块/MCP连接器-Connector/ListConnectorsTool.xbgcrjmm.js",
-  "module": "MCP 连接器 / Connector",
+  "path": "04-tools/ListConnectorsTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 5.3,
   "confidence": "medium"
@@ -9737,8 +9772,8 @@
   "confidence": "low"
  },
  "chunk-zh9cr7gm.js": {
-  "path": "02-功能模块/工具Poll/工具Poll.zh9cr7gm.js",
-  "module": "工具: Poll",
+  "path": "04-tools/PollTool.js",
+  "module": "工具",
   "tier": 2,
   "kb": 6.3,
   "confidence": "high"
@@ -9793,8 +9828,8 @@
   "confidence": "high"
  },
  "chunk-zpne7vfm.js": {
-  "path": "02-功能模块/插件系统/PLUGIN_SKILL_TOOLS.zpne7vfm.js",
-  "module": "插件系统",
+  "path": "04-tools/PluginSkillTools.js",
+  "module": "工具",
   "tier": 2,
   "kb": 19.0,
   "confidence": "high"
@@ -9853,6 +9888,20 @@
   "module": "设计同步",
   "tier": 2,
   "kb": 5.2,
+  "confidence": "high"
+ },
+ "shell-utils.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/shell-utils.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 6.8,
+  "confidence": "high"
+ },
+ "utils.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/utils.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 0.5,
   "confidence": "high"
  }
 }

@@ -178,8 +178,8 @@ function classifyNetworkErrorKind(e) {
     return "invalid_schema";
   return "other";
 }
-import { readdir as de, stat as Qe } from "fs/promises";
-import { join as ue } from "path";
+import { readdir, stat } from "fs/promises";
+import { join } from "path";
 var et = ".claude-plugin",
   PLUGIN_CONTENT_SUBDIRS = [
     "commands",
@@ -194,14 +194,14 @@ var et = ".claude-plugin",
   tt = ["SKILL.md", ".mcp.json", ".lsp.json"],
   PLUGIN_CONTENT_MARKERS = [et, ...PLUGIN_CONTENT_SUBDIRS, ...tt];
 async function hasPluginContentEntries(e) {
-  return (await de(e)).filter((r) => !fe(r)).some(pe);
+  return (await readdir(e)).filter((r) => !fe(r)).some(pe);
 }
 async function resolvePluginRoot(e) {
-  let t = (await de(e, { withFileTypes: !0 })).filter((r) => !fe(r.name));
+  let t = (await readdir(e, { withFileTypes: !0 })).filter((r) => !fe(r.name));
   if (t.some((r) => r.name === ".claude-plugin")) return e;
   if (t.length === 1 && t[0].isDirectory()) {
-    let r = ue(e, t[0].name);
-    if (await rt(ue(r, ".claude-plugin"))) return r;
+    let r = join(e, t[0].name);
+    if (await rt(join(r, ".claude-plugin"))) return r;
     if (!pe(t[0].name) && (await hasPluginContentEntries(r))) return r;
   }
   return e;
@@ -211,7 +211,7 @@ function pe(e) {
 }
 async function rt(e) {
   try {
-    return (await Qe(e), !0);
+    return (await stat(e), !0);
   } catch {
     return !1;
   }
@@ -280,28 +280,25 @@ function we(e, t) {
 }
 var Se = ".linking-",
   LINKING_STAGING_DIR_PATTERN = new RegExp(`\\${Se}(\\d+)$`);
-import { createHash as xe } from "crypto";
+import { createHash } from "crypto";
 import {
   lstat,
   mkdir,
-  open as ct,
-  readdir as L,
+  open,
   readFile,
   readlink,
   realpath,
   rename,
-  stat as pt,
   symlink,
-  writeFile as Ie,
+  writeFile,
 } from "fs/promises";
-import { homedir as ft } from "os";
+import { homedir } from "os";
 import {
   dirname,
   isAbsolute,
-  join as v,
   relative,
   resolve,
-  sep as D,
+  sep,
 } from "path";
 import { spawn } from "child_process";
 var ke = 2000;
@@ -417,7 +414,7 @@ async function wt(e) {
     r = formatDisplayText(e.command, 200);
   logForDebugging(`Plugin command source: running \`${r}\` (timeout ${t}ms)`);
   let o = await Ee(e.command, {
-      cwd: ft(),
+      cwd: homedir(),
       env: subprocessEnv(),
       timeoutMs: t,
       maxStdoutBytes: Re,
@@ -502,7 +499,7 @@ async function wt(e) {
     );
   let _;
   try {
-    _ = await L(h);
+    _ = await readdir(h);
   } catch (w) {
     let S = A(w);
     throw new R(
@@ -525,14 +522,14 @@ async function Me(e, t, r) {
     s = 0,
     c = 0;
   async function p(d) {
-    let h = await L(d, { withFileTypes: !0 });
+    let h = await readdir(d, { withFileTypes: !0 });
     for (let _ of h) {
       if ((c++, c > Ce))
         throw new R(
           `Plugin directory has more than ${Ce} entries; refusing to install it as a plugin.`,
           "plugin command source directory has too many files",
         );
-      let w = v(d, _.name),
+      let w = join(d, _.name),
         S = await getDirentFileInfo(d, _);
       if (S.isDirectory) {
         if (d === e && _.name === ".git") continue;
@@ -554,13 +551,13 @@ async function bt(e) {
   let t = [],
     r = new Map(),
     o = await Me(e, t, r),
-    s = xe("sha256");
+    s = createHash("sha256");
   for (let c of o) {
     let p = r.get(c) ?? 0;
-    s.update(`f ${relative(e, c).split(D).join("/")}\x00${p}\x00`);
+    s.update(`f ${relative(e, c).split(sep).join("/")}\x00${p}\x00`);
     let d = p;
     if (p > 0) {
-      let h = await ct(c, "r");
+      let h = await open(c, "r");
       try {
         for await (let _ of h.createReadStream({ start: 0, end: p - 1 }))
           (s.update(_), (d -= _.length));
@@ -572,7 +569,7 @@ async function bt(e) {
   }
   for (let c of t) {
     let p = await readlink(c);
-    (s.update(`l ${relative(e, c).split(D).join("/")}\x00`),
+    (s.update(`l ${relative(e, c).split(sep).join("/")}\x00`),
       s.update(`${Buffer.byteLength(p)}\x00${p}`));
   }
   return s.digest("hex");
@@ -615,16 +612,16 @@ function At(e, t) {
   );
 }
 async function Pt(e, t) {
-  let r = (await L(e)).filter((c) => !isReservedPluginEntry(c)).sort(),
+  let r = (await readdir(e)).filter((c) => !isReservedPluginEntry(c)).sort(),
     o = await Fe(
       e,
-      r.map((c) => ({ name: c, path: v(e, c) })),
+      r.map((c) => ({ name: c, path: join(e, c) })),
     );
   await mkdir(t, { recursive: !0 });
   for (let { name: c, target: p, isDirectory: d } of o)
-    await symlink(p, v(t, c), d ? "dir" : "file");
-  await Ie(v(t, PLUGIN_LINK_MARKER_FILENAME), JSON.stringify({ target: e }), { flag: "wx" });
-  let s = xe("sha256");
+    await symlink(p, join(t, c), d ? "dir" : "file");
+  await writeFile(join(t, PLUGIN_LINK_MARKER_FILENAME), JSON.stringify({ target: e }), { flag: "wx" });
+  let s = createHash("sha256");
   s.update(`${e}\x00`);
   for (let { name: c, target: p } of o)
     (s.update(`${Buffer.byteLength(c)}\x00${c}`),
@@ -641,7 +638,7 @@ async function Fe(e, t) {
       );
     let c, p;
     try {
-      ((c = await realpath(s)), (p = (await pt(c)).isDirectory()));
+      ((c = await realpath(s)), (p = (await stat(c)).isDirectory()));
     } catch {
       throw new R(
         `A top-level entry of the plugin directory its command produced could not be resolved (${formatDisplayText(o, 80)}); refusing to link it.`,
@@ -649,7 +646,7 @@ async function Fe(e, t) {
       );
     }
     let d = relative(e, c);
-    if (d === "" || d === ".." || d.startsWith(`..${D}`) || isAbsolute(d))
+    if (d === "" || d === ".." || d.startsWith(`..${sep}`) || isAbsolute(d))
       throw new PluginSourceError(
         `A top-level entry of the plugin directory its command produced (${formatDisplayText(o, 80)}) points outside that directory; refusing to link it.`,
         "plugin command source link escapes producer directory",
@@ -661,7 +658,7 @@ async function Fe(e, t) {
 async function relinkPluginFarm(e, t) {
   let r = resolve(he(), e),
     o = resolve(he(), t),
-    s = await ee(v(r, PLUGIN_LINK_MARKER_FILENAME)),
+    s = await ee(join(r, PLUGIN_LINK_MARKER_FILENAME)),
     c = getPluginLinkMarkerSchema().parse(JSON.parse(s)).target;
   if (DYt(c))
     throw new PluginSourceError(
@@ -675,7 +672,7 @@ async function relinkPluginFarm(e, t) {
       "plugin command source relink target resolves to a network path",
     );
   let d = [];
-  for (let S of await L(r, { withFileTypes: !0 })) {
+  for (let S of await readdir(r, { withFileTypes: !0 })) {
     if (isReservedPluginEntry(S.name)) continue;
     if ((await tryGetDirentFileInfo(r, S))?.isSymbolicLink) d.push(S);
   }
@@ -683,7 +680,7 @@ async function relinkPluginFarm(e, t) {
   for (let S of d) {
     let b;
     try {
-      b = await readlink(v(r, S.name));
+      b = await readlink(join(r, S.name));
     } catch (C) {
       if (W(C)) continue;
       throw new PluginSourceError(
@@ -700,15 +697,15 @@ async function relinkPluginFarm(e, t) {
   }
   let _ = await Fe(
     p,
-    h.map((S) => ({ name: S.name, path: v(r, S.name) })),
+    h.map((S) => ({ name: S.name, path: join(r, S.name) })),
   );
   await mkdir(dirname(o), { recursive: !0 });
   let w = we(o, process.pid);
   (await removeDirectoryRecursive(w), await mkdir(w));
   try {
     for (let { name: S, target: b, isDirectory: C } of _)
-      await symlink(b, v(w, S), C ? "dir" : "file");
-    (await Ie(v(w, PLUGIN_LINK_MARKER_FILENAME), s, { flag: "wx" }), await rename(w, o));
+      await symlink(b, join(w, S), C ? "dir" : "file");
+    (await writeFile(join(w, PLUGIN_LINK_MARKER_FILENAME), s, { flag: "wx" }), await rename(w, o));
   } catch (S) {
     await removeDirectoryRecursive(w).catch(() => {});
     let b = A(S);
@@ -722,8 +719,8 @@ async function relinkPluginFarm(e, t) {
   }
 }
 async function pruneReservedEntries(e, { keepGit: t }) {
-  for (let r of await L(e))
-    if (isReservedPluginEntry(r) && !(t && Pz(r) === ".git")) await removeDirectoryRecursive(v(e, r));
+  for (let r of await readdir(e))
+    if (isReservedPluginEntry(r) && !(t && Pz(r) === ".git")) await removeDirectoryRecursive(join(e, r));
 }
 function isReservedPluginEntry(e) {
   return isReservedOrTempName(e, Rt);
@@ -735,16 +732,16 @@ async function isLiveLinkFarm(e, { unclassifiableIsFarm: t = !1 } = {}) {
 }
 async function classifyLinkFarm(e) {
   try {
-    getPluginLinkMarkerSchema().parse(JSON.parse(await ee(v(e, PLUGIN_LINK_MARKER_FILENAME))));
+    getPluginLinkMarkerSchema().parse(JSON.parse(await ee(join(e, PLUGIN_LINK_MARKER_FILENAME))));
   } catch (r) {
     if (A(r) !== void 0) return t(r);
   }
   try {
-    for (let r of await L(e, { withFileTypes: !0 })) {
+    for (let r of await readdir(e, { withFileTypes: !0 })) {
       if (isReservedPluginEntry(r.name)) continue;
       try {
         let o = await getDirentFileInfo(e, r);
-        if (o.isSymbolicLink && isAbsolute(o.linkTarget ?? (await readlink(v(e, r.name)))))
+        if (o.isSymbolicLink && isAbsolute(o.linkTarget ?? (await readlink(join(e, r.name)))))
           return "live";
       } catch (o) {
         if (A(o) === "ENOENT") continue;
@@ -769,16 +766,16 @@ function Ct(e) {
   return PLUGIN_RESERVED_MARKER_FILES.has(e);
 }
 async function isLinkFarmDiverged(e, t) {
-  let r = t.replace(/[\\/]+$/, "") + D;
+  let r = t.replace(/[\\/]+$/, "") + sep;
   try {
-    for (let o of await L(e, { withFileTypes: !0 })) {
+    for (let o of await readdir(e, { withFileTypes: !0 })) {
       if (Ct(o.name)) continue;
       let s;
       try {
         let c = await getDirentFileInfo(e, o);
         if (c.isFile && (Tt(o.name) || isReservedOrTempName(o.name, PLUGIN_RESERVED_MARKER_FILES))) continue;
         if (!c.isSymbolicLink) return !0;
-        s = c.linkTarget ?? (await readlink(v(e, o.name)));
+        s = c.linkTarget ?? (await readlink(join(e, o.name)));
       } catch (c) {
         if (A(c) === "ENOENT") continue;
         return !0;
@@ -793,7 +790,7 @@ async function isLinkFarmDiverged(e, t) {
 }
 async function readLinkFarmTarget(e) {
   try {
-    return getPluginLinkMarkerSchema().parse(JSON.parse(await ee(v(e, PLUGIN_LINK_MARKER_FILENAME)))).target;
+    return getPluginLinkMarkerSchema().parse(JSON.parse(await ee(join(e, PLUGIN_LINK_MARKER_FILENAME)))).target;
   } catch {
     return;
   }
@@ -839,7 +836,6 @@ async function installFromCommandSource(e, t, r, o) {
     })
   );
 }
-import { createHash as Dt } from "crypto";
 var Nt = /^([a-z][a-z\d+\-.]*:)?\/\//i;
 function Lt(e, t) {
   let r = t?.baseURL,
@@ -860,12 +856,11 @@ var claudeDownloadsHttpClient = {
     return (Lt(e, t), ensureAxiosEgressGuardInstalled(), at.get(e, t));
   },
 };
-import { homedir as It } from "os";
 var Ot = 1e4,
   Mt = 1e6;
 function Ft(e) {
   if (isWorkspacePersistedTrusted(e)) return !0;
-  return (e === void 0 || e === It()) && VR() && DLn();
+  return (e === void 0 || e === homedir()) && VR() && DLn();
 }
 async function runHeadersHelperCommand(e) {
   if (e.isRepoResidentConfig && !Ft(e.repoResidentOrigin))
@@ -947,7 +942,7 @@ async function downloadPluginArchive(e, t = {}) {
     if (w) throw w;
     throw new R(Kt(_, e, r), "plugin archive download failed");
   }
-  let h = Dt("sha256").update(d).digest("hex");
+  let h = createHash("sha256").update(d).digest("hex");
   if (t.sha256 && t.sha256.toLowerCase() !== h)
     throw new R(
       `Plugin archive integrity check failed for ${r}: expected sha256 ${t.sha256.toLowerCase()}, got ${h}. The archive was not installed. Verify the sha256 in the marketplace entry, or that the URL serves the intended file.`,
@@ -1622,7 +1617,7 @@ async function sn(e) {
     );
   }
 }
-class Ue {
+class PluginScopeExpansionFlight {
   inFlight = void 0;
   begin(e) {
     this.inFlight = e;
@@ -1631,10 +1626,10 @@ class Ue {
     if (this.inFlight === e) this.inFlight = void 0;
   }
 }
-var an = new j(() => new Ue()),
+var pluginScopeExpansions = new j(() => new PluginScopeExpansionFlight()),
   ln = 15000;
 function cn(e, t) {
-  let r = an.of(e),
+  let r = pluginScopeExpansions.of(e),
     o = r.inFlight;
   if (o) return o;
   let s = sn(t)
@@ -1726,8 +1721,8 @@ function parseServerErrorType(e) {
   return "non_json_body";
 }
 import { createWriteStream } from "fs";
-import { open as fn, rm as je, writeFile as mn } from "fs/promises";
-import { Transform as gn } from "stream";
+import { rm } from "fs/promises";
+import { Transform } from "stream";
 import { pipeline } from "stream/promises";
 function Ge(e) {
   let t = parseInstallationPreference(e.installation_preference);
@@ -1833,7 +1828,7 @@ async function kn(e, t, r, o) {
     }
     let h = _n(),
       _,
-      w = new gn({
+      w = new Transform({
         transform(k, ie, x) {
           if (
             (clearTimeout(_), (_ = setTimeout(S, h)), (c += k.length), c > re)
@@ -1852,7 +1847,7 @@ async function kn(e, t, r, o) {
       clearTimeout(_);
     }
     let b = Buffer.alloc(2048),
-      C = await fn(t, "r"),
+      C = await open(t, "r"),
       T;
     try {
       T = (await C.read(b, 0, b.length, 0)).bytesRead;
@@ -1860,7 +1855,7 @@ async function kn(e, t, r, o) {
       await C.close();
     }
     if (T < 2 || b[0] !== 80 || b[1] !== 75) {
-      await je(t, { force: !0 });
+      await rm(t, { force: !0 });
       let k = T === 0 ? "empty_body" : parseServerErrorType(b.subarray(0, T));
       return (
         writeDiagnosticsEvent("warn", "plugins_sync_download_not_zip", {
@@ -1872,7 +1867,7 @@ async function kn(e, t, r, o) {
     }
     return { ok: !0 };
   } catch (d) {
-    await je(t, { force: !0 }).catch(() => {});
+    await rm(t, { force: !0 }).catch(() => {});
     let h = d?.response?.data;
     if (
       h !== null &&
@@ -1924,7 +1919,7 @@ async function En(e, t, r) {
         { ok: !1, reason: c }
       );
     }
-    return (await mn(t, s), { ok: !0 });
+    return (await writeFile(t, s), { ok: !0 });
   } catch (o) {
     let { kind: s } = Ps(o);
     return (
@@ -1945,7 +1940,7 @@ var bn = createLazyValue(() => {
   }),
   An = 30000,
   Pn = 500;
-class Ve {
+class SessionRefsManifestStore {
   inflight = null;
   featureEventReported = new Set();
   fetch() {
@@ -1985,7 +1980,7 @@ class Ve {
     return { success: !0, entries: o[e] };
   }
 }
-var sessionRefsManifestStore = new Gt(() => new Ve());
+var sessionRefsManifestStore = new Gt(() => new SessionRefsManifestStore());
 async function Rn() {
   let e = await qe();
   if (e.ok || e.reason === "no_auth" || e.reason === "gated") return e;

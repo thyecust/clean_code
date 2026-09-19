@@ -23,11 +23,11 @@ import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-class T {
+class ReplDiffPanelState {
   lastLoggedSessionId = null;
   autoOpenPending = !1;
 }
-var ReplDiffPanelStateStore = new j(() => new T());
+var ReplDiffPanelStateStore = new j(() => new ReplDiffPanelState());
 var DIFF_SIDEBAR_MIN_COLS = 110,
   DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS = 144,
   DIFF_SIDEBAR_NO_GIT_MESSAGE =
@@ -104,15 +104,15 @@ function cycleDiffBaseMode(o, n) {
 }
 F();
 import { homedir } from "os";
-import { isAbsolute as H, sep as U } from "path";
-import { resolve, sep as k, win32 as B } from "path";
+import { isAbsolute, sep } from "path";
+import { win32 } from "path";
 function C(o) {
   return hasUnsupportedDisplayCharacters(M(o));
 }
 function M(o) {
   let n = sn(),
     r = getCurrentPlatform() === "windows",
-    i = r ? B.sep : k,
+    i = r ? win32.sep : sep,
     s = (w) => (r ? w.replaceAll("/", i).toLowerCase() : w),
     l = s(o),
     a = s(n);
@@ -121,10 +121,9 @@ function M(o) {
   let R = a.endsWith(i) ? a : a + i;
   return l.startsWith(R) ? o.slice(R.length) : o;
 }
-import { isAbsolute as I, win32 as D } from "path";
 function S(o) {
-  if (getCurrentPlatform() === "windows") return D.isAbsolute(o) && D.parse(o).root.length > 1;
-  return I(o);
+  if (getCurrentPlatform() === "windows") return win32.isAbsolute(o) && win32.parse(o).root.length > 1;
+  return isAbsolute(o);
 }
 var ToolResultPreviewWidthContext = Qt(null);
 function TruncatedFilePath(Ue) {
@@ -166,11 +165,11 @@ function TruncatedFilePath(Ue) {
 }
 function m(o) {
   let n = L(o);
-  return H(n) ? C(n) : hasUnsupportedDisplayCharacters(n);
+  return isAbsolute(n) ? C(n) : hasUnsupportedDisplayCharacters(n);
 }
 function L(o) {
   if (o === "~") return homedir();
-  return o.startsWith("~" + U) ? homedir() + o.slice(1) : o;
+  return o.startsWith("~" + sep) ? homedir() + o.slice(1) : o;
 }
 export {
   ReplDiffPanelStateStore,

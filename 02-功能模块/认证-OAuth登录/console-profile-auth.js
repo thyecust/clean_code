@@ -54,7 +54,7 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import { join as C } from "path";
+import { join } from "path";
 var CONSOLE_OAUTH_CLIENT_ID = "41077d10-94b8-4194-be48-d251e9eb21b4",
   CONSOLE_PROFILE_OAUTH_SCOPES = [CLAUDE_AI_PROFILE_SCOPE, CLAUDE_AI_INFERENCE_SCOPE],
   x = /^[A-Za-z0-9_.-]+$/,
@@ -151,7 +151,7 @@ async function resolveConsoleProfileLoginTarget() {
       "no_config_dir",
     );
   let i = I(t),
-    f = await k(C(t, "configs", `${i}.json`));
+    f = await k(join(t, "configs", `${i}.json`));
   if (f !== null) {
     if (f.base_url && !isFirstPartyAnthropicHost(f.base_url))
       throw new R(
@@ -195,14 +195,14 @@ async function resolveConsoleProfileLoginTarget() {
 async function saveConsoleProfileLogin(e) {
   let o = await resolveConsoleProfileLoginTarget();
   return (
-    await mkdir(C(o.configDir, "credentials"), { recursive: !0, mode: 448 }),
+    await mkdir(join(o.configDir, "credentials"), { recursive: !0, mode: 448 }),
     withCredentialsLock(w(o.configDir, o.profile), () => q(e))
   );
 }
 async function q(e) {
   let { profile: o, configDir: t, isNewProfile: i } = await resolveConsoleProfileLoginTarget(),
-    f = C(t, "configs", `${o}.json`);
-  await mkdir(C(t, "configs"), { recursive: !0, mode: 448 });
+    f = join(t, "configs", `${o}.json`);
+  await mkdir(join(t, "configs"), { recursive: !0, mode: 448 });
   let c = {
     version: _dr,
     organization_id: e.organizationUuid,
@@ -230,7 +230,7 @@ async function q(e) {
     ...P,
   });
   let E = await Z(
-    C(t, "active_config"),
+    join(t, "active_config"),
     o +
       `
 `,
@@ -253,7 +253,7 @@ async function L({ revoke: e } = {}) {
     } catch {
       return { removed: !1 };
     }
-    let i = await k(C(o, "configs", `${t}.json`));
+    let i = await k(join(o, "configs", `${t}.json`));
     if (i === null || !F(i)) return { removed: !1 };
     if ((await S(w(o, t))) === null) return { removed: !1 };
     return await withCredentialsLock(w(o, t), () => V(e));
@@ -276,7 +276,7 @@ async function V(e) {
   } catch {
     return { removed: !1 };
   }
-  let i = await k(C(o, "configs", `${t}.json`));
+  let i = await k(join(o, "configs", `${t}.json`));
   if (i === null || !F(i)) return { removed: !1 };
   let f = w(o, t),
     c = await S(f);
@@ -314,7 +314,7 @@ function D(e) {
   return !!e && x.test(e) && e !== "." && e !== "..";
 }
 function w(e, o) {
-  return C(e, "credentials", `${o}.json`);
+  return join(e, "credentials", `${o}.json`);
 }
 async function k(e) {
   let o;

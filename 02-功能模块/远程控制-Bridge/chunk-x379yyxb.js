@@ -42,7 +42,7 @@ import { drainResponseBody } from "../../01-核心基础设施/核心工具-其�
 import { s, T, O, se, v, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { randomUUID as me } from "crypto";
+import { randomUUID } from "crypto";
 var x = createLazyValue(() => {
   let e = fe(s(), se()),
     t = it({ type: k("text"), text: s() }),
@@ -204,7 +204,7 @@ function ze(e) {
       e.uuid,
       "minted a uuid \u2014 original was not a non-empty string",
     ),
-      (t = me()),
+      (t = randomUUID()),
       (e.uuid = t));
   let o = e.message;
   if (!q(o))
@@ -257,7 +257,7 @@ function Ye(e) {
       e.uuid,
       "minted a uuid \u2014 original was not a non-empty string",
     ),
-      (e.uuid = me()));
+      (e.uuid = randomUUID()));
   let t = e.message;
   if (!q(t))
     return (E("user", e.uuid, "dropped \u2014 message is not an object"), !1);
@@ -557,17 +557,14 @@ function tt(e) {
       CROSS_SESSION_OPENER_PREFIXES.some((o) => e.startsWith(o.trimEnd())))
   );
 }
-import { randomUUID as _t } from "crypto";
 import { isDeepStrictEqual } from "util";
 function ye(e, t) {
   if (t !== void 0) return t;
   return e === "side_question" ? 600000 : 75000;
 }
-import { appendFile } from "fs/promises";
 function P(e, t, o) {
   return;
 }
-import { randomUUID as Y } from "crypto";
 var st = 1000,
   we = 30000,
   K = 5,
@@ -1285,7 +1282,7 @@ class de {
       );
     }
   }
-  sendControlResponse(e, t = Y(), o = {}) {
+  sendControlResponse(e, t = randomUUID(), o = {}) {
     return (
       logForDebugging("[SessionsV2Client] Sending control_response"),
       this.trackSend(this.postEvent({ ...e, uuid: t }, o))
@@ -1302,7 +1299,7 @@ class de {
         }),
         null
       );
-    let o = Y();
+    let o = randomUUID();
     if ((this.issuedRequestIds.add(o), this.issuedRequestIds.size > Re)) {
       logForDebugging(
         "[SessionsV2Client] issuedRequestIds overflow \u2014 evicting oldest unanswered request_id",
@@ -1312,7 +1309,7 @@ class de {
       if (p !== void 0)
         (this.issuedRequestIds.delete(p), this.ownRequestUuids.delete(p));
     }
-    let r = { type: "control_request", request_id: o, request: e, uuid: Y() };
+    let r = { type: "control_request", request_id: o, request: e, uuid: randomUUID() };
     (this.ownRequestUuids.set(o, r.uuid),
       logForDebugging(`[SessionsV2Client] Sending control_request: ${e.subtype}`));
     let a = this.trackSend(
@@ -1333,7 +1330,7 @@ class de {
       this.sendEvent({
         type: "control_cancel_request",
         request_id: e,
-        uuid: Y(),
+        uuid: randomUUID(),
       }));
   }
   isConnected() {
@@ -2397,7 +2394,7 @@ class RemoteSessionManager {
       d = this.undeliveredResponses.get(a) ?? {
         response: e,
         kind: t,
-        uuid: _t(),
+        uuid: randomUUID(),
         failures: 0,
         inFlight: !1,
         giveUpOnSettle: null,

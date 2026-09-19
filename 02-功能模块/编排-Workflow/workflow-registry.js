@@ -29,7 +29,7 @@ var REMOTE_WORKFLOW_SCRIPT_ENV = "CLAUDE_REMOTE_WORKFLOW_SCRIPT",
 function isWorkflowNameOnlyEnabled() {
   return a.CLAUDE_WORKFLOW_NAME_ONLY;
 }
-import { join as F } from "path";
+import { join } from "path";
 async function _(o, s, t, i, d) {
   let c = getFsSurface(),
     e;
@@ -43,7 +43,7 @@ async function _(o, s, t, i, d) {
       e.map(async (l) => {
         if (!(l.isFile() || l.isSymbolicLink())) return null;
         if (!l.name.endsWith(".js")) return null;
-        return v(F(o, l.name), s, t, i, d);
+        return v(join(o, l.name), s, t, i, d);
       }),
     )
   ).filter((l) => l !== null);
@@ -150,7 +150,6 @@ function P(o) {
     s.workflows
   );
 }
-import { join as h } from "path";
 function W(o, s) {
   if (!s || isValidWorkflowScript(o.script)) return !0;
   return (
@@ -169,9 +168,8 @@ function S(o) {
   }
   return [...s.values()];
 }
-import { join as E } from "path";
 function getUserWorkflowsDir() {
-  return E(getClaudeConfigDir(), "workflows");
+  return join(getClaudeConfigDir(), "workflows");
 }
 async function T(o, s) {
   try {
@@ -205,7 +203,7 @@ async function D(o, s, t, i) {
           if (/\.(mjs|cjs|ts)$/.test(r.name)) t.nearMissExt++;
           return null;
         }
-        let l = h(o, r.name),
+        let l = join(o, r.name),
           u;
         try {
           u = await d.readFileBytes(l, MAX_WORKFLOW_SCRIPT_BYTES + 1);
@@ -288,7 +286,7 @@ async function M(o, s, t) {
         if (!l.ok)
           return (
             logForDebugging(
-              `Workflow ${h(s, r)} could not be read through the storage backend (${l.error.code}) \u2014 skipping`,
+              `Workflow ${join(s, r)} could not be read through the storage backend (${l.error.code}) \u2014 skipping`,
               { level: "warn" },
             ),
             t.skippedUnreadable++,
@@ -296,7 +294,7 @@ async function M(o, s, t) {
           );
         let u = l.value.items[0];
         if (u === void 0 || !u.found) return (t.skippedUnreadable++, null);
-        let m = h(s, r);
+        let m = join(s, r);
         if (u.value.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
           return (
             logForDebugging(`Workflow ${m} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes \u2014 skipping`, {

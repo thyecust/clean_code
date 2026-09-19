@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 function Ie(t) {
   if (!t) return !1;
   if (typeof t === "boolean") return t;
@@ -426,11 +426,11 @@ import {
   basename,
   dirname,
   isAbsolute,
-  join as G,
+  join,
   parse,
   relative,
   resolve,
-  sep as d,
+  sep,
 } from "path";
 import * as J from "path";
 function zn(t) {
@@ -761,11 +761,11 @@ var nr = new Set([
   "__pypackages__",
 ]);
 function Nt(t, e) {
-  if (!t.startsWith(R(e) + d)) return !1;
-  return t.split(d).some((r) => nr.has(r));
+  if (!t.startsWith(R(e) + sep)) return !1;
+  return t.split(sep).some((r) => nr.has(r));
 }
 function R(t) {
-  return t.endsWith(d) ? t.slice(0, -1) : t;
+  return t.endsWith(sep) ? t.slice(0, -1) : t;
 }
 var W;
 function Et(t, e, r) {
@@ -793,10 +793,10 @@ function Ot(t, e, r) {
   let n = [];
   if (t)
     n.push(
-      R(r(t)) + d + ["appdata", "local", "microsoft", "windowsapps"].join(d),
+      R(r(t)) + sep + ["appdata", "local", "microsoft", "windowsapps"].join(sep),
     );
   if (e) {
-    let o = R(r(e)) + d + ["microsoft", "windowsapps"].join(d);
+    let o = R(r(e)) + sep + ["microsoft", "windowsapps"].join(sep);
     if (!n.includes(o)) n.push(o);
   }
   return n;
@@ -807,8 +807,8 @@ function or(t) {
 function z(t, e, r) {
   let n = R(r);
   for (let o of t) {
-    if (!(o === n || o.startsWith(n + d))) continue;
-    if (e === o || e.startsWith(o + d)) return !0;
+    if (!(o === n || o.startsWith(n + sep))) continue;
+    if (e === o || e.startsWith(o + sep)) return !0;
   }
   return !1;
 }
@@ -923,7 +923,7 @@ function RHt(t, e = dirname(t)) {
   if (jt(n)) return !0;
   let o = !1;
   if (o && pl(n)) return !0;
-  let i = o ? G(parse(e).root, n) : n,
+  let i = o ? join(parse(e).root, n) : n,
     s = { trustedStart: !0, trustedRoot: e };
   if (isAbsolute(i)) {
     let l = relative(e, i);
@@ -952,7 +952,7 @@ function jt(t) {
   return !1;
 }
 function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
-  let s = i.endsWith(d) ? i : i + d,
+  let s = i.endsWith(sep) ? i : i + sep,
     a = (l) => o && (l === i || l.startsWith(s)),
     u = t;
   if (!a(u) && P(u, n)) return !0;
@@ -963,7 +963,7 @@ function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
       u = dirname(u);
       continue;
     }
-    let A = G(u, _);
+    let A = join(u, _);
     if (!a(A) && P(A, n)) return !0;
     let L = O(() => lstatSync(A));
     if (L.value === void 0) {
@@ -971,7 +971,7 @@ function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
       let g = A;
       for (let D of e.slice(l + 1))
         if (
-          ((g = D === ".." ? dirname(g) : D === "." ? g : G(g, D)), !a(g) && P(g, n))
+          ((g = D === ".." ? dirname(g) : D === "." ? g : join(g, D)), !a(g) && P(g, n))
         )
           return !0;
       return !1;
@@ -1102,7 +1102,7 @@ function $b(t, { foldCase: e, knownNotSuspect: r = !1 } = {}) {
 }
 function wh(t, e, { alreadyComparable: r = !1, foldCase: n } = {}) {
   let o = relative(r ? t : $b(t, { foldCase: n }), r ? e : $b(e, { foldCase: n }));
-  return o === "" || (!isAbsolute(o) && o !== ".." && !o.startsWith(`..${d}`));
+  return o === "" || (!isAbsolute(o) && o !== ".." && !o.startsWith(`..${sep}`));
 }
 function $W(t) {
   return An(t);

@@ -8,7 +8,6 @@
 
 // Version: 2.1.263
 import { bh, j, B, K, jc, lje, cje, ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -560,7 +559,7 @@ var acornWalkModule = commonJS(function (qt, Un) {
       (t.simple = l));
   });
 });
-import { open as $n, realpath } from "fs/promises";
+import { open, realpath } from "fs/promises";
 import { constants } from "fs";
 import { resolve } from "path";
 function Dt(t) {
@@ -585,7 +584,7 @@ async function readWorkflowScriptFileHardened(t, l) {
     p = constants.O_RDONLY | yo,
     k;
   try {
-    k = await $n(m, p);
+    k = await open(m, p);
   } catch (C) {
     return {
       error: W(C)
@@ -599,7 +598,7 @@ async function readWorkflowScriptFileHardened(t, l) {
     let I = await getFdRealPath(k.fd),
       E = I ?? (await realpath(m));
     if (I === null) {
-      let J = await $n(E, p | bo);
+      let J = await open(E, p | bo);
       try {
         let N = await J.stat({ bigint: !0 });
         if (N.ino !== C.ino || N.dev !== C.dev || N.nlink !== 1n)
@@ -631,7 +630,7 @@ async function readWorkflowScriptFileHardened(t, l) {
 }
 var yo = getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK,
   bo = getCurrentPlatform() === "windows" ? 0 : constants.O_NOFOLLOW;
-import * as Lt from "vm";
+import * as vm from "vm";
 function _t(t) {
   return (
     Object.setPrototypeOf(t, null),
@@ -666,7 +665,7 @@ var To =
       globalThis.Date = ShimDate;
     })()`;
 function Yt(t) {
-  Lt.runInContext(So, t);
+  vm.runInContext(So, t);
 }
 var DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS = 30000;
 function makeVmTimers(t) {
@@ -709,7 +708,7 @@ var X = "__wRg$",
   _o = "{put, read, on, retract, agent, workflow}",
   jn = `${X}resolve`;
 function Xt(t) {
-  Lt.runInContext(
+  vm.runInContext(
     `Object.defineProperty(globalThis, ${jsonStringify(jn)}, {
       value: Promise.resolve.bind(Promise),
       writable: false, enumerable: false, configurable: false,
@@ -811,7 +810,7 @@ ${t}
       k = `((${X} => ((${X}a${m}) => async () => {'use strict';
 ${s}
 })(${X}it => ({[Symbol.asyncIterator](){const ${X}ai = ${X}it[Symbol.asyncIterator];if (${X}ai != null && typeof ${X}ai !== 'function') throw new TypeError('@@asyncIterator is not a function');const ${X}i = ${X}ai != null ? ${X}ai.call(${X}it) : ${X}it[Symbol.iterator]();if (${X}i === null || (typeof ${X}i !== 'object' && typeof ${X}i !== 'function')) throw new TypeError('Iterator is not an object');const ${X}nxt = ${X}i.next;if (typeof ${X}nxt !== 'function') throw new TypeError('Iterator.next is not a function');const ${X}ret = ${X}i.return;const ${X}thr = ${X}i.throw;const ${X}w = s => ${X}(s).then(s => { if (s === null || (typeof s !== 'object' && typeof s !== 'function')) throw new TypeError('Iterator result is not an object'); const done = s.done; return ${X}(s.value).then(value => ({value, done})) });return {next:v=>${X}w(${X}nxt.call(${X}i,v)),return:v=>${X}w(typeof ${X}ret==='function'?${X}ret.call(${X}i,v):{value:v,done:true}),throw:e=>typeof ${X}thr==='function'?${X}w(${X}thr.call(${X}i,e)):${X}(typeof ${X}ret==='function'?${X}ret.call(${X}i):undefined).then(()=>{throw new TypeError('The iterator does not provide a throw method')})}}})${p}))(${jn}))()`,
-      C = new Lt.Script(k, {
+      C = new vm.Script(k, {
         filename: "workflow.js",
         importModuleDynamically: () => {
           throw makePlainError("import() is not available in workflow scripts.");
@@ -828,9 +827,7 @@ ${s}
     );
   }
 }
-import { createHash as sr } from "crypto";
-import * as jt from "vm";
-import * as Qt from "vm";
+import { createHash } from "crypto";
 function pn(
   t,
   l = {
@@ -939,7 +936,7 @@ function createChildWorkflowVmContext(t, l, s, m = t.timers) {
       log: wrapSyncHostFunction((e) => t.hooks.log(p + toDisplayString(e))),
       console: pn((e) => t.hooks.log(p + e), k),
     },
-    I = Qt.createContext(C, { codeGeneration: { strings: !1, wasm: !1 } });
+    I = vm.createContext(C, { codeGeneration: { strings: !1, wasm: !1 } });
   (Yt(I), hardenVmIntrinsics(I), Xt(I));
   let E = makeVmErrorExtractor(I),
     fe = makeVmAwait(I),
@@ -948,7 +945,7 @@ function createChildWorkflowVmContext(t, l, s, m = t.timers) {
     N = makeVmSanitizers(I),
     { vmToStr: ue, vmOwnString: pe, vmStringify: ee } = makeVmStringUtils(I);
   ((k.sanitize = N.sanitize), (k.toStr = ue));
-  let d = Qt.runInContext(
+  let d = vm.runInContext(
       '(o => { try { const s = o && typeof o === "object" ? o.schema : undefined; return s && typeof s === "object" ? s : undefined } catch { return undefined } })',
       I,
     ),
@@ -1131,9 +1128,8 @@ function yn(t) {
     indentAndEscapeForwardedTurns(t.referentTail)
   );
 }
-import { createHash as Ro } from "crypto";
 import { appendFile, mkdir, readFile } from "fs/promises";
-import { dirname, join as $o } from "path";
+import { dirname, join } from "path";
 var Do = "v2";
 function zn(t) {
   let l = new Map(),
@@ -1187,7 +1183,7 @@ function Fo(t) {
   return jsonStringify(m(l));
 }
 function Jn(t, l, s) {
-  let m = Ro("sha256")
+  let m = createHash("sha256")
     .update(s)
     .update("\x00")
     .update(t)
@@ -1208,7 +1204,7 @@ class en {
   storageV5;
   dirReady = !1;
   constructor(t, l) {
-    this.path = $o(getWorkflowTranscriptDir(t), "journal.jsonl");
+    this.path = join(getWorkflowTranscriptDir(t), "journal.jsonl");
     let s = l === void 0 ? void 0 : No(t);
     this.storageV5 =
       l === void 0 || s === void 0 ? void 0 : { backend: l, key: s };
@@ -1282,7 +1278,7 @@ class en {
 }
 var Lo = 5000,
   Uo = 270000;
-class Hn {
+class PromptCacheWarmGate {
   now;
   entries = new Map();
   constructor(t = Date.now) {
@@ -1354,9 +1350,9 @@ function Bo(t, l, s) {
     })
   );
 }
-var Vo = new j(() => new Hn());
+var promptCacheWarmGates = new j(() => new PromptCacheWarmGate());
 function Kn() {
-  return Vo.of(B().host);
+  return promptCacheWarmGates.of(B().host);
 }
 function Gn(t) {
   return t ?? Lo;
@@ -3153,7 +3149,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     }),
     r = t.abortController?.signal,
     e = makeVmTimers(r),
-    c = jt.createContext(
+    c = vm.createContext(
       {
         __proto__: null,
         log: wrapSyncHostFunction(pe.log),
@@ -3167,7 +3163,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     );
   (Yt(c), hardenVmIntrinsics(c), Xt(c));
   let { vmToStr: _, vmStringify: T, vmOwnString: V } = makeVmStringUtils(c);
-  e.bindVMInvoke(jt.runInContext("(fn => { fn() })", c));
+  e.bindVMInvoke(vm.runInContext("(fn => { fn() })", c));
   let M = makeVmClone(c),
     G = makeVmAwait(c),
     te = makeVmApply(c),
@@ -3204,7 +3200,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       value:
         ve === void 0
           ? void 0
-          : jt.runInContext(`JSON.parse(${JSON.stringify(ve)})`, c),
+          : vm.runInContext(`JSON.parse(${JSON.stringify(ve)})`, c),
       writable: !0,
       enumerable: !0,
       configurable: !0,
@@ -3761,7 +3757,7 @@ async function adoptWorkflowRun(t) {
       "workflow was checkpointed without a content pin; resume via the Workflow tool",
       "adopted workflow missing scriptSha256",
     );
-  if (sr("sha256").update(I).digest("hex") !== t.scriptSha256)
+  if (createHash("sha256").update(I).digest("hex") !== t.scriptSha256)
     throw new R(
       "script content changed since it was approved; resume via the Workflow tool to re-approve",
       "adopted workflow scriptSha256 mismatch",

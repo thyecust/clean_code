@@ -25,10 +25,10 @@ function isRunningWithBun() {
 function isBunStandaloneExecutable() {
   return typeof Bun < "u" && Bun.isStandaloneExecutable === !0;
 }
-import { lstat as Q, rmdir, unlink as tt } from "fs/promises";
+import { lstat, rmdir, unlink } from "fs/promises";
 async function tryRemoveFileOrEmptyDirectory(t) {
   try {
-    return (await tt(t), "removed");
+    return (await unlink(t), "removed");
   } catch (o) {
     if (A(o) === "ENOENT") return "absent";
     try {
@@ -38,7 +38,7 @@ async function tryRemoveFileOrEmptyDirectory(t) {
       if (_ === "ENOTEMPTY" || _ === "EEXIST") return "directory";
       if (_ === "ENOENT") {
         if (
-          await Q(t).then(
+          await lstat(t).then(
             () => !1,
             (r) => A(r) === "ENOENT",
           )
@@ -50,14 +50,12 @@ async function tryRemoveFileOrEmptyDirectory(t) {
     }
   }
 }
-import { constants as R } from "fs";
+import { constants } from "fs";
 import {
-  lstat as x,
-  open as ot,
-  readdir as Et,
-  unlink as F,
+  open,
+  readdir,
 } from "fs/promises";
-import { join as U } from "path";
+import { join } from "path";
 function hasUnknownFileType(t) {
   return (
     !t.isDirectory() &&
@@ -78,7 +76,7 @@ async function getDirentFileInfo(t, o) {
       isSymbolicLink: o.isSymbolicLink(),
     };
   else {
-    let _ = await x(U(t, o.name));
+    let _ = await lstat(join(t, o.name));
     E = {
       isDirectory: _.isDirectory(),
       isFile: _.isFile(),
@@ -87,7 +85,7 @@ async function getDirentFileInfo(t, o) {
     };
   }
   if (E.isDirectory && getCurrentPlatform() === "windows") {
-    let _ = await Tae(U(t, o.name));
+    let _ = await Tae(join(t, o.name));
     switch (_.kind) {
       case "junction":
         return {
@@ -117,17 +115,17 @@ async function tryGetDirentFileInfo(t, o) {
 async function removePathRecursively(t) {
   let o;
   try {
-    o = await x(t);
+    o = await lstat(t);
   } catch (E) {
     if (A(E) !== "ENOENT") throw E;
     return;
   }
   if (o.isFile()) {
-    if (o.nlink > 1) await F(t);
+    if (o.nlink > 1) await unlink(t);
     return;
   }
   if (o.isSymbolicLink()) {
-    await F(t);
+    await unlink(t);
     return;
   }
   await removeDirectoryRecursive(t);
@@ -137,7 +135,7 @@ async function removeDirectoryRecursive(t) {
   if ((await tryRemoveFileOrEmptyDirectory(t)) !== "directory") return;
   let E;
   try {
-    E = await x(t);
+    E = await lstat(t);
   } catch (r) {
     if (A(r) === "ENOENT") return;
     throw r;
@@ -152,14 +150,14 @@ async function removeDirectoryRecursive(t) {
   }
   let _;
   try {
-    _ = await Et(t);
+    _ = await readdir(t);
   } catch (r) {
     let s = A(r);
     if (s === "ENOENT" || s === "ENOTDIR") return;
     throw r;
   }
   for (let r = 0; r < _.length; r += K)
-    await Promise.all(_.slice(r, r + K).map((s) => removeDirectoryRecursive(U(t, s))));
+    await Promise.all(_.slice(r, r + K).map((s) => removeDirectoryRecursive(join(t, s))));
   if ((await tryRemoveFileOrEmptyDirectory(t)) === "directory")
     throw Object.assign(Error("directory refilled during removal"), {
       code: "ENOTEMPTY",
@@ -167,8 +165,8 @@ async function removeDirectoryRecursive(t) {
     });
 }
 async function overwriteFileContents(t, o) {
-  let E = getCurrentPlatform() === "windows" ? 0 : R.O_NOFOLLOW | R.O_NONBLOCK,
-    _ = await ot(t, R.O_WRONLY | R.O_CREAT | R.O_TRUNC | E, 438);
+  let E = getCurrentPlatform() === "windows" ? 0 : constants.O_NOFOLLOW | constants.O_NONBLOCK,
+    _ = await open(t, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | E, 438);
   try {
     await _.writeFile(o, "utf-8");
   } finally {
@@ -180,7 +178,7 @@ async function _t(t) {
   if (o.kind === "error") throw o.error;
   return o.kind === "junction";
 }
-import { delimiter as v, isAbsolute } from "path";
+import { delimiter, isAbsolute } from "path";
 function et(t) {
   let o = process.cwd();
   return t.filter((E) => !AHt(E, o));
@@ -195,10 +193,10 @@ var resolveExecutablePathAsync = async (t) => g(t),
   resolveExecutablePath = g;
 function resolveCommandInPath(t, o) {
   let E = o
-    .split(v)
+    .split(delimiter)
     .map((_) => normalizePathEntry(_))
     .filter((_) => st(_));
-  return E.length === 0 ? null : nt(t, E.join(v));
+  return E.length === 0 ? null : nt(t, E.join(delimiter));
 }
 function normalizePathEntry(t, o = "darwin") {
   return o === "win32" ? t.replaceAll('"', "") : t;
@@ -210,15 +208,12 @@ function st(t) {
 function nt(t, o) {
   return y(t, Bun.which(t, { PATH: o }));
 }
-import { constants as Ct } from "fs";
 import {
   access,
-  readdir as Ot,
-  readFile,
   readlink,
 } from "fs/promises";
 import { homedir } from "os";
-import { delimiter as Lt, join as S, resolve } from "path";
+import { resolve } from "path";
 function h() {
   return !1;
 }
@@ -229,12 +224,12 @@ function V() {
   return !1;
 }
 function pt() {
-  if (getFsSurface().existsSync(S(getClaudeConfigDir(), ".config.json"))) return S(getClaudeConfigDir(), ".config.json");
+  if (getFsSurface().existsSync(join(getClaudeConfigDir(), ".config.json"))) return join(getClaudeConfigDir(), ".config.json");
   return getDefaultGlobalClaudeFilePath();
 }
 function getDefaultGlobalClaudeFilePath() {
   let t = `.claude${fileSuffixForOauthConfig()}.json`;
-  return S(process.env.CLAUDE_CONFIG_DIR || homedir(), t);
+  return join(process.env.CLAUDE_CONFIG_DIR || homedir(), t);
 }
 function getGlobalClaudeFile() {
   return C().getGlobalClaudeFile();
@@ -337,7 +332,7 @@ async function findCommandsOnPath(t, o) {
       : [],
     s = dedupe(
       (process.env.PATH ?? "")
-        .split(Lt)
+        .split(delimiter)
         .map((e) => e.replace(/^"|"$/g, ""))
         .filter(Boolean),
     );
@@ -346,7 +341,7 @@ async function findCommandsOnPath(t, o) {
       if (!(await isVerifiablePath(e))) return;
       let n;
       try {
-        n = await Ot(e, { withFileTypes: !0 });
+        n = await readdir(e, { withFileTypes: !0 });
       } catch {
         return;
       }
@@ -362,12 +357,12 @@ async function findCommandsOnPath(t, o) {
         }
         if (!_.has(p) || o.has(p)) continue;
         if (E) {
-          if (L && (await xt(S(e, O.name)))) continue;
+          if (L && (await xt(join(e, O.name)))) continue;
         } else {
-          let D = S(e, O.name);
+          let D = join(e, O.name);
           if ((O.isSymbolicLink() || hasUnknownFileType(O)) && (await hasUnverifiableAncestry(resolve(D)))) continue;
           try {
-            await access(D, Ct.X_OK);
+            await access(D, constants.X_OK);
           } catch {
             continue;
           }

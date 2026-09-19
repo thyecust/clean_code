@@ -16,7 +16,7 @@ import { getDesktopPath } from "../../01-核心基础设施/核心工具-路径�
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { writeFileSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
-import { join as w } from "path";
+import { join } from "path";
 import { getHeapSpaceStatistics, getHeapStatistics } from "v8";
 async function T(u, a = 0) {
   let t = process.memoryUsage(),
@@ -139,8 +139,8 @@ async function performHeapDump(u = "manual", a = 0) {
     let l = a > 0 ? `-dump${a}` : "",
       d = `${t}${l}.heapsnapshot`,
       f = `${t}${l}-diagnostics.json`,
-      s = w(m, d),
-      c = w(m, f);
+      s = join(m, d),
+      c = join(m, f);
     return (
       await writeFile(c, jsonStringify(e, null, 2), { mode: 384 }),
       logForDebugging(`[HeapDump] Diagnostics written to ${c}`),

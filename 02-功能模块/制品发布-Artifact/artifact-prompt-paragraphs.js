@@ -15,7 +15,7 @@ import { isArtifactToolsetEnabled } from "./chunk-qpgskeea.js";
 import { noWatchRailCollabNote } from "./chunk-b6k1z7an.js";
 import { detectImageMediaType } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../Skills技能/bundled-skill-names.js";
-import { dirname, join as A, normalize } from "path";
+import { dirname, join, normalize } from "path";
 var d = 4096,
   v = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 function m(e) {
@@ -99,7 +99,7 @@ function parseThumbnailDeclarations(e, i) {
       a.problems.push(o.errMsg);
       continue;
     }
-    a[r] = { href: n, rel: o.rel, fromAbs: A(s, normalize(l)), dark: r === "dark" };
+    a[r] = { href: n, rel: o.rel, fromAbs: join(s, normalize(l)), dark: r === "dark" };
   }
   return ((a.skipped = a.skipped.map(u)), (a.problems = a.problems.map(u)), a);
 }

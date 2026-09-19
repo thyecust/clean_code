@@ -38,7 +38,7 @@ import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { readDesignOauthTokens, saveDesignOauthTokens, getDesignOauthClientId, isDesignOauthClientConfigured, validateDesignOauthResponse } from "../设计同步/design-oauth-credentials.js";
 import { OAuthLoginFlow } from "./oauth-login-flow.js";
 import { isHeadlessEnvironment } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 function oe() {

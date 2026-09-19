@@ -72,10 +72,10 @@ class AsyncQueue {
   }
 }
 import { readFile } from "fs/promises";
-import { dirname as E, join as D } from "path";
+import { dirname, join } from "path";
 var C = createLazyValue(() => c({ customTitle: s() }));
 function getSessionTitleSidecarPath(e, t) {
-  return D(E(e), t, "custom-title.json");
+  return join(dirname(e), t, "custom-title.json");
 }
 async function readSessionCustomTitle(e, t, i) {
   let n = await N(getSessionTitleSidecarPath(e, t), i);
@@ -109,9 +109,8 @@ async function N(e, t) {
     return;
   }
 }
-import { constants as y } from "fs";
-import { open as F } from "fs/promises";
-import { dirname as x, join as _ } from "path";
+import { constants } from "fs";
+import { open } from "fs/promises";
 var P = '"type":"continued-in"',
   B = createLazyValue(() => it({ type: k("continued-in"), continuedInSessionId: s() })),
   L = createLazyValue(() =>
@@ -170,7 +169,7 @@ function z(e) {
   return isRecord(e) && extractUserPromptText(e, { commandFallback: "" }) !== void 0;
 }
 async function continuedInSessionExists(e, t, i) {
-  let n = _(x(e), `${t}.jsonl`),
+  let n = join(dirname(e), `${t}.jsonl`),
     r = await readSessionLite(n, createTranscriptSource(resolveTranscriptLocator(n, i)));
   return r !== null && (await hasParentUuidEntries(n, r.head, r.tail, r.size, i));
 }
@@ -182,7 +181,7 @@ async function hasParentUuidEntries(e, t, i, n, r) {
   if (n <= LITE_READ_BUF_SIZE) return !1;
   if (resolveTranscriptLocator(e, r) !== void 0) return !0;
   try {
-    let u = await F(e, y.O_RDONLY | y.O_NOFOLLOW | y.O_NONBLOCK);
+    let u = await open(e, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     try {
       if (!(await u.stat()).isFile()) return !1;
       let a = Buffer.allocUnsafe(I + h.length),
@@ -203,8 +202,7 @@ async function hasParentUuidEntries(e, t, i, n, r) {
     return !1;
   }
 }
-import { readdir as q, stat as J } from "fs/promises";
-import { basename, join as b } from "path";
+import { readdir, stat } from "fs/promises";
 function X(e) {
   let t = getProjectKeyFromDir(e);
   return t !== void 0 && isValidPathSegment(t) ? t : void 0;
@@ -238,7 +236,7 @@ async function listProjectSessions(e, t, i, n, r, o) {
             }
             f.set(g, {
               sessionId: g,
-              filePath: b(e, `${d.key.sessionId}.jsonl`),
+              filePath: join(e, `${d.key.sessionId}.jsonl`),
               mtime: w,
               projectPath: i,
               ownWorktrees: o,
@@ -252,7 +250,7 @@ async function listProjectSessions(e, t, i, n, r, o) {
   }
   let a;
   try {
-    a = await q(e);
+    a = await readdir(e);
   } catch {
     return [];
   }
@@ -262,7 +260,7 @@ async function listProjectSessions(e, t, i, n, r, o) {
         if (!f.endsWith(".jsonl")) return null;
         let l = validateUuid(f.slice(0, -6));
         if (!l) return null;
-        let d = b(e, f);
+        let d = join(e, f);
         if (!t)
           return {
             sessionId: l,
@@ -272,7 +270,7 @@ async function listProjectSessions(e, t, i, n, r, o) {
             ownWorktrees: o,
           };
         try {
-          let g = await J(d);
+          let g = await stat(d);
           return {
             sessionId: l,
             filePath: d,
@@ -287,13 +285,11 @@ async function listProjectSessions(e, t, i, n, r, o) {
     )
   ).filter((f) => f !== null);
 }
-import { constants as j } from "fs";
-import { open as Z, readdir as ot, rm as st, stat as at } from "fs/promises";
 async function tryAppendTranscriptEntry(e, t, i) {
   if (isHoverRestEnabled() && i !== void 0) return Q(i, t);
   let n;
   try {
-    n = await Z(e, j.O_WRONLY | j.O_APPEND);
+    n = await open(e, constants.O_WRONLY | constants.O_APPEND);
   } catch (r) {
     let o = A(r);
     if (o === "ENOENT" || o === "ENOTDIR") return !1;

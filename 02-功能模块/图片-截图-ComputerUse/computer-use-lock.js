@@ -31,7 +31,7 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import { join as U } from "path";
+import { join } from "path";
 var I = "computer-use.lock",
   l = { kind: "acquired", fresh: !0 },
   p = { kind: "acquired", fresh: !1 };
@@ -45,7 +45,7 @@ function S(e) {
   );
 }
 function i() {
-  return U(getClaudeConfigDir(), I);
+  return join(getClaudeConfigDir(), I);
 }
 function u() {
   return STORAGE_KEYS.state("computer-use-lock");
@@ -221,7 +221,7 @@ class ComputerUseMcpStateStore {
     this.#e.set(e);
   }
 }
-class _ {
+class ComputerUseLockOwner {
   owner = void 0;
   acquire(e) {
     if (this.owner) return () => {};
@@ -233,7 +233,7 @@ class _ {
     );
   }
 }
-var ComputerUseLockOwnerContext = new Gt(() => new _());
+var ComputerUseLockOwnerContext = new Gt(() => new ComputerUseLockOwner());
 function getComputerUseLockOwner(e) {
   return ComputerUseLockOwnerContext.of(e).owner;
 }

@@ -41,44 +41,31 @@ function resolveSessionAdoption(t, e, i = {}) {
     { adoptedSessionId: null, effectiveFork: !0 }
   );
 }
-import { constants as _, fstat } from "fs";
+import { constants, fstat } from "fs";
 import {
-  lstat as J,
-  mkdir as It,
-  open as yt,
+  lstat,
+  mkdir,
+  open,
   readdir,
-  readlink as ut,
+  readlink,
   realpath,
   symlink,
   unlink,
 } from "fs/promises";
 import {
-  basename as mt,
-  dirname as x,
-  isAbsolute as At,
-  join as U,
+  basename,
+  dirname,
+  isAbsolute,
+  join,
   resolve,
-  sep as Z,
-} from "path";
-import { constants as S } from "fs";
-import {
-  lstat as Q,
-  mkdir as Kt,
-  open as st,
-  readlink as Et,
-} from "fs/promises";
-import {
-  basename as dt,
-  dirname as L,
-  isAbsolute as jt,
-  join as T,
+  sep,
 } from "path";
 function it(t, e) {
   return (e === "windows" && An(t) && !Oi(t)) || Dr(t);
 }
 async function vt(t, e, i, o, r) {
   r?.throwIfAborted();
-  let s = o ? openNoSymlinkTraversal(t, e, i) : st(t, e);
+  let s = o ? openNoSymlinkTraversal(t, e, i) : open(t, e);
   if (!r) return s;
   let c,
     a = new Promise((u, f) => {
@@ -110,27 +97,27 @@ function Zt(t) {
 }
 var Jt = 2097152;
 async function openNoSymlinkTraversal(t, e, i) {
-  if (i !== "macos") return st(t, e);
+  if (i !== "macos") return open(t, e);
   try {
-    return await st(t, (e & ~S.O_NOFOLLOW) | Wt);
+    return await open(t, (e & ~constants.O_NOFOLLOW) | Wt);
   } catch (o) {
-    if (A(o) === "EINVAL") return st(t, e);
+    if (A(o) === "EINVAL") return open(t, e);
     throw o;
   }
 }
 async function xt(t, e, i) {
   if (i !== "macos") return !1;
-  for (let r = t; ; r = L(r)) {
+  for (let r = t; ; r = dirname(r)) {
     try {
-      if (!(await Q(r)).isDirectory()) return !1;
+      if (!(await lstat(r)).isDirectory()) return !1;
     } catch {
       return !1;
     }
-    if (L(r) === r) break;
+    if (dirname(r) === r) break;
   }
   let o;
   try {
-    o = await st(t, S.O_RDONLY | S.O_DIRECTORY | Wt);
+    o = await open(t, constants.O_RDONLY | constants.O_DIRECTORY | Wt);
   } catch {
     return !1;
   }
@@ -155,15 +142,15 @@ async function openApprovedPathForRead(t, e, i) {
   let o = new Set(e);
   for (let m of expandPathAliases(t)) if (!o.has(m)) throw X(t);
   let r = getCurrentPlatform(),
-    s = r === "windows" ? S.O_RDONLY : S.O_RDONLY | S.O_NOCTTY,
-    c = r === "windows" ? s : s | S.O_NOFOLLOW,
+    s = r === "windows" ? constants.O_RDONLY : constants.O_RDONLY | constants.O_NOCTTY,
+    c = r === "windows" ? s : s | constants.O_NOFOLLOW,
     a = async (m, y) => {
-      if ((await Q(m)).isSymbolicLink()) throw X(t);
+      if ((await lstat(m)).isSymbolicLink()) throw X(t);
       let v = await vt(m, c, r, !y, i);
       if (r === "linux" || r === "wsl") {
         let z = null;
         try {
-          z = await Et(`/proc/self/fd/${v.fd}`);
+          z = await readlink(`/proc/self/fd/${v.fd}`);
         } catch {}
         if (z !== null && z !== m && !o.has(z)) throw (await v.close(), X(t));
         if (z !== null)
@@ -180,7 +167,7 @@ async function openApprovedPathForRead(t, e, i) {
   let u = resolvePathInfo(getFsSurface(), t),
     f =
       Zt(t) &&
-      !jt(u.resolvedPath) &&
+      !isAbsolute(u.resolvedPath) &&
       /^(?:pipe|socket|anon_inode):\[/.test(u.resolvedPath) &&
       o.has(u.resolvedPath);
   if (!u.isCanonical && !f) {
@@ -200,7 +187,7 @@ async function openApprovedPathForRead(t, e, i) {
   let w = f ? t : u.resolvedPath,
     k;
   try {
-    k = await vt(w, f ? c & ~S.O_NOFOLLOW : c, r, !f, i);
+    k = await vt(w, f ? c & ~constants.O_NOFOLLOW : c, r, !f, i);
   } catch (m) {
     if (A(m) === "ELOOP") throw X(t);
     throw m;
@@ -210,7 +197,7 @@ async function openApprovedPathForRead(t, e, i) {
     if (r === "linux" || r === "wsl") {
       let v = null;
       try {
-        v = await Et(`/proc/self/fd/${k.fd}`);
+        v = await readlink(`/proc/self/fd/${k.fd}`);
       } catch {}
       if (v !== null) {
         if (v !== (f ? u.resolvedPath : w)) throw X(t);
@@ -248,18 +235,18 @@ async function ot(t, e, i, o, r = !1) {
     );
   if (i === "windows")
     try {
-      if ((await Q(t)).isSymbolicLink()) throw s();
+      if ((await lstat(t)).isSymbolicLink()) throw s();
     } catch (u) {
       if (A(u) === "ENOENT") return null;
       throw u;
     }
   let c =
       i === "windows"
-        ? S.O_RDONLY
-        : S.O_RDONLY | S.O_NOFOLLOW | S.O_NONBLOCK | (S.O_NOCTTY ?? 0),
+        ? constants.O_RDONLY
+        : constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK | (constants.O_NOCTTY ?? 0),
     a;
   try {
-    a = r ? await st(t, c) : await openNoSymlinkTraversal(t, c, i);
+    a = r ? await open(t, c) : await openNoSymlinkTraversal(t, c, i);
   } catch (u) {
     let f = A(u);
     if (f === "ENOENT") return null;
@@ -290,10 +277,10 @@ async function pinWriteTarget(t, e, i) {
 }
 async function Vt(t, e, i) {
   let o = new Set(e),
-    r = dt(t),
+    r = basename(t),
     s = getCurrentPlatform(),
     c = () =>
-      (i?.leaf === "replace" ? expandPathAliases(L(t)).map((O) => T(O, r)) : expandPathAliases(t)).every(
+      (i?.leaf === "replace" ? expandPathAliases(dirname(t)).map((O) => join(O, r)) : expandPathAliases(t)).every(
         (O) => o.has(O),
       ),
     a = () => {
@@ -317,7 +304,7 @@ async function Vt(t, e, i) {
         !0
       );
     },
-    w = (p) => o.has(T(p, r)),
+    w = (p) => o.has(join(p, r)),
     k = (p) => {
       let O = resolvePathInfo(getFsSurface(), p);
       if (!O.isCanonical) throw C(t);
@@ -330,22 +317,22 @@ async function Vt(t, e, i) {
   if (it(t, s) && s !== "linux" && s !== "wsl") {
     let p = async (d) => {
       if (s !== "macos") return;
-      for (let F = d; ; F = L(F))
+      for (let F = d; ; F = dirname(F))
         try {
-          await (await openNoSymlinkTraversal(F, S.O_RDONLY | S.O_DIRECTORY, s)).close();
+          await (await openNoSymlinkTraversal(F, constants.O_RDONLY | constants.O_DIRECTORY, s)).close();
           return;
         } catch (W) {
           let M = A(W);
           if (M === "ELOOP") throw C(t);
-          if (M !== "ENOENT" || L(F) === F) throw W;
+          if (M !== "ENOENT" || dirname(F) === F) throw W;
         }
     };
-    if ((await p(L(t)), i?.createParents))
-      (await getFsSurface().mkdir(L(t)), await p(L(t)));
+    if ((await p(dirname(t)), i?.createParents))
+      (await getFsSurface().mkdir(dirname(t)), await p(dirname(t)));
     let O = async () => {
       if ((a(), s !== "macos")) return;
       try {
-        await (await openNoSymlinkTraversal(L(t), S.O_RDONLY | S.O_DIRECTORY, s)).close();
+        await (await openNoSymlinkTraversal(dirname(t), constants.O_RDONLY | constants.O_DIRECTORY, s)).close();
       } catch (d) {
         throw A(d) === "ELOOP" ? C(t) : d;
       }
@@ -363,13 +350,13 @@ async function Vt(t, e, i) {
     };
   }
   let y = async () => {
-    if (i?.createParents) (await getFsSurface().mkdir(L(t)), a());
-    let p = resolvePathInfo(getFsSurface(), L(t));
+    if (i?.createParents) (await getFsSurface().mkdir(dirname(t)), a());
+    let p = resolvePathInfo(getFsSurface(), dirname(t));
     if (
       !p.isCanonical &&
-      !(p.isSymlink && w(p.resolvedPath) && it(T(p.resolvedPath, r), s))
+      !(p.isSymlink && w(p.resolvedPath) && it(join(p.resolvedPath, r), s))
     ) {
-      if (!p.isSymlink) await Q(L(t));
+      if (!p.isSymlink) await lstat(dirname(t));
       throw C(t);
     }
     let O = !p.isCanonical,
@@ -377,11 +364,11 @@ async function Vt(t, e, i) {
     if (!w(d)) throw C(t);
     return {
       ioPath: t,
-      canonicalPath: T(d, r),
+      canonicalPath: join(d, r),
       readExisting: async (F) => {
         a();
         let W = await ot(t, t, s, F, O);
-        if ((a(), O && resolvePathInfo(getFsSurface(), L(t)).resolvedPath !== d)) throw C(t);
+        if ((a(), O && resolvePathInfo(getFsSurface(), dirname(t)).resolvedPath !== d)) throw C(t);
         return W;
       },
       recheckBeforeWrite: a,
@@ -391,9 +378,9 @@ async function Vt(t, e, i) {
   if (s === "windows") return y();
   let z =
       s === "linux" || s === "wsl"
-        ? Jt | S.O_DIRECTORY
-        : S.O_RDONLY | S.O_DIRECTORY,
-    D = L(t),
+        ? Jt | constants.O_DIRECTORY
+        : constants.O_RDONLY | constants.O_DIRECTORY,
+    D = dirname(t),
     V = [],
     N,
     et = "";
@@ -403,39 +390,39 @@ async function Vt(t, e, i) {
       break;
     } catch (p) {
       let O = A(p),
-        d = L(D),
+        d = dirname(D),
         F =
           O === "ELOOP" &&
           s === "macos" &&
           et === D &&
           !resolvePathInfo(getFsSurface(), D).isCanonical;
       if (O === "ELOOP" && !F) {
-        let W = resolvePathInfo(getFsSurface(), L(t));
+        let W = resolvePathInfo(getFsSurface(), dirname(t));
         if (
           u &&
           !W.isCanonical &&
           W.isSymlink &&
           w(W.resolvedPath) &&
-          it(T(W.resolvedPath, r), s)
+          it(join(W.resolvedPath, r), s)
         )
           return y();
         throw C(t);
       }
       if (F && !i?.createParents) {
-        let W = [dt(D)];
-        for (let M = d; ; M = L(M)) {
+        let W = [basename(D)];
+        for (let M = d; ; M = dirname(M)) {
           let E = resolvePathInfo(getFsSurface(), M);
           if (E.isCanonical) {
-            await Q(T(E.resolvedPath, W[0]));
+            await lstat(join(E.resolvedPath, W[0]));
             break;
           }
-          if (L(M) === M) break;
-          W.unshift(dt(M));
+          if (dirname(M) === M) break;
+          W.unshift(basename(M));
         }
         throw C(t);
       }
       if ((O === "ENOENT" || F) && i?.createParents && d !== D) {
-        (V.unshift(dt(D)), (D = d));
+        (V.unshift(basename(D)), (D = d));
         continue;
       }
       throw p;
@@ -445,7 +432,7 @@ async function Vt(t, e, i) {
       O = async (E, I) => {
         if (s === "linux" || s === "wsl")
           try {
-            let B = await Et(`/proc/self/fd/${E.fd}`);
+            let B = await readlink(`/proc/self/fd/${E.fd}`);
             if (((p = !0), B.endsWith(" (deleted)"))) throw new rt(I);
             return B;
           } catch (B) {
@@ -454,13 +441,13 @@ async function Vt(t, e, i) {
         return k(I);
       },
       d = await O(N, D);
-    if (!p && d !== D && !w(T(d, ...V)) && w(T(D, ...V)) && (await f(D, d, N)))
+    if (!p && d !== D && !w(join(d, ...V)) && w(join(D, ...V)) && (await f(D, d, N)))
       d = D;
-    let F = T(d, ...V);
+    let F = join(d, ...V);
     if (!w(F)) {
       if (
         V.length === 0 &&
-        (await Q(T(p ? `/proc/self/fd/${N.fd}` : d, r)).then(
+        (await lstat(join(p ? `/proc/self/fd/${N.fd}` : d, r)).then(
           (I) => I.isSymbolicLink(),
           () => !1,
         ))
@@ -474,35 +461,35 @@ async function Vt(t, e, i) {
       let I = p ? `/proc/self/fd/${N.fd}` : d,
         B = null;
       try {
-        await Kt(T(I, E));
+        await mkdir(join(I, E));
       } catch (j) {
         if (((B = j), A(j) === "ENOENT")) throw new rt(d);
         if (A(j) !== "EEXIST")
-          rethrowWithUserFacingPath(j, { ioPath: T(I, E), canonicalPath: T(d, E) }, T(d, E));
+          rethrowWithUserFacingPath(j, { ioPath: join(I, E), canonicalPath: join(d, E) }, join(d, E));
       }
       let G;
       try {
-        G = await openNoSymlinkTraversal(T(I, E), z | S.O_NOFOLLOW, s);
+        G = await openNoSymlinkTraversal(join(I, E), z | constants.O_NOFOLLOW, s);
       } catch (j) {
         if (A(j) === "ELOOP" || A(j) === "ENOTDIR") throw C(t);
         if (A(j) === "ENOENT") {
           let $t;
           if (B !== null)
             try {
-              rethrowWithUserFacingPath(B, { ioPath: T(I, E), canonicalPath: T(d, E) }, T(d, E));
+              rethrowWithUserFacingPath(B, { ioPath: join(I, E), canonicalPath: join(d, E) }, join(d, E));
             } catch (Xt) {
               $t = Xt;
             }
-          throw new rt(T(d, E), $t);
+          throw new rt(join(d, E), $t);
         }
         rethrowWithUserFacingPath(
           B !== null ? B : j,
-          { ioPath: T(I, E), canonicalPath: T(d, E) },
-          T(d, E),
+          { ioPath: join(I, E), canonicalPath: join(d, E) },
+          join(d, E),
         );
       }
       (await N.close(), (N = G));
-      let nt = T(d, E);
+      let nt = join(d, E);
       if (((d = await O(N, nt)), d !== nt)) {
         if (p || !(await f(nt, d, N))) throw C(t);
         d = nt;
@@ -515,7 +502,7 @@ async function Vt(t, e, i) {
           if (!(await xt(F, E, s))) throw C(t);
           if (
             i?.leaf !== "replace" &&
-            (await Q(T(F, r)).then(
+            (await lstat(join(F, r)).then(
               (G) => G.isSymbolicLink(),
               (G) => A(G) !== "ENOENT",
             ))
@@ -523,7 +510,7 @@ async function Vt(t, e, i) {
             throw C(t);
         };
       await I();
-      let B = T(F, r);
+      let B = join(F, r);
       return {
         ioPath: B,
         canonicalPath: B,
@@ -540,7 +527,7 @@ async function Vt(t, e, i) {
       M = `/proc/self/fd/${W.fd}/${r}`;
     return {
       ioPath: M,
-      canonicalPath: T(F, r),
+      canonicalPath: join(F, r),
       readExisting: (E) => ot(M, t, s, E),
       recheckBeforeWrite: () => {},
       close: () => W.close(),
@@ -558,7 +545,7 @@ function rethrowWithUserFacingPath(t, e, i) {
   }
   throw t;
 }
-var lt = _.O_NOFOLLOW ?? 0,
+var lt = constants.O_NOFOLLOW ?? 0,
   Bt = 8388608,
   MAX_TASK_OUTPUT_BYTES = 5368709120,
   MAX_TASK_OUTPUT_BYTES_DISPLAY = "5GB",
@@ -568,37 +555,37 @@ function getTaskOutputRootDir() {
 }
 function getTaskOutputDir() {
   let t = getBgTakeover()?.adoptShellOutputRoot;
-  if (t !== void 0) return U(t, K(), "tasks");
+  if (t !== void 0) return join(t, K(), "tasks");
   let e = getSessionStateStore();
-  if (e.outputDir === void 0) e.outputDir = U(getCurrentProjectTempDir(), K(), "tasks");
+  if (e.outputDir === void 0) e.outputDir = join(getCurrentProjectTempDir(), K(), "tasks");
   return e.outputDir;
 }
 function taskOutputDirForSession(t) {
-  return U(getCurrentProjectTempDir(), t, "tasks");
+  return join(getCurrentProjectTempDir(), t, "tasks");
 }
 function peekTaskOutputDir() {
   return getBgTakeover()?.adoptShellOutputRoot !== void 0
     ? getTaskOutputDir()
-    : (getSessionStateStore().outputDir ?? U(getCurrentProjectTempDir(), K(), "tasks"));
+    : (getSessionStateStore().outputDir ?? join(getCurrentProjectTempDir(), K(), "tasks"));
 }
 function te() {
   let t = getSessionStateStore();
   if (t.outputDir === void 0) {
-    if (getBgTakeover() !== null) return U(getCurrentProjectTempDir(), K(), "tasks");
-    t.outputDir = U(getCurrentProjectTempDir(), K(), "tasks");
+    if (getBgTakeover() !== null) return join(getCurrentProjectTempDir(), K(), "tasks");
+    t.outputDir = join(getCurrentProjectTempDir(), K(), "tasks");
   }
   return t.outputDir;
 }
 function bindTaskOutputPath(t) {
   let e = getSessionStateStore().outputPathBindings.get(t);
   if (e !== void 0) return e;
-  let i = U(getTaskOutputDir(), `${t}.output`);
+  let i = join(getTaskOutputDir(), `${t}.output`);
   return (getSessionStateStore().outputPathBindings.set(t, i), i);
 }
 function getTaskOutputPath(t) {
   let e = getSessionStateStore().outputPathBindings.get(t);
   if (e !== void 0) return e;
-  return U(te(), `${t}.output`);
+  return join(te(), `${t}.output`);
 }
 function kt(t) {
   let e = getSessionStateStore().pendingOutputOps;
@@ -765,7 +752,7 @@ function evictTaskOutput(t) {
 }
 function releaseConvergentTaskOutputBinding(t) {
   let e = getSessionStateStore().outputPathBindings.get(t);
-  if (e !== void 0 && getBgTakeover() === null && e === U(getTaskOutputDir(), `${t}.output`))
+  if (e !== void 0 && getBgTakeover() === null && e === join(getTaskOutputDir(), `${t}.output`))
     getSessionStateStore().outputPathBindings.delete(t);
 }
 async function getTaskOutputDelta(t, e, i = Bt) {
@@ -827,7 +814,7 @@ async function getTaskOutputSize(t) {
     let i = A(e);
     if (i === "ENOENT") return 0;
     if (i === "EACCES" || i === "EPERM") {
-      let o = await J(getTaskOutputPath(t)).catch(() => null);
+      let o = await lstat(getTaskOutputPath(t)).catch(() => null);
       if (o !== null && o.isFile() && (o.mode & 256) === 0) return o.size;
       b(getTaskOutputPath(t), `output no longer measurable (${i})`);
     }
@@ -841,10 +828,10 @@ async function repointTaskOutputSymlinks(t, e) {
   let i = getSessionStateStore(),
     o = dedupe([
       ...(i.outputDir !== void 0 ? [i.outputDir] : []),
-      ...[...i.outputPathBindings.values()].map((s) => x(s)),
+      ...[...i.outputPathBindings.values()].map((s) => dirname(s)),
     ]);
   if (o.length === 0) return;
-  let r = t + Z;
+  let r = t + sep;
   for (let s of o) {
     let c;
     try {
@@ -866,7 +853,7 @@ async function ie(t, e, i, o, r) {
   let s = getSessionStateStore().linkedOutputs;
   for (let c of e) {
     if (!c.endsWith(".output")) continue;
-    let a = U(t, c),
+    let a = join(t, c),
       u = s.get(a),
       f;
     try {
@@ -878,7 +865,7 @@ async function ie(t, e, i, o, r) {
         });
       if (u === void 0 || !u.startsWith(i)) continue;
       let k = r + u.slice(o.length);
-      if ((await ut(w)) !== u) b(a, "output symlink was re-pointed");
+      if ((await readlink(w)) !== u) b(a, "output symlink was re-pointed");
       (await f?.recheckBeforeWrite(),
         await unlink(w),
         await f?.recheckBeforeWrite(),
@@ -893,7 +880,7 @@ async function ie(t, e, i, o, r) {
 }
 async function ct(t, e, i = 0) {
   if (getCurrentPlatform() === "windows")
-    return (await It(x(t), { recursive: !0 }), yt(t, e.windowsFlags));
+    return (await mkdir(dirname(t), { recursive: !0 }), open(t, e.windowsFlags));
   let o = await tt(t, { replaceLeaf: !0 });
   try {
     let r = await Rt(o.ioPath);
@@ -910,11 +897,11 @@ async function ct(t, e, i = 0) {
     try {
       c = await openNoSymlinkTraversal(
         o.ioPath,
-        _.O_WRONLY |
-          _.O_APPEND |
-          (s ? _.O_CREAT | _.O_EXCL : 0) |
+        constants.O_WRONLY |
+          constants.O_APPEND |
+          (s ? constants.O_CREAT | constants.O_EXCL : 0) |
           lt |
-          (_.O_NONBLOCK ?? 0),
+          (constants.O_NONBLOCK ?? 0),
         getCurrentPlatform(),
       );
     } catch (a) {
@@ -947,7 +934,7 @@ async function openTaskOutputForRead(t, e = 0) {
       return Ct(s, e, t);
     }
     if (!o.isFile()) b(t, "not a regular file");
-    let r = await yt(t, "r");
+    let r = await open(t, "r");
     return (await Ft(r, o, t, { anyLinkCount: !0 }), r);
   }
   let i;
@@ -967,7 +954,7 @@ async function openTaskOutputForRead(t, e = 0) {
     if (!o.isFile() || (o.nlink !== 1 && e === 0))
       b(t, "not a regular nlink-1 file");
     await i.recheckBeforeWrite();
-    let r = await openNoSymlinkTraversal(i.ioPath, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), getCurrentPlatform());
+    let r = await openNoSymlinkTraversal(i.ioPath, constants.O_RDONLY | lt | (constants.O_NONBLOCK ?? 0), getCurrentPlatform());
     try {
       await Ft(r, o, t, { registeredIdentity: e > 0 ? Ut(t) : void 0 });
     } catch (s) {
@@ -982,15 +969,15 @@ async function openTaskOutputForRead(t, e = 0) {
   }
 }
 async function Ht(t, e) {
-  let i = await ut(e),
-    o = At(i) && resolve(i).startsWith(resolve(getProjectsDir()) + Z);
-  if (!At(i) || (!q(i) && !o))
+  let i = await readlink(e),
+    o = isAbsolute(i) && resolve(i).startsWith(resolve(getProjectsDir()) + sep);
+  if (!isAbsolute(i) || (!q(i) && !o))
     return b(
       t,
       "output is an unregistered symlink of a shape this session does not create",
     );
-  let r = await J(e);
-  if (!r.isSymbolicLink() || r.ctimeMs >= getSessionStateStore().linksInheritedBeforeFor(x(t)))
+  let r = await lstat(e);
+  if (!r.isSymbolicLink() || r.ctimeMs >= getSessionStateStore().linksInheritedBeforeFor(dirname(t)))
     return b(t, "output is an unregistered symlink made during this session");
   return (await Lt(t, i), i);
 }
@@ -1004,7 +991,7 @@ async function St(t, e) {
       );
     i = await Ht(t, e);
   }
-  if ((await ut(e)) !== i) return b(t, "output symlink was re-pointed");
+  if ((await readlink(e)) !== i) return b(t, "output symlink was re-pointed");
   return i;
 }
 async function Ct(t, e, i) {
@@ -1016,8 +1003,8 @@ async function Ct(t, e, i) {
   try {
     let s = await realpath(t);
     if (q(s)) return b(i, "output link leads back into the tasks tree");
-    ((r = await J(s)),
-      (o = await openNoSymlinkTraversal(s, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), getCurrentPlatform())));
+    ((r = await lstat(s)),
+      (o = await openNoSymlinkTraversal(s, constants.O_RDONLY | lt | (constants.O_NONBLOCK ?? 0), getCurrentPlatform())));
   } catch (s) {
     if (isTaskOutputSwapRefusal(s)) throw s;
     if (A(s) === "ENOENT") return null;
@@ -1034,11 +1021,11 @@ async function Ct(t, e, i) {
 }
 function q(t) {
   let e = getResolvedClaudeTempDir();
-  return t === e || t.startsWith(e.endsWith(Z) ? e : e + Z);
+  return t === e || t.startsWith(e.endsWith(sep) ? e : e + sep);
 }
 async function Rt(t) {
   try {
-    return await J(t);
+    return await lstat(t);
   } catch (e) {
     if (A(e) === "ENOENT") return null;
     throw e;
@@ -1059,7 +1046,7 @@ async function Mt(t) {
   try {
     let i = await openNoSymlinkTraversal(
       e.ioPath,
-      _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0),
+      constants.O_RDONLY | lt | (constants.O_NONBLOCK ?? 0),
       getCurrentPlatform(),
     ).catch((o) => {
       throw Tt(o, t);
@@ -1112,22 +1099,22 @@ function Tt(t, e) {
 function re(t) {
   let e = _t(),
     i = resolve(t);
-  if (i.startsWith(e + Z)) return i;
+  if (i.startsWith(e + sep)) return i;
   let o = getFsSurface(),
-    r = x(x(x(x(i)))),
+    r = dirname(dirname(dirname(dirname(i)))),
     { resolvedPath: s } = resolvePathInfo(o, r);
-  return normalizeCaseForComparison(s) === normalizeCaseForComparison(e) ? U(e, i.slice(r.length + 1)) : i;
+  return normalizeCaseForComparison(s) === normalizeCaseForComparison(e) ? join(e, i.slice(r.length + 1)) : i;
 }
 function _t() {
-  return x(x(x(resolve(getTaskOutputDir()))));
+  return dirname(dirname(dirname(resolve(getTaskOutputDir()))));
 }
 function isTaskOutputFilePath(t) {
   let e = _t(),
     i = getFsSurface(),
     o = new Set([e, resolvePathInfo(i, e).resolvedPath].map((r) => normalizeCaseForComparison(r)));
   return expandPathAliases(t).some((r) => {
-    let s = x(resolve(r));
-    return normalizeCaseForComparison(mt(s)) === "tasks" && Yt(mt(x(s))) && o.has(normalizeCaseForComparison(x(x(x(s)))));
+    let s = dirname(resolve(r));
+    return normalizeCaseForComparison(basename(s)) === "tasks" && Yt(basename(dirname(s))) && o.has(normalizeCaseForComparison(dirname(dirname(dirname(s)))));
   });
 }
 function bt() {
@@ -1145,14 +1132,14 @@ function taskOutputDirExclusions(t) {
     o = dedupe([e, resolvePathInfo(i, e).resolvedPath]),
     r = new Set(),
     s = (a, u) => {
-      let f = a.endsWith(Z) ? a : a + Z;
+      let f = a.endsWith(sep) ? a : a + sep;
       return normalizeCaseForComparison(u).startsWith(normalizeCaseForComparison(f)) ? u.slice(f.length) : null;
     },
     c = (a) => a.replaceAll("\\", "/");
   for (let a of expandPathAliases(t)) {
     let u = resolve(a);
     for (let f of o) {
-      let w = mt(f);
+      let w = basename(f);
       if (normalizeCaseForComparison(u) === normalizeCaseForComparison(f)) {
         for (let y of bt())
           (r.add(`!/*/${y}/tasks/**`), r.add(`!**/${w}/*/${y}/tasks/**`));
@@ -1167,7 +1154,7 @@ function taskOutputDirExclusions(t) {
       }
       let m = s(f, u);
       if (m !== null) {
-        let y = m.split(Z);
+        let y = m.split(sep);
         if (y.length === 1)
           for (let v of bt())
             (r.add(`!/${v}/tasks/**`), r.add(`!**/${w}/${c(m)}/${v}/tasks/**`));
@@ -1185,7 +1172,7 @@ async function bindTaskOutputForRead(t) {
   let e = await openTaskOutputForRead(t);
   if (e === null)
     throw (
-      await J(t),
+      await lstat(t),
       new R(
         `task output ${t} is no longer available (the file it pointed to was removed)`,
         "task output link target removed",
@@ -1195,7 +1182,7 @@ async function bindTaskOutputForRead(t) {
   return {
     ioPath:
       (i === "linux" || i === "wsl") &&
-      (await ut(`/proc/self/fd/${e.fd}`).then(
+      (await readlink(`/proc/self/fd/${e.fd}`).then(
         () => !0,
         () => !1,
       ))
@@ -1246,13 +1233,13 @@ async function writeTaskOutputSnapshot(t, e) {
   }
 }
 async function tt(t, e) {
-  let i = x(t),
-    o = mt(t),
+  let i = dirname(t),
+    o = basename(t),
     r = H.get(i);
   if (r !== void 0) {
     let f = await r.catch(() => null);
     if (f !== null) {
-      let k = (await Promise.all([f.handleStat(), J(i)]).then(
+      let k = (await Promise.all([f.handleStat(), lstat(i)]).then(
         ([m, y]) =>
           m.nlink > 0 && y.isDirectory() && y.ino === m.ino && y.dev === m.dev,
         () => !1,
@@ -1276,7 +1263,7 @@ async function tt(t, e) {
       } catch (N) {
         if (N instanceof SymlinkWriteRefusedError) {
           if (!(await oe())) {
-            if (e?.create ?? !0) await It(x(t), { recursive: !0, mode: 448 });
+            if (e?.create ?? !0) await mkdir(dirname(t), { recursive: !0, mode: 448 });
             return {
               ioPath: t,
               canonicalPath: t,
@@ -1285,7 +1272,7 @@ async function tt(t, e) {
               close: async () => {},
             };
           }
-          (logForDebugging(`task output: pin of ${x(t)} refused: ${l(N)}`, { level: "warn" }),
+          (logForDebugging(`task output: pin of ${dirname(t)} refused: ${l(N)}`, { level: "warn" }),
             b(
               t,
               "tasks dir moved or linked",
@@ -1313,8 +1300,8 @@ async function tt(t, e) {
           let et = !1;
           return {
             ioPath: `${k}/${N}`,
-            canonicalPath: U(i, N),
-            readExisting: (p) => ot(`${k}/${N}`, U(i, N), getCurrentPlatform(), p),
+            canonicalPath: join(i, N),
+            readExisting: (p) => ot(`${k}/${N}`, join(i, N), getCurrentPlatform(), p),
             recheckBeforeWrite: () => {},
             close: async () => {
               if (!et) ((et = !0), y--, await D());
@@ -1403,7 +1390,7 @@ var ht = new Set(),
 async function openVerifiedTaskOutput(t, e) {
   let i;
   try {
-    i = await J(t);
+    i = await lstat(t);
   } catch (c) {
     let a = A(c);
     if (a === "ELOOP" || a === "ENOTDIR")
@@ -1415,13 +1402,13 @@ async function openVerifiedTaskOutput(t, e) {
     r = i.size > e,
     s;
   try {
-    s = await yt(
+    s = await open(
       t,
       o
         ? r
           ? "r+"
           : "r"
-        : (r ? _.O_RDWR : _.O_RDONLY) | lt | (_.O_NONBLOCK ?? 0),
+        : (r ? constants.O_RDWR : constants.O_RDONLY) | lt | (constants.O_NONBLOCK ?? 0),
     );
   } catch (c) {
     let a = A(c);
@@ -1475,7 +1462,7 @@ async function getVerifiedTaskOutputTail(t, e) {
 async function persistTaskOutputSnapshot(t, e, i) {
   let { handle: r, size: s } = await openVerifiedTaskOutput(t, i);
   try {
-    let c = await yt(e, _.O_WRONLY | _.O_CREAT | _.O_TRUNC | lt);
+    let c = await open(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | lt);
     try {
       let a = Buffer.alloc(1048576),
         u = 0;
@@ -1501,7 +1488,7 @@ async function persistTaskOutputSnapshot(t, e, i) {
 async function ue(t, e, i = t) {
   if (t === e) return !0;
   try {
-    if (!(await J(i)).isFile()) return !1;
+    if (!(await lstat(i)).isFile()) return !1;
     return (await realpath(i)) === (await realpath(e));
   } catch {
     return !1;
@@ -1515,7 +1502,7 @@ function initTaskOutputAsSymlink(t, e, i) {
           r = await tt(o, { replaceLeaf: !0 });
         try {
           if (await ue(o, e, r.ioPath)) {
-            let s = await ut(r.ioPath).catch(() => e);
+            let s = await readlink(r.ioPath).catch(() => e);
             return (await Lt(o, q(s) ? s : e), i?.("noop"), o);
           }
           if (q(e)) await Mt(e);

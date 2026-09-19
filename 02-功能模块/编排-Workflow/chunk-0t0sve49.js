@@ -307,13 +307,13 @@ function contentToText(e) {
 `,
       );
 }
-import * as j from "vm";
+import * as vm from "vm";
 function withVmTimeout(e, t) {
   if (t != null) return { timeout: t };
   return { timeout: e };
 }
 function hardenVmIntrinsics(e) {
-  j.runInContext(
+  vm.runInContext(
     `(() => {
     Object.defineProperty(Error, 'prepareStackTrace', {
       value: (err, sites) => String(err.stack ?? err),
@@ -453,13 +453,13 @@ function hardenVmIntrinsics(e) {
   );
 }
 function makeVmAwait(e) {
-  return j.runInContext("(async v => ({__proto__: null, v: await v}))", e);
+  return vm.runInContext("(async v => ({__proto__: null, v: await v}))", e);
 }
 function makeVmApply(e) {
-  return j.runInContext("((fn, ...args) => fn(...args))", e);
+  return vm.runInContext("((fn, ...args) => fn(...args))", e);
 }
 function makeVmErrorExtractor(e) {
-  return j.runInContext(
+  return vm.runInContext(
     `(e => {
       let name = 'Error', message = '', stack = ''
       try { const v = e?.name; if (typeof v === 'string') name = v } catch {}
@@ -479,7 +479,7 @@ function makeVmErrorExtractor(e) {
   );
 }
 function makeVmClone(e) {
-  return j.runInContext(
+  return vm.runInContext(
     `(() => {
       const _WeakMap = WeakMap, _WeakSet = WeakSet, _isArray = Array.isArray,
             _keys = Object.keys, _defineProperty = Object.defineProperty,
@@ -556,7 +556,7 @@ function makeVmClone(e) {
   );
 }
 function makeAsyncWrapper(e) {
-  return j.runInContext("(hostFn => async (...a) => hostFn(...a))", e);
+  return vm.runInContext("(hostFn => async (...a) => hostFn(...a))", e);
 }
 function makePlainError(e, t = "Error", r) {
   let o = () => `${t}: ${e}`;
@@ -575,12 +575,12 @@ function makePlainError(e, t = "Error", r) {
 var at;
 function ns() {
   if (!at) {
-    let e = j.createContext(
+    let e = vm.createContext(
       { __proto__: null },
       { codeGeneration: { strings: !1, wasm: !1 } },
     );
     (hardenVmIntrinsics(e),
-      (at = j.runInContext(
+      (at = vm.runInContext(
         `(e => {
         // Independent try blocks \u2014 a throwing .name getter must not discard
         // an already-validated .message (and vice versa).
@@ -719,7 +719,7 @@ function snapshotArray(e) {
   return r;
 }
 function makeVmStringUtils(e) {
-  return j.runInContext(
+  return vm.runInContext(
     `((S, JS) => ({
       vmToStr: v => { try { return S(v) } catch { return '<unprintable>' } },
       vmStringify: v => JS(v),
@@ -732,7 +732,7 @@ function makeVmStringUtils(e) {
   );
 }
 function makeVmSanitizers(e) {
-  return j.runInContext(
+  return vm.runInContext(
     `(() => {
       const _WeakMap = WeakMap, _WeakSet = WeakSet, _isArray = Array.isArray,
             _keys = Object.keys, _defineProperty = Object.defineProperty,
@@ -823,8 +823,8 @@ function toDisplayString(e) {
 }
 var L = (e) => e.isCore === !0 || e.isManaged === !0;
 var HOOK_GRACE_MS = 5000;
-import { AsyncLocalStorage as ds } from "async_hooks";
-var ft = new ds();
+import { AsyncLocalStorage } from "async_hooks";
+var ft = new AsyncLocalStorage();
 async function gs(e) {
   let t = ft.getStore();
   if (t === void 0) return e();
@@ -1456,7 +1456,6 @@ function Fr() {
   };
 }
 var xe = Fr();
-import * as je from "vm";
 var ht = String.raw`(() => {
   const INTRINSIC = {
     Box: 'Box', box: 'Box', Text: 'Text', text: 'Text',
@@ -2189,7 +2188,7 @@ var qi = String.raw`(helpers => {
     },
   })
 })`;
-var He = je.runInContext(ht, je.createContext({}));
+var He = vm.runInContext(ht, vm.createContext({}));
 var ep = He.Fragment;
 var tp = He.h;
 function wt(e, t) {
@@ -2491,8 +2490,7 @@ function Xs(e, t) {
   };
 }
 var DEFAULT_HOOK_BUDGET_MS = 1e4;
-import { resolve as qf } from "path";
-import * as se from "vm";
+import { resolve } from "path";
 function Dp({
   engine: e,
   core: t,
@@ -3316,9 +3314,8 @@ async function cf(e) {
     }
   );
 }
-import * as Lo from "vm";
 var gf = (e) =>
-  Lo.runInContext(
+  vm.runInContext(
     `(() => {
       const _isArray = Array.isArray, _keys = Object.keys,
             _create = Object.create, _defineProperty = Object.defineProperty,
@@ -3381,9 +3378,8 @@ var gf = (e) =>
     })()`,
     e,
   );
-import * as Bo from "vm";
 var xf = (e) =>
-  Bo.runInContext(
+  vm.runInContext(
     `(() => {
       const _Object = Object
       return value => {
@@ -3405,11 +3401,10 @@ function Ke(e) {
 }
 var We = (e) => Ke(() => e instanceof Error);
 var bf = () => Object.create(null);
-import * as Pt from "vm";
 function wf(e) {
-  let t = Pt.runInContext("Error", e),
+  let t = vm.runInContext("Error", e),
     r = Function.prototype[Symbol.hasInstance];
-  Pt.runInContext(
+  vm.runInContext(
     "(hasInstance => Object.defineProperty(Error, Symbol.hasInstance, { value: hasInstance }))",
     e,
   )(B((o) => We(o) || Ke(() => r.call(t, o))));
@@ -3440,24 +3435,21 @@ import { dirname } from "path";
 import { pathToFileURL } from "url";
 var Do = (e) => ({ url: pathToFileURL(e).href, dir: dirname(e), file: e });
 var ze = (e, t) => `${e.length}:${e}${t.length}:${t}`;
-import { resolve as If } from "path";
-var Uo = (e) => new Map(e.map((t) => [ze(If(t.from), t.spelled), t.file]));
-import { relative, resolve as _t } from "path";
-import * as Ve from "vm";
-import { resolve as Cf } from "path";
+var Uo = (e) => new Map(e.map((t) => [ze(resolve(t.from), t.spelled), t.file]));
+import { relative } from "path";
 var Ko = ({ modulePath: e, source: t, linked: r }) =>
-  new Map([[Cf(e), t], ...r.map((o) => [o.file, o.source])]);
+  new Map([[resolve(e), t], ...r.map((o) => [o.file, o.source])]);
 async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   let { modulePath: n, pluginName: s, pluginRoot: p, source: i } = e,
-    a = _t(p),
+    a = resolve(p),
     f = new Map(),
-    c = new Ve.SyntheticModule([], () => {}, { context: t, identifier: CLAUDE_CODE_MODULE_ID }),
+    c = new vm.SyntheticModule([], () => {}, { context: t, identifier: CLAUDE_CODE_MODULE_ID }),
     m = Ko(e),
     d = Uo(e.links);
   async function u(w, S) {
     if (w === CLAUDE_CODE_MODULE_ID) return c;
     if (!isRelativeImportPath(w)) throw createBadImportError(s, w, relative(a, S.identifier) || n);
-    let O = d.get(ze(_t(S.identifier), w)),
+    let O = d.get(ze(resolve(S.identifier), w)),
       C = O === void 0 ? void 0 : m.get(O);
     if (O !== void 0 && C !== void 0) return b(O, C);
     let R = await resolveHookImport(
@@ -3470,7 +3462,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
   function b(w, S) {
     let O = f.get(w);
     if (O) return O;
-    let C = new Ve.SourceTextModule(transpileHookSource(w, S), {
+    let C = new vm.SourceTextModule(transpileHookSource(w, S), {
       context: t,
       identifier: w,
       initializeImportMeta: (R) => {
@@ -3492,7 +3484,7 @@ async function Hf({ args: e, context: t, intoEnvironment: r, stamped: o }) {
     });
     return (f.set(w, C), C);
   }
-  let T = b(_t(n), i);
+  let T = b(resolve(n), i);
   return (await T.link(u), await o(() => T.evaluate()), T.namespace);
 }
 var Mf = `(() => {
@@ -3737,10 +3729,9 @@ var Jo = (e) => (t) => {
     Atomics.store(e.view, 0, r);
   }
 };
-import * as Yo from "vm";
 function qo(e) {
   let { context: t, wrapMethod: r, cloneIn: o, pluginName: n, vmClone: s } = e,
-    p = Yo.runInContext(Mf, t),
+    p = vm.runInContext(Mf, t),
     i = new Set();
   return (a) => {
     if (!isRecord(a)) return s(a);
@@ -3780,10 +3771,10 @@ async function Qf(e, t, r = {}) {
     a = new Map(),
     f = 0,
     c = bf(),
-    m = se.createContext(c, { codeGeneration: { strings: !1, wasm: !1 } });
+    m = vm.createContext(c, { codeGeneration: { strings: !1, wasm: !1 } });
   (wf(m), hardenVmIntrinsics(m));
   let d = makeVmApply(m),
-    u = se.runInContext(
+    u = vm.runInContext(
       "((self, fn, ...args) => Reflect.apply(fn, self, args))",
       m,
     ),
@@ -3794,9 +3785,9 @@ async function Qf(e, t, r = {}) {
     S = makeVmClone(m),
     O = (x) => ae(S(x)),
     C = makeAsyncWrapper(m),
-    R = se.runInContext(qi, m)(Ff(qf(e.pluginRoot))),
+    R = vm.runInContext(qi, m)(Ff(resolve(e.pluginRoot))),
     { fromEnvironment: J, intoEnvironment: I } = Fo(b, R, T),
-    M = se.runInContext($f, m)(B(I));
+    M = vm.runInContext($f, m)(B(I));
   function dn(x, v) {
     if (p) throw createUnloadedModuleError(o);
     try {
@@ -3986,12 +3977,11 @@ function tn(e, t, r) {
   }
   return s;
 }
-import { AsyncLocalStorage as rn } from "async_hooks";
 var fm = (e, t) => ({
   environments: new Map(),
   loading: new Map(),
-  dispatching: new rn(),
-  serving: new rn(),
+  dispatching: new AsyncLocalStorage(),
+  serving: new AsyncLocalStorage(),
   servingLive: new Set(),
   hostOps: e,
   presses: new Map(),

@@ -21,7 +21,7 @@ import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DY
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { readFileSync } from "fs";
-import { join as u } from "path";
+import { join } from "path";
 var p = importMetaRequire("./loopAutonomousPreamble-07qcyhv4.md");
 var y = importMetaRequire("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
 function g() {
@@ -112,7 +112,7 @@ function P(e) {
 > WARNING: loop.md was truncated to ${l} bytes. Keep the task list concise.`;
 }
 function _() {
-  return c(u(sn(), ".claude", "loop.md")) ?? c(u(getClaudeConfigDir(), "loop.md"));
+  return c(join(sn(), ".claude", "loop.md")) ?? c(join(getClaudeConfigDir(), "loop.md"));
 }
 function c(e) {
   let t;
@@ -128,9 +128,9 @@ function c(e) {
 }
 async function readLoopFileAsync(e) {
   if (!e) return _();
-  let t = c(u(sn(), ".claude", "loop.md"));
+  let t = c(join(sn(), ".claude", "loop.md"));
   if (t) return t;
-  let o = u(getClaudeConfigDir(), "loop.md"),
+  let o = join(getClaudeConfigDir(), "loop.md"),
     n = await e.read([STORAGE_KEYS.state("loop-file")]);
   if (!n.ok) return c(o);
   let r = n.value.items[0];

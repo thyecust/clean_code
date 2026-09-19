@@ -29,7 +29,7 @@ import { PERMANENT_FAILURE_EXIT_CODE, TEMP_FAILURE_EXIT_CODE } from "../../01-�
 import { s, T, O, c, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomUUID } from "crypto";
-import { join as ee } from "path";
+import { join } from "path";
 function ae(e) {
   return (
     typeof e === "object" &&
@@ -207,8 +207,8 @@ function createDaemonAuth(e, t, y = () => !0, d, p) {
       return;
     }
     let i = getClaudeConfigDir(),
-      A = ee(i, "daemon-auth-cooldown"),
-      a = ee(i, "daemon-auth-status.json");
+      A = join(i, "daemon-auth-cooldown"),
+      a = join(i, "daemon-auth-status.json");
     try {
       let o;
       if (isHoverRestEnabled() && d !== void 0) {
