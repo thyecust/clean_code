@@ -8724,7 +8724,9 @@ class FirstPartyAttributionRegistry {
   loggableMcpServers = new Set();
 }
 
-var firstPartyAttributionRegistries = new j(() => new FirstPartyAttributionRegistry());
+var firstPartyAttributionRegistries = new j(
+  () => new FirstPartyAttributionRegistry(),
+);
 
 function dye() {
   return firstPartyAttributionRegistries.of(B().host);
@@ -26184,7 +26186,7 @@ function dU(e, t, r) {
 
 var REFUSED_TOOL_INPUT_FIELDS = [
   "dangerouslyDisableSandbox",
-  
+
   "run_in_background",
   "_simulatedSedEdit",
 ];
@@ -36577,7 +36579,6 @@ var ioo = [
   "GIT_CONFIG_PARAMETERS",
   "CLAUDE_EFFORT",
   "CLAUDE_CODE_INVOKED_SKILLS",
-  
 ];
 
 class SpawnEnvKeyState {
@@ -53227,7 +53228,9 @@ class ServerClassifierRequestHistory {
   }
 }
 
-var serverClassifierRequestHistory = new j(() => new ServerClassifierRequestHistory());
+var serverClassifierRequestHistory = new j(
+  () => new ServerClassifierRequestHistory(),
+);
 
 function IPe() {
   return serverClassifierRequestHistory.of(B().host);
@@ -78948,7 +78951,9 @@ class HostClassifierContextRegistry {
   }
 }
 
-var hostClassifierContextRegistry = new j(() => new HostClassifierContextRegistry());
+var hostClassifierContextRegistry = new j(
+  () => new HostClassifierContextRegistry(),
+);
 
 function Rce() {
   return hostClassifierContextRegistry.of(B().host);
@@ -93575,7 +93580,9 @@ class EnterpriseMcpConfigPresence {
   }
 }
 
-var enterpriseMcpConfigPresence = new j(() => new EnterpriseMcpConfigPresence());
+var enterpriseMcpConfigPresence = new j(
+  () => new EnterpriseMcpConfigPresence(),
+);
 
 function doesEnterpriseMcpConfigExist() {
   return enterpriseMcpConfigPresence.of(B().host).check();
@@ -95202,7 +95209,7 @@ async function* runAgent({
             pRn(Cn);
           },
         },
-        
+
         {
           name: "propagateNestedMemory",
           run: () => {
@@ -107480,7 +107487,7 @@ function getBuiltinToolDefinitions() {
     D2n,
     SkillTool,
     enterPlanModeTool,
-    
+
     DesignSyncTool,
     ...(e ? [e] : []),
     ProjectsTool,
@@ -107521,7 +107528,7 @@ function getBuiltinToolDefinitions() {
     ...(Pdt() ? [Pdt()] : []),
     ...(y6n ? [y6n] : []),
     ...(_6n ? [_6n()] : []),
-    
+
     listMcpResourcesTool,
     readMcpResourceTool,
     readMcpResourceDirTool,
@@ -145314,149 +145321,146 @@ function jds(e) {
 
 function getBuiltinCommands() {
   function Wds() {
-  return [
-    pYe,
-    fYe,
-    mYe,
-    rTt,
-    oTt,
-    qEt,
-    jlr,
-    gwt,
-    tcr,
-    XHe,
-    ...kZ("fleetFork"),
-    Dur,
-    Swt,
-    qlr,
-    bdr,
-    KHe,
-    xwt,
-    Cwt,
-    YHe,
-    Pwt,
-    Rwt,
-    Iwt,
-    ocr,
-    Awt,
-    Vlr,
-    Mwt,
-    Dwt,
-    Lwt,
-    ...kZ("fleetBackground"),
-    bTt,
-    _Tt,
-    STt,
-    iTt,
-    vEt,
-    EEt,
-    kTt,
-    Gur,
-    Bwt,
-    lcr,
-    wcr,
-    Hwt,
-    Rcr,
-    Pcr,
-    jwt,
-    QHe,
-    Fwt,
-    kcr,
-    ccr,
-    Wwt,
-    $wt,
-    uTt,
-    cTt,
-    Cdr,
-    xdr,
-    Adr,
-    KEt,
-    ...kZ("pluginTypes"),
-    zwt,
-    ZHe,
-    t1e,
-    Vwt,
-    qwt,
-    Dcr,
-    Ncr,
-    Lcr,
-    Kwt,
-    Ywt,
-    Xwt,
-    Odr,
-    Sdr,
-    yEt,
-    Eur,
-    Twt,
-    vwt,
-    $cr,
-    Ucr,
-    wur,
-    YEt,
-    Ycr,
-    Jwt,
-    Wcr,
-    aTt,
-    UPGRADE_COMMAND,
-    USAGE_CREDITS_COMMAND,
-    dTt,
-    mTt,
-    hTt,
-    Pdr,
-    Idr,
-    Mdr,
-    Rdr,
-    iEt,
-    lEt,
-    Uds,
-    Lds,
-    Dds,
-    ...(Bdr ? [Bdr] : []),
-    ...kZ("daemon"),
-    Ocr,
-    ...(Jme ? [Jme] : []),
-    ...kZ("skillDoctor"),
-    bEt,
-    SEt,
-    Gwt,
-    GEt,
-    Nds,
-    $Tt,
-    zEt,
-    Iur,
-    lTt,
-    tTt,
-    xcr(),
-    Ccr(),
-    vcr,
-    Ecr,
-    Tcr,
-    ...kZ("logout"),
-    BEt,
-    ...(l1e ? [l1e] : []),
-    ...(f1e ? [f1e] : []),
-    Qwt,
-    zlr,
-    
-    ...Fds,
-    Gcr,
-    ...(Udr ? [Udr] : []),
-    Wlr,
-    ...(Hdr ? [Hdr] : []),
-    kdr,
-    ...(ege ? [ege] : []),
-    ...(RTt ? [RTt] : []),
-    ...(PTt ? [PTt] : []),
-    ...(MTt ? [MTt] : []),
-    ...Edr,
-    
-  ];
-}
+    return [
+      pYe,
+      fYe,
+      mYe,
+      rTt,
+      oTt,
+      qEt,
+      jlr,
+      gwt,
+      tcr,
+      XHe,
+      ...kZ("fleetFork"),
+      Dur,
+      Swt,
+      qlr,
+      bdr,
+      KHe,
+      xwt,
+      Cwt,
+      YHe,
+      Pwt,
+      Rwt,
+      Iwt,
+      ocr,
+      Awt,
+      Vlr,
+      Mwt,
+      Dwt,
+      Lwt,
+      ...kZ("fleetBackground"),
+      bTt,
+      _Tt,
+      STt,
+      iTt,
+      vEt,
+      EEt,
+      kTt,
+      Gur,
+      Bwt,
+      lcr,
+      wcr,
+      Hwt,
+      Rcr,
+      Pcr,
+      jwt,
+      QHe,
+      Fwt,
+      kcr,
+      ccr,
+      Wwt,
+      $wt,
+      uTt,
+      cTt,
+      Cdr,
+      xdr,
+      Adr,
+      KEt,
+      ...kZ("pluginTypes"),
+      zwt,
+      ZHe,
+      t1e,
+      Vwt,
+      qwt,
+      Dcr,
+      Ncr,
+      Lcr,
+      Kwt,
+      Ywt,
+      Xwt,
+      Odr,
+      Sdr,
+      yEt,
+      Eur,
+      Twt,
+      vwt,
+      $cr,
+      Ucr,
+      wur,
+      YEt,
+      Ycr,
+      Jwt,
+      Wcr,
+      aTt,
+      UPGRADE_COMMAND,
+      USAGE_CREDITS_COMMAND,
+      dTt,
+      mTt,
+      hTt,
+      Pdr,
+      Idr,
+      Mdr,
+      Rdr,
+      iEt,
+      lEt,
+      Uds,
+      Lds,
+      Dds,
+      ...(Bdr ? [Bdr] : []),
+      ...kZ("daemon"),
+      Ocr,
+      ...(Jme ? [Jme] : []),
+      ...kZ("skillDoctor"),
+      bEt,
+      SEt,
+      Gwt,
+      GEt,
+      Nds,
+      $Tt,
+      zEt,
+      Iur,
+      lTt,
+      tTt,
+      xcr(),
+      Ccr(),
+      vcr,
+      Ecr,
+      Tcr,
+      ...kZ("logout"),
+      BEt,
+      ...(l1e ? [l1e] : []),
+      ...(f1e ? [f1e] : []),
+      Qwt,
+      zlr,
+
+      ...Fds,
+      Gcr,
+      ...(Udr ? [Udr] : []),
+      Wlr,
+      ...(Hdr ? [Hdr] : []),
+      kdr,
+      ...(ege ? [ege] : []),
+      ...(RTt ? [RTt] : []),
+      ...(PTt ? [PTt] : []),
+      ...(MTt ? [MTt] : []),
+      ...Edr,
+    ];
+  }
   let e = getHostStateStore();
   return ((e.builtinCommandTable ??= Wds()), e.builtinCommandTable);
 }
-
-
 
 function builtInCommandNames() {
   let e = getHostStateStore();
@@ -146264,8 +146268,7 @@ function xfr() {
             "Briefly explain what sandbox restriction likely caused the failure. Be sure to mention that the user can use the `/sandbox` command to manage restrictions.",
             "This goes through the permission gate (a user prompt, or the auto-mode classifier when auto mode is active)",
           ],
-          
-          
+
           "Treat each command you execute with `dangerouslyDisableSandbox: true` individually. Even if you have recently run a command with this setting, you should default to running future commands within the sandbox.",
           "Do not suggest adding sensitive paths like ~/.bashrc, ~/.zshrc, ~/.ssh/*, or credential files to the sandbox allowlist.",
         ]
@@ -147118,8 +147121,7 @@ async function Pfs(e, t, r, o, d, p, _) {
       wf("skill_listing", () => getSkillListingAttachments(F)),
       wf("plan_mode", () => jfs(e, d, t, _)),
       wf("plan_mode_exit", () => Wfs(d, t)),
-      
-      
+
       wf("auto_mode", () => Gfs(d, t)),
       wf("auto_mode_exit", () => zfs(d, t)),
       wf("todo_reminders", de),
@@ -147138,7 +147140,7 @@ async function Pfs(e, t, r, o, d, p, _) {
         : []),
       wf("agent_pending_messages", async () => Dfs(t)),
       wf("critical_system_reminder", () => Promise.resolve(Qfs(t))),
-      
+
       ...(U &&
       e === null &&
       !_?.isRegularUserPrompt &&
