@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
-class e {
+class AdditionalWorkingDirectories {
   directories = [];
   get() {
     return this.directories;
@@ -26,9 +26,9 @@ class e {
     this.directories = [];
   }
 }
-var a = new j(() => new e());
+var additionalWorkingDirectoriesByHost = new j(() => new AdditionalWorkingDirectories());
 function n() {
-  return a.of(B().host);
+  return additionalWorkingDirectoriesByHost.of(B().host);
 }
 function getAdditionalWorkingDirectories() {
   return n().get();

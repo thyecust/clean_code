@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-class n {
+class SessionAnnouncementState {
   announcementSlotWinner = null;
   announcementSlotGovernance = null;
   countedNoticeImpressions = new Set();
@@ -26,7 +26,7 @@ class n {
       (this.ccCeMigrateGroup = void 0));
   }
 }
-var sessionAnnouncementStateStore = new Gt(() => new n());
+var sessionAnnouncementStateStore = new Gt(() => new SessionAnnouncementState());
 function getSessionAnnouncementState() {
   return sessionAnnouncementStateStore.of(B());
 }

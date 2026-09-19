@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-class s {
+class HostClaimRegistry {
   #t = new Set();
   #e = new Map();
   lastBellAt = 0;
@@ -24,7 +24,7 @@ class s {
     return (this.#e.set(t, e), !0);
   }
 }
-var claimRegistriesByHost = new j(() => new s());
+var claimRegistriesByHost = new j(() => new HostClaimRegistry());
 function getClaimRegistry() {
   return claimRegistriesByHost.of(B().host);
 }

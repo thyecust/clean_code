@@ -10,16 +10,16 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../核心工具-并发与缓存/async-timeout-utils.js";
 import "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-class r {
+class AttachState {
   stampMs = 0;
   detachedSinceLastAttach = !1;
   reset() {
     ((this.stampMs = 0), (this.detachedSinceLastAttach = !1));
   }
 }
-var s = new j(() => new r());
+var attachStatesByHost = new j(() => new AttachState());
 function a() {
-  return s.of(B().host);
+  return attachStatesByHost.of(B().host);
 }
 function markAttached(e) {
   let t = a();

@@ -16,7 +16,7 @@ import { join } from "path";
 function E() {
   return !1;
 }
-class f {
+class ExecutablePathCache {
   resolved = new Map();
   lookup(e) {
     return this.resolved.get(e);
@@ -28,7 +28,7 @@ class f {
     this.resolved.delete(e);
   }
 }
-var h = new j(() => new f()),
+var executablePathCachesByHost = new j(() => new ExecutablePathCache()),
   b = 5000;
 function u(e) {
   try {
@@ -47,7 +47,7 @@ function y(e) {
   return n > 0 && v.has(t.slice(n));
 }
 function findExecutableWindows(e, t = !1) {
-  let n = h.of(B().host),
+  let n = executablePathCachesByHost.of(B().host),
     o = n.lookup(e);
   if (o !== void 0)
     if (o !== null) {

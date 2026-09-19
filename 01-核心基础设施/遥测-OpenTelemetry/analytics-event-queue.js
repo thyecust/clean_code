@@ -25,12 +25,12 @@ function s(t, e) {
   if (t.eventQueue.length >= u) (t.eventQueue.shift(), t.droppedEventCount++);
   t.eventQueue.push(e);
 }
-class r {
+class AnalyticsEventQueue {
   state = c();
 }
-var l = new j(() => new r());
+var analyticsEventQueue = new j(() => new AnalyticsEventQueue());
 function a() {
-  return bi(l);
+  return bi(analyticsEventQueue);
 }
 function attachAnalyticsSink(t) {
   let e = a().state;

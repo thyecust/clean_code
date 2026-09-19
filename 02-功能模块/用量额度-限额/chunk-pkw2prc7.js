@@ -21,14 +21,14 @@ function stripAutoContinuePrefill(t, e, n) {
     return t.slice(AUTO_CONTINUE_PREFILL_TEXT.length);
   return t;
 }
-class o {
+class RateLimitCheckpointState {
   lastResult = null;
   listeners = new Set();
   inFlight = null;
 }
-var l = new Gt(() => new o());
+var rateLimitCheckpointStatesByHost = new Gt(() => new RateLimitCheckpointState());
 function i() {
-  return l.of(B());
+  return rateLimitCheckpointStatesByHost.of(B());
 }
 function publishRateLimitCheckpointResult(t) {
   let e = i();

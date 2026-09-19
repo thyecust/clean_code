@@ -23,12 +23,12 @@ async function flushAnalyticsSinks() {
     (await Promise.race([Promise.all(l), sleep(500)]), await a);
   } catch {}
 }
-class o {
+class PreFlushTaskQueue {
   tasks = [];
 }
-var c = new j(() => new o());
+var preFlushTaskQueue = new j(() => new PreFlushTaskQueue());
 function t() {
-  return bi(c).tasks;
+  return bi(preFlushTaskQueue).tasks;
 }
 function registerPreFlushTask(s) {
   t().push(s.catch(() => {}));
