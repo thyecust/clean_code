@@ -1709,13 +1709,13 @@ Connection: close\r
 function ft(e) {
   return /^[\d.]+$/.test(e) || e.includes(":");
 }
-class xe {
+class EgressProxyState {
   active;
   handle;
 }
-var ht = new j(() => new xe());
+var egressProxyStates = new j(() => new EgressProxyState());
 function _e() {
-  return ht.of(B().host);
+  return egressProxyStates.of(B().host);
 }
 function mt(e, n) {
   let o = ge.map((t) => [t, n[t]]),
@@ -2021,7 +2021,7 @@ async function runCheckoutHook(e) {
     }
 }
 var Ae = 2000;
-class Ce {
+class InFlightHookCounter {
   inFlight = 0;
   increment() {
     this.inFlight++;
@@ -2030,9 +2030,9 @@ class Ce {
     this.inFlight--;
   }
 }
-var St = new j(() => new Ce());
+var inFlightHookCounters = new j(() => new InFlightHookCounter());
 function He() {
-  return St.of(B().host);
+  return inFlightHookCounters.of(B().host);
 }
 function getInFlightHookCount() {
   return He().inFlight;

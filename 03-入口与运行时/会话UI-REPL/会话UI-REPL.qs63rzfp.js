@@ -20027,7 +20027,7 @@ class ModePushTimeoutError extends Error {
     this.name = "ModePushTimeoutError";
   }
 }
-class Ett {
+class ModePushWaiterRegistry {
   pending = [];
   register(w, I) {
     let { promise: ne, resolve: me, reject: pe } = Promise.withResolvers(),
@@ -20046,12 +20046,12 @@ class Ett {
       else me.resolve();
   }
 }
-var Ntt = new Gt(() => new Ett());
+var modePushWaiterRegistries = new Gt(() => new ModePushWaiterRegistry());
 function sZ(w, I, ne) {
-  Ntt.of(w).settle(I, ne);
+  modePushWaiterRegistries.of(w).settle(I, ne);
 }
 function registerModePushWaiter(w, I, ne) {
-  return Ntt.of(w).register(I, ne);
+  return modePushWaiterRegistries.of(w).register(I, ne);
 }
 function m4t(w, I) {
   ((w.pending = w.pending.filter((ne) => ne !== I)), I.reject(new ModePushTimeoutError()));
@@ -23151,7 +23151,7 @@ function HSe(w, I, ne) {
 }
 function jSe(w, I) {
   if (!w || w.length === 0 || !I) return [];
-  let ne = B4t.of(B().host),
+  let ne = footerLinksResolvers.of(B().host),
     me = [];
   for (let pe of w) {
     if (pe.type !== "regex") continue;
@@ -23313,7 +23313,7 @@ function lZ(w, I) {
     (w.dedupUrl !== void 0 && w.dedupUrl === I.dedupUrl)
   );
 }
-class lot {
+class FooterLinksResolver {
   warnedUnreadableShapes = new Set();
   warnedPlaceholderConfigs = new Set();
   pinByTemplate = new Map();
@@ -23369,7 +23369,7 @@ ${ne ?? ""}`;
     return (this.regexByPattern.set(w, I), I);
   }
 }
-var B4t = new j(() => new lot());
+var footerLinksResolvers = new j(() => new FooterLinksResolver());
 var cot = 8192,
   WSe = 65536,
   U4t = 256;
@@ -41380,16 +41380,16 @@ function Udt(w) {
   ];
 }
 F();
-class jdt {
+class PersistenceSuppressionLatch {
   emitted = !1;
   claim() {
     if (this.emitted) return !1;
     return ((this.emitted = !0), !0);
   }
 }
-var sao = new j(() => new jdt());
+var persistenceSuppressionLatches = new j(() => new PersistenceSuppressionLatch());
 function jPe(w) {
-  return sao.of(w).claim();
+  return persistenceSuppressionLatches.of(w).claim();
 }
 var $dt = "persistence-suppressed";
 function Zoe() {
@@ -42437,10 +42437,10 @@ function xlo({
     }),
   };
 }
-class Amt {
+class StatusLineMemory {
   lastText = void 0;
 }
-var iAe = new Gt(() => new Amt()),
+var statusLineMemories = new Gt(() => new StatusLineMemory()),
   Rlo = [
     "tokenUsage",
     "permissionMode",
@@ -42746,7 +42746,7 @@ function Umt(n6n) {
           session: yne,
           getMessages: hne.getSnapshot,
           setTimeout: (r6n, i6n) => Emt.setTimeout(r6n, i6n),
-          memory: iAe.of(yne),
+          memory: statusLineMemories.of(yne),
           execute: (s6n, a6n, l6n) => executeStatusLineCommand(yne, s6n, a6n, l6n),
           getWorkspaceGit: rAe,
           isVimModeEnabled: qlo,
@@ -46650,7 +46650,7 @@ F();
 F();
 F();
 var lDe = 10;
-class fht {
+class HistoryEntriesLoadCache {
   #e = null;
   #t = 0;
   #o = void 0;
@@ -46685,7 +46685,7 @@ class fht {
     }
   }
 }
-var nmo = new j(() => new fht());
+var historyEntriesLoadCaches = new j(() => new HistoryEntriesLoadCache());
 function rmo(w, I) {
   if (I.length === 0) return 0;
   for (let ne = 0; ne < w.length; ne++) {
@@ -46702,7 +46702,7 @@ function rmo(w, I) {
 }
 function uDe(w, I, ne) {
   let { storageV5: me } = useStorageV5Context(),
-    pe = nmo.of(useSession().host),
+    pe = historyEntriesLoadCaches.of(useSession().host),
     be = useStoreSelector(w, sR),
     [xe, Ae] = d(0),
     [Oe, He] = d(null),
@@ -67728,16 +67728,16 @@ function zX() {
   else lEo = iEo[3];
   return lEo;
 }
-class oAt {
+class AutoModeReviewState {
   reviewFocus = createStore(null);
   flaggedStash = createStore(null);
 }
-var dle = new Gt(() => new oAt());
+var autoModeReviewStates = new Gt(() => new AutoModeReviewState());
 function Y$e(VFr) {
   let ule = _(18),
     { payload: XMt, answer: ZMt } = VFr,
     F$e = zX(),
-    { reviewFocus: fF } = dle.of(useSession()),
+    { reviewFocus: fF } = autoModeReviewStates.of(useSession()),
     GFr = At(fF.subscribe, fF.getState),
     dEo;
   if (ule[0] !== ZMt || ule[1] !== fF)
@@ -67802,7 +67802,7 @@ function J$e(QFr) {
   let KX = _(27),
     { payload: W$e, answer: tAt } = QFr,
     jW = zX(),
-    { flaggedStash: tx } = dle.of(useSession()),
+    { flaggedStash: tx } = autoModeReviewStates.of(useSession()),
     bP = W$e.runId,
     q$e = At(tx.subscribe, tx.getState),
     pEo;
@@ -73425,7 +73425,7 @@ import { spawn } from "child_process";
 var oOo = 300,
   nOo = 240000,
   rOo = 30000;
-class o0t {
+class SleepInhibitor {
   inhibitorProcess = null;
   restartInterval = null;
   pendingKillTimeout = null;
@@ -73520,9 +73520,9 @@ class o0t {
     }
   }
 }
-var iOo = new j(() => new o0t());
+var sleepInhibitors = new j(() => new SleepInhibitor());
 function n0t() {
-  return iOo.of(B().host);
+  return sleepInhibitors.of(B().host);
 }
 function KVe() {
   n0t().acquire();
@@ -75440,7 +75440,7 @@ async function XNt(w, I) {
   }
 }
 var yKe = 2;
-class eLt {
+class DeadProbeTipCountsLatch {
   fired = new Set();
   fire(w, I) {
     if (w <= 0) return;
@@ -75455,9 +75455,9 @@ class eLt {
       }));
   }
 }
-var FBo = new j(() => new eLt());
+var deadProbeTipCountsLatches = new j(() => new DeadProbeTipCountsLatch());
 function BBo() {
-  return FBo.of(B().host);
+  return deadProbeTipCountsLatches.of(B().host);
 }
 async function oLt(w) {
   if (getSettings_DEPRECATED().spinnerTipsEnabled === !1) return;
@@ -89394,7 +89394,7 @@ function tQe(w, I) {
 }
 import { extname } from "path";
 F();
-class bUt {
+class BinaryCheckCache {
   installed = new Map();
   lookup(w) {
     return this.installed.get(w);
@@ -89403,7 +89403,7 @@ class bUt {
     this.installed.set(w, I);
   }
 }
-var e1o = new j(() => new bUt()),
+var binaryCheckCaches = new j(() => new BinaryCheckCache()),
   t1o =
     getCurrentPlatform() === "windows"
       ? /^[A-Za-z0-9/\\][A-Za-z0-9_.+:\\?/-]*$/
@@ -89417,7 +89417,7 @@ async function SUt(w, I) {
       logForDebugging(`[binaryCheck] Rejected command with unsafe characters: '${ne}'`),
       !1
     );
-  let me = e1o.of(w),
+  let me = binaryCheckCaches.of(w),
     pe = me.lookup(ne);
   if (pe !== void 0)
     return (logForDebugging(`[binaryCheck] Cache hit for '${ne}': ${pe}`), pe);

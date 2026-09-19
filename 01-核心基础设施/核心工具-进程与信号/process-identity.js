@@ -216,7 +216,7 @@ class g {
   }
 }
 var ownProcStartMemo = new g();
-class h {
+class ProcessStartTimeCache {
   #e = new Map();
   get(e) {
     return this.#e.get(e);
@@ -225,7 +225,7 @@ class h {
     this.#e.set(e, t);
   }
 }
-var T = new j(() => new h());
+var processStartTimeCaches = new j(() => new ProcessStartTimeCache());
 function ownProcStart() {
   return ownProcStartMemo.token ?? ownProcStartMemo.set(getProcessStartTime(process.pid));
 }
@@ -245,7 +245,7 @@ var x = 60000,
   C = 5000;
 async function getProcessStartTimeAsync(e, t) {
   let n = Date.now(),
-    r = T.of(B().host);
+    r = processStartTimeCaches.of(B().host);
   if (t?.env !== void 0) return m(e, t.env);
   if (!t?.skipCache) {
     let a = r.get(e),

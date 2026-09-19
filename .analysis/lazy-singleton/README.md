@@ -147,16 +147,26 @@ node check-local.mjs <plan>    # 6 本流程专属三道校验
 | `node check-local.mjs` | 引用点守恒 36/36 · 旧名残留 0 · 无类名可见性风险 |
 | `node .analysis/rename/exitpath.mjs` | `exit=1`（非 TIMEOUT，无自引用死锁）；A/B 中位数 1.74s vs 1.84s，噪声内 |
 
-### 落盘时踩到的两个坑（**都在我自己的校验脚本里，不是树的问题**）
+### 落盘时踩到的坑（**都在工具链里，不是树的问题**）
 
-1. **`check-undef.mjs` 没跳过 `.analysis`**，于是 `.work/pilot-backup/` 下那份备份副本
-   让一条**已知**债务（`a @ 01-…/chunk-p7jm635c.js`，本来就在 `KNOWN` 里）
-   换了个路径重新出现，被判成「本次新引入」。排除 `.analysis` 后是 0 处。
-   `check-imports.mjs` 与 `paths.mjs` 都是跳过 `.analysis` 的，`check-undef.mjs` 漏了这条。
-   另外它的输出要读对：数的是**去重后的 (标识符, 文件) 对**，不是出现次数。
-   **未修** —— 改闸门不该混在改名批次里。
-2. `check-local.mjs` 的旧名残留扫描最初把 `Anthropic's` 里的 `s`、私有字段 `#o` / `#s`
-   当成残留。前后 lookaround 补上 `'` `’` `#` 即可。
+1. **`check-local.mjs` 的旧名残留扫描用文本匹配，假阳性不断**：单字母/双字母名会在
+   英文所有格（`Anthropic's` 的 `s`）、版权注释（`// (c) Anthropic`、`as a Beta product`
+   里的 `a`）、正则字面量（`[\da-fA-F]` 里的 `da`、`[a-z]` 里的 `z`）、属性位置
+   （`et.sh` / `o.sh` / 对象键 `sh:`）里撞上。前后 lookaround 补 `'` `’` `#` 只解决了一半，
+   正则与属性位置必须**用 AST 挖掉**（`blankMask`）。
+   真正可靠的是 `[A] 引用点守恒` —— 它是作用域感知的，485/485 逐个守恒。
+   `[B]` 只是补充层，别让它当主闸门。
+2. **`verify.mjs` 的原型链下标**（第 3 个潜伏 bug，前两个见 `../rename/README.md`）：
+   `plan.renames[n] ?? n` 在导出名是 `toString` 时命中 `Object.prototype.toString` ——
+   `??` 兜不住函数，于是把函数当成「新名字」塞进期望值，报出一个假的导出面变化。
+   lodash 那个聚合 chunk **恰好导出 `toString`**，而它第一次进计划表就是这一轮。
+   同款模式在 `../rename/combine.mjs` 和本目录 `merge-plans.mjs` 里也有，三处一起改成
+   `Object.hasOwn`。
+3. 更正上一轮记错的一条：`check-undef.mjs` 那次「新引入」**不是**它没跳过 `.analysis`，
+   而是 **oxlint 尊重 `.gitignore`** —— 给本目录加上 `.gitignore`（`.work/`）之后，
+   同一份数据就报 0 处了。`.analysis/rename/.work/` 有自己的 `.gitignore`，
+   这就是历轮没踩到的原因。
+
 
 ### 命名 agent 提出的两条可复用判据
 

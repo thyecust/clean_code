@@ -794,12 +794,12 @@ function Ne() {
     wslProviderOfPluginsRootMemo: void 0,
   };
 }
-class J {
+class PluginRegistryState {
   registry = Ne();
 }
-var _e = new j(() => new J());
+var pluginRegistryStates = new j(() => new PluginRegistryState());
 function Oe() {
-  return _e.of(B().host);
+  return pluginRegistryStates.of(B().host);
 }
 function getPluginRegistryState() {
   return Oe().registry;

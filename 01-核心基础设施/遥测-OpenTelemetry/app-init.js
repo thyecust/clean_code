@@ -113,13 +113,13 @@ function w() {
     signal: AbortSignal.timeout(1e4),
   }).catch(() => {});
 }
-class C {
+class AppInitState {
   promise = void 0;
   telemetryInitialized = !1;
 }
-var A = new j(() => new C());
+var appInitState = new j(() => new AppInitState());
 function y() {
-  return A.of(B().host);
+  return appInitState.of(B().host);
 }
 async function T(t = {}) {
   let r = Date.now();

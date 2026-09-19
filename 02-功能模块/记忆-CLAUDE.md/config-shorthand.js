@@ -218,7 +218,7 @@ function listConfigKeys(n) {
 `);
 }
 function getConfigArgumentCompletions(n, o) {
-  let t = y.of(B().host).lookup(),
+  let t = configKeysCache.of(B().host).lookup(),
     e = o.indexOf("=");
   if (e === -1) {
     let l = o.toLowerCase();
@@ -240,7 +240,7 @@ function getConfigArgumentCompletions(n, o) {
     .filter((l) => l.toLowerCase().startsWith(f))
     .map((l) => ({ value: `${d.id}=${l}`, isFinal: !0 }));
 }
-class S {
+class ConfigKeysCache {
   keys = void 0;
   remoteWorkspace = !1;
   lookup() {
@@ -249,7 +249,7 @@ class S {
     return ((this.keys ??= b()), this.keys);
   }
 }
-var y = new j(() => new S());
+var configKeysCache = new j(() => new ConfigKeysCache());
 function b() {
   let n = {
       getAppState: () => ({

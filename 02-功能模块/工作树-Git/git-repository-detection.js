@@ -38,7 +38,7 @@ async function detectCurrentRepository() {
   if (!isGitHubHost(t.host)) return null;
   return `${t.owner}/${t.name}`;
 }
-class y {
+class RepoDetectionGuards {
   guards = null;
   setGuards(t) {
     this.guards = t;
@@ -52,9 +52,9 @@ class y {
     }
   }
 }
-var _ = new j(() => new y());
+var repoDetectionGuardsByHost = new j(() => new RepoDetectionGuards());
 function repoDetectionGuards() {
-  return _.of(B().host);
+  return repoDetectionGuardsByHost.of(B().host);
 }
 function setRepoDetectionGuards(t) {
   repoDetectionGuards().setGuards(t);

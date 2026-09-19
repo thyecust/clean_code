@@ -1260,7 +1260,7 @@ function Pc(e, t) {
 }
 import { open, realpath } from "fs/promises";
 import { dirname, join } from "path";
-class Tc {
+class InboundLaneRegistry {
   #e = new WeakMap();
   mark(e, t) {
     this.#e.set(e, t);
@@ -1269,9 +1269,9 @@ class Tc {
     return this.#e.get(e);
   }
 }
-var Rc = new Gt(() => new Tc());
+var inboundLaneRegistries = new Gt(() => new InboundLaneRegistry());
 var Ac = 1e4;
-class Dc {
+class CommandUuidTracker {
   uuids = new Set();
   order = [];
   has(e) {
@@ -1286,7 +1286,7 @@ class Dc {
     return !0;
   }
 }
-var Ic = new Gt(() => new Dc());
+var commandUuidTrackers = new Gt(() => new CommandUuidTracker());
 var xc = "tengu_polished_lagoon",
   Uc = !1,
   Fc = "session_notices",
@@ -1623,7 +1623,7 @@ function Vc(e) {
     return !1;
   }
 }
-class Gc {
+class StreamJsonStdoutGuard {
   buffer = "";
   originalWrite = null;
   install() {
@@ -1682,9 +1682,9 @@ class Gc {
     this.buffer = "";
   }
 }
-var Op = new j(() => new Gc());
+var streamJsonStdoutGuards = new j(() => new StreamJsonStdoutGuard());
 function zc(e) {
-  Op.of(e).install();
+  streamJsonStdoutGuards.of(e).install();
 }
 function Qc(e, t, o) {
   let d = [
@@ -7870,8 +7870,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     t instanceof RemoteIO)
   )
     $m(t.sessionState, v);
-  let Tt = Ic.of(e),
-    en = Rc.of(e),
+  let Tt = commandUuidTrackers.of(e),
+    en = inboundLaneRegistries.of(e),
     Ne = new Set(),
     gt = !1,
     pn = 0,

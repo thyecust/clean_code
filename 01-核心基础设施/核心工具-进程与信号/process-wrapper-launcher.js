@@ -17,7 +17,7 @@ import { isAbsolute, join } from "path";
 var PROCESS_WRAPPER_ENV_VAR = "CLAUDE_CODE_PROCESS_WRAPPER",
   FAST_CRASH_WINDOW_MS = 12000,
   c = { argv: [], error: null, platformIgnored: !1, record: "" };
-class f {
+class ProcessWrapperState {
   memoRaw = void 0;
   memoState = c;
   getState() {
@@ -42,9 +42,9 @@ class f {
     return this.memoState;
   }
 }
-var S = new j(() => new f());
+var processWrapperStates = new j(() => new ProcessWrapperState());
 function getProcessWrapperState() {
-  return S.of(B().host).getState();
+  return processWrapperStates.of(B().host).getState();
 }
 function getLauncherArgv() {
   return getProcessWrapperState().argv;

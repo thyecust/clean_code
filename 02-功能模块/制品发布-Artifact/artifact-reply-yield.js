@@ -59,7 +59,7 @@ var A = 4000,
     },
     clearTimeout: (e) => clearTimeout(e),
   };
-class b {
+class ArtifactReplyYieldState {
   outstanding = new Map();
   pendingClaims = new Map();
   holder = null;
@@ -78,9 +78,9 @@ class b {
       this.delivered.clear());
   }
 }
-var P = new j(() => new b());
+var artifactReplyYieldState = new j(() => new ArtifactReplyYieldState());
 function p() {
-  return P.of(B().host);
+  return artifactReplyYieldState.of(B().host);
 }
 function z(e, i) {
   while (e.size > x) {

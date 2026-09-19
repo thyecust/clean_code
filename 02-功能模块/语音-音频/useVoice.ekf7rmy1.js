@@ -33,7 +33,7 @@ import { getResolvedLanguage } from "../../01-核心基础设施/核心工具-�
 F();
 var w = 1e4,
   I = 3;
-class B {
+class VoiceRuntimeState {
   voiceModule = null;
   recentEarlyFailures = [];
   breakerTrippedLogged = !1;
@@ -47,7 +47,7 @@ class B {
       (this.lastExpectedHint = null));
   }
 }
-var z = new j(() => new B());
+var voiceRuntimeState = new j(() => new VoiceRuntimeState());
 function P(e) {
   return `voice_transcription_connection_failed_${e ?? "no_response"}`;
 }
@@ -136,7 +136,7 @@ class L {
       (this.#O = e.isVoiceStreamAvailable),
       (this.#z = e.probeVoiceConnectivity),
       (this.#I = e.getVoiceKeyterms),
-      (this.#h = z.of(e.host)),
+      (this.#h = voiceRuntimeState.of(e.host)),
       (this.#t = e.inputs));
   }
   subscribe = (e) => this.#j.subscribe(e);

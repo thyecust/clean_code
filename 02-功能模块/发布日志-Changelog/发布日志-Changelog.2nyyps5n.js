@@ -34,13 +34,13 @@ function u() {
 function p() {
   return STORAGE_KEYS.cache("changelog", "changelog.md");
 }
-class v {
+class ChangelogContentCache {
   content = null;
   remember(a) {
     this.content = a;
   }
 }
-var E = new j(() => new v());
+var changelogContentCache = new j(() => new ChangelogContentCache());
 async function migrateChangelogFromConfig(a) {
   let t = getGlobalConfig();
   if (!t.cachedChangelog) return;
@@ -224,7 +224,7 @@ function S(a, t) {
   });
 }
 function m() {
-  return E.of(B().host);
+  return changelogContentCache.of(B().host);
 }
 var PLUGIN_SUBCOMMAND_SPECS = {
   init: {

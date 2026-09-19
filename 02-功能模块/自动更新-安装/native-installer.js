@@ -1839,7 +1839,7 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ${M} && source ${M}`,
   else logFeatureSad("native_check_install", _[0]);
   return o;
 }
-class bt {
+class NativeInstallInFlight {
   inFlight = null;
   begin(e) {
     this.inFlight = e;
@@ -1848,10 +1848,10 @@ class bt {
     this.inFlight = null;
   }
 }
-var Sn = new j(() => new bt());
+var nativeInstallInFlight = new j(() => new NativeInstallInFlight());
 function installLatest(e, t = !1, r) {
   if (t) return dt(e, t, r);
-  let d = Sn.of(B().host);
+  let d = nativeInstallInFlight.of(B().host);
   if (d.inFlight)
     return (logForDebugging("installLatest: joining in-flight call"), d.inFlight);
   let p = dt(e, t, r);

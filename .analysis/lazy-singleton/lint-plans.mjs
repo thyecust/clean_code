@@ -99,7 +99,7 @@ if (existsSync(classifyPath)) {
   const { groups } = JSON.parse(readFileSync(classifyPath, "utf8"));
   const byFile = new Map();
   for (const g of groups) {
-    if (g.kind !== "local") continue;
+    if (g.kind !== "local" || g.readable) continue;
     if (!byFile.has(g.file)) byFile.set(g.file, new Set());
     byFile.get(g.file).add(g.inner);
   }

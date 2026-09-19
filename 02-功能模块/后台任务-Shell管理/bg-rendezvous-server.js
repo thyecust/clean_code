@@ -36,18 +36,18 @@ import { unlink } from "fs/promises";
 import { createServer } from "net";
 import { join } from "path";
 import { StringDecoder } from "string_decoder";
-class I {
+class PeerReplyResolverRegistry {
   resolver = null;
   registerResolver(e) {
     this.resolver = e;
   }
 }
-var x = new j(() => new I());
+var peerReplyResolvers = new j(() => new PeerReplyResolverRegistry());
 function registerPeerReplyResolver(e, t) {
-  x.of(e).registerResolver(t);
+  peerReplyResolvers.of(e).registerResolver(t);
 }
 function C(e, t) {
-  return x.of(e).resolver?.(t) ?? !1;
+  return peerReplyResolvers.of(e).resolver?.(t) ?? !1;
 }
 import { rm } from "fs/promises";
 var U = ".prompt-stash",
@@ -486,10 +486,10 @@ class H {
     if (this.promptInput.getState().value === "") setPromptInputValue(this.promptInput, o);
   }
 }
-class J {
+class RendezvousServerState {
   server = void 0;
 }
-var ue = new j(() => new J());
+var rendezvousServerStates = new j(() => new RendezvousServerState());
 function V() {
   return B();
 }
@@ -497,7 +497,7 @@ function G() {
   return V().host;
 }
 function P() {
-  return ue.of(G());
+  return rendezvousServerStates.of(G());
 }
 async function startRendezvousServer(e) {
   let t = a.CLAUDE_BG_RENDEZVOUS_SOCK,

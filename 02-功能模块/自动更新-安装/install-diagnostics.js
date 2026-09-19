@@ -284,15 +284,15 @@ async function ce() {
   if (s && e.startsWith(s)) return "npm-global";
   return "unknown";
 }
-class q {
+class InstallTypeDetectionState {
   attempted = !1;
 }
-var X = new j(() => new q());
+var installTypeDetectionState = new j(() => new InstallTypeDetectionState());
 function hasDetectedInstallType() {
-  return X.of(B().host).attempted;
+  return installTypeDetectionState.of(B().host).attempted;
 }
 async function detectInstallType() {
-  return ((X.of(B().host).attempted = !0), await ce());
+  return ((installTypeDetectionState.of(B().host).attempted = !0), await ce());
 }
 async function ue() {
   if (isBunStandaloneExecutable()) {

@@ -362,7 +362,7 @@ function AAt() {
 var Ubr = 256;
 
 
-class IAt {
+class ApiRequestState {
   promptCacheBreak = {
     previousStateBySource: new Map(),
     hydrationAttempted: !1,
@@ -415,11 +415,11 @@ class IAt {
 }
 
 
-var Hbr = new Gt(() => new IAt());
+var apiRequestStates = new Gt(() => new ApiRequestState());
 
 
 function getApiRequestState() {
-  return Hbr.of(B());
+  return apiRequestStates.of(B());
 }
 
 
@@ -799,7 +799,7 @@ function MMt(e, t) {
 }
 
 
-class OMt {
+class PluginAttributionCache {
   #e = new Map();
   #t = 0;
   generation() {
@@ -819,11 +819,11 @@ class OMt {
 }
 
 
-var NEr = new j(() => new OMt());
+var pluginAttributionCaches = new j(() => new PluginAttributionCache());
 
 
 function fye() {
-  return NEr.of(B().host);
+  return pluginAttributionCaches.of(B().host);
 }
 
 
@@ -989,7 +989,7 @@ function fSe(e, t) {
 }
 
 
-class z5t {
+class RipgrepConfigState {
   config = void 0;
   roundedFileCounts = new Map();
   #e = null;
@@ -1027,11 +1027,11 @@ class z5t {
 }
 
 
-var Hqr = new j(() => new z5t());
+var ripgrepConfigStates = new j(() => new RipgrepConfigState());
 
 
 function qB() {
-  return Hqr.of(B().host);
+  return ripgrepConfigStates.of(B().host);
 }
 
 
@@ -2173,7 +2173,7 @@ function isPluginZipCacheEnabled() {
 var tQt = "cli";
 
 
-class rQt {
+class SessionPluginCacheRegistry {
   keyOf = () => tQt;
   statesByKey = new Map();
   useKey(e) {
@@ -2215,11 +2215,11 @@ class rQt {
 }
 
 
-var F3r = new j(() => new rQt());
+var sessionPluginCacheRegistries = new j(() => new SessionPluginCacheRegistry());
 
 
 function oQt() {
-  return F3r.of(B().host);
+  return sessionPluginCacheRegistries.of(B().host);
 }
 
 
@@ -7221,7 +7221,7 @@ function Wen(e) {
 }
 
 
-class Gen {
+class LspDiagnosticsRegistry {
   pending = new Map();
   delivered = new Ku({ max: nJr });
   register({ serverName: e, files: t }) {
@@ -7383,7 +7383,7 @@ class Gen {
 }
 
 
-var k8 = new Gt(() => new Gen());
+var k8 = new Gt(() => new LspDiagnosticsRegistry());
 
 
 function zen(e, t) {
@@ -8783,7 +8783,7 @@ function KG(e, t) {
 var wJr = 64;
 
 
-class ltn {
+class RealPathCache {
   expansionByRootCanonical = new Map();
   expand(e) {
     let t = this.expansionByRootCanonical.get(e);
@@ -8800,11 +8800,11 @@ class ltn {
 }
 
 
-var EJr = new j(() => new ltn());
+var realPathCaches = new j(() => new RealPathCache());
 
 
 function TJr() {
-  return EJr.of(B().host);
+  return realPathCaches.of(B().host);
 }
 
 
@@ -11001,7 +11001,7 @@ function SL(e) {
 var Sso = 8;
 
 
-class Tin {
+class DirSyncNoticeState {
   #e = [];
   #t = !1;
   #n = null;
@@ -11030,7 +11030,7 @@ class Tin {
 }
 
 
-var DirSyncNoticeStore = new Gt(() => new Tin());
+var DirSyncNoticeStore = new Gt(() => new DirSyncNoticeState());
 
 
 function getDirSyncCopyCleared(e) {

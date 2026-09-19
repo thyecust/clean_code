@@ -22,6 +22,32 @@ const keyOf = (rel) => rel.replace(/\//g, "__");
 let fail = 0;
 const bad = (m) => { console.log("  ✗ " + m); fail++; };
 
+/** 用 AST 把「旧名出现但不是绑定引用」的位置挖出来，避免靠正则猜。
+ *  挖三类：正则字面量、字符串字面量、属性位置（`x.sh` / `{ sh: … }`）。
+ *  这些位置上的旧名是**同名巧合**，不是残留 —— 单字母/双字母名尤其容易撞。 */
+function blankMask(src, oldName) {
+  const { ast } = analyze(src);
+  // 字符数组：被标记的位置全部替换成空格，保留换行以便行号不变
+  const mask = new Array(src.length).fill(false);
+  const mark = (a, b) => { for (let i = a; i < b; i++) mask[i] = true; };
+  const visit = (n) => {
+    if (!n || typeof n.type !== "string") return;
+    if (n.type === "Literal" && (n.regex || typeof n.value === "string")) mark(n.range[0], n.range[1]);
+    if (n.type === "TemplateElement") mark(n.range[0], n.range[1]);
+    if (n.type === "MemberExpression" && !n.computed && n.property.name === oldName) mark(n.property.range[0], n.property.range[1]);
+    if (n.type === "Property" && !n.computed && n.key && n.key.name === oldName) mark(n.key.range[0], n.key.range[1]);
+    for (const k of Object.keys(n)) {
+      if (k === "type" || k === "range" || k === "start" || k === "end") continue;
+      const v = n[k];
+      if (Array.isArray(v)) { for (const c of v) if (c && typeof c.type === "string") visit(c); }
+      else if (v && typeof v.type === "string") visit(v);
+    }
+  };
+  visit(ast);
+  // mask[i] 为 true 的字符换成 \0（不参与 \b 类匹配，且不改变长度）
+  return src.split("").map((c, i) => (mask[i] ? "\0" : c)).join("");
+}
+
 /** 名字在文件里的引用行号集合 */
 function refLines(src, name) {
   const { sm, moduleScope } = analyze(src);
@@ -53,21 +79,25 @@ console.log("[B] 旧名残留");
 let leaks = 0;
 for (const plan of plans) {
   const after = readFileSync(join(ROOT, plan.module), "utf8");
-  const lines = after.split("\n");
   for (const oldName of Object.keys(plan.renames)) {
+    // 先把正则/字符串/属性位置挖掉 —— 那里出现的旧名是同名巧合，不是残留
+    const masked = blankMask(after, oldName);
+    const lines = masked.split("\n");
+    const rawLines = after.split("\n");
     // 前后都要排除 `'` / `’` —— 否则单字母名会匹到英文里的所有格（`Anthropic's` 的 `s`）。
     // 前面还要排除 `#` —— 私有类字段 `#o` / `this.#o` 里的 `o` 不是这个绑定。
     const re = new RegExp(`(?<![A-Za-z0-9_$'’#])${oldName.replace(/\$/g, "\\$")}(?![A-Za-z0-9_$'’])`);
     lines.forEach((t, i) => {
       if (!re.test(t)) return;
-      // 字符串字面量 / 注释里的出现不算残留，但要提示（可能是 name 依赖）。
-      // 单字母名在散文注释里必然满天飞（`(c) Anthropic`、`a` / `I` 这种词），只报 ≥2 字符的。
-      const inString = new RegExp(`["'\`][^"'\`]*${oldName}[^"'\`]*["'\`]`).test(t);
-      const inComment = /^\s*(\/\/|\*|\/\*)/.test(t);
-      if ((inString || inComment) && oldName.length >= 2) {
-        console.log(`  · 提示 ${plan.module}:${i + 1} 旧名 ${oldName} 出现在${inString ? "字符串" : "注释"}里：${t.trim().slice(0, 100)}`);
-      } else if (!inString && !inComment) {
-        bad(`${plan.module}:${i + 1} 旧名 ${oldName} 作为标识符残留：${t.trim().slice(0, 100)}`);
+      const raw = rawLines[i];
+      const inString = new RegExp(`["'\`][^"'\`]*${oldName}[^"'\`]*["'\`]`).test(raw);
+      const inComment = /^\s*(\/\/|\*|\/\*)/.test(raw);
+      if (inString || inComment || /\/.*\//.test(raw)) {
+        // 注释/字符串/正则里的旧名是巧合（`// (c) Anthropic` 里的 `c`、`as a Beta` 里的 `a`）。
+        // 单字母名这类噪声必然满天飞，只在 ≥2 字符时打出来。
+        if (oldName.length >= 2) console.log(`  · 提示 ${plan.module}:${i + 1} 旧名 ${oldName} 出现在字符串/注释/正则里：${raw.trim().slice(0, 90)}`);
+      } else {
+        bad(`${plan.module}:${i + 1} 旧名 ${oldName} 作为标识符残留：${raw.trim().slice(0, 100)}`);
         leaks++;
       }
     });

@@ -2407,12 +2407,12 @@ var Sc =
     "Blank prompt \u2014 the message was only whitespace, so nothing was sent to the model.",
   Ei = () => import.meta.require("../自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
   Sy = () => import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js");
-class Pc {
+class ClassifierJobStateStore {
   state = void 0;
 }
-var _y = new j(() => new Pc());
+var classifierJobStateStores = new j(() => new ClassifierJobStateStore());
 function Cc(w) {
-  let I = _y.of(w.session.host);
+  let I = classifierJobStateStores.of(w.session.host);
   if (I.state === void 0) I.state = Ei?.().createClassifierJobState(w) ?? null;
   return I.state;
 }
@@ -5010,7 +5010,7 @@ var Oc = new Set([
   "downsell_on",
   "gb_on",
 ]);
-class Lc {
+class FullscreenBootCanary {
   canary = { status: "idle" };
   recordMaybeOnDisk = void 0;
   exitHook = void 0;
@@ -5027,9 +5027,9 @@ class Lc {
       (process.off("exit", this.exitHook), (this.exitHook = void 0));
   }
 }
-var th = new j(() => new Lc());
+var fullscreenBootCanaries = new j(() => new FullscreenBootCanary());
 function el() {
-  return th.of(B().host);
+  return fullscreenBootCanaries.of(B().host);
 }
 function Nc(w, I, O) {
   let U = w.fullscreenBootPending?.[String(I)] !== void 0;
@@ -10257,7 +10257,7 @@ var sb = { enable_shortcut_tip: !1, enable_contextual_tip: !1 };
 function Tl() {
   return getDynamicConfig_CACHED_MAY_BE_STALE("tengu_desktop_upsell", sb);
 }
-class Ym {
+class SpinnerTipHostStateStore {
   knownMarketplaces = void 0;
   marketplacePluginTips = void 0;
   sessionCountInFlight = void 0;
@@ -10346,7 +10346,7 @@ ${Ae(`/plugin install ${me.name}@${V}`)}`;
     return ((this.sessionCountInFlight = I), I);
   }
 }
-var spinnerTipHostStateStore = new j(() => new Ym());
+var spinnerTipHostStateStore = new j(() => new SpinnerTipHostStateStore());
 function jm(w) {
   if (isHoverRestEnabled() && w?.storageV5 !== void 0)
     return spinnerTipHostStateStore.of(w.session.host).countSessionsOnce(w.storageV5);

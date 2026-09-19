@@ -672,7 +672,7 @@ function rE(e) {
     },
   };
 }
-class Et {
+class HostSettingsStore {
   mergedSettings = null;
   perSource = new Map();
   parsedFiles = new Map();
@@ -891,7 +891,7 @@ class Dt {
     this.realHomeDir = void 0;
   }
 }
-var HXt = new j(() => new Et());
+var HXt = new j(() => new HostSettingsStore());
 function CW() {
   return {
     sent: new Set(),
@@ -2682,7 +2682,7 @@ class De {
 function Ee(e, t) {
   return `${e}\x00${t}`;
 }
-function OXt(e) {
+function createRootSessionContext(e) {
   return on(
     { kind: "root", host: e.host, id: e.id, parentId: e.parentId },
     e.project,
@@ -3935,7 +3935,7 @@ function un() {
   });
 }
 function Ei(e = getNormalizedRealCwd()) {
-  return OXt({
+  return createRootSessionContext({
     host: un(),
     id: qxt() ?? randomUUID(),
     project: { originalCwd: e, projectRoot: e, cwd: e },
@@ -5710,7 +5710,7 @@ export {
   baseIteratee,
   Si,
   iOn,
-  OXt,
+  createRootSessionContext as OXt,
   Gt,
   B,
   bi,

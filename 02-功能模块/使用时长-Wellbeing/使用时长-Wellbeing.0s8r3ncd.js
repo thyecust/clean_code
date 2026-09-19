@@ -64,7 +64,7 @@ async function w(t) {
     return d();
   }
 }
-class g {
+class ActiveTimeLedger {
   pendingSeconds = 0;
   activeStretch = null;
   cachedBreakThresholdMs = DEFAULT_BREAK_THRESHOLD_MINUTES * 60000;
@@ -173,7 +173,7 @@ class g {
       (this.#t = void 0));
   }
 }
-var K = new j(() => new g());
+var activeTimeLedgers = new j(() => new ActiveTimeLedger());
 class c {
   activeOperations = new Set();
   lastUserActivityTime = 0;
@@ -249,12 +249,12 @@ class c {
     };
   }
 }
-class p {
+class ActiveTimeTrackerSlot {
   current = null;
 }
-var I = new j(() => new p());
+var activeTimeTrackerSlots = new j(() => new ActiveTimeTrackerSlot());
 function m() {
-  return I.of(B().host);
+  return activeTimeTrackerSlots.of(B().host);
 }
 var activeTimeTracker = {
   recordUserActivity: () => c.getInstance().recordUserActivity(),

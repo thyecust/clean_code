@@ -414,13 +414,13 @@ async function w(e, t) {
     throw (S(t), r);
   }
 }
-class F {
+class CredentialsCopyCache {
   copy = void 0;
   generation = 0;
 }
-var Z = new j(() => new F());
+var credentialsCopyCaches = new j(() => new CredentialsCopyCache());
 function p() {
-  return Z.of(B().host);
+  return credentialsCopyCaches.of(B().host);
 }
 function D(e, t, r) {
   ((e.copy = { storagePath: t, text: r }), e.generation++);
@@ -492,7 +492,7 @@ var _ = {
     return C(e).remove();
   },
 };
-class N {
+class CredManBackendEnabledMemo {
   memo;
   handedIn;
   prime(e, t) {
@@ -520,9 +520,9 @@ class N {
     ((this.memo = void 0), (this.handedIn = void 0));
   }
 }
-var ee = new j(() => new N());
+var credManBackendEnabledMemos = new j(() => new CredManBackendEnabledMemo());
 function te() {
-  return ee.of(B().host);
+  return credManBackendEnabledMemos.of(B().host);
 }
 function re() {
   return {

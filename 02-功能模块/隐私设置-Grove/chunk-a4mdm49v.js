@@ -322,7 +322,7 @@ async function C(t) {
 function getClaudeAiCodeBaseUrl() {
   return `${getOauthConfig().CLAUDE_AI_ORIGIN}/code`;
 }
-class G {
+class GithubConnectionStatusStore {
   inFlight = void 0;
   status = void 0;
   generation = 0;
@@ -374,7 +374,7 @@ class G {
     ((this.status = e), w(e, o));
   }
 }
-var githubConnectionStatusStore = new j(() => new G());
+var githubConnectionStatusStore = new j(() => new GithubConnectionStatusStore());
 function b() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cheerful_horizon", !1);
 }

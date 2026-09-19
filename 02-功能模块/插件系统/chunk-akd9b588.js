@@ -204,7 +204,7 @@ async function ot() {
     throw (logPluginRemoteFetch("plugin_catalog", Z, "failure", performance.now() - e, classifyNetworkErrorKind(t)), t);
   }
 }
-class xe {
+class PluginCatalogCache {
   promise;
   load(e) {
     return (this.promise ??= e());
@@ -213,9 +213,9 @@ class xe {
     this.promise = void 0;
   }
 }
-var it = new j(() => new xe());
+var pluginCatalogCache = new j(() => new PluginCatalogCache());
 function Me(e) {
-  let t = it.of(B().host);
+  let t = pluginCatalogCache.of(B().host);
   return t.load(async () => {
     let a = await st(e);
     if (a) return (logPluginRemoteFetch("plugin_catalog", Z, "cache_hit", 0), a.catalog);

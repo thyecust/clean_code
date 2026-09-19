@@ -1617,7 +1617,7 @@ async function sn(e) {
     );
   }
 }
-class Ue {
+class PluginScopeExpansionFlight {
   inFlight = void 0;
   begin(e) {
     this.inFlight = e;
@@ -1626,10 +1626,10 @@ class Ue {
     if (this.inFlight === e) this.inFlight = void 0;
   }
 }
-var an = new j(() => new Ue()),
+var pluginScopeExpansions = new j(() => new PluginScopeExpansionFlight()),
   ln = 15000;
 function cn(e, t) {
-  let r = an.of(e),
+  let r = pluginScopeExpansions.of(e),
     o = r.inFlight;
   if (o) return o;
   let s = sn(t)
@@ -1940,7 +1940,7 @@ var bn = createLazyValue(() => {
   }),
   An = 30000,
   Pn = 500;
-class Ve {
+class SessionRefsManifestStore {
   inflight = null;
   featureEventReported = new Set();
   fetch() {
@@ -1980,7 +1980,7 @@ class Ve {
     return { success: !0, entries: o[e] };
   }
 }
-var sessionRefsManifestStore = new Gt(() => new Ve());
+var sessionRefsManifestStore = new Gt(() => new SessionRefsManifestStore());
 async function Rn() {
   let e = await qe();
   if (e.ok || e.reason === "no_auth" || e.reason === "gated") return e;

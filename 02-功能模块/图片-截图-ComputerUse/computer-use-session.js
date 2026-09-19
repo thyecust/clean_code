@@ -17,7 +17,7 @@ var p = commonJS(function (S, u) {
     C = getComputerUseSwiftNativeModule();
   u.exports = C.computerUse;
 });
-class s {
+class ComputerUseSession {
   binding = void 0;
   currentToolUseContext = void 0;
   currentOnProgress = void 0;
@@ -52,9 +52,9 @@ class s {
       (this.inputModule = void 0));
   }
 }
-var l = new j(() => new s());
+var computerUseSessions = new j(() => new ComputerUseSession());
 function getComputerUseSession() {
-  return l.of(B().host);
+  return computerUseSessions.of(B().host);
 }
 function getComputerUseNativeModule() {
   return (getComputerUseSession().swiftModule ??= p());

@@ -616,16 +616,16 @@ function be({
 }) {
   return !e && !o && !r && !c && m;
 }
-class re {
+class RecallIndexPrewarmState {
   fired = !1;
   claim() {
     if (this.fired) return !1;
     return ((this.fired = !0), !0);
   }
 }
-var we = new j(() => new re());
+var recallIndexPrewarmState = new j(() => new RecallIndexPrewarmState());
 function maybePrewarmRecallIndex(e) {
-  if (!we.of(e.host).claim()) return;
+  if (!recallIndexPrewarmState.of(e.host).claim()) return;
   if (Nn() || !checkHasTrustDialogAccepted()) return;
   (async () => {
     let [o, r] = await Promise.all([

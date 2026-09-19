@@ -147,7 +147,7 @@ function M(e, s) {
       o.unref());
   });
 }
-class E {
+class ClaudeInChromeState {
   bridgeBinding = void 0;
   resolvedHostByToolUseId = new Map();
   shouldAutoEnable = void 0;
@@ -179,9 +179,9 @@ class E {
       (this.resolvedUrlByToolUseId = new Map()));
   }
 }
-var G = new j(() => new E());
+var claudeInChromeStates = new j(() => new ClaudeInChromeState());
 function getClaudeInChromeState() {
-  return G.of(B().host);
+  return claudeInChromeStates.of(B().host);
 }
 var CFC_TOOL_PREFIX = `mcp__${CLAUDE_IN_CHROME_MCP_SERVER_NAME}__`,
   CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL = "ClaudeInChromeDomain",

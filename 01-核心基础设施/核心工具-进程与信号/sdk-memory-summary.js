@@ -17,7 +17,7 @@ function registerMemoryAttributor(t, e) {
   n().registerAttributor(t, e);
 }
 var c = ["bash_shell", "mcp_stdio", "lsp", "other"];
-class m {
+class SdkMemorySummary {
   attributors = new Map();
   childProcesses = new Map();
   childRegisteredCount = 0;
@@ -113,9 +113,9 @@ class m {
       (this.childRegisteredCount = 0));
   }
 }
-var h = new j(() => new m());
+var sdkMemorySummaries = new j(() => new SdkMemorySummary());
 function n() {
-  return h.of(B().host);
+  return sdkMemorySummaries.of(B().host);
 }
 function registerChildProcess(t, e) {
   if (!isSdkEntrypoint() || isSimpleMode()) return;

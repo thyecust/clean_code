@@ -106,7 +106,7 @@ class Q {
     (this.updates.done(), this.owner(e));
   }
 }
-class ee {
+class ManagedSettingsConsentState {
   replRequester = null;
   requesterWaiters = [];
   noConsentSurface = !1;
@@ -167,9 +167,9 @@ class ee {
   consentHandoffSignal = Le();
   consentHandoffRevealActive = !1;
 }
-var Ae = new j(() => new ee());
+var managedSettingsConsentStates = new j(() => new ManagedSettingsConsentState());
 function F() {
-  return Ae.of(B().host);
+  return managedSettingsConsentStates.of(B().host);
 }
 function te() {
   return getInkInstanceRegistry().pendingStandaloneRender !== null;
@@ -444,7 +444,7 @@ var Ve = 1e4,
   Ye = 5,
   Xe = 3600000,
   Qe = 30000;
-class pe {
+class RemoteSettingsLoadBarrier {
   poller = null;
   loadingCompletePromise = null;
   loadingCompleteResolve = null;
@@ -489,9 +489,9 @@ class pe {
     (this.poller?.[Symbol.dispose](), (this.poller = null));
   }
 }
-var Ze = new j(() => new pe());
+var remoteSettingsLoadBarriers = new j(() => new RemoteSettingsLoadBarrier());
 function O() {
-  return Ze.of(B().host);
+  return remoteSettingsLoadBarriers.of(B().host);
 }
 function startRemoteSettingsLoadBarrier() {
   ye();

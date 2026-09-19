@@ -22,7 +22,7 @@ import { createKeyedSerialQueue } from "../核心工具-并发与缓存/async-se
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform } from "./platform-detection.js";
 import * as x from "path/win32";
-class K {
+class ShellConfig {
   shellConfig = null;
   powerShellProvider = null;
   powerShellPath = null;
@@ -30,9 +30,9 @@ class K {
   gitBashPath = void 0;
   warnedShortTmpDir = !1;
 }
-var fe = new j(() => new K());
+var shellConfig = new j(() => new ShellConfig());
 function getShellConfig() {
-  return fe.of(B().host);
+  return shellConfig.of(B().host);
 }
 function setupGitBashShellEnv() {
   if (getCurrentPlatform() === "windows") {
@@ -210,7 +210,7 @@ import {
   parse,
 } from "path";
 var ATOMIC_WRITE_STAGING_DIR_NAME = ".cc-writes";
-class ie {
+class FileIdentityRegistry {
   identities = new Map();
   record(e, t, r, i) {
     let s = q(e),
@@ -232,9 +232,9 @@ class ie {
     this.identities.clear();
   }
 }
-var $e = new j(() => new ie());
+var fileIdentityRegistry = new j(() => new FileIdentityRegistry());
 function G() {
-  return $e.of(B().host);
+  return fileIdentityRegistry.of(B().host);
 }
 function q(e) {
   return resolve(e);

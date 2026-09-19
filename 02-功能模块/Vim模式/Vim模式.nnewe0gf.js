@@ -92,7 +92,7 @@ import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter, getFirstGrapheme, getLastGrapheme, countGraphemes, countWords } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { getBuildRefName } from "../../01-核心基础设施/核心工具-其他/build-ref-name.js";
 import { toESM, MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-class Wo {
+class AuthStateStore {
   #e = { credentialsPersisted: 0, loginCompleted: 0 };
   #t = Le();
   subscribe = (l) => this.#t.subscribe(l);
@@ -109,7 +109,7 @@ class Wo {
       this.#t.emit());
   }
 }
-var authStateStore = new Gt(() => new Wo());
+var authStateStore = new Gt(() => new AuthStateStore());
 F();
 var bn = /\s+/g,
   na = 5;
@@ -3449,7 +3449,7 @@ function useSelectionBackgroundColor(l) {
     l.setSelectionBgColor(b.selectionBg);
   }, [l, b.selectionBg]);
 }
-class Us {
+class SessionStateStore {
   packageManagerUpdateLastFailedAt = 0;
   packageManagerLatestVersion = null;
   fastIconHintShown = !1;
@@ -3471,7 +3471,7 @@ class Us {
     this.ultraEffortObserved = l;
   }
 }
-var sessionStateStore = new j(() => new Us());
+var sessionStateStore = new j(() => new SessionStateStore());
 F();
 import Ua from "path";
 var Wa = "at_mentioned",

@@ -251,13 +251,13 @@ class N {
     return this.#e.size;
   }
 }
-class ne {
+class CleanupRegistries {
   cleanup = new N();
   preExitFlush = new N();
 }
-var ze = new j(() => new ne());
+var cleanupRegistries = new j(() => new CleanupRegistries());
 function R() {
-  return bi(ze);
+  return bi(cleanupRegistries);
 }
 var CLEANUP_DRAIN_TIMEOUT_MS = 2000;
 function registerCleanup(e) {
@@ -2096,7 +2096,7 @@ class Te {
     } catch {}
   }
 }
-class Ne {
+class DebugLogState {
   instance = void 0;
   init = {};
   setInstance(e) {
@@ -2106,9 +2106,9 @@ class Ne {
     this.init = e;
   }
 }
-var Ut = new j(() => new Ne());
+var debugLogState = new j(() => new DebugLogState());
 function _() {
-  return bi(Ut);
+  return bi(debugLogState);
 }
 function Q(e, t) {
   return new Te({

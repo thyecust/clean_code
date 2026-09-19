@@ -790,7 +790,7 @@ function listScopeFrom(t) {
   return e === "shared" || e === "all" ? e : "mine";
 }
 var D = [COWRITTEN_ARTIFACT_HTML_TAG, ARTIFACT_FILE_CONTENT_TAG, ARTIFACT_ORIGIN_NOTES_TAG, ARTIFACT_TYPE_INSTRUCTIONS_TAG].map((t) => t.replaceAll("-", "_"));
-class W {
+class ArtifactTagPatterns {
   #t;
   #e;
   #n;
@@ -844,7 +844,7 @@ class W {
     );
   }
 }
-var artifactTagPatterns = new j(() => new W());
+var artifactTagPatterns = new j(() => new ArtifactTagPatterns());
 function q() {
   return artifactTagPatterns.of(B().host);
 }

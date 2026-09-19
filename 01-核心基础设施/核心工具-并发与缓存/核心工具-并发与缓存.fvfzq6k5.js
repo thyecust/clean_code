@@ -33,7 +33,7 @@ function ce() {
 }
 var P = "cli",
   ue = 1000;
-class F {
+class ActivityStateRegistry {
   activityKey = () => P;
   mainLoopActivityListener = null;
   nestedChainDropListener = null;
@@ -77,9 +77,9 @@ class F {
     (t.cleanupHandle?.(), this.statesByKey.delete(e));
   }
 }
-var le = new j(() => new F());
+var activityStateRegistries = new j(() => new ActivityStateRegistry());
 function p() {
-  return le.of(B().host);
+  return activityStateRegistries.of(B().host);
 }
 function G(e) {
   (I(e),

@@ -25,7 +25,8 @@ for (const f of inFiles) {
     if (!merged.has(p.module)) merged.set(p.module, { module: p.module, renames: {}, why: [] });
     const m = merged.get(p.module);
     for (const [oldName, newName] of Object.entries(p.renames)) {
-      if (m.renames[oldName] !== undefined && m.renames[oldName] !== newName) {
+      // hasOwn：旧名可能是 `toString` / `constructor` 这类，普通下标会命中 Object.prototype
+      if (Object.hasOwn(m.renames, oldName) && m.renames[oldName] !== newName) {
         errors.push(`${p.module}: ${oldName} 两个 agent 给了不同的新名 —— ${m.renames[oldName]} vs ${newName}`);
         continue;
       }

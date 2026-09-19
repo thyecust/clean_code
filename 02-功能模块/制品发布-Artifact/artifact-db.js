@@ -182,14 +182,14 @@ var we = createLazyValue(() => nt({ version: Zt().int().optional(), usage: V() }
 function Fe(e, r) {
   return e === 400 && ve().safeParse(r).success;
 }
-class Z {
+class BatchSupportStore {
   refusedAt = void 0;
   get unsupported() {
     return this.refusedAt !== void 0 && Date.now() - this.refusedAt < De;
   }
 }
 var De = 3600000,
-  batchSupportStore = new j(() => new Z()),
+  batchSupportStore = new j(() => new BatchSupportStore()),
   Ee = createLazyValue(() =>
     nt({
       error: nt({
@@ -319,7 +319,7 @@ async function te(e) {
     } catch {}
 }
 function clearMeIdResolutionCache(e) {
-  let { resolvedMeIds: r, inFlightMeIds: t } = ae.of(e);
+  let { resolvedMeIds: r, inFlightMeIds: t } = meIdResolutionCaches.of(e);
   (r.clear(), t.clear());
 }
 function re(e, r) {
@@ -331,11 +331,11 @@ function re(e, r) {
   return null;
 }
 var R = Symbol("contested-me-key");
-class ne {
+class MeIdResolutionCache {
   resolvedMeIds = new Map();
   inFlightMeIds = new Map();
 }
-var ae = new j(() => new ne());
+var meIdResolutionCaches = new j(() => new MeIdResolutionCache());
 function oe(e, r, t, c, o) {
   if (r === "malformed_whoami_echo")
     return `db ${t} failed (unavailable): resolving 'me' returned an unreadable response \u2014 the artifact db service may need an update`;
@@ -351,7 +351,7 @@ var P = "; nothing was written",
     "network_off",
   ]);
 async function z(e, r, t, c, o, u) {
-  let i = ae.of(e),
+  let i = meIdResolutionCaches.of(e),
     { resolvedMeIds: n, inFlightMeIds: s } = i,
     d = await Oe(t, u),
     _ = null;

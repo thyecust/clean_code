@@ -208,15 +208,15 @@ class b {
   }
 }
 var otelContextManager = new b();
-class I {
+class CurrentSpanContextStore {
   current = void 0;
 }
-var h = new j(() => new I());
+var currentSpanContextStores = new j(() => new CurrentSpanContextStore());
 function setCurrentSpanContext(e) {
-  h.of(B().host).current = e;
+  currentSpanContextStores.of(B().host).current = e;
 }
 function getCurrentSpanContext() {
-  return h.of(B().host).current;
+  return currentSpanContextStores.of(B().host).current;
 }
 function getActiveOtelContext() {
   let e = otelContextManager.active();
@@ -225,11 +225,11 @@ function getActiveOtelContext() {
 }
 var f = toESM(otelApiModule(), 1),
   A = toESM(otelCoreModule(), 1);
-class x {
+class OtelEventEmitState {
   nextSequence = 0;
   warnedNoEventLogger = !1;
 }
-var M = new j(() => new x());
+var otelEventEmitStates = new j(() => new OtelEventEmitState());
 function P() {
   return a.OTEL_LOG_USER_PROMPTS;
 }
@@ -253,7 +253,7 @@ function G() {
   return;
 }
 async function emitOtelEvent(e, t = {}, r) {
-  let i = M.of(B().host),
+  let i = otelEventEmitStates.of(B().host),
     o = {
       ...buildOtelResourceAttributes(),
       "event.name": e,

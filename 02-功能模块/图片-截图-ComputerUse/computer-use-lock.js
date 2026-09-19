@@ -221,7 +221,7 @@ class ComputerUseMcpStateStore {
     this.#e.set(e);
   }
 }
-class _ {
+class ComputerUseLockOwner {
   owner = void 0;
   acquire(e) {
     if (this.owner) return () => {};
@@ -233,7 +233,7 @@ class _ {
     );
   }
 }
-var ComputerUseLockOwnerContext = new Gt(() => new _());
+var ComputerUseLockOwnerContext = new Gt(() => new ComputerUseLockOwner());
 function getComputerUseLockOwner(e) {
   return ComputerUseLockOwnerContext.of(e).owner;
 }

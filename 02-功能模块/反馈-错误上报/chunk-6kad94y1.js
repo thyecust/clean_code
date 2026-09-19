@@ -66,15 +66,15 @@ async function f(e) {
     else logForDebugging(`dd-error-tracking: intake failed: ${l(t)}`, { level: "warn" });
   }
 }
-class i {
+class ErrorTrackingClient {
   reportsEnqueued = 0;
   capSentinelSent = !1;
   cachedUserBucket = void 0;
   sender = createBatchedSender({ maxBatchSize: g, getFlushIntervalMs: m, post: f });
 }
-var E = new j(() => new i());
+var errorTrackingClients = new j(() => new ErrorTrackingClient());
 function errorTrackingClient() {
-  return E.of(B().host);
+  return errorTrackingClients.of(B().host);
 }
 function isErrorTrackingCapReached() {
   return errorTrackingClient().reportsEnqueued >= o;

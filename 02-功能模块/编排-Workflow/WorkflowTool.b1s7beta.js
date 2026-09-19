@@ -260,7 +260,7 @@ function jr(e) {
     return "non-stringifiable error";
   }
 }
-class pr {
+class WorkflowWorld {
   rows = [];
   rules = new Map();
   fired = new Set();
@@ -2315,24 +2315,24 @@ function tt(e, r) {
   }
   return (e.restore(a), a.length);
 }
-var nt = new Gt(() => new pr());
+var workflowWorlds = new Gt(() => new WorkflowWorld());
 function vr(e) {
-  return nt.of(e);
+  return workflowWorlds.of(e);
 }
-class ot {
+class WorkflowWorldOpenState {
   opened;
   unsubscribe;
 }
-var Rr = new Gt(() => new ot()),
+var workflowWorldOpenStates = new Gt(() => new WorkflowWorldOpenState()),
   Ht = new Gt(() => new Map());
 function Sr(e, r) {
-  let t = Rr.of(e);
+  let t = workflowWorldOpenStates.of(e);
   if (t.opened) return t.opened;
   if (t.unsubscribe === void 0) {
     let d = K();
     t.unsubscribe = sc((o, a) => {
       if (a === "cd" || a === "hydrate" || o === d) return;
-      (t.unsubscribe?.(), Rr.drop(e), nt.drop(e));
+      (t.unsubscribe?.(), workflowWorldOpenStates.drop(e), workflowWorlds.drop(e));
     });
   }
   return (
@@ -2363,7 +2363,7 @@ function Sr(e, r) {
       } catch (x) {
         ((I = !0), logForDebugging(`world journal replay failed: ${x}`, { level: "warn" }));
       }
-      if (Rr.peek(e) !== t) return Sr(e, r);
+      if (workflowWorldOpenStates.peek(e) !== t) return Sr(e, r);
       if (!_) {
         if (
           (logFeatureSad("workflow_journal", I ? "replay_failed" : "not_whole"),

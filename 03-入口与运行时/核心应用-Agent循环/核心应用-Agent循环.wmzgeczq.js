@@ -4128,10 +4128,10 @@ function DIt(e) {
   if (!t || !e) return;
   t.endInteractionSpan(e);
 }
-class FIt {
+class InteractionSequenceCounter {
   lastSequence = 0;
 }
-var Cwr = new j(() => new FIt());
+var interactionSequenceCounters = new j(() => new InteractionSequenceCounter());
 function xwr(e) {
   let t = hasPerfettoRecorder() ? OIt(e) : void 0,
     r = yw();
@@ -4153,7 +4153,7 @@ function xwr(e) {
   }
   let o = uk(),
     p = a.OTEL_LOG_USER_PROMPTS ? e : "<REDACTED>",
-    _ = ++Cwr.of(B().host).lastSequence,
+    _ = ++interactionSequenceCounters.of(B().host).lastSequence,
     E = mW("interaction", {
       user_prompt: p,
       user_prompt_length: e.length,
@@ -4849,7 +4849,7 @@ var sEr = new Set([
   "EmptyOutput",
   "InvalidJson",
 ]);
-class oMt {
+class PowerShellCommandParser {
   cached = xA(
     (e) => {
       let t = oEr(e);
@@ -4868,9 +4868,9 @@ class oMt {
     return this.cached(e);
   }
 }
-var iEr = new j(() => new oMt());
+var powerShellCommandParsers = new j(() => new PowerShellCommandParser());
 function parsePowerShellCommand(e) {
-  return iEr.of(B().host).parse(e);
+  return powerShellCommandParsers.of(B().host).parse(e);
 }
 var POWERSHELL_COMMAND_ALIASES = Object.assign(Object.create(null), {
   ls: "Get-ChildItem",
@@ -13192,7 +13192,7 @@ async function readClaudeAiCatalogCache(e) {
 async function writeClaudeAiCatalogCache(e, t) {
   await writeFileAtomic(VQt(e), jsonStringify({ ...t, parserVersion: qQt }, null, 2));
 }
-class KQt {
+class ClaudeAiCatalogCacheStore {
   #e = null;
   #t = null;
   read(e, t) {
@@ -13213,7 +13213,7 @@ class KQt {
     ((this.#e = null), (this.#t = null));
   }
 }
-var claudeAiCatalogCacheStore = new j(() => new KQt());
+var claudeAiCatalogCacheStore = new j(() => new ClaudeAiCatalogCacheStore());
 async function listClaudeAiMarketplaces(e) {
   if (!canSyncPluginsFromClaudeAi()) return null;
   let t = await claudeAiCatalogCacheStore.of(B().host).read(`${LP()}|${K3()}`, async () => {
@@ -18016,7 +18016,7 @@ async function enn() {
     )
   ).some(Boolean);
 }
-class tnn {
+class DiffBaseResolveLogState {
   #e = !1;
   #t = !1;
   get baseResolveOkLogged() {
@@ -18032,9 +18032,9 @@ class tnn {
     this.#t = !0;
   }
 }
-var $Zr = new j(() => new tnn());
+var diffBaseResolveLogStates = new j(() => new DiffBaseResolveLogState());
 async function BZr(e, t) {
-  let r = $Zr.of(e),
+  let r = diffBaseResolveLogStates.of(e),
     o = await UZr(t);
   if (o.kind === "error") {
     if (!r.baseResolveSadLogged)
@@ -18769,7 +18769,7 @@ function clearOrphanedVersionGlobCache() {
 }
 var Dio = 2500,
   Yin = /^\s*\S+ has not been authenticated with glab\s*$/m;
-class Jin {
+class GitLabMrBadgeState {
   glabOnPath;
   unauthenticatedHosts = new Set();
   okEmitted = !1;
@@ -18782,7 +18782,7 @@ class Jin {
     (logFeatureOk("gitlab_mr_badge"), (this.okEmitted = !0));
   }
 }
-var Nio = new j(() => new Jin());
+var gitLabMrBadgeStates = new j(() => new GitLabMrBadgeState());
 function Lio() {
   try {
     let e = findCanonicalGitRoot(getCwd());
@@ -18840,7 +18840,7 @@ function mRe(e) {
 }
 async function Zin(e) {
   if (isEssentialTrafficOnly()) return null;
-  let t = Nio.of(e);
+  let t = gitLabMrBadgeStates.of(e);
   if (!t.isGlabOnPath()) return null;
   let r = Lio();
   if (r === null) return null;
@@ -26117,7 +26117,7 @@ function isSkillOff(e) {
   return getSkillOverride(e) === "off";
 }
 var gTo = 1000;
-class TAn {
+class MessageTokenCountCache {
   #e = new Ku({ max: gTo });
   #t = new Map();
   run(e, t) {
@@ -26136,7 +26136,7 @@ class TAn {
     return (this.#t.set(e, d), d);
   }
 }
-var vAn = new j(() => new TAn());
+var messageTokenCountCaches = new j(() => new MessageTokenCountCache());
 function CTo(e) {
   return e.type === "prompt" && e.source === "bundled";
 }
@@ -26324,7 +26324,7 @@ function DTo(e, t, r) {
     let I = lit(_, p);
     return { count: I, countTranscript: I };
   }
-  let E = vAn.of(t),
+  let E = messageTokenCountCaches.of(t),
     C = jsonStringify([toProviderWireModelId(o), getModelBetas(o)]);
   return {
     count: lit((I, D) => E.run(hashSha256(C + jsonStringify([I, D])), () => _(I, D)), p),
@@ -27043,7 +27043,7 @@ async function Mvo() {
 async function Ovo() {
   return null;
 }
-class gRn {
+class HostContainerContext {
   namespace = void 0;
   containerId = void 0;
   kubernetesNamespace() {
@@ -27053,9 +27053,9 @@ class gRn {
     return (this.containerId ??= Ovo());
   }
 }
-var Dvo = new j(() => new gRn());
+var hostContainerContexts = new j(() => new HostContainerContext());
 function hRn() {
-  return Dvo.of(B().host);
+  return hostContainerContexts.of(B().host);
 }
 function Nvo() {
   return hRn().ociContainerId();
@@ -27927,15 +27927,15 @@ function buildSessionEventsRequest(e, t, r, o) {
     },
   };
 }
-class eNn {
+class SessionHostReportState {
   counts = void 0;
   sender = void 0;
   contentPaintSent = !1;
   promptIdleSent = !1;
 }
-var MDo = new j(() => new eNn());
+var sessionHostReportStates = new j(() => new SessionHostReportState());
 function DOe() {
-  return MDo.of(B().host);
+  return sessionHostReportStates.of(B().host);
 }
 function tNn(e) {
   DOe().counts = e;
@@ -29055,7 +29055,7 @@ var {
   sFo = 3,
   iFo = 600000,
   aFo = OLn;
-class LLn {
+class SyncedFilePushState {
   seenState = new Map();
   evictedEtag = new Map();
   lastSeenMtime = new Map();
@@ -29169,9 +29169,9 @@ class LLn {
       (this.startInFlight = null));
   }
 }
-var lFo = new j(() => new LLn());
+var syncedFilePushStates = new j(() => new SyncedFilePushState());
 function gI() {
-  return lFo.of(B().host);
+  return syncedFilePushStates.of(B().host);
 }
 function N7(e, t, r) {
   gI().recordSeen(e, t, r);
@@ -39799,18 +39799,18 @@ async function runPreModelSwitchHooks(e, t, r = {}) {
   if (I) return { decision: "ask", reason: C, messages: o };
   return { decision: "proceed", skipConfirm: D, messages: o };
 }
-class N9n {
+class PendingModelSwitch {
   next = void 0;
 }
-var L9n = new Gt(() => new N9n());
+var pendingModelSwitchStore = new Gt(() => new PendingModelSwitch());
 function LXo(e, t, r) {
-  L9n.of(e).next = { source: t, requestedModel: r };
+  pendingModelSwitchStore.of(e).next = { source: t, requestedModel: r };
 }
 function recordModelSwitchIfChanged(e, t, r, o) {
   if (getActiveModelForState(t) !== resolveModelForPermissionMode(r, t.toolPermissionContext.mode)) LXo(e, o, r);
 }
 function takePendingModelSwitch(e) {
-  let t = L9n.of(e),
+  let t = pendingModelSwitchStore.of(e),
     r = t.next ?? { source: "auto", requestedModel: null };
   return ((t.next = void 0), r);
 }
@@ -39895,11 +39895,11 @@ function FXo(e, t) {
     t.push(`PreModelSwitch hook ${r.hookName} failed${o ? `: ${o}` : ""}`);
   }
 }
-class U9n {
+class SessionTaskQueue {
   tail = Promise.resolve();
   pending = 0;
 }
-var sessionTaskQueueStore = new Gt(() => new U9n());
+var sessionTaskQueueStore = new Gt(() => new SessionTaskQueue());
 function enqueueSessionTask(e, t) {
   let r = sessionTaskQueueStore.of(e);
   r.pending++;
@@ -41280,7 +41280,7 @@ function yJo(e, t = {}) {
   }
   return isExcludedMemoryPath(r);
 }
-class FZn {
+class MemoryWatcher {
   watcher = null;
   started = !1;
   notices = new Zst();
@@ -42011,7 +42011,7 @@ class FZn {
     }
   }
 }
-var memoryWatchers = new j(() => new FZn());
+var memoryWatchers = new j(() => new MemoryWatcher());
 async function startMemoryWatcher(e, t) {
   if (e !== void 0)
     logForDebugging(
@@ -48033,12 +48033,12 @@ function formatCurrencyAmount(e, t, r = "precise") {
   if (r === "fit" && p % 1 === 0) return `${d}${p.toLocaleString("en-US")}`;
   return `${d}${p.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
-class Aur {
+class PassesEligibilityFetchState {
   inFlight = null;
 }
-var vus = new j(() => new Aur());
+var passesEligibilityFetchStates = new j(() => new PassesEligibilityFetchState());
 function Cus() {
-  return vus.of(B().host);
+  return passesEligibilityFetchStates.of(B().host);
 }
 var xus = {
   "no-auth": "no_auth",
@@ -49334,14 +49334,14 @@ function parseElicitationHookOutput(e, t) {
     return {};
   }
 }
-class zmr {
+class StatusLineCommandLogState {
   okLogged = !1;
   badLogged = !1;
 }
-var Xms = new j(() => new zmr());
+var statusLineCommandLogStates = new j(() => new StatusLineCommandLogState());
 async function executeStatusLineCommand(e, t, r, o = !1) {
   if (shouldDisableAllHooksIncludingManaged()) return;
-  let d = Xms.of(e.host);
+  let d = statusLineCommandLogStates.of(e.host);
   if (isCustomizationDisabled("statusLine")) return;
   if (shouldSkipHookDueToTrust()) {
     logForDebugging("Skipping StatusLine command execution - workspace trust not accepted");

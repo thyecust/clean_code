@@ -122,6 +122,7 @@ for (const rel of targets) {
     items.push({
       class: g.inner,
       classLocal: isFileLocal(g.inner, exports, moduleNames),
+      classReadable: g.readable,   // 已是人写的名字 —— 试点改过的那些，别当候选
       holder,
       holderLocal: holder ? isFileLocal(holder, exports, moduleNames) : null,
       ctor: g.ctor,
@@ -134,7 +135,9 @@ for (const rel of targets) {
     });
   }
 
-  const eligible = items.filter((it) => it.classLocal);
+  // 只收「本文件内非导出」且「名字仍混淆」的 —— 后者靠 classify 带过来的 readable 标记，
+  // 它用仓库自己的 isClearlyReadable 判定，避免把已经恢复好的名字再送一遍。
+  const eligible = items.filter((it) => it.classLocal && !it.classReadable);
   if (!eligible.length) continue;
 
   // 大文件要切片：execution-core.js 有 69 组 / 120KB，一份塞不进一个 agent。

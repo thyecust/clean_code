@@ -62,14 +62,14 @@ import { spawn } from "child_process";
 import { existsSync } from "fs";
 import { createInterface } from "readline";
 import { StringDecoder } from "string_decoder";
-class gt {
+class SdkDebugLogState {
   debugFilePath = void 0;
   initPromise = null;
   logStem = null;
 }
-var us = new j(() => new gt());
+var sdkDebugLogState = new j(() => new SdkDebugLogState());
 function ht() {
-  return us.of(B().host);
+  return sdkDebugLogState.of(B().host);
 }
 function St(e) {
   if (e.initPromise) return e.initPromise;

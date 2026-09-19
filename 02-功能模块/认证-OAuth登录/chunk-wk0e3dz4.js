@@ -186,7 +186,7 @@ function isNoRefreshAvailableError(e) {
   );
 }
 var me = ["ANTHROPIC_FEDERATION_RULE_ID", "ANTHROPIC_ORGANIZATION_ID"];
-class W {
+class ProfileAuthCache {
   precedenceSource = { filled: !1 };
   authType = { filled: !1 };
   accountInfo = { filled: !1 };
@@ -194,9 +194,9 @@ class W {
   settingsBearerRejected = !1;
   primedFiles = void 0;
 }
-var d = new j(() => new W());
+var profileAuthCaches = new j(() => new ProfileAuthCache());
 function getAuthPrecedenceSource() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.precedenceSource.filled) return e.precedenceSource.value;
   let r = xe();
   return ((e.precedenceSource = { filled: !0, value: r }), r);
@@ -220,7 +220,7 @@ function xe() {
   return null;
 }
 function resetProfileAuthCache() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   ((e.precedenceSource = { filled: !1 }),
     (e.authType = { filled: !1 }),
     (e.profileStoreDenyPaths = { filled: !1 }),
@@ -228,13 +228,13 @@ function resetProfileAuthCache() {
     clearCachedAccountInfo());
 }
 function clearCachedAccountInfo() {
-  d.of(B().host).accountInfo = { filled: !1 };
+  profileAuthCaches.of(B().host).accountInfo = { filled: !1 };
 }
 function isProfileAuthSelected() {
   return getAuthPrecedenceSource() !== null;
 }
 function getProfileAuthType() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.authType.filled) return e.authType.value;
   let r = ge();
   return ((e.authType = { filled: !0, value: r }), r);
@@ -256,7 +256,7 @@ function isClaudeAiLoginShadowingProfile() {
   return getAuthPrecedenceSource() === "profile-implicit" && getProfileAuthType() === "user_oauth";
 }
 function getProfileAccountInfo() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.accountInfo.filled) return e.accountInfo.value;
   let r = he();
   return ((e.accountInfo = { filled: !0, value: r }), r);
@@ -326,13 +326,13 @@ function getProfileBaseUrl() {
   }
 }
 function isSettingsBearerRejected() {
-  return d.of(B().host).settingsBearerRejected;
+  return profileAuthCaches.of(B().host).settingsBearerRejected;
 }
 function setSettingsBearerRejected(e) {
-  d.of(B().host).settingsBearerRejected = e;
+  profileAuthCaches.of(B().host).settingsBearerRejected = e;
 }
 function getProfileStoreDenyPaths() {
-  let e = d.of(B().host);
+  let e = profileAuthCaches.of(B().host);
   if (e.profileStoreDenyPaths.filled) return e.profileStoreDenyPaths.value;
   let { value: r, complete: t } = _e();
   if (t) e.profileStoreDenyPaths = { filled: !0, value: r };
@@ -453,7 +453,7 @@ function ye(e) {
   }
 }
 function g(e) {
-  let r = d.of(B().host).primedFiles;
+  let r = profileAuthCaches.of(B().host).primedFiles;
   if (r !== void 0 && r.has(e)) return r.get(e) ?? null;
   try {
     return readFileSync(e, "utf-8");
@@ -463,7 +463,7 @@ function g(e) {
   }
 }
 async function primeProfileReadAhead(e) {
-  let r = d.of(B().host),
+  let r = profileAuthCaches.of(B().host),
     t = G();
   if (r.precedenceSource.filled || t === null) return;
   let { dir: o, space: s } = t,
@@ -566,7 +566,7 @@ function normalizeUrlSchemeToHttp(e) {
   else if (e.protocol === "ws:") e.protocol = "http:";
   return e;
 }
-class K {
+class McpClientState {
   reconnect = null;
   toggle = null;
   isDisabled = null;
@@ -622,9 +622,9 @@ class K {
   cachedAdopt = Le();
   cachedDialFailed = Le();
 }
-var Ce = new j(() => new K());
+var mcpClientStates = new j(() => new McpClientState());
 function getMcpClientState() {
-  return Ce.of(B().host);
+  return mcpClientStates.of(B().host);
 }
 function markConfigAsCliOwned(e, r) {
   let t = getMcpClientState();

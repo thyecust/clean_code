@@ -14050,7 +14050,7 @@ var I_ = new Set([
     "plaintext",
   ]),
   D_ = new RegExp(`^${DATA_ID_VALUE_PATTERN}$`);
-class sh {
+class CanonicalMarkupCache {
   #e = new Map();
   async of(e) {
     let t = this.#e.get(e);
@@ -14061,7 +14061,7 @@ class sh {
     return this.#e.has(e);
   }
 }
-var L_ = new j(() => new sh());
+var canonicalMarkupCaches = new j(() => new CanonicalMarkupCache());
 async function oh(e, t) {
   let { parse: o, parseFragment: r } = await import("../../01-核心基础设施/核心工具-未归类/parse.4jce22r9.js"),
     d = t === "document" ? asDocument(o(e)) : asDocumentFragment(r(e)),
@@ -14220,7 +14220,7 @@ var ih = () => PRR_ISLAND_VALIDATORS.find((e) => e.id === PRR_ANCHOR_ISLAND_ID),
   lh = () => PRR_ISLAND_VALIDATORS.find((e) => e.id === PRR_DECISIONS_ISLAND_ID),
   dh = () => PRR_ISLAND_VALIDATORS.find((e) => e.id === PRR_STAMP_ISLAND_ID);
 async function ch(e, t, o, r) {
-  let d = L_.of(r),
+  let d = canonicalMarkupCaches.of(r),
     w = (D) =>
       `${D} \u2014 the page was published by a different version of this CLI, and a republish cannot reproduce it. Re-run /artifact-pr-review to publish a fresh review (decisions recorded on the old page stay visible there; the fresh page starts with its decisions open).`,
     p = (D) =>

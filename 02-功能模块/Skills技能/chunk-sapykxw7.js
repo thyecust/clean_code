@@ -27,7 +27,7 @@ function isSourceAdminTrusted(t) {
   return t !== void 0 && k.has(t);
 }
 var c = "cli";
-class f {
+class HooksConfigSnapshotStore {
   snapshotKey = () => c;
   snapshotsBySessionId = new Map();
   setSnapshotKey(t) {
@@ -48,9 +48,9 @@ class f {
     this.snapshotsBySessionId.delete(t);
   }
 }
-var h = new j(() => new f());
+var hooksConfigSnapshotStores = new j(() => new HooksConfigSnapshotStore());
 function a() {
-  return bi(h);
+  return bi(hooksConfigSnapshotStores);
 }
 function l() {
   let t = getSettingsForSource("policySettings");

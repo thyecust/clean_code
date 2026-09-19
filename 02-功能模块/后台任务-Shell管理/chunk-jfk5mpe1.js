@@ -794,7 +794,7 @@ import {
 } from "fs/promises";
 import { dirname } from "path";
 import { setTimeout as We } from "timers/promises";
-class Lt {
+class BackgroundSupervisorState {
   daemonConfirmedUp = !1;
   ensureInFlight = null;
   lastTransientSpawnAt = null;
@@ -812,9 +812,9 @@ class Lt {
       this.ownedBeacons.clear());
   }
 }
-var Hr = new j(() => new Lt());
+var backgroundSupervisorStates = new j(() => new BackgroundSupervisorState());
 function getBackgroundSupervisorState() {
-  return Hr.of(B().host);
+  return backgroundSupervisorStates.of(B().host);
 }
 import { setTimeout as Wr } from "timers/promises";
 var mt = 120000,

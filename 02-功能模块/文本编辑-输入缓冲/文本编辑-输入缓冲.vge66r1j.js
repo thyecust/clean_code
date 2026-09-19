@@ -396,7 +396,7 @@ function cr() {
       return null;
   }
 }
-class xt {
+class VscodeUserDirectories {
   pathFor = rs(
     async (e) => {
       let t = (r) =>
@@ -418,7 +418,7 @@ class xt {
     (e) => `${e}:${homedir()}`,
   );
 }
-var vscodeUserDirectories = new j(() => new xt());
+var vscodeUserDirectories = new j(() => new VscodeUserDirectories());
 async function Ze(e, t, r) {
   let s = chalk.dim(
     `For smoother scrolling, set "${ke}": ${Oe} in ${t} settings.`,
@@ -1871,7 +1871,7 @@ class $t {
     return t[r];
   }
 }
-class St {
+class PrewarmLatch {
   prewarmed = !1;
   claim() {
     if (this.prewarmed) return !1;
@@ -1881,9 +1881,9 @@ class St {
     this.prewarmed = !1;
   }
 }
-var xr = new j(() => new St());
+var prewarmLatch = new j(() => new PrewarmLatch());
 function Tr() {
-  return xr.of(B().host);
+  return prewarmLatch.of(B().host);
 }
 function Et() {
   if (!Tr().claim()) return;

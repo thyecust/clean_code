@@ -5931,7 +5931,7 @@ function getAwsRegionOrDefault() {
 function wc() {
   return `${a.AWS_CONFIG_FILE ?? ""}|${a.AWS_SHARED_CREDENTIALS_FILE ?? ""}|${a.AWS_PROFILE ?? ""}`;
 }
-class Zm {
+class AwsSharedConfigRegionCache {
   resolvedSharedConfigRegions = new Map();
   readAwsSharedConfigRegion = rs(async () => {
     let e = wc(),
@@ -5964,9 +5964,9 @@ class Zm {
     return (this.resolvedSharedConfigRegions.set(e, t), t);
   }, wc);
 }
-var _H = new j(() => new Zm());
+var awsSharedConfigRegionCaches = new j(() => new AwsSharedConfigRegionCache());
 function e_() {
-  return _H.of(B().host);
+  return awsSharedConfigRegionCaches.of(B().host);
 }
 async function resolveAwsRegion() {
   let e = Pc();
@@ -6435,7 +6435,7 @@ async function resolveModelStrings(e) {
   await l_();
 }
 var AH = "max";
-class c_ {
+class UnifiedRateLimitState {
   enabled = !1;
   headers = {};
   exceededLimits = [];
@@ -6779,9 +6779,9 @@ class c_ {
     return ((r["retry-after"] = String(Math.max(1, Math.ceil(t / 1000)))), r);
   }
 }
-var yH = new j(() => new c_());
+var unifiedRateLimitStates = new j(() => new UnifiedRateLimitState());
 function on() {
-  return yH.of(B().host);
+  return unifiedRateLimitStates.of(B().host);
 }
 function vH() {
   let e = on();
@@ -9072,7 +9072,7 @@ var kG = "tengu_ax_screen_reader";
 function J_(e) {
   return zt().swapRemoteGateReader(e);
 }
-class Q_ {
+class ScreenReaderState {
   #t;
   #i;
   #n;
@@ -9129,9 +9129,9 @@ class Q_ {
       (this.#e.length = 0));
   }
 }
-var wG = new j(() => new Q_());
+var screenReaderStates = new j(() => new ScreenReaderState());
 function zt() {
-  return wG.of(B().host);
+  return screenReaderStates.of(B().host);
 }
 var PG = "tengu_ax_sr_arrow_nav";
 function isScreenReaderArrowNavEnabled() {
@@ -9211,7 +9211,7 @@ class eh {
   }
 }
 var vs = new eh();
-class th {
+class SubagentSteerState {
   modelSteerFloor = null;
   promptModel = void 0;
   latched = void 0;
@@ -9230,9 +9230,9 @@ class th {
     ((this.latched = void 0), (this.promptModel = void 0));
   }
 }
-var NG = new Gt(() => new th());
+var subagentSteerStates = new Gt(() => new SubagentSteerState());
 function Rs() {
-  return NG.of(B());
+  return subagentSteerStates.of(B());
 }
 function nh(e) {
   return vs.registerClientData(e);
@@ -12089,7 +12089,7 @@ function getModelBucketForAnalytics(e) {
 }
 var xx = 200,
   Nx = Date.now() - process.uptime() * 1000;
-class Lx {
+class SessionStateStore {
   outputDir = void 0;
   linkedOutputs = new Map();
   linksInheritedBefore = Nx;
@@ -12183,9 +12183,9 @@ class Lx {
     this.diskOutputs.clear();
   }
 }
-var lee = new j(() => new Lx());
+var sessionStateStores = new j(() => new SessionStateStore());
 function getSessionStateStore() {
-  return lee.of(B().host);
+  return sessionStateStores.of(B().host);
 }
 function Ux(e) {
   if (getSessionStateStore().terminalEmitClaims.has(e)) return !1;
@@ -12197,7 +12197,7 @@ function releaseTerminalEmitClaim(e) {
 var cee = 1000,
   DEFAULT_SDK_QUEUE_KEY = "cli",
   uee = 1000;
-class Fx {
+class SdkEventQueue {
   queueKey = () => DEFAULT_SDK_QUEUE_KEY;
   queuesByKey = new Map();
   evictedKeys = new Set();
@@ -12303,9 +12303,9 @@ class Fx {
     return t.splice(0).map((r) => ({ ...r, uuid: randomUUID(), session_id: e }));
   }
 }
-var dee = new j(() => new Fx());
+var sdkEventQueues = new j(() => new SdkEventQueue());
 function eo() {
-  return dee.of(B().host);
+  return sdkEventQueues.of(B().host);
 }
 function pee() {
   return eo().currentKey();
@@ -26064,7 +26064,7 @@ class SF {
     (this.spawned.clear(), this.cleanlyRemoved.clear());
   }
 }
-class TF {
+class WorktreeSessionState {
   currentSession = null;
   resumeHintWorktreeName = null;
   bgTakeover = null;
@@ -26091,9 +26091,9 @@ class TF {
     this.isolationUnavailableCwd = e;
   }
 }
-var qce = new j(() => new TF());
+var worktreeSessionStates = new j(() => new WorktreeSessionState());
 function Kt() {
-  return bi(qce);
+  return bi(worktreeSessionStates);
 }
 function getCurrentWorktreeSession() {
   return Kt().currentSession;
@@ -26153,7 +26153,7 @@ var tm = createLazyValue(() =>
     pidDomain: le().optional(),
   }),
 );
-class CF {
+class SessionRegistry {
   uncleanExitsScanned = !1;
   reportedUncleanExitPaths = new Set();
   watchedCache = void 0;
@@ -26226,9 +26226,9 @@ class CF {
     return looksLikeFullHostProcessTable();
   }
 }
-var aue = new j(() => new CF());
+var sessionRegistries = new j(() => new SessionRegistry());
 function yt() {
-  return aue.of(B().host);
+  return sessionRegistries.of(B().host);
 }
 function getHeldSessionNames() {
   return yt().heldNames;
@@ -27501,15 +27501,15 @@ async function Iue() {
     ...(o.length > 0 && { vcs: o.join(",") }),
   };
 }
-class FF {
+class MemoryPeakTracker {
   envContext = void 0;
   prevCpuUsage = null;
   prevWallTimeMs = null;
   memPeaks = { rss: 0, heapUsed: 0, external: 0 };
 }
-var BF = new j(() => new FF());
+var memoryPeakTrackers = new j(() => new MemoryPeakTracker());
 function getMemoryPeaks() {
-  return { ...BF.of(B().host).memPeaks };
+  return { ...memoryPeakTrackers.of(B().host).memPeaks };
 }
 function Due(e) {
   let { memPeaks: t } = e;
@@ -27556,7 +27556,7 @@ async function Vl(e = {}) {
   let t = e.model ? String(e.model) : getMainLoopModel(),
     r = typeof e.betas === "string" ? e.betas : getBetaHeaders(getModelBetas(t)).join(","),
     o = fZ(),
-    d = BF.of(B().host);
+    d = memoryPeakTrackers.of(B().host);
   d.envContext ??= Iue();
   let [p, _, E] = await Promise.all([d.envContext, getRepoRemoteHash(), getCachedHead(), ensureServedCatalogMaskHydrated()]),
     C = maskModelIdIfConfidential(t),
@@ -28518,7 +28518,7 @@ function XF() {
   return getDynamicConfig_CACHED_MAY_BE_STALE($ue, {});
 }
 var JF = 1024;
-class QF {
+class FirstPartyEventLoggingState {
   firstPartyEventLogger = null;
   firstPartyEventLoggerProvider = null;
   firstPartyEventExporter = null;
@@ -28527,15 +28527,15 @@ class QF {
   preInitQueue = [];
   reinitInFlight = null;
 }
-var Ar = new j(() => new QF());
+var firstPartyEventLoggingStates = new j(() => new FirstPartyEventLoggingState());
 async function beginFirstPartyExporterShutdown() {
-  let { firstPartyEventExporter: e } = Ar.of(B().host);
+  let { firstPartyEventExporter: e } = firstPartyEventLoggingStates.of(B().host);
   try {
     await e?.beginShutdown(qF);
   } catch {}
 }
 async function shutdownFirstPartyEventLogging() {
-  let { firstPartyEventLoggerProvider: e, firstPartyEventExporter: t } = Ar.of(
+  let { firstPartyEventLoggerProvider: e, firstPartyEventExporter: t } = firstPartyEventLoggingStates.of(
     B().host,
   );
   if (!e) return;
@@ -28568,7 +28568,7 @@ async function ZF(e, t, r = {}) {
 }
 function logFirstPartyEvent(e, t = {}) {
   if (!isTelemetryEnabled()) return;
-  let { firstPartyEventLogger: r, preInitQueue: o } = Ar.of(B().host);
+  let { firstPartyEventLogger: r, preInitQueue: o } = firstPartyEventLoggingStates.of(B().host);
   if (!r) {
     if (o !== null && o.length < JF) o.push({ eventName: e, metadata: t });
     return;
@@ -28578,7 +28578,7 @@ function logFirstPartyEvent(e, t = {}) {
 }
 async function logFirstPartyEventAsync(e, t = {}) {
   if (!isTelemetryEnabled()) return;
-  let { firstPartyEventLogger: r, preInitQueue: o } = Ar.of(B().host);
+  let { firstPartyEventLogger: r, preInitQueue: o } = firstPartyEventLoggingStates.of(B().host);
   if (!r) {
     if (o !== null && o.length < JF) o.push({ eventName: e, metadata: t });
     return;
@@ -28591,7 +28591,7 @@ function que() {
 }
 function logGrowthBookExposure(e) {
   if (!isTelemetryEnabled() || isAnalyticsSinkDisabled("firstParty")) return !0;
-  let { firstPartyEventLogger: t, lastBatchConfig: r } = Ar.of(B().host);
+  let { firstPartyEventLogger: t, lastBatchConfig: r } = firstPartyEventLoggingStates.of(B().host);
   if (!t) {
     if (r === null) return !0;
     return !1;
@@ -28630,7 +28630,7 @@ var Xue = 1e4,
   Jue = 200,
   Que = 8192;
 function initializeFirstPartyEventLogging(e) {
-  let t = Ar.of(B().host);
+  let t = firstPartyEventLoggingStates.of(B().host);
   if (e !== void 0 && t.retainedStorageV5 === void 0) t.retainedStorageV5 = e;
   if ((profileCheckpoint("1p_event_logging_start"), !isTelemetryEnabled())) {
     t.preInitQueue = null;
@@ -28714,7 +28714,7 @@ function initializeFirstPartyEventLogging(e) {
   }
 }
 function reinitializeFirstPartyEventLogging() {
-  let e = Ar.of(B().host);
+  let e = firstPartyEventLoggingStates.of(B().host);
   return (
     (e.reinitInFlight ??= Zue(e).finally(() => {
       e.reinitInFlight = null;
@@ -28750,12 +28750,12 @@ async function Zue(e) {
   r.shutdown().catch(() => {});
 }
 var ede = mt.fetchRemoteEvalCall;
-class tB {
+class GrowthBookClientSlot {
   client = null;
 }
-var tde = new j(() => new tB());
+var growthBookClientSlots = new j(() => new GrowthBookClientSlot());
 function nB() {
-  return tde.of(B().host);
+  return growthBookClientSlots.of(B().host);
 }
 function ft() {
   let e = nB();
@@ -29135,7 +29135,7 @@ function getAutoMemPathSettingSource() {
 function hasAutoMemPathOverride() {
   return mm() !== void 0;
 }
-class aB {
+class AutoMemPathState {
   canonicalWcRoot;
   canonicalWcRootFor;
   wcWarmPromise;
@@ -29183,9 +29183,9 @@ class aB {
       this.clearWcWarmLatch());
   }
 }
-var hde = new j(() => new aB());
+var autoMemPathStates = new j(() => new AutoMemPathState());
 function getAutoMemPathState() {
-  return hde.of(B().host);
+  return autoMemPathStates.of(B().host);
 }
 function getAutoMemPath() {
   return getAutoMemPathState().resolve();
@@ -32469,7 +32469,7 @@ async function _pe(e) {
   }
 }
 var hpe = 30;
-class WB {
+class DatadogState {
   datadogInitialized = null;
   builtUnredacted = new WeakSet();
   sender = createBatchedSender({
@@ -32496,13 +32496,13 @@ class WB {
   });
   peerRateWindows = new Map();
 }
-var Lm = new j(() => new WB());
+var datadogStates = new j(() => new DatadogState());
 function resetDatadogInit() {
-  let e = Lm.of(B().host);
+  let e = datadogStates.of(B().host);
   (e.initializeDatadog.cache?.clear?.(), (e.datadogInitialized = null));
 }
 async function shutdownDatadog() {
-  await Lm.of(B().host).sender.shutdown();
+  await datadogStates.of(B().host).sender.shutdown();
 }
 function Epe(e) {
   return e.replace(
@@ -32519,7 +32519,7 @@ function Spe(e, { isTrustedAnt: t, onAnthropicHost: r }) {
 }
 async function trackDatadogEvent(e, t) {
   if (getAPIProvider() !== "firstParty") return;
-  let r = Lm.of(B().host),
+  let r = datadogStates.of(B().host),
     o = r.datadogInitialized;
   if (o === null) o = await r.initializeDatadog();
   if (!o || !ope.has(e)) return;
@@ -33959,7 +33959,7 @@ var invalidateToolDescriptions = Kn.invalidateToolDescriptions;
 var resolveToolDescription = Kn.resolveToolDescription;
 var Jpe = Kn.setToolDescribeInvalidator;
 var setToolDescribeResolver = Kn.setToolDescribeResolver;
-class R0 {
+class ToolDefinitionCache {
   byKey = new Map();
   generation = 0;
   get(e) {
@@ -33981,9 +33981,9 @@ class R0 {
     this.generation += 1;
   }
 }
-var Qpe = new j(() => new R0());
+var toolDefinitionCaches = new j(() => new ToolDefinitionCache());
 function ho() {
-  return Qpe.of(B().host);
+  return toolDefinitionCaches.of(B().host);
 }
 var toolDefinitionCache = {
   get(e) {
@@ -34080,7 +34080,7 @@ function afe() {
 var lfe = createLazyValue(() => nt({ accessToken: le().min(1), expiresAt: le() })),
   cfe = /^[a-z0-9-]{1,32}$/,
   ufe = 128;
-class K0 {
+class AwsCredentialMemo {
   ssoProfile = cB(async (e, t, r) => {
     let { loadSharedConfigFiles: o } = await import("./chunk-j6921052.js").then(
         (m) => toESM(m.default, 1),
@@ -34202,7 +34202,7 @@ class K0 {
     ((t.cache = e), (this.defaultChain = t));
   }
 }
-var awsCredentialMemos = new j(() => new K0());
+var awsCredentialMemos = new j(() => new AwsCredentialMemo());
 async function dfe(e, t, r) {
   let o = awsCredentialMemos.of(B().host);
   try {
@@ -34236,11 +34236,11 @@ function isFirstPartyManagedOAuthContext() {
     a.CLAUDE_CODE_ENTRYPOINT !== "claude-desktop-3p"
   );
 }
-class j0 {
+class WifAuthDebugNotice {
   implicitProfileSkippedLogged = !1;
   profileAuthSelectedLogged = !1;
 }
-var wifAuthDebugNotices = new j(() => new j0());
+var wifAuthDebugNotices = new j(() => new WifAuthDebugNotice());
 function pfe(e) {
   if (e.implicitProfileSkippedLogged) return;
   (logForDebugging(
@@ -34762,12 +34762,12 @@ var hfe = 3600000,
   I0 = 300000,
   Efe = 60000,
   Sfe = 30000;
-class $0 {
+class AwsAuthRefreshState {
   lastRefreshAt = null;
   inFlight = null;
   epoch = 0;
 }
-var awsAuthRefreshStates = new j(() => new $0());
+var awsAuthRefreshStates = new j(() => new AwsAuthRefreshState());
 async function Tfe() {
   let e = awsAuthRefreshStates.of(B().host),
     t = getConfiguredAwsAuthRefresh(),
@@ -35215,14 +35215,14 @@ function wfe() {
   if (!e.primaryApiKey) return null;
   return { key: e.primaryApiKey, source: "/login managed key" };
 }
-class q0 {
+class LoginManagedKeyMemo {
   value = void 0;
   promise = null;
   clear() {
     ((this.value = void 0), (this.promise = null));
   }
 }
-var loginManagedKeyMemos = new j(() => new q0());
+var loginManagedKeyMemos = new j(() => new LoginManagedKeyMemo());
 function $i() {
   return loginManagedKeyMemos.of(B().host);
 }
@@ -35551,7 +35551,7 @@ function Dfe() {
   if (e) return t(e);
   return null;
 }
-class tH {
+class OAuthTokenReadMemo {
   value = void 0;
   promise = null;
   lastCredentialsMtimeMs = 0;
@@ -35568,7 +35568,7 @@ class tH {
       (this.lastKeychainAccessToken = null));
   }
 }
-var oauthTokenReadMemos = new j(() => new tH());
+var oauthTokenReadMemos = new j(() => new OAuthTokenReadMemo());
 function getClaudeAIOAuthTokens() {
   let e = oauthTokenReadMemos.of(B().host);
   if (e.value !== void 0) return e.value;
@@ -35739,10 +35739,10 @@ function Lfe() {
   if (e !== void 0) return e;
   return Ym() ? 60000 : 0;
 }
-class cH {
+class AuthFailureClock {
   firstUnrecoveredAtMs = null;
 }
-var authFailureClocks = new j(() => new cH());
+var authFailureClocks = new j(() => new AuthFailureClock());
 function noteAuthRecoveryOutcome(e) {
   let t = e.nowMs ?? Date.now(),
     r = authFailureClocks.of(B().host);

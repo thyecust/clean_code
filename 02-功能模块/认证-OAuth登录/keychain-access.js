@@ -38,7 +38,7 @@ function getKeychainAccountName() {
   return n;
 }
 var KEYCHAIN_CACHE_TTL_MS = 30000;
-class i {
+class KeychainState {
   cache = { data: null, cachedAt: 0 };
   generation = 0;
   readInFlight = null;
@@ -46,9 +46,9 @@ class i {
   lastKnown = null;
   legacyApiKeyPrefetch = null;
 }
-var d = new j(() => new i());
+var keychainState = new j(() => new KeychainState());
 function getKeychainState() {
-  return d.of(B().host);
+  return keychainState.of(B().host);
 }
 var KEYCHAIN_READ_FAILURE_BACKOFF_MS = 1000;
 function invalidateKeychainCache() {

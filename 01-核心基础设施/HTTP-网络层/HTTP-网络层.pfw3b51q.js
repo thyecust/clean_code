@@ -1858,7 +1858,7 @@ var En = "/run/ccr/session_token",
     ".svc.cluster.local",
     "*.svc.cluster.local",
   ].join(",");
-class wt {
+class AgentProxyState {
   state = { enabled: !1, noProxy: Se };
   relay = void 0;
   generation = 0;
@@ -1877,9 +1877,9 @@ class wt {
       (this.relay = void 0));
   }
 }
-var vn = new j(() => new wt());
+var agentProxyState = new j(() => new AgentProxyState());
 function re() {
-  return vn.of(B().host);
+  return agentProxyState.of(B().host);
 }
 async function initAgentProxy(t) {
   let e = re(),

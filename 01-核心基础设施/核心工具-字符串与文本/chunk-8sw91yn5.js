@@ -86,7 +86,7 @@ function buildAttributionHeader(e, t, r, o, i) {
 function hasClaudeAIOAuthInferenceScope(e) {
   return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(CLAUDE_AI_INFERENCE_SCOPE));
 }
-class H {
+class MonitoringNoticeStore {
   notice = null;
   changed = Le();
   replaceNotice(e) {
@@ -101,9 +101,9 @@ class H {
     ((this.notice = e), this.changed.emit(this.notice));
   }
 }
-var me = new j(() => new H());
+var monitoringNoticeStores = new j(() => new MonitoringNoticeStore());
 function R() {
-  return me.of(B().host);
+  return monitoringNoticeStores.of(B().host);
 }
 function K(e) {
   R().replaceNotice(e);

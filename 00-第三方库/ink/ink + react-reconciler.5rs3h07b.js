@@ -16148,7 +16148,7 @@ function $E() {
 }
 var lg = $E;
 var ex;
-class rg {
+class BidiReorderFlag {
   needed;
   isNeeded() {
     if (this.needed === void 0)
@@ -16158,9 +16158,9 @@ class rg {
     return this.needed;
   }
 }
-var tx = new j(() => new rg());
+var bidiReorderFlags = new j(() => new BidiReorderFlag());
 function og(t) {
-  if (!tx.of(B().host).isNeeded() || t.length === 0) return t;
+  if (!bidiReorderFlags.of(B().host).isNeeded() || t.length === 0) return t;
   let s = t
     .map((E) =>
       E.value.replace(/[\u061C\u202A-\u202E\u2066-\u2069]/g, "\uFFFD"),
@@ -16822,7 +16822,7 @@ var dx = (t, s, c, f) => {
   },
   yg = dx;
 var vg = 256;
-class gg {
+class InputEventRecorder {
   enabled = !1;
   events = [];
   position = null;
@@ -16922,9 +16922,9 @@ class gg {
     for (let t of this.listeners) t();
   }
 }
-var hx = new j(() => new gg());
+var inputEventRecorders = new j(() => new InputEventRecorder());
 function jl() {
-  return hx.of(B().host);
+  return inputEventRecorders.of(B().host);
 }
 function Dat(t, s) {
   jl().setLiveWatching(t, s);

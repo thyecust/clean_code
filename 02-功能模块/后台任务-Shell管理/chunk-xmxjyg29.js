@@ -1683,7 +1683,7 @@ function Ho(e) {
       return `Not installing the background service: ${describeStopFailure(e)} \u2014 connecting to whichever daemon is available. If this repeats, kill pid ${e.pid} (or run 'claude daemon stop' again), then re-run to install.`;
   }
 }
-class fr {
+class JobPromiseTracker {
   #e = new Map();
   get(e) {
     return this.#e.get(e);
@@ -1696,9 +1696,9 @@ class fr {
       }));
   }
 }
-var Wo = new j(() => new fr());
+var jobPromiseTrackers = new j(() => new JobPromiseTracker());
 function mr() {
-  return Wo.of(B().host);
+  return jobPromiseTrackers.of(B().host);
 }
 function trackJobPromise(e, t) {
   return (
@@ -4180,7 +4180,7 @@ function areDefaultsEqual(e, t) {
   }
   return !0;
 }
-class xr {
+class SpareJobSlot {
   spare = null;
   ensuring = null;
   discarded = !1;
@@ -4275,9 +4275,9 @@ class xr {
     if (t) await deleteJob(t.jobId, { internal: !0 }, e);
   }
 }
-var Ui = new j(() => new xr());
+var spareJobSlots = new j(() => new SpareJobSlot());
 function Qe() {
-  return Ui.of(B().host);
+  return spareJobSlots.of(B().host);
 }
 function getSpareJob() {
   return Qe().spare;

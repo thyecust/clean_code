@@ -1536,7 +1536,7 @@ ${vt(e.slice(n), !1)}`;
     isRecallVisible: n,
   }),
   Ce = (e, t) => `${t ? "persist" : "no-persist"}:${e}`;
-class Dt {
+class MemoryIndexOpenCache {
   open = Ycr(
     async (e, t, n, o, s) => {
       let r = performance.now(),
@@ -1563,7 +1563,7 @@ class Dt {
     if (this.open.cache.get(o) === n) this.open.cache.delete(o);
   }
 }
-var Mt = new Gt(() => new Dt()),
+var memoryIndexOpenCaches = new Gt(() => new MemoryIndexOpenCache()),
   zt = async (e, t, n, o, s, r) => {
     let i = e.open(t, n, o, s, r),
       a = await i;
@@ -1576,7 +1576,7 @@ var Mt = new Gt(() => new Dt()),
     return a;
   },
   prewarmMemoryIndex = (e, t, n, o) => {
-    zt(Mt.of(e), t, null, n, o, !0)
+    zt(memoryIndexOpenCaches.of(e), t, null, n, o, !0)
       .then(({ store: s }) => {
         if (!s.lastSync.scanCompleted)
           _("index_prewarm_failed", { prewarm: !0, sweep_incomplete: !0 });
@@ -1589,7 +1589,7 @@ var Mt = new Gt(() => new Dt()),
   },
   searchMemoryFilesWithIndex = async (e, t, n, o, s = 5, r = null, i, a = !1, c) => {
     let l = performance.now(),
-      d = Mt.of(e),
+      d = memoryIndexOpenCaches.of(e),
       h = d.isHeld(n, a),
       { store: u, openMs: p } = await zt(d, n, r, i, c, a),
       f = performance.now() - l,

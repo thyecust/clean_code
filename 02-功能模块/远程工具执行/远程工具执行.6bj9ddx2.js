@@ -928,7 +928,7 @@ var me = "sync_files",
   Ke = 15000,
   Ye = 30000,
   Je = 300;
-class pe {
+class WorkerDirSyncState {
   #e = void 0;
   caughtUp = new Map();
   ledger = he();
@@ -958,9 +958,9 @@ class pe {
       ));
   }
 }
-var Ze = new Gt(() => new pe());
+var workerDirSyncState = new Gt(() => new WorkerDirSyncState());
 function A() {
-  return Ze.of(B());
+  return workerDirSyncState.of(B());
 }
 function registerWorkerDirSyncForMidTurn(e, t = rowStagedBus.subscribe) {
   let r = A();

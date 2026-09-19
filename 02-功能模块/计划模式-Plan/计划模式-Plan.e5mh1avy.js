@@ -61,7 +61,7 @@ function isManagedRemoteSession(t, e) {
 var le = 10,
   _ = 2000,
   ce = 8;
-class X {
+class PlanFileStore {
   primedListing = null;
   slugMeta = new Map();
   planFileCache = null;
@@ -444,12 +444,12 @@ class X {
       (this.snapshotChain = Promise.resolve()));
   }
 }
-var ue = new j(() => new X());
+var planFileStores = new j(() => new PlanFileStore());
 function L() {
   return B().host;
 }
 function planFiles() {
-  return ue.of(L());
+  return planFileStores.of(L());
 }
 function notePlanFileWritten(t, e) {
   planFiles().notePlanFileWritten(t, e);
@@ -579,7 +579,7 @@ function setPlanSlug(t, e) {
 function clearAllPlanSlugs() {
   planFiles().clearAllPlanSlugs();
 }
-class z {
+class PlansDirectory {
   #e = void 0;
   directory() {
     return ((this.#e ??= this.#t()), this.#e);
@@ -598,15 +598,15 @@ class z {
     this.#e = void 0;
   }
 }
-var G = new j(() => new z()),
+var plansDirectories = new j(() => new PlansDirectory()),
   getPlansDirectory = Object.assign(
     function () {
-      return G.of(L()).directory();
+      return plansDirectories.of(L()).directory();
     },
     {
       cache: {
         clear() {
-          G.of(L()).reset();
+          plansDirectories.of(L()).reset();
         },
       },
     },

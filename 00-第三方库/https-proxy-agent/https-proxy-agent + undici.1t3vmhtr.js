@@ -1368,13 +1368,13 @@ function N(e) {
   if (te.has(e)) return !1;
   return (te.add(e), !0);
 }
-class Te {
+class CACertificatesCache {
   extraCACerts = null;
   certificates = rs(() => bt(this));
 }
-var St = new j(() => new Te());
+var caCertificatesCache = new j(() => new CACertificatesCache());
 function re() {
-  return St.of(B().host);
+  return caCertificatesCache.of(B().host);
 }
 var loadExtraCACerts = serializeAsyncCalls(async () => {
   let e = re(),

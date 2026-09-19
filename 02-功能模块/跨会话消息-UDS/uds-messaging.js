@@ -104,7 +104,7 @@ import {
 } from "path";
 var Pe = 500,
   Ne = 32;
-class ye {
+class PeerSelfVerdictCache {
   verdicts = new Map();
   lookup(e) {
     let t = this.verdicts.get(e);
@@ -119,7 +119,7 @@ class ye {
     this.verdicts.set(e, t);
   }
 }
-var Le = new j(() => new ye()),
+var peerSelfVerdictCaches = new j(() => new PeerSelfVerdictCache()),
   Ke = {
     readAncestors: async (e) => {
       let { ancestors: t, readFailed: i, truncated: r } = await getAncestorPidsCheckedAsync(e);
@@ -148,7 +148,7 @@ async function We(e, t = Ke) {
   }
   if (i === void 0) return "no-evidence";
   let r = `${e}:${i}`,
-    d = Le.of(B().host),
+    d = peerSelfVerdictCaches.of(B().host),
     s = d.lookup(r);
   if (s !== void 0) return s ? "self" : "not-self";
   let w;
@@ -178,7 +178,7 @@ async function _e(e) {
   return i === "self" || (i === "no-evidence" && e.childTokenPresented);
 }
 var ne = 30000;
-class we {
+class UdsMessagingStateStore {
   activeSocketPath = void 0;
   connectedClients = new Set();
   onEnqueue = null;
@@ -239,7 +239,7 @@ function getUdsStartFailureDetail(e) {
       return;
   }
 }
-var udsMessagingStateStore = new j(() => new we());
+var udsMessagingStateStore = new j(() => new UdsMessagingStateStore());
 function c() {
   return udsMessagingStateStore.of(B().host);
 }
