@@ -36,7 +36,9 @@ for (const p of all) {
   else {
     const prev = byModule.get(p.module);
     for (const [o, n] of Object.entries(p.renames)) {
-      if (prev.renames[o] && prev.renames[o] !== n) {
+      // hasOwn：导出名里可能出现 `toString` / `constructor` 这类名字，
+      // 普通对象下标会命中 Object.prototype，把「没有」误判成「有」。
+      if (Object.hasOwn(prev.renames, o) && prev.renames[o] !== n) {
         console.log(`  同一导出名被两片改成不同名字 ${o}: ${prev.renames[o]} vs ${n}（取后者）`);
       }
       prev.renames[o] = n;

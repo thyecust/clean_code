@@ -95,8 +95,12 @@ for (const [rel, rec] of Object.entries(beforeSnap)) {
   const now = after[target];
   if (!now) continue;
   const plan = planByModule.get(rel);
+  // 必须用 hasOwn 而不是 `plan.renames[n] ?? n` —— 导出名里真的有 `toString`
+  // （lodash 那个聚合 chunk 就导出它），普通对象下标会命中 Object.prototype.toString，
+  // `??` 兜不住函数，于是把函数当成「新名字」塞进期望值，报出一个假的导出面变化。
+  const renamed = (n) => (plan && Object.hasOwn(plan.renames, n) ? plan.renames[n] : n);
   const want = plan
-    ? [...new Set(rec.exports.map((n) => plan.renames[n] ?? n))].sort()
+    ? [...new Set(rec.exports.map(renamed))].sort()
     : rec.exports;
   if (JSON.stringify(want) !== JSON.stringify(now.exports)) {
     bad(`导出面变化 ${target}: ${JSON.stringify(rec.exports)} -> ${JSON.stringify(now.exports)}（期望 ${JSON.stringify(want)}）`);
