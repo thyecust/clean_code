@@ -4401,26 +4401,6 @@ class Kje {
   }
 }
 
-var MAX_BASH_OUTPUT_CHARS = 150000,
-  DEFAULT_BASH_OUTPUT_CHARS = 30000;
-
-function getBashOutputMaxChars() {
-  return (
-    see(getInitialSettings().bashOutputMaxChars) ?? DEFAULT_BASH_OUTPUT_CHARS
-  );
-}
-
-function resolveBashOutputMaxChars() {
-  let e = see(getInitialSettings().bashOutputMaxChars);
-  if (e !== void 0) return e;
-  return resolveCappedConfigInteger(
-    "BASH_MAX_OUTPUT_LENGTH",
-    process.env.BASH_MAX_OUTPUT_LENGTH,
-    DEFAULT_BASH_OUTPUT_CHARS,
-    MAX_BASH_OUTPUT_CHARS,
-  ).effective;
-}
-
 var wbr = 8388608,
   Ebr = 1000,
   Tbr = 4096;
@@ -26097,6 +26077,19 @@ import {
   D9e,
   GZt,
   splitCommandArgs,
+  isLocalBashTask,
+  getBashDefaultTimeoutMs,
+  resolveBashOutputMaxChars,
+  getBashMaxTimeoutMs,
+  getShellResultStatus,
+  Fpt,
+  toShellPermissionRules,
+  DEFAULT_BASH_OUTPUT_CHARS,
+  getBashOutputMaxChars,
+  getBashCommandClampCrashDeny,
+  capTimeoutForAutoBackground,
+  MAX_BASH_OUTPUT_CHARS,
+  stripUnsupportedPowerShellRules,
 } from "./shell-utils.js";
 
 var l7r = {
@@ -32607,15 +32600,6 @@ async function Ono({
       null
     );
   }
-}
-
-function isLocalBashTask(e) {
-  return (
-    typeof e === "object" &&
-    e !== null &&
-    "type" in e &&
-    e.type === "local_bash"
-  );
 }
 
 var HQe = !1;
@@ -41981,43 +41965,6 @@ function emitTaskProgress(e) {
   });
 }
 
-var jlo = 120000,
-  Wlo = 600000;
-
-function getBashDefaultTimeoutMs(e = process.env) {
-  let t = e.BASH_DEFAULT_TIMEOUT_MS;
-  if (t) {
-    let r = parseConfigInteger(t);
-    if (!isNaN(r) && r > 0) return r;
-  }
-  return jlo;
-}
-
-function getBashMaxTimeoutMs(e = process.env) {
-  let t = e.BASH_MAX_TIMEOUT_MS;
-  if (t) {
-    let r = parseConfigInteger(t);
-    if (!isNaN(r) && r > 0) return Math.max(r, getBashDefaultTimeoutMs(e));
-  }
-  return Math.max(Wlo, getBashDefaultTimeoutMs(e));
-}
-
-var Glo = 2000;
-
-function capTimeoutForAutoBackground({
-  requestedTimeoutMs: e,
-  isMainAgent: t,
-  canAutoBackground: r,
-  env: o = process.env,
-}) {
-  if (!t || !r) return e;
-  let d = o.CLAUDE_CODE_AUTO_BACKGROUND_TIMEOUT_MS;
-  if (!d) return e;
-  let p = parseConfigInteger(d);
-  if (isNaN(p) || p <= 0) return e;
-  return Math.min(e, Math.max(p, Glo));
-}
-
 var CRe = {
   memory_pressure: "stopped because the system is running low on memory",
 };
@@ -50810,20 +50757,6 @@ async function verifyCommandsAgainstAllowRules(e, t) {
     }
   }
   return null;
-}
-
-function getBashCommandClampCrashDeny(e, t) {
-  let r = getToolPermissionContext(t).bashCommandClamps;
-  if (r !== void 0 && r.length > 0)
-    return {
-      behavior: "deny",
-      message: `The ${e} permission check crashed and this agent carries a per-spawn bashCommandClamp; denying rather than running an unverified command.`,
-      decisionReason: {
-        type: "other",
-        reason: BASH_COMMAND_CLAMP_CRASH_REASON,
-      },
-    };
-  return;
 }
 
 var CPe = (e, t) => {
@@ -125366,16 +125299,6 @@ function finalizeForegroundShellTask(e, t, r) {
     }));
 }
 
-function getShellResultStatus(e) {
-  if (e.interrupted) return "stopped";
-  return e.code === 0 ? "completed" : "failed";
-}
-
-function Fpt(e) {
-  if (e.interrupted) return "killed";
-  return e.code === 0 ? "completed" : "failed";
-}
-
 function Ger({
   shellCommand: e,
   taskId: t,
@@ -141721,14 +141644,6 @@ var acs = {
     },
   },
   Vlr = acs;
-
-function toShellPermissionRules(e) {
-  return e.flatMap((t) => [`Bash(${t})`, `PowerShell(${t})`]);
-}
-
-function stripUnsupportedPowerShellRules(e) {
-  return e.filter((t) => t !== "PowerShell(git checkout -b *)");
-}
 
 var GIT_COMMIT_DISALLOWED_PATTERNS = [
     "git commit *--fil*",

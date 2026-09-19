@@ -1,3 +1,7 @@
+import { see, resolveCappedConfigInteger } from "./standalone-tools.js";
+import { parseConfigInteger } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
+import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { BASH_COMMAND_CLAMP_CRASH_REASON } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import {
   getBashParserModule,
   findCommandNode,
@@ -12,7 +16,7 @@ import {
   UNESCAPED_QUOTE_REGEX,
 } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 import { escapeRegExp, repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getSettings_DEPRECATED, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 
 var WZt = new Set([
@@ -650,6 +654,106 @@ function m8(e, t = a7r) {
   return r;
 }
 
+// ---- shell 配置 / 任务判定 / 权限规则（自 execution-core.js 迁入）----
+
+var MAX_BASH_OUTPUT_CHARS = 150000,
+  DEFAULT_BASH_OUTPUT_CHARS = 30000;
+
+function getBashOutputMaxChars() {
+  return (
+    see(getInitialSettings().bashOutputMaxChars) ?? DEFAULT_BASH_OUTPUT_CHARS
+  );
+}
+
+function resolveBashOutputMaxChars() {
+  let e = see(getInitialSettings().bashOutputMaxChars);
+  if (e !== void 0) return e;
+  return resolveCappedConfigInteger(
+    "BASH_MAX_OUTPUT_LENGTH",
+    process.env.BASH_MAX_OUTPUT_LENGTH,
+    DEFAULT_BASH_OUTPUT_CHARS,
+    MAX_BASH_OUTPUT_CHARS,
+  ).effective;
+}
+
+var jlo = 120000,
+  Wlo = 600000;
+
+function getBashDefaultTimeoutMs(e = process.env) {
+  let t = e.BASH_DEFAULT_TIMEOUT_MS;
+  if (t) {
+    let r = parseConfigInteger(t);
+    if (!isNaN(r) && r > 0) return r;
+  }
+  return jlo;
+}
+
+function getBashMaxTimeoutMs(e = process.env) {
+  let t = e.BASH_MAX_TIMEOUT_MS;
+  if (t) {
+    let r = parseConfigInteger(t);
+    if (!isNaN(r) && r > 0) return Math.max(r, getBashDefaultTimeoutMs(e));
+  }
+  return Math.max(Wlo, getBashDefaultTimeoutMs(e));
+}
+
+var Glo = 2000;
+
+function capTimeoutForAutoBackground({
+  requestedTimeoutMs: e,
+  isMainAgent: t,
+  canAutoBackground: r,
+  env: o = process.env,
+}) {
+  if (!t || !r) return e;
+  let d = o.CLAUDE_CODE_AUTO_BACKGROUND_TIMEOUT_MS;
+  if (!d) return e;
+  let p = parseConfigInteger(d);
+  if (isNaN(p) || p <= 0) return e;
+  return Math.min(e, Math.max(p, Glo));
+}
+
+function isLocalBashTask(e) {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    "type" in e &&
+    e.type === "local_bash"
+  );
+}
+
+function getBashCommandClampCrashDeny(e, t) {
+  let r = getToolPermissionContext(t).bashCommandClamps;
+  if (r !== void 0 && r.length > 0)
+    return {
+      behavior: "deny",
+      message: `The ${e} permission check crashed and this agent carries a per-spawn bashCommandClamp; denying rather than running an unverified command.`,
+      decisionReason: {
+        type: "other",
+        reason: BASH_COMMAND_CLAMP_CRASH_REASON,
+      },
+    };
+  return;
+}
+
+function getShellResultStatus(e) {
+  if (e.interrupted) return "stopped";
+  return e.code === 0 ? "completed" : "failed";
+}
+
+function Fpt(e) {
+  if (e.interrupted) return "killed";
+  return e.code === 0 ? "completed" : "failed";
+}
+
+function toShellPermissionRules(e) {
+  return e.flatMap((t) => [`Bash(${t})`, `PowerShell(${t})`]);
+}
+
+function stripUnsupportedPowerShellRules(e) {
+  return e.filter((t) => t !== "PowerShell(git checkout -b *)");
+}
+
 export {
   parseShellCommandRedirections,
   extractCommandSegments,
@@ -671,4 +775,20 @@ export {
   D9e,
   GZt,
   splitCommandArgs,
+  MAX_BASH_OUTPUT_CHARS,
+  DEFAULT_BASH_OUTPUT_CHARS,
+  getBashOutputMaxChars,
+  resolveBashOutputMaxChars,
+  jlo,
+  Wlo,
+  getBashDefaultTimeoutMs,
+  getBashMaxTimeoutMs,
+  Glo,
+  capTimeoutForAutoBackground,
+  isLocalBashTask,
+  getShellResultStatus,
+  Fpt,
+  getBashCommandClampCrashDeny,
+  toShellPermissionRules,
+  stripUnsupportedPowerShellRules,
 };
