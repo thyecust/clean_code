@@ -7,5 +7,5 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Hke } from "../../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { Hke } from "../https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 export default Hke();
