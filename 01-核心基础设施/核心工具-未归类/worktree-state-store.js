@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-class e {
+class WorktreeStateStore {
   last = null;
   record(s) {
     this.last = s;
   }
 }
-var worktreeStateStore = new j(() => new e());
+var worktreeStateStore = new j(() => new WorktreeStateStore());
 export { worktreeStateStore };

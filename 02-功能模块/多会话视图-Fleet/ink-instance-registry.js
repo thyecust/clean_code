@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { setTerminalUiMounted, getTerminalUiMounted } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-class o extends Map {
+class InkInstanceRegistry extends Map {
   get everMounted() {
     return getTerminalUiMounted();
   }
@@ -31,8 +31,8 @@ class o extends Map {
     return this.standaloneRender;
   }
 }
-var r = new j(() => new o());
+var inkInstanceRegistriesByHost = new j(() => new InkInstanceRegistry());
 function getInkInstanceRegistry() {
-  return r.of(B().host);
+  return inkInstanceRegistriesByHost.of(B().host);
 }
 export { getInkInstanceRegistry };

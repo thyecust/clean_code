@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-class o {
+class HostCapabilityState {
   #o = !1;
   #s = !1;
   get backgroundTasksDisabled() {
@@ -25,9 +25,9 @@ class o {
     this.#s = !0;
   }
 }
-var s = new j(() => new o());
+var hostCapabilityStatesByHost = new j(() => new HostCapabilityState());
 function getHostCapabilityState() {
-  return s.of(B().host);
+  return hostCapabilityStatesByHost.of(B().host);
 }
 function areBackgroundTasksDisabled() {
   return getHostCapabilityState().backgroundTasksDisabled || a.CLAUDE_CODE_DISABLE_BACKGROUND_TASKS;

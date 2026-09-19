@@ -20,7 +20,7 @@ async function p(n, t) {
     (await i.mkdir(dirname(n)).catch(s), await i.appendFile(n, t));
   }
 }
-class c {
+class DiagnosticsLog {
   pendingWrite = Promise.resolve();
   cleanupRegistered = !1;
   append(n, t) {
@@ -36,9 +36,9 @@ class c {
     return this.pendingWrite;
   }
 }
-var f = new j(() => new c());
+var diagnosticsLog = new j(() => new DiagnosticsLog());
 function g() {
-  return bi(f);
+  return bi(diagnosticsLog);
 }
 function writeDiagnosticsEvent(n, t, i) {
   let r = m();

@@ -22,7 +22,7 @@ function resetAuthCachesAfterLogin(o) {
   )
     refreshGrowthBookFeatures();
 }
-class n {
+class AutoModeCheckState {
   #o = !1;
   get autoModeCheckRan() {
     return this.#o;
@@ -38,7 +38,7 @@ class n {
     this.#o = !1;
   }
 }
-var a = new j(() => new n());
+var autoModeCheckStatesByHost = new j(() => new AutoModeCheckState());
 function buildAutoModeGateNotification(o) {
   return {
     key: "auto-mode-gate-notification",
@@ -49,7 +49,7 @@ function buildAutoModeGateNotification(o) {
   };
 }
 async function runAutoModeGateCheck(o, l, d, c, r) {
-  if (!a.of(o).claimAutoModeCheck()) return;
+  if (!autoModeCheckStatesByHost.of(o).claimAutoModeCheck()) return;
   let { updateContext: m, notification: e } = await verifyAutoModeGateAccess(l, c);
   if (
     (d((t) => {
@@ -72,6 +72,6 @@ async function runAutoModeGateCheck(o, l, d, c, r) {
     r(buildAutoModeGateNotification(e));
 }
 function rearmAutoModeCheck(o) {
-  a.of(o).rearmAutoModeCheck();
+  autoModeCheckStatesByHost.of(o).rearmAutoModeCheck();
 }
 export { resetAuthCachesAfterLogin, buildAutoModeGateNotification, runAutoModeGateCheck, rearmAutoModeCheck };

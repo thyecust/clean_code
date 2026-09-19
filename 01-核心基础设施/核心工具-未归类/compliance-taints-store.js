@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-class n {
+class ComplianceTaintsStore {
   taints = [];
   changed = Le();
   verdict = void 0;
@@ -25,9 +25,9 @@ class n {
     this.verdict = i;
   }
 }
-var o = new j(() => new n());
+var complianceTaintsStoresByHost = new j(() => new ComplianceTaintsStore());
 function e() {
-  return o.of(B().host);
+  return complianceTaintsStoresByHost.of(B().host);
 }
 function setComplianceTaints(i) {
   e().replaceTaints(i);
