@@ -537,9 +537,10 @@
 - [`02-功能模块/图片-截图-ComputerUse/computer-use-input-native.js`](../02-功能模块/图片-截图-ComputerUse/computer-use-input-native.js) — 0.7 KB
 - [`02-功能模块/图片-截图-ComputerUse/image-processor-native.js`](../02-功能模块/图片-截图-ComputerUse/image-processor-native.js) — 0.7 KB
 
-## 第三方库 · turndown / domino  <sub>00-第三方库 · 1 个文件 · 0.38 MB</sub>
+## 第三方库 · turndown / domino  <sub>00-第三方库 · 2 个文件 · 0.39 MB</sub>
 
 - [`00-第三方库/turndown/turndown.fsc3etcb.js`](../00-第三方库/turndown/turndown.fsc3etcb.js) — 390.4 KB
+- [`00-第三方库/turndown/dom-parser.js`](../00-第三方库/turndown/dom-parser.js) — 8.7 KB
 
 ## CLI 入口 / Commander  <sub>03-入口与运行时 · 13 个文件 · 0.36 MB</sub>
 

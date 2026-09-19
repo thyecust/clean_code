@@ -51,3 +51,14 @@ jobs:
       # KNOWN 里，修一条删一条。
       - name: 悬空的自由标识符
         run: bun .analysis/check-undef.mjs
+
+      # 上面四道都建立在「specifier 能解析」这个前提上：check-imports 的**依赖边集合里
+      # 根本不会有解析不到的边**，所以断链对它完全不可见。
+      # 实测：2763e4ac 把 `00-第三方库/_未识别/第三方库-AWSSDK/` 下的 18 个 chunk 提了一层
+      # （98% 相似度重命名 —— 内容没动，specifier 也没动），`../../https-proxy-agent/…`
+      # 从「指向 00-第三方库/」变成「指向仓库根」。这些边是懒加载/动态 import 的，
+      # `bun run` 只在走到那条路径时才炸，于是藏了三天，直到 `bun build` 追边才暴露。
+      # 只对**树内断链**失败；经过悬空符号链接的（外部依赖没装）与 `.original.js`
+      # 参考副本只报告，不计入失败。
+      - name: 相对 specifier 断链
+        run: bun .analysis/check-dangling.mjs
