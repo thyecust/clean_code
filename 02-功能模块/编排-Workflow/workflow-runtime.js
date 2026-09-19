@@ -1278,7 +1278,7 @@ class en {
 }
 var Lo = 5000,
   Uo = 270000;
-class Hn {
+class PromptCacheWarmGate {
   now;
   entries = new Map();
   constructor(t = Date.now) {
@@ -1350,9 +1350,9 @@ function Bo(t, l, s) {
     })
   );
 }
-var Vo = new j(() => new Hn());
+var promptCacheWarmGates = new j(() => new PromptCacheWarmGate());
 function Kn() {
-  return Vo.of(B().host);
+  return promptCacheWarmGates.of(B().host);
 }
 function Gn(t) {
   return t ?? Lo;

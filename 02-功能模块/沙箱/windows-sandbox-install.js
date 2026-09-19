@@ -12,7 +12,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { WindowsSandboxError, ensurePersistentWindowsCa, installWindowsSandboxAsync, WINDOWS_SANDBOX_USER_NAME, getSrtWinLaunchConfig, formatWindowsSandboxErrorMessage, resolveWindowsTlsTerminateCaSource, willSandboxTlsTerminate, SandboxManager } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-class d {
+class WindowsSandboxInstallInFlight {
   inFlight = void 0;
   run(e) {
     return (
@@ -23,9 +23,9 @@ class d {
     );
   }
 }
-var u = new j(() => new d());
+var windowsSandboxInstallInFlight = new j(() => new WindowsSandboxInstallInFlight());
 function runWindowsSandboxInstall(e) {
-  return u.of(e).run(c);
+  return windowsSandboxInstallInFlight.of(e).run(c);
 }
 async function c() {
   try {

@@ -26,7 +26,7 @@ import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施
 import { readdir, readFile, stat } from "fs/promises";
 import { basename, extname, join } from "path";
 import { isDeepStrictEqual } from "util";
-class N {
+class ThemeStore {
   customThemeBases = void 0;
   userThemes = void 0;
   pluginThemes = createStore([]);
@@ -60,9 +60,9 @@ class N {
     ((this.systemTheme = e), this.systemThemeChanged.emit());
   }
 }
-var F = new j(() => new N());
+var themeStores = new j(() => new ThemeStore());
 function getThemeStore() {
-  return F.of(B().host);
+  return themeStores.of(B().host);
 }
 var k = "custom:",
   P = 262144;

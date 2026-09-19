@@ -21,7 +21,7 @@ function getProjectsDir() {
 function getProjectKeyFromDir(t) {
   return dirname(t) === getProjectsDir() ? basename(t) : void 0;
 }
-class c {
+class TranscriptPathsState {
   projectDirCache = new Map();
   agentTranscriptSubdirs = new Map();
   cacheProjectDir(t, e) {
@@ -37,9 +37,9 @@ class c {
     this.agentTranscriptSubdirs.delete(t);
   }
 }
-var g = new j(() => new c());
+var transcriptPathsState = new j(() => new TranscriptPathsState());
 function getProjectDir(t) {
-  let e = g.of(B().host),
+  let e = transcriptPathsState.of(B().host),
     n = e.projectDirCache.get(t);
   if (n !== void 0) return n;
   let r = join(getProjectsDir(), getProjectKey(t));
@@ -50,17 +50,17 @@ function getSessionTranscriptPath() {
   return join(t, `${K()}.jsonl`);
 }
 function setAgentTranscriptSubdir(t, e) {
-  g.of(B().host).setAgentTranscriptSubdir(t, e);
+  transcriptPathsState.of(B().host).setAgentTranscriptSubdir(t, e);
 }
 function clearAgentTranscriptSubdir(t) {
-  g.of(B().host).clearAgentTranscriptSubdir(t);
+  transcriptPathsState.of(B().host).clearAgentTranscriptSubdir(t);
 }
 function getSessionSubagentsDir() {
   let t = fy() ?? getProjectDir(he());
   return join(t, K(), "subagents");
 }
 function getAgentTranscriptPath(t) {
-  let e = g.of(B().host).agentTranscriptSubdirs.get(t),
+  let e = transcriptPathsState.of(B().host).agentTranscriptSubdirs.get(t),
     n = e ? join(getSessionSubagentsDir(), e) : getSessionSubagentsDir();
   return join(n, `agent-${t}.jsonl`);
 }

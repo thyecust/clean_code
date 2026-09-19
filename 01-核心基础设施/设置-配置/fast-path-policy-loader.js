@@ -15,7 +15,7 @@ import { awaitMdmSettingsLoaded, runPolicyHelperPass, hasActivePolicyHelper, get
 import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../../02-功能模块/认证-OAuth登录/keychain-prefetch.js";
 import { applySafeConfigEnvironmentVariables } from "../遥测-OpenTelemetry/settings-env-application.js";
 import { checkVersionPolicy } from "../核心工具-未归类/version-policy.js";
-class s {
+class FastPathPolicyState {
   settingsLoaded = !1;
   helperResult = null;
   claimSettingsLoad() {
@@ -26,9 +26,9 @@ class s {
     return ((this.helperResult = { error: null }), this.helperResult);
   }
 }
-var p = new j(() => new s());
+var fastPathPolicyState = new j(() => new FastPathPolicyState());
 function l() {
-  return p.of(B().host);
+  return fastPathPolicyState.of(B().host);
 }
 async function ensureFastPathSettingsLoaded(t) {
   if (!l().claimSettingsLoad()) return;

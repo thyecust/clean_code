@@ -53,16 +53,16 @@ var T = a.CLAUDE_CODE_PROFILE_STARTUP,
   v = Math.random() < J,
   R = T || v,
   E = "headless_";
-class w {
+class HeadlessTurnState {
   current = -1;
   turn0Marks = [];
   advance() {
     this.current++;
   }
 }
-var Z = new j(() => new w());
+var headlessTurnStates = new j(() => new HeadlessTurnState());
 function L() {
-  return Z.of(B().host);
+  return headlessTurnStates.of(B().host);
 }
 function C() {
   return L().turn0Marks;
@@ -142,7 +142,7 @@ var P = a.CLAUDE_CODE_PROFILE_STARTUP,
   Q = 0.005,
   Y = Math.random() < Q,
   M = P || Y;
-class z {
+class StartupProfilerState {
   memorySnapshots = [];
   startupContext = {};
   bootstrapEntry = "cli";
@@ -151,9 +151,9 @@ class z {
   lateReported = !1;
   firstEmitPhases = new Set();
 }
-var tt = new j(() => new z());
+var startupProfilerState = new j(() => new StartupProfilerState());
 function k() {
-  return bi(tt);
+  return bi(startupProfilerState);
 }
 var et = {
     import_time: ["cli_entry", "main_tsx_imports_loaded"],

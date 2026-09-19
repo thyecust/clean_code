@@ -153,7 +153,7 @@ function isSdkEntrypoint() {
   let e = a.CLAUDE_CODE_ENTRYPOINT;
   return e === "sdk-ts" || e === "sdk-py" || e === "sdk-cli";
 }
-class i {
+class HostState {
   entrypoint = void 0;
   childSession = !1;
   claudecode = !1;
@@ -171,9 +171,9 @@ class i {
     this.coworkFrameArtifacts = e;
   }
 }
-var _ = new j(() => new i());
+var hostStates = new j(() => new HostState());
 function o() {
-  return _.of(B().host);
+  return hostStates.of(B().host);
 }
 function getSessionEntrypoint() {
   return o().entrypoint;

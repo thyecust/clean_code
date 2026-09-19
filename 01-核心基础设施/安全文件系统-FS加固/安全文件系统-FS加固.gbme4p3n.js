@@ -1093,7 +1093,7 @@ function me(e) {
   let t = e === "win32" ? 0 : (constants.O_NONBLOCK ?? 0);
   return constants.O_RDONLY | t;
 }
-class gt {
+class PdftoppmAvailability {
   available = void 0;
   markAvailable() {
     this.available = !0;
@@ -1102,9 +1102,9 @@ class gt {
     this.available = void 0;
   }
 }
-var pr = new j(() => new gt());
+var pdftoppmAvailability = new j(() => new PdftoppmAvailability());
 function gr() {
-  return pr.of(B().host);
+  return pdftoppmAvailability.of(B().host);
 }
 async function mr() {
   let e = gr();
@@ -1832,7 +1832,7 @@ function kr(e) {
   );
 }
 var GIT_ROOT_NEGATIVE_RESULT = Symbol("git-repo-negative-result");
-class St {
+class GitRepoCache {
   rootByPath = new Ku({ max: 50 });
   canonicalRootByRoot = new Ku({ max: 50 });
   remoteSlugByRoot = new Ku({ max: 50 });
@@ -1872,9 +1872,9 @@ function memoizeInMap(e, t, r) {
   let s = r(t);
   return (e.set(t, s), s);
 }
-var xr = new j(() => new St());
+var gitRepoCaches = new j(() => new GitRepoCache());
 function getGitRepoCache() {
-  return xr.of(B().host);
+  return gitRepoCaches.of(B().host);
 }
 function Rt(e, t) {
   try {
@@ -2894,7 +2894,7 @@ async function Bt(e, t, r) {
   return null;
 }
 var Ot = 1000;
-class Ht {
+class GitFileWatcher {
   gitDir = null;
   commonDir = null;
   initialized = !1;
@@ -3091,9 +3091,9 @@ class Ht {
       (this.commonDir = null));
   }
 }
-var mo = new j(() => new Ht());
+var gitFileWatchers = new j(() => new GitFileWatcher());
 function v() {
-  return mo.of(B().host);
+  return gitFileWatchers.of(B().host);
 }
 async function ho() {
   let e = await resolveGitDir();

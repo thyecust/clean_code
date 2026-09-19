@@ -117,7 +117,7 @@ function readWorkflowLaunchRecord(e) {
     settled: t.data.settled,
   };
 }
-class H {
+class WorkflowLaunchHandoffStore {
   slots = new Map();
   stash(e, t) {
     this.slots.set(e, t);
@@ -127,7 +127,7 @@ class H {
     return (this.slots.delete(e), t);
   }
 }
-var workflowLaunchHandoffs = new j(() => new H()),
+var workflowLaunchHandoffs = new j(() => new WorkflowLaunchHandoffStore()),
   oe = 5000;
 async function B(e) {
   return (

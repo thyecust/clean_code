@@ -108,7 +108,7 @@ import {
   rmdir,
 } from "fs/promises";
 import { basename, dirname, join, relative } from "path";
-class H {
+class SessionRecordingState {
   filePath = null;
   key = void 0;
   timestamp = 0;
@@ -135,9 +135,9 @@ function ne(e, o, t) {
     stamp: String(t),
   };
 }
-var ie = new Gt(() => new H());
+var sessionRecordingStates = new Gt(() => new SessionRecordingState());
 async function renameRecordingForSession(e, o) {
-  let t = ie.of(e),
+  let t = sessionRecordingStates.of(e),
     r = t.filePath;
   if (!r || t.timestamp === 0) return;
   let s = getProjectDir(he()),
@@ -197,18 +197,18 @@ function applyAgentFrontmatterHooks(e) {
   if (o && !t) warnUntrustedAgentOrigin(e, "mainThread");
   yHt(void 0);
 }
-class U {
+class SessionRestoreState {
   restored = !1;
   markRestored() {
     this.restored = !0;
   }
 }
-var W = new j(() => new U());
+var sessionRestoreStates = new j(() => new SessionRestoreState());
 function markSessionRestored(e) {
-  W.of(e).markRestored();
+  sessionRestoreStates.of(e).markRestored();
 }
 function wasSessionRestored(e) {
-  return W.of(e).restored;
+  return sessionRestoreStates.of(e).restored;
 }
 function ue(e) {
   for (let o = e.length - 1; o >= 0; o--) {

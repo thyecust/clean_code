@@ -229,11 +229,11 @@ class w {
 var u = id(new w(), (e) => {
   (e.reset(), resetEnvScrubEnabled());
 });
-class H {
+class SubprocessEnvOverrides {
   getAgentProxyEnv = void 0;
   settingsColorEnv = {};
 }
-var m = new j(() => new H());
+var subprocessEnvOverrides = new j(() => new SubprocessEnvOverrides());
 function isScrubEnabled() {
   let e = u.scrubEnabledLatched;
   if (e !== void 0) return e;
@@ -332,13 +332,13 @@ function enforceScriptCaps(e) {
   }
 }
 function registerAgentProxyEnvFn(e) {
-  m.of(B().host).getAgentProxyEnv = e;
+  subprocessEnvOverrides.of(B().host).getAgentProxyEnv = e;
 }
 function agentProxyEnv() {
-  return m.of(B().host).getAgentProxyEnv?.() ?? {};
+  return subprocessEnvOverrides.of(B().host).getAgentProxyEnv?.() ?? {};
 }
 function setSettingsColorEnv(e) {
-  m.of(B().host).settingsColorEnv = e;
+  subprocessEnvOverrides.of(B().host).settingsColorEnv = e;
 }
 function isArtifactDevBaseUrlVar(e) {
   return e.startsWith("CLAUDE_CODE_ARTIFACT") && e.endsWith("_BASE_URL");
@@ -379,7 +379,7 @@ function I(e) {
   return e.toUpperCase().startsWith("BUN_JSC_");
 }
 function subprocessEnv() {
-  let e = m.of(B().host),
+  let e = subprocessEnvOverrides.of(B().host),
     t = e.getAgentProxyEnv?.() ?? {},
     n = Object.keys(t).length > 0,
     { settingsColorEnv: r } = e,

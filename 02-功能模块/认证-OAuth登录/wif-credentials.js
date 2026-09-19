@@ -94,7 +94,7 @@ async function O(e, t, r) {
         await sleep(1000 + Math.random() * 1000));
     }
 }
-class T {
+class WIFCredentialState {
   credentialsPromise = void 0;
   tokenCachePromise = void 0;
   resolvedBaseUrlSnapshot = void 0;
@@ -106,9 +106,9 @@ class T {
       this.failedAccessTokens.clear());
   }
 }
-var D = new j(() => new T());
+var wifCredentialState = new j(() => new WIFCredentialState());
 function w() {
-  return D.of(B().host);
+  return wifCredentialState.of(B().host);
 }
 var x = 20;
 function getResolvedWIFBaseUrlSnapshot() {

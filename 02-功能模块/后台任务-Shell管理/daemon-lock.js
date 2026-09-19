@@ -55,16 +55,16 @@ function getDaemonLockStateKey() {
 function h(e) {
   return e === "EISDIR" || e === "ENXIO";
 }
-class k {
+class DaemonLockLogState {
   logged = !1;
   markLogged() {
     if (this.logged) return !1;
     return ((this.logged = !0), !0);
   }
 }
-var D = new j(() => new k());
+var daemonLockLogState = new j(() => new DaemonLockLogState());
 function E() {
-  return D.of(B().host);
+  return daemonLockLogState.of(B().host);
 }
 async function S() {
   let e = await lstat(getDaemonLockPath()).catch(() => {

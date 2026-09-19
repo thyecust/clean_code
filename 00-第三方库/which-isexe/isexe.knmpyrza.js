@@ -1836,7 +1836,7 @@ function Jcr(e, t) {
   if (t !== void 0) F.subscribeRefresh = t;
   return F.register(e);
 }
-class Fn {
+class ToolMemoryCgroupState {
   dir = void 0;
   layout = void 0;
   limit = 0;
@@ -1845,9 +1845,9 @@ class Fn {
   pendingUnsubscribe = void 0;
   oomKillsSeen = void 0;
 }
-var T = new j(() => new Fn());
+var toolMemoryCgroupState = new j(() => new ToolMemoryCgroupState());
 function ze() {
-  let e = bi(T);
+  let e = bi(toolMemoryCgroupState);
   if (e.dir !== void 0) return e.dir ?? void 0;
   let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") {
@@ -1896,7 +1896,7 @@ function ze() {
 function B(e) {
   if (ze() === void 0) return;
   if (e !== "shell" && Gn().has(e)) return;
-  let t = bi(T),
+  let t = bi(toolMemoryCgroupState),
     r = Ho(t);
   if (r === void 0) return;
   if ((jn(t), !t.activatedClasses.has(e)))
@@ -1905,7 +1905,7 @@ function B(e) {
   return r;
 }
 function Qcr(e) {
-  return typeof bi(T).dir === "string" && (e === "shell" || !Gn().has(e));
+  return typeof bi(toolMemoryCgroupState).dir === "string" && (e === "shell" || !Gn().has(e));
 }
 function Ho(
   e,
@@ -1986,7 +1986,7 @@ function yxt(e, t, r) {
   };
 }
 function exe() {
-  return bi(T).dir === void 0;
+  return bi(toolMemoryCgroupState).dir === void 0;
 }
 var Zo = 64,
   Sxt = {
@@ -1999,7 +1999,7 @@ function Qie(e, t, r, o = Sxt) {
   try {
     if (!t) return;
     ze();
-    let s = bi(T);
+    let s = bi(toolMemoryCgroupState);
     if (s.dir === null) return;
     let c = o.readStarttime(t);
     if (c === void 0) return;
@@ -2019,7 +2019,7 @@ function Qie(e, t, r, o = Sxt) {
   }
 }
 function Qo(e = Sxt) {
-  let t = bi(T);
+  let t = bi(toolMemoryCgroupState);
   try {
     if ((ze(), t.dir === void 0)) {
       Nn(t, e);
@@ -2044,7 +2044,7 @@ function Ln(e, { cls: t, starttime: r, shouldStayUncapped: o }, s) {
     let d = posix.join(c, "cgroup.procs");
     s.writeFileSync(d, String(e));
     let l = 1,
-      p = bi(T).layout;
+      p = bi(toolMemoryCgroupState).layout;
     if (p !== void 0 && !p.reuse) l += Mn(e, p.selfDir, d, s, "attached");
     logForDebugging(
       `tool cgroup: late-attached ${t} pid ${e} (${l} process${l === 1 ? "" : "es"})`,
@@ -2101,12 +2101,12 @@ function qe(e, t = K) {
   }
 }
 function SPn(e = K) {
-  let { dir: t, layout: r } = bi(T);
+  let { dir: t, layout: r } = bi(toolMemoryCgroupState);
   if (!t || r === void 0) return;
   return qe(We(r), e);
 }
 function Zcr(e, t = K) {
-  let r = bi(T),
+  let r = bi(toolMemoryCgroupState),
     o = e ?? r.oomKillsSeen,
     s = SPn(t);
   return (jn(r, t, s), o === void 0 || s === void 0 ? void 0 : s > o);
@@ -2133,7 +2133,7 @@ function jn(e, t = K, r) {
 }
 function eur(e, t = K) {
   let r = B(e),
-    o = bi(T).layout;
+    o = bi(toolMemoryCgroupState).layout;
   if (r === void 0 || o === void 0) return;
   let s = We(o);
   return () => qe(s, t);
@@ -2145,7 +2145,7 @@ function tur(e, t) {
 }
 function bxt(e, t, r = Sxt) {
   try {
-    let o = bi(T);
+    let o = bi(toolMemoryCgroupState);
     if (o.dir === void 0) {
       if (o.pendingPids.get(e)?.starttime !== t) return !1;
       return (

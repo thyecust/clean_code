@@ -260,7 +260,7 @@ function getSessionTitleOrDefault(e) {
   return normalizePlainName(e) ?? "(untitled)";
 }
 var M = 300000;
-class C {
+class BridgeSessionListingCache {
   listed = void 0;
   inFlight = void 0;
   record(e, t, i) {
@@ -276,7 +276,7 @@ class C {
     if (this.inFlight === e) this.inFlight = void 0;
   }
 }
-var b = new Gt(() => new C());
+var bridgeSessionListingCache = new Gt(() => new BridgeSessionListingCache());
 async function refreshPeerIdentityOwner(e = { refresh: !0 }) {
   {
     let { primePeerIdentityOwner: t } = import.meta.require(
@@ -294,7 +294,7 @@ async function loadBridgePeerSessionRows(e, t) {
   {
     let i = m();
     if (!i) return { rows: [], failed: !1, identityKey: null };
-    let r = b.of(e),
+    let r = bridgeSessionListingCache.of(e),
       s = r.inFlight;
     if (s !== void 0 && s.identityKey === i) return s.promise;
     let { listBridgePeerSessions: o } = import.meta.require(
@@ -353,7 +353,7 @@ function recordBridgeSessionRows(e, t, i) {
       );
       return;
     }
-    let s = b.of(e);
+    let s = bridgeSessionListingCache.of(e);
     if (t.failed) {
       let o = s.listed;
       if (o !== void 0 && o.identityKey === r)
@@ -373,7 +373,7 @@ function forgetBridgeSessionRows(e, t) {
   {
     let i = m();
     if (!i || t.identityKey !== i) return;
-    let r = b.of(e),
+    let r = bridgeSessionListingCache.of(e),
       s = r.listed;
     if (s !== void 0 && s.identityKey === i)
       (r.forget(),
@@ -388,7 +388,7 @@ function getWarmBridgeSessionRows(e) {
 function getWarmBridgeSessionListing(e) {
   {
     let t = m(),
-      i = b.of(e).listed;
+      i = bridgeSessionListingCache.of(e).listed;
     if (!t || i === void 0 || i.identityKey !== t) return;
     let r = Date.now() - i.at;
     if (r >= 0 && r < M)
@@ -417,7 +417,7 @@ function isCloudListUnavailable(e) {
 }
 var D = 30000,
   P = 5000;
-class w {
+class CloudPeerSessionsCache {
   memo = void 0;
   inFlight = void 0;
   record(e, t, i) {
@@ -441,13 +441,13 @@ function S() {
   let { walkCredentialKey: e } = import.meta.require("../权限系统/chunk-1y2g140m.js");
   return e();
 }
-var k = new Gt(() => new w());
+var cloudPeerSessionsCache = new Gt(() => new CloudPeerSessionsCache());
 async function listCloudPeerSessions(e, t) {
   {
     let { hasCloudPeerAccess: i } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
     if (!i()) return { sessions: [], unavailable: "gate_off" };
     let { walkCcrSessionList: r } = import.meta.require("../会话-历史-恢复/chunk-ds47w88s.js"),
-      s = k.of(e),
+      s = cloudPeerSessionsCache.of(e),
       o = S(),
       u = s.warm(o);
     if (u !== void 0)
@@ -550,7 +550,7 @@ function getWarmCloudSessions(e) {
   {
     let { hasCloudPeerAccess: t } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
     if (!t()) return;
-    return k.of(e).warm(S())?.sessions;
+    return cloudPeerSessionsCache.of(e).warm(S())?.sessions;
   }
   return;
 }

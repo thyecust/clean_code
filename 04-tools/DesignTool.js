@@ -271,7 +271,7 @@ var Ce = createLazyValue(() =>
     }).optional(),
   }),
 );
-class de {
+class OperationHints {
   byOperation = new Map();
   hintsFor(e) {
     return this.byOperation.get(e);
@@ -286,9 +286,9 @@ class de {
     this.byOperation.clear();
   }
 }
-var Ae = new j(() => new de());
+var operationHints = new j(() => new OperationHints());
 function ne() {
-  return Ae.of(B().host);
+  return operationHints.of(B().host);
 }
 function L(e) {
   return ne().hintsFor(e);

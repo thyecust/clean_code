@@ -296,14 +296,14 @@ This will ensure you have access to the latest features and improvements.
   }
 }
 var Ke = 300000;
-class ve {
+class AutoUpdateState {
   lastAutoUpdateCheckAt = 0;
   updateRestoreFailure = null;
   mintedPreservedInodes = new Set();
 }
-var je = new j(() => new ve());
+var autoUpdateState = new j(() => new AutoUpdateState());
 function te() {
-  return je.of(B().host);
+  return autoUpdateState.of(B().host);
 }
 var Ye = 1e4;
 function getRemainingStartupDelay() {

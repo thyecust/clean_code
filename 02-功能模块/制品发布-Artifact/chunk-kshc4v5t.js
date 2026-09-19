@@ -147,22 +147,22 @@ import { resolveOwnProcStart, getArtifactCommentMonitorStorage, ensureArtifactCo
 import { hasLiveAutoReactSupervision } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
 import { createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 import { s, T, O, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-class kn {
+class SessionWorkingStore {
   working = createStore({ working: !1 });
   userPrompt = createStore({ pending: !1 });
 }
-var je = new Gt(() => new kn());
+var sessionWorkingStores = new Gt(() => new SessionWorkingStore());
 function setSessionWorking(e, t) {
-  je.of(e).working.setState((r) => (r.working === t ? r : { working: t }));
+  sessionWorkingStores.of(e).working.setState((r) => (r.working === t ? r : { working: t }));
 }
 function isSessionWorking(e) {
-  return je.of(e).working.getState().working;
+  return sessionWorkingStores.of(e).working.getState().working;
 }
 function subscribeSessionWorking(e, t) {
-  return je.of(e).working.subscribe(t);
+  return sessionWorkingStores.of(e).working.subscribe(t);
 }
 function setSessionUserPromptPending(e, t) {
-  je.of(e).userPrompt.setState((r) => (r.pending === t ? r : { pending: t }));
+  sessionWorkingStores.of(e).userPrompt.setState((r) => (r.pending === t ? r : { pending: t }));
 }
 var yt = 120,
   yn = `act:${yt}`,

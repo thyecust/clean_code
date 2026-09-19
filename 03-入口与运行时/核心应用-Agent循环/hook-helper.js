@@ -134,7 +134,7 @@ var Zhe = new Set([
 ]);
 
 
-class KPt {
+class McpServerProcessRegistry {
   servers = [];
   unsubscribe = void 0;
   clear() {
@@ -143,11 +143,11 @@ class KPt {
 }
 
 
-var qkr = new j(() => new KPt());
+var mcpServerProcessRegistries = new j(() => new McpServerProcessRegistry());
 
 
 function DWe() {
-  return bi(qkr);
+  return bi(mcpServerProcessRegistries);
 }
 
 
@@ -215,7 +215,7 @@ function kW(e) {
 }
 
 
-class gMt {
+class PendingPluginUsage {
   pendingUsage = new Map();
   flushTimer = null;
   exitFlushesInFlight = [];
@@ -223,7 +223,7 @@ class gMt {
 }
 
 
-var hMt = new j(() => new gMt());
+var pendingPluginUsage = new j(() => new PendingPluginUsage());
 
 
 class yMt {
@@ -239,7 +239,7 @@ var AEr = 60000;
 
 
 function tM() {
-  return hMt.of(B().host);
+  return pendingPluginUsage.of(B().host);
 }
 
 
@@ -403,7 +403,7 @@ function Z3e(e) {
 }
 
 
-class lXt {
+class HookOutputWriterStack {
   writers = [];
   register(e) {
     this.writers.push(e);
@@ -421,11 +421,11 @@ class lXt {
 }
 
 
-var D5r = new j(() => new lXt());
+var hookOutputWriterStacks = new j(() => new HookOutputWriterStack());
 
 
 function KSe() {
-  return D5r.of(B().host);
+  return hookOutputWriterStacks.of(B().host);
 }
 
 

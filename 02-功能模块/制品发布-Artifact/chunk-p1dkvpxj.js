@@ -919,15 +919,15 @@ function deleteCommentCensusEntry(e) {
   ve().delete(e);
 }
 var He = 180000;
-class io {
+class SessionUserBusyState {
   busy = !1;
   busySince = 0;
   idleWaiters = new Set();
   valveTimer = null;
 }
-var ei = new Gt(() => new io());
+var sessionUserBusyStates = new Gt(() => new SessionUserBusyState());
 function ct() {
-  return ei.of(B());
+  return sessionUserBusyStates.of(B());
 }
 function ao(e) {
   if (e.valveTimer !== null)

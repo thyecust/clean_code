@@ -122,7 +122,7 @@ function wrapOscForMultiplexer(t) {
   if (e === "screen") return `\x1BP${t.replaceAll("\x1B", "\x1B\x1B")}\x1B\\`;
   return t;
 }
-class L {
+class LinuxClipboardToolState {
   tool = void 0;
   addonWriteFailed = !1;
   addonWriteSucceeded = !1;
@@ -170,9 +170,9 @@ class L {
       (this.addonWriteSucceeded = !1));
   }
 }
-var H = new j(() => new L());
+var linuxClipboardToolStates = new j(() => new LinuxClipboardToolState());
 function d() {
-  return H.of(B().host);
+  return linuxClipboardToolStates.of(B().host);
 }
 function getClipboardCopyStrategy() {
   if (!p())

@@ -23,11 +23,11 @@ import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-class T {
+class ReplDiffPanelState {
   lastLoggedSessionId = null;
   autoOpenPending = !1;
 }
-var ReplDiffPanelStateStore = new j(() => new T());
+var ReplDiffPanelStateStore = new j(() => new ReplDiffPanelState());
 var DIFF_SIDEBAR_MIN_COLS = 110,
   DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS = 144,
   DIFF_SIDEBAR_NO_GIT_MESSAGE =

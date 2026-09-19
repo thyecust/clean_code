@@ -280,13 +280,13 @@ var I = "tengu_lilac_loom",
       redeemBy: h(),
     }),
   );
-class _ {
+class FotwCampaignState {
   parsedCampaign = null;
   inFlightEligibilityRefresh = null;
 }
-var R = new j(() => new _());
+var fotwCampaignState = new j(() => new FotwCampaignState());
 function A() {
-  return R.of(B().host);
+  return fotwCampaignState.of(B().host);
 }
 function getActiveFotwCampaign() {
   let e = getDynamicConfig_CACHED_MAY_BE_STALE(I, null);

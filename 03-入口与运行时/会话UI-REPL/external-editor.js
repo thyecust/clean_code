@@ -94,7 +94,7 @@ function openFileInEditor(t, e) {
     d.exitAlternateScreen();
   }
 }
-class y {
+class ExternalEditorState {
   isResolved = !1;
   editor = void 0;
   resolve() {
@@ -111,9 +111,9 @@ class y {
     ((this.isResolved = !1), (this.editor = void 0));
   }
 }
-var P = new j(() => new y());
+var externalEditorState = new j(() => new ExternalEditorState());
 function T() {
-  return P.of(B().host);
+  return externalEditorState.of(B().host);
 }
 function resolveEditorCommand() {
   return dl()?.editor ?? T().resolve();

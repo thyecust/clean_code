@@ -708,7 +708,7 @@ var bc = createLazyValue(() =>
       .catch(void 0),
   }),
 );
-class zi {
+class OrgMemoryWriteGrantState {
   grantedStores = null;
   grantedModes = null;
   mirrorPresent = !1;
@@ -780,9 +780,9 @@ class zi {
       else logFeatureSad("org_memory_writes", "downgraded");
   }
 }
-var _c = new j(() => new zi());
+var orgMemoryWriteGrantStates = new j(() => new OrgMemoryWriteGrantState());
 function Fe() {
-  return _c.of(B().host);
+  return orgMemoryWriteGrantStates.of(B().host);
 }
 function normalizeStorePath(e) {
   return e.replace(/\/+$/, "");
@@ -1016,7 +1016,7 @@ function yn(e, t) {
     logForDebugging(`org-memory decision ${t}: listener threw: ${l(r)}`, { level: "error" });
   }
 }
-class Ji {
+class OrgMemoryDecisionState {
   decision = { state: "undecided" };
   servedIdentity = null;
   settleDeadlineConsumed = !1;
@@ -1144,9 +1144,9 @@ class Ji {
     );
   }
 }
-var xc = new j(() => new Ji());
+var orgMemoryDecisionStates = new j(() => new OrgMemoryDecisionState());
 function Ze() {
-  return xc.of(B().host);
+  return orgMemoryDecisionStates.of(B().host);
 }
 function onOrgMemoryDecisionShrink(e) {
   return Ze().shrunk.subscribe(e);
@@ -1314,7 +1314,7 @@ function is(e, t) {
     { ...getMemoryHostRequestOptions(), credentials: t, timeout: Tc, validateStatus: () => !0 },
   );
 }
-class ss {
+class OrgMemoryCredentialCache {
   cached = null;
   inflightMint = null;
   lastMintSelectionDegraded = !1;
@@ -1579,9 +1579,9 @@ class ss {
       Qi());
   }
 }
-var Cc = new j(() => new ss());
+var orgMemoryCredentialCaches = new j(() => new OrgMemoryCredentialCache());
 function Jn() {
-  return Cc.of(B().host);
+  return orgMemoryCredentialCaches.of(B().host);
 }
 function wasLastMintSelectionDegraded() {
   return Jn().lastMintSelectionDegraded;
@@ -1606,7 +1606,7 @@ var FIRST_STORE_PULL_WAIT_DEADLINE_MS = 2500;
 function eo() {
   return Boolean(process.env.CLAUDE_MEMORY_STORES?.trim());
 }
-class as {
+class FirstStorePullState {
   settled = !1;
   racePromise = null;
   raceSettled = !1;
@@ -1634,9 +1634,9 @@ class as {
     await Promise.race([this.racePromise, sleep(FIRST_STORE_PULL_WAIT_DEADLINE_MS, e)]);
   }
 }
-var Mc = new j(() => new as());
+var firstStorePullStates = new j(() => new FirstStorePullState());
 function Pn() {
-  return Mc.of(B().host);
+  return firstStorePullStates.of(B().host);
 }
 function settleFirstStorePull() {
   Pn().settle();
@@ -2042,7 +2042,7 @@ function er(e) {
 }
 var Zc = 3600000,
   Xc = 15000;
-class vs {
+class OrgMemoryDiscoveryState {
   lastPickerData = null;
   discoveryGeneration = 0;
   grantMissingEmitted = !1;
@@ -2608,9 +2608,9 @@ class vs {
     );
   }
 }
-var Qc = new j(() => new vs());
+var orgMemoryDiscoveryStates = new j(() => new OrgMemoryDiscoveryState());
 function Lt() {
-  return Qc.of(B().host);
+  return orgMemoryDiscoveryStates.of(B().host);
 }
 function clearOrgMemoryDiscoveryCaches() {
   Lt().clearCaches();
@@ -7879,7 +7879,7 @@ function isSharedMemoryServedViaTools() {
 }
 var ca = 5000,
   zd = 60000;
-class da {
+class MemoryPromptIndexCache {
   current = null;
   entriesFor(e, t, r) {
     let o =
@@ -7897,7 +7897,7 @@ class da {
     return this.current.entries;
   }
 }
-var Gd = new j(() => new da());
+var memoryPromptIndexCaches = new j(() => new MemoryPromptIndexCache());
 async function fa(e = ca, t = {}) {
   let r;
   try {
@@ -7924,7 +7924,7 @@ async function fa(e = ca, t = {}) {
   let L = [Js() ?? "", ...d.map((x) => `${x.path} ${x.mode} ${x.promptIndex}`)]
     .join(`
 `);
-  return Gd.of(B().host).entriesFor(L, d.length, _);
+  return memoryPromptIndexCaches.of(B().host).entriesFor(L, d.length, _);
 }
 async function ma(e, t, r) {
   let o = e.promptIndex;
@@ -8261,7 +8261,7 @@ function xa(e) {
       }));
   return d;
 }
-class Ra {
+class PromptFlagCache {
   bashFirstSessionAssignment = rs(ba);
   bashFirstSessionAssignmentCompiledOnly = rs(ba);
   preReadLineDropped = rs(La);
@@ -8273,9 +8273,9 @@ class Ra {
   promptModelSwapsLogged = new Set();
   unusableWritingOverrideTold = !1;
 }
-var af = new j(() => new Ra());
+var promptFlagCaches = new j(() => new PromptFlagCache());
 function an() {
-  return af.of(B().host);
+  return promptFlagCaches.of(B().host);
 }
 function Aa(e) {
   let {
@@ -8410,9 +8410,9 @@ function assertSafePathKey(e) {
 }
 function hasTeamMemoryStore() {
   if (!isAutoMemoryEnabled()) return !1;
-  return uf.of(B().host).hasTeamStore();
+  return teamMemoryStorePresences.of(B().host).hasTeamStore();
 }
-class Oa {
+class TeamMemoryStorePresence {
   raw = void 0;
   valid = !1;
   hasTeamStore() {
@@ -8428,7 +8428,7 @@ class Oa {
     return this.valid;
   }
 }
-var uf = new j(() => new Oa());
+var teamMemoryStorePresences = new j(() => new TeamMemoryStorePresence());
 function getTeamMemoryDir() {
   return (join(getAutoMemPath(), TEAM_MEMORY_DIR_NAME) + sep).normalize("NFC");
 }
@@ -15005,7 +15005,7 @@ function Bm(e = {}) {
 }
 function getGitTrackedSettingsSources(e) {
   let t = he(),
-    r = Um.of(B().host),
+    r = gitTrackedSettingsTrackers.of(B().host),
     o = isLocalSettingsGitTracked({ onIndeterminate: "tracked" });
   if (o && checkHasTrustDialogAccepted()) {
     if ((r.markTracked(t), !r.persistIssued(t) && isLocalSettingsGitTrackedInIndex()))
@@ -15015,7 +15015,7 @@ function getGitTrackedSettingsSources(e) {
     ? ["projectSettings", "localSettings"]
     : ["projectSettings"];
 }
-class Cl {
+class GitTrackedSettingsTracker {
   tracked = new Set();
   persisted = new Set();
   isTracked(e) {
@@ -15031,7 +15031,7 @@ class Cl {
     this.persisted.add(e);
   }
 }
-var Um = new j(() => new Cl());
+var gitTrackedSettingsTrackers = new j(() => new GitTrackedSettingsTracker());
 function jm() {
   return getGlobalConfig().projects?.[getWorkspacePersistedTrustKey()]?.localSettingsSeenGitTracked === !0;
 }
@@ -15114,7 +15114,7 @@ function hasRepoSettingsRequiringTrust() {
   let { gateProject: e, gateLocal: t } = getSettingsTrustGates();
   return (e && Al("projectSettings")) || (t && Al("localSettings"));
 }
-class Ml {
+class FirstTimeKeyTracker {
   warned = new Set();
   firstTimeFor(e) {
     if (this.warned.has(e)) return !1;
@@ -15124,12 +15124,12 @@ class Ml {
     this.warned.clear();
   }
 }
-var Il = new j(() => new Ml());
+var firstTimeKeyTrackers = new j(() => new FirstTimeKeyTracker());
 function isFirstTimeForKey(e) {
-  return Il.of(B().host).firstTimeFor(e);
+  return firstTimeKeyTrackers.of(B().host).firstTimeFor(e);
 }
 function Ol(e, t, r) {
-  if (!Il.of(B().host).firstTimeFor(e)) return;
+  if (!firstTimeKeyTrackers.of(B().host).firstTimeFor(e)) return;
   if (
     (logForDebugging(
       `Dropped ${t} project-scoped ${e} entr${t === 1 ? "y" : "ies"} \u2014 workspace not yet trusted`,
@@ -15677,7 +15677,7 @@ function buildDirectoryReadRuleUpdate(e, t = "session") {
     destination: t,
   };
 }
-class Nl {
+class PathCacheStore {
   claudeTempDir = void 0;
   childProcessTmpDir = void 0;
   bundledSkillsRoot = void 0;
@@ -15700,9 +15700,9 @@ class Nl {
       this.canonicalHomedirByHome.clear());
   }
 }
-var Qm = new j(() => new Nl());
+var pathCacheStores = new j(() => new PathCacheStore());
 function getPathCacheStore() {
-  return Qm.of(B().host);
+  return pathCacheStores.of(B().host);
 }
 function getResolvedClaudeTempDir() {
   let e = getPathCacheStore();
@@ -17405,12 +17405,12 @@ function readAutoAllowedForMutation(e, t, r, o) {
 function $p() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_playful_lobster", !0);
 }
-class lc {
+class PlayfulLobsterLoggedPaths {
   loggedPaths = new Set();
 }
-var Fp = new j(() => new lc());
+var playfulLobsterLoggedPaths = new j(() => new PlayfulLobsterLoggedPaths());
 function cc() {
-  return Fp.of(B().host).loggedPaths;
+  return playfulLobsterLoggedPaths.of(B().host).loggedPaths;
 }
 var Wp = 256;
 function uc(e) {

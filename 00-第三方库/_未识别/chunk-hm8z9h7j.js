@@ -85,16 +85,16 @@ class H9e extends EventEmitter {
     return !0;
   }
 }
-class E {
+class TerminalProbeState {
   xtversionName = void 0;
   synchronizedOutputSupported = void 0;
   osc11Responsive = void 0;
   probeEventLogged = !1;
   nativeCursorEnabled = void 0;
 }
-var z = new j(() => new E());
+var terminalProbeStates = new j(() => new TerminalProbeState());
 function sk() {
-  return z.of(B().host);
+  return terminalProbeStates.of(B().host);
 }
 function YUn(t) {
   sk().xtversionName = t;
@@ -110,7 +110,7 @@ function Zd() {
 function JUn() {
   return sk().xtversionName?.toLowerCase().startsWith("ghostty") ?? !1;
 }
-class g {
+class TerminalScrollConfigCache {
   value = void 0;
   get() {
     let t = Lat(),
@@ -152,9 +152,9 @@ class g {
     this.value = void 0;
   }
 }
-var S = new j(() => new g());
+var terminalScrollConfigCaches = new j(() => new TerminalScrollConfigCache());
 function Av() {
-  return S.of(B().host).get();
+  return terminalScrollConfigCaches.of(B().host).get();
 }
 function Itn() {
   if (process.env.CURSOR_TRACE_ID !== void 0) return !0;
@@ -182,7 +182,7 @@ function Z(t, r, o) {
   return Number.isNaN(p) || p <= 0 ? u : Math.min(p, 20);
 }
 function j0e() {
-  S.of(B().host).invalidate();
+  terminalScrollConfigCaches.of(B().host).invalidate();
 }
 var b = toESM(pg(), 1);
 function tBn(t) {

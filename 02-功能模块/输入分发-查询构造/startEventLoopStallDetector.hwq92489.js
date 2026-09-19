@@ -95,9 +95,9 @@ function w({
   };
 }
 function startEventLoopStallDetector(t) {
-  y.of(t).start(a.CLAUDE_CODE_REMOTE ? T : p);
+  eventLoopStallDetectors.of(t).start(a.CLAUDE_CODE_REMOTE ? T : p);
 }
-class b {
+class EventLoopStallDetector {
   timer = null;
   intervalMs = p;
   rssSampleTicks = d / p;
@@ -205,5 +205,5 @@ class b {
       this.timer.unref());
   }
 }
-var y = new j(() => new b());
+var eventLoopStallDetectors = new j(() => new EventLoopStallDetector());
 export { startEventLoopStallDetector };

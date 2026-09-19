@@ -115,7 +115,7 @@ function Ee() {
 }
 var Ne = 4096,
   et = 1024,
-  tt = new j(() => new ke());
+  tt = new j(() => new PresentedCredentialLog());
 function getPresentedCredentialLog() {
   return tt.of(B().host);
 }
@@ -130,7 +130,7 @@ function encodeBasicAuth(e, t) {
 function rt() {
   return getDiscoveryCacheOffLatch() !== void 0;
 }
-class ke {
+class PresentedCredentialLog {
   seen = new Set();
   off = !1;
   incomplete = !1;

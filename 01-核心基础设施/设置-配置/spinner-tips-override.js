@@ -119,7 +119,7 @@ async function V(e) {
     );
   }
 }
-class C {
+class SpinnerTipsOverrideFileCache {
   #e = new Map();
   get size() {
     return this.#e.size;
@@ -134,7 +134,7 @@ class C {
     return (this.#e.set(e, i), i);
   }
 }
-var ee = new j(() => new C());
+var spinnerTipsOverrideFileCache = new j(() => new SpinnerTipsOverrideFileCache());
 function te() {
   if (getRemoteManagedSettingsSyncFromCache()?.spinnerTipsOverride?.tipsFile)
     return (
@@ -207,7 +207,7 @@ async function getOverrideSpinnerTips(e) {
         `spinnerTipsOverride.tipsFile/label in ${s} are ignored; set them in user or managed settings`,
         { level: "warn" },
       );
-  let u = d ? (await ee.of(e).read(d)).entries : [],
+  let u = d ? (await spinnerTipsOverrideFileCache.of(e).read(d)).entries : [],
     g = new Set(),
     T = [],
     S = (s, o, p, _, M) => {

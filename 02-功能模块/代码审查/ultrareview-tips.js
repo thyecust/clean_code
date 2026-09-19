@@ -59,13 +59,13 @@ async function v(e) {
     );
   }
 }
-class c {
+class UltrareviewQuotaState {
   quota = void 0;
   fetch = void 0;
 }
-var S = new j(() => new c());
+var ultrareviewQuotaState = new j(() => new UltrareviewQuotaState());
 function p() {
-  return S.of(B().host);
+  return ultrareviewQuotaState.of(B().host);
 }
 async function loadUltrareviewQuota(e) {
   let r = p();

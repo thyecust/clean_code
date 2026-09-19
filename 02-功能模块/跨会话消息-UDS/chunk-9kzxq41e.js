@@ -69,7 +69,7 @@ function O(e) {
   if (u.length === 0) return { kind: "keep" };
   return { kind: "yield", newName: generateUniqueName(a, D(t), o), holders: u };
 }
-class N {
+class SessionNamingState {
   correspondents = new Map();
   senderMode = null;
   userTypedName = void 0;
@@ -101,9 +101,9 @@ class N {
       (this.hasAdopter = !1));
   }
 }
-var F = new j(() => new N());
+var sessionNamingStates = new j(() => new SessionNamingState());
 function getSessionNamingState() {
-  return F.of(B().host);
+  return sessionNamingStates.of(B().host);
 }
 function noteVettedCorrespondent(e, i, s) {
   getSessionNamingState().noteCorrespondent(e, i, s);

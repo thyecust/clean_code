@@ -89,7 +89,7 @@ function p(e) {
     return;
   }
 }
-class c {
+class StartupTimingTelemetry {
   phases = {};
   phaseStarts = {};
   warmSpareClaimed = !1;
@@ -214,9 +214,9 @@ class c {
     );
   }
 }
-var k = new j(() => new c());
+var startupTimingTelemetries = new j(() => new StartupTimingTelemetry());
 function n() {
-  return k.of(B().host);
+  return startupTimingTelemetries.of(B().host);
 }
 function recordStartupPhase(e, r, t) {
   n().recordPhase(e, r, t);

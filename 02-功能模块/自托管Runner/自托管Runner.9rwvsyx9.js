@@ -3523,15 +3523,15 @@ async function gn(e, t) {
     }
   }
 }
-class Cs {
+class RunnerRequestIdSequence {
   last = 0;
   next() {
     return ++this.last;
   }
 }
-var co = new j(() => new Cs());
+var runnerRequestIdSequence = new j(() => new RunnerRequestIdSequence());
 function lo() {
-  return co.of(B().host);
+  return runnerRequestIdSequence.of(B().host);
 }
 function ls(e) {
   let t =

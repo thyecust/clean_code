@@ -213,7 +213,7 @@ function formatCurrentDate() {
     o = String(e.getDate()).padStart(2, "0");
   return `${t}-${r}-${o}`;
 }
-class V {
+class SessionDateCache {
   #e;
   get() {
     return ((this.#e ??= formatCurrentDate()), this.#e);
@@ -225,7 +225,7 @@ class V {
     return this.#e !== void 0;
   }
 }
-var sessionDateCache = new Gt(() => new V());
+var sessionDateCache = new Gt(() => new SessionDateCache());
 function getSessionDate(e) {
   return sessionDateCache.of(e).get();
 }
@@ -298,12 +298,12 @@ ${
 `;
 }
 var Ne = 900000;
-class z {
+class WebFetchCacheTtl {
   ms = void 0;
 }
-var xe = new j(() => new z());
+var webFetchCacheTtl = new j(() => new WebFetchCacheTtl());
 function getWebFetchCacheTtlMs() {
-  let e = xe.of(B().host);
+  let e = webFetchCacheTtl.of(B().host);
   return ((e.ms ??= a.CLAUDE_CODE_WEBFETCH_CACHE_TTL_MS ?? Ne), e.ms);
 }
 function J() {

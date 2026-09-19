@@ -2617,7 +2617,7 @@ function Jo(e) {
   }
   return !1;
 }
-class Do {
+class PermissionContextSetterStore {
   permissionContextSetter = null;
   registerSetter(e) {
     this.permissionContextSetter = e;
@@ -2626,7 +2626,7 @@ class Do {
     this.permissionContextSetter = null;
   }
 }
-var permissionContextSetterStore = new Gt(() => new Do());
+var permissionContextSetterStore = new Gt(() => new PermissionContextSetterStore());
 export {
   runCoordinatorAutomatedPermissionCheck,
   ASK_USER_QUESTION_PERMISSION_DIALOG,

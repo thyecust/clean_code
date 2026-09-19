@@ -77,7 +77,7 @@ function assertSafeTempDir(e) {
     closeSync(n);
   }
 }
-class f {
+class ClaudeTempDirState {
   ensured = void 0;
   childProcessTmpDirMemo = void 0;
   markEnsured(e) {
@@ -87,9 +87,9 @@ class f {
     this.childProcessTmpDirMemo = e;
   }
 }
-var l = new j(() => new f());
+var claudeTempDirState = new j(() => new ClaudeTempDirState());
 function getClaudeTempDir() {
-  return h(l.of(B().host));
+  return h(claudeTempDirState.of(B().host));
 }
 function h(e) {
   if (z1())
@@ -116,7 +116,7 @@ function getPluginToolStagingDir() {
   return (mkdirSync(r, { recursive: !0, mode: 448 }), assertSafeTempDir(r), r);
 }
 function getChildProcessTmpDir() {
-  let e = l.of(B().host),
+  let e = claudeTempDirState.of(B().host),
     r = h(e);
   if (Buffer.byteLength(r) <= MAX_TMP_DIR_PATH_BYTES) return r;
   let t = "/tmp",

@@ -1175,7 +1175,7 @@ function Ee(e) {
   let t = sanitizeGroupName(e);
   return t && !isReservedGroupName(t) ? t : void 0;
 }
-class Ze {
+class JobStateCache {
   #e = new Map();
   #t = new Set();
   #n = new Set();
@@ -1223,12 +1223,12 @@ class Ze {
     return (this.#o.add(e), !0);
   }
 }
-var Qe = new j(() => new Ze());
-class et {
+var jobStateCaches = new j(() => new JobStateCache());
+class JobDraftStore {
   drafts = new Map();
   pins = new Map();
 }
-var jobDraftStore = new j(() => new et());
+var jobDraftStore = new j(() => new JobDraftStore());
 async function readJobDraftText(e, t, { cap: r, screens: o, screenKey: d, heal: g }) {
   if (o.get(d) !== "ok") {
     let w = await e.statMeta(t);
@@ -1568,7 +1568,7 @@ function buildBridgeReattachEnv(e, t, r, o, d) {
   return g;
 }
 function N() {
-  return Qe.of(B().host);
+  return jobStateCaches.of(B().host);
 }
 function _e(e, t) {
   return t?.onReadFailure === "null" ? null : (e?.state ?? null);

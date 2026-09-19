@@ -65,7 +65,7 @@ class r {
       (this.lastEmittedBranches = {}));
   }
 }
-class i {
+class SessionRuntimeState {
   attestation = new t();
   replHandle = null;
   sdkHostedHandle = null;
@@ -100,9 +100,9 @@ class i {
   historyPrefetchEntries = new Map();
   repoCheckouts = new r();
 }
-var s = new j(() => new i());
+var sessionRuntimeStates = new j(() => new SessionRuntimeState());
 function getSessionRuntimeState() {
-  return s.of(B().host);
+  return sessionRuntimeStates.of(B().host);
 }
 var d = /^[a-zA-Z0-9_-]+$/;
 function validateBridgeId(e, n) {

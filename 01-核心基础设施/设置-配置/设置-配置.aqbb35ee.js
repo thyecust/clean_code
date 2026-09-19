@@ -9095,7 +9095,7 @@ function helperConsentDigest(e) {
 function stripReservedKeys(e) {
   return omitBy(e, (t, o) => o.startsWith("$") && o !== "$schema");
 }
-class cr {
+class RemoteManagedSettingsState {
   sessionCache = null;
   eligible = void 0;
   eligibilityMemo = void 0;
@@ -9166,9 +9166,9 @@ class cr {
     }
   }
 }
-var Nd = new j(() => new cr());
+var remoteManagedSettingsStates = new j(() => new RemoteManagedSettingsState());
 function ee() {
-  return Nd.of(B().host);
+  return remoteManagedSettingsStates.of(B().host);
 }
 function getSyncCacheResetEpoch() {
   return ee().resetEpoch;

@@ -266,7 +266,7 @@ function clearInternalWrites() {
   getHostSettingsStore().internalWrites.clear();
 }
 var Z = Object.freeze({ settings: {}, errors: [] });
-class mt {
+class MdmSettingsStore {
   mdm = null;
   hkcu = null;
   wslInherits = !1;
@@ -305,9 +305,9 @@ class mt {
       (this.loadPromise = null));
   }
 }
-var Zn = new j(() => new mt());
+var mdmSettingsStores = new j(() => new MdmSettingsStore());
 function te() {
-  return Zn.of(B().host);
+  return mdmSettingsStores.of(B().host);
 }
 function Qn(e) {
   te().startLoad(e);
@@ -3071,7 +3071,7 @@ function createPolicySettingsSeedSource(e, t, r, o) {
 async function reseedUserSettingsFile(e, t, r) {
   return reseedSettingsFileLayer(t, createUserSettingsSeedSource(e, r));
 }
-class $n {
+class LegacyLocalSettingsProbe {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
@@ -3082,7 +3082,7 @@ class $n {
     this.firedSites.clear();
   }
 }
-var legacyLocalSettingsProbes = new j(() => new $n());
+var legacyLocalSettingsProbes = new j(() => new LegacyLocalSettingsProbe());
 function parseSettingsFile(e, t, r) {
   return parseSettingsFileCached(e, getHostSettingsStore(), t, r);
 }

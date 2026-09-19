@@ -457,12 +457,12 @@ function stopArtifactSupervisor(e) {
     (clearTimeout(e.timer), (e.timer = void 0));
   (delete e.lease, delete e.renewable, delete e.wake);
 }
-class W {
+class ArtifactStateStore {
   current = void 0;
 }
-var de = new Gt(() => new W());
+var artifactStateStores = new Gt(() => new ArtifactStateStore());
 function v() {
-  return de.of(B());
+  return artifactStateStores.of(B());
 }
 function getArtifactState() {
   let e = v();

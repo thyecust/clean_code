@@ -26,11 +26,11 @@ var m = "tengu_sessions_elevated_auth_enforcement",
   c = "require_trusted_devices",
   h = "tengu_sessions_elevated_auth_disable_proactive_enrollment",
   O = 300000;
-class C {
+class TrustedDeviceTokenState {
   storedTokenRead = void 0;
   lastEnrollAttemptAtMs = 0;
 }
-var g = new j(() => new C()),
+var trustedDeviceTokenStates = new j(() => new TrustedDeviceTokenState()),
   PROACTIVE_ENROLLMENT_DISABLED_MESSAGE =
     "Your organization requires Trusted Devices for Remote Control, but enrollment is temporarily disabled. Please try again later, or contact your administrator.";
 function isProactiveEnrollmentDisabled() {
@@ -65,7 +65,7 @@ function getAttestationFilterPolicy() {
   return parseAttestationFilterPolicy(t);
 }
 function readStoredTrustedDeviceToken() {
-  let e = g.of(B().host);
+  let e = trustedDeviceTokenStates.of(B().host);
   if (e.storedTokenRead !== void 0) return e.storedTokenRead;
   let t = x();
   return ((e.storedTokenRead = t), t);
@@ -93,14 +93,14 @@ async function preflightTrustedDeviceBlocking(e) {
   return (await checkGate_CACHED_OR_BLOCKING(m), await enrollTrustedDeviceIfNeeded(e), I());
 }
 function clearTrustedDeviceTokenCache() {
-  g.of(B().host).storedTokenRead = void 0;
+  trustedDeviceTokenStates.of(B().host).storedTokenRead = void 0;
 }
 async function recoverFromUntrustedDevice(e, t) {
   if (!isTrustedDeviceGateEnabled()) return;
   clearTrustedDeviceTokenCache();
   let r = await getTrustedDeviceToken();
   if (!r || r === e) {
-    let o = g.of(B().host);
+    let o = trustedDeviceTokenStates.of(B().host);
     if (Date.now() - o.lastEnrollAttemptAtMs >= O)
       ((o.lastEnrollAttemptAtMs = Date.now()),
         await enrollTrustedDevice({ trigger: "server_denied", credentials: t }),

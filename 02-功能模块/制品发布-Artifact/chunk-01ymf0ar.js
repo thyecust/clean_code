@@ -1524,15 +1524,15 @@ var WEB_FETCH_TOOL_NAME = "WebFetch",
 function Bn(e) {
   return `This cloud session's network access follows the "Allow network egress" setting for Cowork in claude.ai, not an environment allowlist. To allow direct artifact reads here, an organization admin (or the user, on an individual plan) can turn that setting on and either allow all domains or add ${e} to its additional allowed domains.`;
 }
-class $s {
+class AgentProxyEndpoint {
   endpoint = void 0;
   set(e) {
     this.endpoint = e;
   }
 }
-var Uc = new j(() => new $s());
+var agentProxyEndpoints = new j(() => new AgentProxyEndpoint());
 function Ls() {
-  return Uc.of(B().host);
+  return agentProxyEndpoints.of(B().host);
 }
 function setAgentProxyEndpoint(e) {
   Ls().set(e);
@@ -1572,7 +1572,7 @@ function Ms(e) {
     }) !== void 0
   );
 }
-class Ns {
+class ProxyAgentCache {
   builtFor = void 0;
   agent = void 0;
   warnedMalformed = void 0;
@@ -1594,12 +1594,12 @@ class Ns {
       ));
   }
 }
-var Yc = new j(() => new Ns());
+var proxyAgentCaches = new j(() => new ProxyAgentCache());
 function Is() {
   if (!isAnthropicHostedEnvironment()) return;
   let e = a.CCR_AGENT_PROXY_FRAME_HOSTS;
   if (e === void 0) return;
-  let t = Yc.of(B().host),
+  let t = proxyAgentCaches.of(B().host),
     r = Gc(e);
   if (r === void 0) {
     t.warnMalformedOnce(e);
@@ -3154,15 +3154,15 @@ function mergeCapabilities(e, t) {
   return { capabilities: p ? d : e, widened: p, conflict: _ };
 }
 var NO_PIN_VERSION_SENTINEL = "0.0.0";
-class vo {
+class SessionHostServers {
   served = void 0;
 }
-var xo = new Gt(() => new vo());
+var sessionHostServers = new Gt(() => new SessionHostServers());
 function setSessionHostServers(e, t) {
-  xo.of(e).served = t;
+  sessionHostServers.of(e).served = t;
 }
 function getSessionHostServers(e) {
-  return xo.peek(e)?.served;
+  return sessionHostServers.peek(e)?.served;
 }
 function isCapabilityFeatureEnabled(e, t, r) {
   let o = e.features;

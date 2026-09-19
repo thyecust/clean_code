@@ -4161,7 +4161,7 @@ var { claim: fbr, lineFor: pbr } = dbr(),
   Qxt = fbr,
   eAt = pbr;
 
-class tAt {
+class PendingWriteTracker {
   pendingWrites = new Set();
   unresumedAdopt = new Map();
   unresumedFrameLive = new Map();
@@ -4177,10 +4177,10 @@ class tAt {
   }
 }
 
-var mbr = new j(() => new tAt());
+var pendingWriteTracker = new j(() => new PendingWriteTracker());
 
 function getPendingWriteTracker() {
-  return bi(mbr);
+  return bi(pendingWriteTracker);
 }
 
 function nAt() {
@@ -4191,7 +4191,7 @@ function rAt() {
   return getPendingWriteTracker().drain();
 }
 
-class oAt {
+class CacheHeartbeatState {
   lastMainRequestAt = 0;
   lastEventAt = 0;
   lastUserInputMonotonic = null;
@@ -4200,10 +4200,10 @@ class oAt {
   interactiveLogged = !1;
 }
 
-var ybr = new j(() => new oAt());
+var cacheHeartbeatStates = new j(() => new CacheHeartbeatState());
 
 function g4() {
-  return ybr.of(B().host);
+  return cacheHeartbeatStates.of(B().host);
 }
 
 function isCacheHeartbeatEnabled() {
@@ -4405,7 +4405,7 @@ var wbr = 8388608,
   Ebr = 1000,
   Tbr = 4096;
 
-class dAt {
+class TaskOutputRegistry {
   #e = new Map();
   #t = new Map();
   #n = null;
@@ -4435,10 +4435,10 @@ class dAt {
   }
 }
 
-var vbr = new j(() => new dAt());
+var taskOutputRegistries = new j(() => new TaskOutputRegistry());
 
 function ahe() {
-  return vbr.of(B().host);
+  return taskOutputRegistries.of(B().host);
 }
 
 class TaskOutput {
@@ -4672,15 +4672,15 @@ var iee = 137,
   Abr = 1500,
   Rbr = 100;
 
-class mAt {
+class LiveShellCommandRegistry {
   pendingKillBackstops = new Set();
   liveShellCommands = new Set();
 }
 
-var Pbr = new j(() => new mAt());
+var liveShellCommandRegistry = new j(() => new LiveShellCommandRegistry());
 
 function Xje() {
-  return bi(Pbr);
+  return bi(liveShellCommandRegistry);
 }
 
 async function Qje() {
@@ -5059,7 +5059,7 @@ function OD(e) {
   };
 }
 
-class hAt {
+class AgentProcessRegistry {
   liveProcessesByAgentId = new Map();
   stopPendingAgentIds = new Set();
   everRegisteredTaskIds = new Set();
@@ -5078,10 +5078,10 @@ class hAt {
   }
 }
 
-var Obr = new j(() => new hAt());
+var agentProcessRegistry = new j(() => new AgentProcessRegistry());
 
 function Gb() {
-  return bi(Obr);
+  return bi(agentProcessRegistry);
 }
 
 function yAt(e, t) {
@@ -5663,17 +5663,17 @@ ${t}`
     : e || t;
 }
 
-class zAt {
+class AgentProxyNoteSlot {
   note = void 0;
   setNote(e) {
     this.note = e;
   }
 }
 
-var tSr = new j(() => new zAt());
+var agentProxyNoteSlots = new j(() => new AgentProxyNoteSlot());
 
 function VAt() {
-  return tSr.of(B().host);
+  return agentProxyNoteSlots.of(B().host);
 }
 
 function XAt() {
@@ -6380,7 +6380,7 @@ var Bhe = 2000,
   Akr = /\]\(([^()\n]+?\.md)\)/gi,
   EPt = { resolved: !1, read: !1, written: !1, injection: "none" };
 
-class CPt {
+class MemoryCitationTracker {
   memoryContext = null;
   surfacedKeys = new Set();
   accessedKeys = new Map();
@@ -6464,7 +6464,7 @@ class CPt {
   }
 }
 
-var getMemoryCitationTracker = new Gt(() => new CPt());
+var getMemoryCitationTracker = new Gt(() => new MemoryCitationTracker());
 
 function Rkr(e, t) {
   return [...e.matchAll(Akr)]
@@ -6503,7 +6503,7 @@ function zhe(e, t) {
   } else return `${jo([e])} ${jo([t])}`;
 }
 
-class FPt {
+class SessionEnvironmentCache {
   script = void 0;
   owner = void 0;
   store(e, t) {
@@ -6514,10 +6514,10 @@ class FPt {
   }
 }
 
-var Dkr = new j(() => new FPt());
+var sessionEnvironmentCaches = new j(() => new SessionEnvironmentCache());
 
 function $Pt() {
-  return Dkr.of(B().host);
+  return sessionEnvironmentCaches.of(B().host);
 }
 
 async function PWe() {
@@ -7632,16 +7632,16 @@ function E4() {
   return a.OTEL_LOG_USER_PROMPTS;
 }
 
-class yIt {
+class DetailedTracingState {
   seenHashes = new Set();
   lastReportedMessage = new Map();
   emittedUserPromptForSessionId = void 0;
 }
 
-var _It = new Gt(() => new yIt());
+var detailedTracingState = new Gt(() => new DetailedTracingState());
 
 function bIt() {
-  let e = _It.of(B());
+  let e = detailedTracingState.of(B());
   (e.seenHashes.clear(), e.lastReportedMessage.clear());
 }
 
@@ -7715,7 +7715,7 @@ ${jsonStringify(_.content)}`);
 
 function kIt(e, t, r) {
   if (!isDetailedTracingEnabled()) return;
-  let o = _It.of(B());
+  let o = detailedTracingState.of(B());
   if (t?.systemPrompt) {
     let d = Ewr(t.systemPrompt),
       p = t.systemPrompt.slice(0, 500);
@@ -7866,14 +7866,14 @@ ${r}`);
       (e.new_context_original_length = r.length));
 }
 
-class vIt {
+class PerfettoRecorderSlot {
   recorder = null;
 }
 
-var vwr = new j(() => new vIt());
+var perfettoRecorderSlots = new j(() => new PerfettoRecorderSlot());
 
 function Qx() {
-  return vwr.of(B().host).recorder;
+  return perfettoRecorderSlots.of(B().host).recorder;
 }
 
 function hasPerfettoRecorder() {
@@ -8719,15 +8719,15 @@ function h2e(e) {
   );
 }
 
-class xMt {
+class FirstPartyAttributionRegistry {
   firstPartyPlugins = new Map();
   loggableMcpServers = new Set();
 }
 
-var IEr = new j(() => new xMt());
+var firstPartyAttributionRegistries = new j(() => new FirstPartyAttributionRegistry());
 
 function dye() {
-  return IEr.of(B().host);
+  return firstPartyAttributionRegistries.of(B().host);
 }
 
 function MEr(e) {
@@ -21570,17 +21570,17 @@ function V6(e) {
 
 var N5r = ["SessionStart", "Setup"];
 
-class fXt {
+class AllHookEventsState {
   allHookEventsEnabled = !1;
   setAllHookEventsEnabled(e) {
     this.allHookEventsEnabled = e;
   }
 }
 
-var L5r = new j(() => new fXt());
+var allHookEventsStates = new j(() => new AllHookEventsState());
 
 function pXt() {
-  return L5r.of(B().host);
+  return allHookEventsStates.of(B().host);
 }
 
 function YSe(e) {
@@ -21740,7 +21740,7 @@ function Ioe(e) {
   return `a ${typeof e}`;
 }
 
-class gXt {
+class PendingHookRegistry {
   pendingHooks = new Map();
   register(e) {
     this.pendingHooks.set(e.processId, e);
@@ -21762,10 +21762,10 @@ class gXt {
   }
 }
 
-var $5r = new j(() => new gXt());
+var pendingHookRegistries = new j(() => new PendingHookRegistry());
 
 function ZSe() {
-  return $5r.of(B().host);
+  return pendingHookRegistries.of(B().host);
 }
 
 function hXt({
@@ -22124,7 +22124,7 @@ function rYe(e) {
 var J5r = "paste-cache",
   xXt = 1e7;
 
-class RXt {
+class PasteContentCache {
   inFlight = new Map();
   retainedFailed = new Map();
   retainedFailedChars = 0;
@@ -22162,10 +22162,10 @@ class RXt {
   }
 }
 
-var Z5r = new j(() => new RXt());
+var pasteContentCaches = new j(() => new PasteContentCache());
 
 function PXt() {
-  return Z5r.of(B().host);
+  return pasteContentCaches.of(B().host);
 }
 
 function tke() {
@@ -22442,7 +22442,7 @@ function g6r(e) {
   return !(Object.keys(t.pastedContents).length > 0) && !r.hasPastes;
 }
 
-class QXt {
+class HistoryStore {
   getSensitiveCommands = null;
   pendingEntries = [];
   isWriting = !1;
@@ -22876,20 +22876,20 @@ class QXt {
   }
 }
 
-var h6r = new j(() => new QXt());
+var historyStores = new j(() => new HistoryStore());
 
 function GN() {
-  return h6r.of(B().host);
+  return historyStores.of(B().host);
 }
 
-class JXt {
+class SensitiveCommandsProvider {
   get = () => [];
 }
 
-var y6r = new j(() => new JXt());
+var sensitiveCommandsProvider = new j(() => new SensitiveCommandsProvider());
 
 function ZXt() {
-  return y6r.of(B().host);
+  return sensitiveCommandsProvider.of(B().host);
 }
 
 function addHistoryEntry(e, t, r) {
@@ -22930,7 +22930,7 @@ function t7t(e, t) {
 
 var n7t = 2147483648;
 
-class r7t {
+class PasteIdRegistry {
   next = 1;
   minted = new Set();
   flooredSessionId = null;
@@ -22964,10 +22964,10 @@ class r7t {
   }
 }
 
-var _6r = new Gt(() => new r7t());
+var pasteIdRegistry = new Gt(() => new PasteIdRegistry());
 
 function nke() {
-  return _6r.of(B());
+  return pasteIdRegistry.of(B());
 }
 
 function registerPasteIdCarrier(e) {
@@ -23953,15 +23953,14 @@ var fYe = {
     load: () =>
       import("../../02-功能模块/斜杠命令-框架/add-dir-cmd.n6ncahgx.js"),
   },
-  R6r = {
+  pYe = {
     type: "local-jsx",
     name: "add-dir",
     description: "Add a new working directory",
     argumentHint: "<path>",
     immediate: (e, t) => e.trim() !== "" || t === "fullscreen",
     thinClientDispatch: "twin",
-  },
-  pYe = R6r;
+  };
 
 var mYe = {
   type: "local-jsx",
@@ -24458,7 +24457,7 @@ var Q6r = ["off", "infinite", "fixed", "countdown", "padded-countdown"],
   J6r = 5000000,
   B7t = 15000000;
 
-class U7t {
+class ContextBudgetTracker {
   #e = new Map();
   #t = new Map();
   #n = new Map();
@@ -24476,7 +24475,7 @@ class U7t {
   }
 }
 
-var contextBudgetTracker = new Gt(() => new U7t());
+var contextBudgetTracker = new Gt(() => new ContextBudgetTracker());
 
 function RYe(e, t) {
   contextBudgetTracker.of(B()).rollOverContext(e, t);
@@ -25854,15 +25853,15 @@ function Ave() {
   return "default";
 }
 
-class RZt {
+class WebFetchAgentState {
   enabled = void 0;
   policyAllowed = void 0;
 }
 
-var IXr = new j(() => new RZt());
+var webFetchAgentState = new j(() => new WebFetchAgentState());
 
 function PZt() {
-  return IXr.of(B().host);
+  return webFetchAgentState.of(B().host);
 }
 
 function isWebFetchAgentEnabled() {
@@ -25889,7 +25888,7 @@ function Rve() {
   return t && Ave() === "default";
 }
 
-class IZt {
+class ExplorePlanAgentsGate {
   latched = void 0;
   isEnabled() {
     return (
@@ -25899,10 +25898,10 @@ class IZt {
   }
 }
 
-var MXr = new j(() => new IZt());
+var explorePlanAgentsGate = new j(() => new ExplorePlanAgentsGate());
 
 function f8() {
-  return MXr.of(B().host).isEnabled();
+  return explorePlanAgentsGate.of(B().host).isEnabled();
 }
 
 function agentMcpSource(e) {
@@ -26127,16 +26126,16 @@ var l7r = {
   H9e = 3,
   c7r = 80;
 
-class YZt {
+class AgentProxyFailureLog {
   statusUrl = void 0;
   seq = 0;
   recent = [];
 }
 
-var u7r = new j(() => new YZt());
+var agentProxyFailureLog = new j(() => new AgentProxyFailureLog());
 
 function Hve() {
-  return u7r.of(B().host);
+  return agentProxyFailureLog.of(B().host);
 }
 
 function XZt() {
@@ -26545,7 +26544,7 @@ var capitalizeFirst = xQr;
 
 var L0 = Symbol("ide-not-yet-computed");
 
-class wen {
+class IdeEnvironmentState {
   supportedVSCodeTerminal = L0;
   supportedJetBrainsTerminal = L0;
   supportedTerminal = L0;
@@ -26569,10 +26568,10 @@ class wen {
   }
 }
 
-var AQr = new j(() => new wen());
+var ideEnvironmentState = new j(() => new IdeEnvironmentState());
 
 function Dx() {
-  return AQr.of(B().host);
+  return ideEnvironmentState.of(B().host);
 }
 
 function getConnectedIdeClient(e) {
@@ -26836,7 +26835,7 @@ function Fen(e) {
   return `scheme=${r} sep=${p} enc=${_} drive=${C}`;
 }
 
-class Uen {
+class LspDiagnosticsService {
   baseline = new Map();
   initialized = !1;
   mcpClient;
@@ -27011,7 +27010,7 @@ class Uen {
   }
 }
 
-var lspDiagnosticsService = new Gt(() => new Uen());
+var lspDiagnosticsService = new Gt(() => new LspDiagnosticsService());
 
 function lCe(e) {
   let t = e.range;
@@ -27896,7 +27895,7 @@ class IXe {
   }
 }
 
-class Otn {
+class PromptCacheTracker {
   #e = new Map();
   record(e, t) {
     let r = this.#e.get(e);
@@ -27928,7 +27927,7 @@ class Otn {
   }
 }
 
-var promptCacheTrackerStore = new Gt(() => new Otn());
+var promptCacheTrackerStore = new Gt(() => new PromptCacheTracker());
 
 function XG() {
   return promptCacheTrackerStore.of(B());
@@ -28327,7 +28326,7 @@ ${p}`;
 
 var zZr = Object.freeze({});
 
-class rnn {
+class HostRuntimeRegistry {
   #e;
   register(e) {
     this.#e ??= e;
@@ -28340,10 +28339,10 @@ class rnn {
   }
 }
 
-var qZr = new j(() => new rnn());
+var hostRuntimeRegistry = new j(() => new HostRuntimeRegistry());
 
 function onn() {
-  return qZr.of(B().host);
+  return hostRuntimeRegistry.of(B().host);
 }
 
 function I8() {
@@ -28694,7 +28693,7 @@ function qXe(e) {
 var seo = 1000,
   ieo = 16777216;
 
-class gnn {
+class FileContentCache {
   cache;
   constructor(e = seo, t = ieo) {
     this.cache = new Ku({
@@ -28738,10 +28737,10 @@ class gnn {
   }
 }
 
-var aeo = new j(() => new gnn());
+var fileContentCache = new j(() => new FileContentCache());
 
 function VXe(e) {
-  let { content: t } = aeo.of(B().host).readFile(e);
+  let { content: t } = fileContentCache.of(B().host).readFile(e);
   return t;
 }
 
@@ -36328,7 +36327,7 @@ async function Jro(e) {
   }
 }
 
-class Dsn {
+class CommandSpecResolver {
   specForCommand = xA(
     async (e) => Osn.find((r) => r.name === e) || (await Jro(e)) || null,
     (e) => e,
@@ -36338,7 +36337,7 @@ class Dsn {
   }
 }
 
-var CommandSpecStore = new j(() => new Dsn());
+var CommandSpecStore = new j(() => new CommandSpecResolver());
 
 var Zro = `${sep}worktrees${sep}`,
   eoo = [
@@ -36581,7 +36580,7 @@ var ioo = [
   
 ];
 
-class Usn {
+class SpawnEnvKeyState {
   #e = !1;
   #t = new Set();
   #n = null;
@@ -36616,10 +36615,10 @@ class Usn {
   }
 }
 
-var aoo = new j(() => new Usn());
+var spawnEnvKeyState = new j(() => new SpawnEnvKeyState());
 
 function HAe() {
-  return aoo.of(B().host);
+  return spawnEnvKeyState.of(B().host);
 }
 
 function WAe(e) {
@@ -40305,14 +40304,14 @@ function isReplVerboseEnabled() {
   return (antEnv.CLAUDE_REPL_VERBOSE ?? !1) && isReplModeEnabled();
 }
 
-class ean {
+class GhAuthTokenCache {
   resultsByHost = new Map();
 }
 
-var Uio = new j(() => new ean());
+var ghAuthTokenCache = new j(() => new GhAuthTokenCache());
 
 function tan() {
-  return Uio.of(B().host).resultsByHost;
+  return ghAuthTokenCache.of(B().host).resultsByHost;
 }
 
 async function nan(e) {
@@ -40358,7 +40357,7 @@ async function Hio(e) {
 
 var kZe = 60000;
 
-class aan {
+class PullRequestStatusStore {
   #e = Le();
   bump = {
     ...this.#e,
@@ -40425,10 +40424,10 @@ class aan {
   }
 }
 
-var qio = new j(() => new aan());
+var pullRequestStatusStore = new j(() => new PullRequestStatusStore());
 
 function getPullRequestStatusStore() {
-  return qio.of(B().host);
+  return pullRequestStatusStore.of(B().host);
 }
 
 var _Re = 5000;
@@ -52510,7 +52509,7 @@ function lyn(e, t, r) {
   return omitBy(t, (p, _) => d(_));
 }
 
-class dyn {
+class AutoModeDecisionLog {
   logPath = void 0;
   append(e) {
     if (this.logPath === void 0)
@@ -52527,10 +52526,10 @@ class dyn {
   }
 }
 
-var Wmo = new Gt(() => new dyn());
+var autoModeDecisionLog = new Gt(() => new AutoModeDecisionLog());
 
 function xPe(e, t) {
-  Wmo.of(e).append(t);
+  autoModeDecisionLog.of(e).append(t);
 }
 
 function fyn() {
@@ -52876,7 +52875,7 @@ function Ktt(e) {
   );
 }
 
-class jyn {
+class ClassifiedCallQueue {
   serializer = createKeyedSerialQueue();
   pending = new Map();
   classifiedCallIds = new Set();
@@ -52924,10 +52923,10 @@ class jyn {
   }
 }
 
-var cgo = new j(() => new jyn());
+var classifiedCallQueue = new j(() => new ClassifiedCallQueue());
 
 function Ytt() {
-  return cgo.of(B().host);
+  return classifiedCallQueue.of(B().host);
 }
 
 function enqueueClassifiedCall(e, t, r) {
@@ -53204,7 +53203,7 @@ function cbn(e) {
   };
 }
 
-class ubn {
+class ServerClassifierRequestHistory {
   inFlight = new Map();
   judged = new Map();
   recordRequest(e, t) {
@@ -53228,10 +53227,10 @@ class ubn {
   }
 }
 
-var ygo = new j(() => new ubn());
+var serverClassifierRequestHistory = new j(() => new ServerClassifierRequestHistory());
 
 function IPe() {
-  return ygo.of(B().host);
+  return serverClassifierRequestHistory.of(B().host);
 }
 
 function dbn(e, t) {
@@ -53339,7 +53338,7 @@ function Tgo(e) {
   }
 }
 
-class _bn {
+class PendingSafeguardResults {
   entries = new Map();
   open(e) {
     if (this.entries.has(e)) return;
@@ -53386,10 +53385,10 @@ class _bn {
 }
 
 var vgo = 256,
-  Cgo = new j(() => new _bn());
+  pendingSafeguardResults = new j(() => new PendingSafeguardResults());
 
 function lle() {
-  return Cgo.of(B().host);
+  return pendingSafeguardResults.of(B().host);
 }
 
 function bbn(e) {
@@ -64228,7 +64227,7 @@ function Wle(e) {
   return pxe(e.toolUseId, e.toolName);
 }
 
-class fCn {
+class DeferredToolLedger {
   #e = new Map();
   #t = new Set();
   #n = new Map();
@@ -64273,7 +64272,7 @@ class fCn {
   }
 }
 
-var deferredToolLedgerRegistry = new Gt(() => new fCn());
+var deferredToolLedgerRegistry = new Gt(() => new DeferredToolLedger());
 
 function getDeferredToolLedger() {
   return deferredToolLedgerRegistry.of(B());
@@ -65110,14 +65109,14 @@ function Owo(e) {
   return Ie(e) ? { mode: "inline" } : { mode: "disabled" };
 }
 
-class KCn {
+class OtelRawApiBodyLogConfig {
   cached = void 0;
 }
 
-var Dwo = new j(() => new KCn());
+var otelRawApiBodyLogConfig = new j(() => new OtelRawApiBodyLogConfig());
 
 function YCn() {
-  let e = Dwo.of(B().host),
+  let e = otelRawApiBodyLogConfig.of(B().host),
     t = process.env.OTEL_LOG_RAW_API_BODIES;
   if (!e.cached || e.cached.raw !== t) e.cached = { raw: t, config: Owo(t) };
   return e.cached.config;
@@ -66261,7 +66260,7 @@ var EXPECTED_ABSENT_TOOL_NAMES = new Set([
   "AutofixPr",
 ]);
 
-class kAn {
+class MemoryStoreSkillCommands {
   commands = [];
   nameStableSnapshot = this.commands;
   replace(e) {
@@ -66275,10 +66274,10 @@ class kAn {
   changed = Le();
 }
 
-var cTo = new j(() => new kAn());
+var memoryStoreSkillCommands = new j(() => new MemoryStoreSkillCommands());
 
 function oce() {
-  return cTo.of(B().host);
+  return memoryStoreSkillCommands.of(B().host);
 }
 
 function getMemoryStoreSkillCommands() {
@@ -66566,7 +66565,7 @@ function OAn() {
   return new Ku({ max: xTo, ttl: ATo });
 }
 
-class DAn {
+class CommandStateStore {
   commandMatcherIndex = null;
   internalOnlyCommandNames = void 0;
   directoryScanCache = OAn();
@@ -66583,7 +66582,7 @@ class DAn {
   skillInvoked = Le();
 }
 
-var commandStateStore = new Gt(() => new DAn());
+var commandStateStore = new Gt(() => new CommandStateStore());
 
 var RTo = 60000;
 
@@ -66755,7 +66754,7 @@ function YTo(e) {
   return Math.floor(HAn(e) * KTo);
 }
 
-class jAn {
+class DeferredToolTokenCache {
   counts = new Map();
   lookup(e) {
     return this.counts.get(e);
@@ -66765,12 +66764,12 @@ class jAn {
   }
 }
 
-var XTo = new j(() => new jAn());
+var deferredToolTokenCache = new j(() => new DeferredToolTokenCache());
 
 function QTo(e, t, r, o, d) {
   let p = e.filter((D) => isDeferredTool(D)),
     _ = p.map((D) => D.name).join(","),
-    E = XTo.of(B().host),
+    E = deferredToolTokenCache.of(B().host),
     C = E.lookup(_);
   if (C !== void 0) return C;
   let I = JTo(p, t, r, o, d);
@@ -70422,7 +70421,7 @@ function getSkillVerificationCommand(e) {
 var JRn = 50,
   CCo = "Never consult the advisor tool.";
 
-class ePn {
+class CacheSafeParamsStore {
   params = null;
   savedAt = null;
   sessionModel = null;
@@ -70438,11 +70437,11 @@ function tPn() {
   );
 }
 
-var xCo = new Gt(() => new ePn());
+var cacheSafeParamsStore = new Gt(() => new CacheSafeParamsStore());
 
 function L0e() {
   let e = B();
-  return { last: xCo.of(e), rootId: e.id };
+  return { last: cacheSafeParamsStore.of(e), rootId: e.id };
 }
 
 function saveCacheSafeParams(e) {
@@ -78907,7 +78906,7 @@ function clt(e) {
   return o === void 0 ? void 0 : String(o);
 }
 
-class nNn {
+class HostClassifierContextRegistry {
   #e = new Map();
   #t = 0;
   register(e) {
@@ -78949,10 +78948,10 @@ class nNn {
   }
 }
 
-var DDo = new j(() => new nNn());
+var hostClassifierContextRegistry = new j(() => new HostClassifierContextRegistry());
 
 function Rce() {
-  return DDo.of(B().host);
+  return hostClassifierContextRegistry.of(B().host);
 }
 
 function rNn(e) {
@@ -82704,7 +82703,7 @@ function XFn(e) {
   return d === e ? [e] : [e, d];
 }
 
-class e$n {
+class PendingDirSyncSeed {
   pending = null;
   #e = () => {};
   publish(e, t = () => {}) {
@@ -82720,10 +82719,10 @@ class e$n {
   }
 }
 
-var CBo = new j(() => new e$n());
+var pendingDirSyncSeed = new j(() => new PendingDirSyncSeed());
 
 function act() {
-  return CBo.of(B().host);
+  return pendingDirSyncSeed.of(B().host);
 }
 
 var xBo =
@@ -93558,7 +93557,7 @@ function parseMcpConfigFromFilePath(e) {
   );
 }
 
-class tHn {
+class EnterpriseMcpConfigPresence {
   exists = void 0;
   check() {
     return (
@@ -93576,10 +93575,10 @@ class tHn {
   }
 }
 
-var WWo = new j(() => new tHn());
+var enterpriseMcpConfigPresence = new j(() => new EnterpriseMcpConfigPresence());
 
 function doesEnterpriseMcpConfigExist() {
-  return WWo.of(B().host).check();
+  return enterpriseMcpConfigPresence.of(B().host).check();
 }
 
 function GWo() {
@@ -98036,7 +98035,7 @@ class b1n {
   }
 }
 
-class S1n {
+class SubagentStatsRegistry {
   #e = _1n();
   #t = new Map();
   recordSpawn(e) {
@@ -98079,7 +98078,7 @@ class S1n {
   }
 }
 
-var subagentStatsRegistry = new Gt(() => new S1n());
+var subagentStatsRegistry = new Gt(() => new SubagentStatsRegistry());
 
 function getAgentToolUserFacingName(e, { activeAgents: t } = {}) {
   if (isBuiltInWebFetchAgentType(e?.subagent_type, t))
@@ -99871,7 +99870,7 @@ function $1n(e) {
   }
 }
 
-class B1n {
+class TeamArtifactRegistry {
   inFlight = void 0;
   resolved = void 0;
   get(e) {
@@ -99961,7 +99960,7 @@ class B1n {
   }
 }
 
-var U1n = new Gt(() => new B1n());
+var U1n = new Gt(() => new TeamArtifactRegistry());
 
 function getTeamArtifactAuthor(e, t, r) {
   if (
@@ -100031,7 +100030,7 @@ function damerauLevenshteinDistance(e, t) {
   return d[r][o];
 }
 
-class H1n {
+class SkillsSyncState {
   syncPromise = null;
   firstSyncPromise = null;
   firstListDeferred = null;
@@ -100059,10 +100058,10 @@ class H1n {
   }
 }
 
-var jGo = new j(() => new H1n());
+var skillsSyncState = new j(() => new SkillsSyncState());
 
 function getSkillsSyncState() {
-  return jGo.of(B().host);
+  return skillsSyncState.of(B().host);
 }
 
 function shouldSyncSkills(e) {
@@ -102596,7 +102595,7 @@ function MQ() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_repl_mcp_error_throw", !0);
 }
 
-class Ljn {
+class GhAvailabilityCache {
   pending;
   isAvailable() {
     return (this.pending ??= resolveExecutablePathAsync("gh").then(
@@ -102608,10 +102607,10 @@ class Ljn {
   }
 }
 
-var Mzo = new j(() => new Ljn());
+var ghAvailabilityCache = new j(() => new GhAvailabilityCache());
 
 function Ozo() {
-  return Mzo.of(B().host);
+  return ghAvailabilityCache.of(B().host);
 }
 
 async function Fjn(e) {
@@ -107846,11 +107845,11 @@ function Afe(e, t, r) {
   return "user_interrupted";
 }
 
-class I6n {
+class LocalWriteListener {
   listener = void 0;
 }
 
-var M6n = new Gt(() => new I6n());
+var M6n = new Gt(() => new LocalWriteListener());
 
 function O6n() {
   try {
@@ -114452,15 +114451,15 @@ function lXo(e) {
 
 var skillsChangedEmitter = rE(() => getHostStateStore().skillsChanged);
 
-class u9n {
+class SessionStartHookState {
   pendingInitialUserMessage = void 0;
   pendingHookSessionTitle = void 0;
 }
 
-var cXo = new Gt(() => new u9n());
+var sessionStartHookState = new Gt(() => new SessionStartHookState());
 
 function Sft() {
-  return cXo.of(B());
+  return sessionStartHookState.of(B());
 }
 
 async function runSessionStartHooks(
@@ -116519,13 +116518,13 @@ function NXo(e, t) {
   return `Compacting at auto window (${formatTokens(d)} tokens) \xB7 /autocompact to configure`;
 }
 
-class F9n {
+class PendingModelSwitchDeliveries {
   pending = [];
   landedOn = null;
   inFlight = new Set();
 }
 
-var $9n = new Gt(() => new F9n());
+var $9n = new Gt(() => new PendingModelSwitchDeliveries());
 
 async function B9n(e, t = OYt) {
   let r = $9n.of(e);
@@ -116557,11 +116556,11 @@ async function B9n(e, t = OYt) {
 
 var $Xo = ["take_in", "publish"];
 
-class H9n {
+class SessionVisitorRegistry {
   visitors = new Map();
 }
 
-var Pft = new Gt(() => new H9n());
+var Pft = new Gt(() => new SessionVisitorRegistry());
 
 function j9n(e) {
   try {
@@ -116911,7 +116910,7 @@ ${r7o}`,
 </memory_updates>`;
 }
 
-class J9n {
+class NarrationState {
   onAssistantRound = null;
   sink = null;
   tasks = null;
@@ -116924,7 +116923,7 @@ class J9n {
   unsubscribeFocus = null;
 }
 
-var narrationStateStore = new Gt(() => new J9n());
+var narrationStateStore = new Gt(() => new NarrationState());
 
 function Z9n(e, t, r, o) {
   try {
@@ -117511,14 +117510,14 @@ function npt(e, t) {
   return e >= t;
 }
 
-class VQn {
+class TurnContextObserverRegistry {
   hooks = [];
   register(e) {
     this.hooks.push(e);
   }
 }
 
-var KQn = new j(() => new VQn());
+var KQn = new j(() => new TurnContextObserverRegistry());
 
 async function YQn(e, t, r, o, d, p) {
   let _ = {
@@ -117986,7 +117985,7 @@ async function* XQn(e, t) {
 
 var vpe = Ie(void 0);
 
-class JQn {
+class QueryProfileMemoryStore {
   memorySnapshots = new Map();
   queryCount = 0;
   startQuery() {
@@ -117997,10 +117996,10 @@ class JQn {
   }
 }
 
-var v7o = new j(() => new JQn());
+var queryProfileMemoryStore = new j(() => new QueryProfileMemoryStore());
 
 function opt() {
-  return v7o.of(B().host);
+  return queryProfileMemoryStore.of(B().host);
 }
 
 function recordQueryProfileMark(e) {
@@ -118298,22 +118297,22 @@ function dJn() {
   );
 }
 
-class fJn {
+class MemoryExtractionCallbacks {
   extractor = null;
   drainer = async () => {};
 }
 
-var lUe = new j(() => new fJn());
+var lUe = new j(() => new MemoryExtractionCallbacks());
 
 async function executeExtractMemories(e, t) {
   await lUe.of(e.toolUseContext.session.host).extractor?.(e, t);
 }
 
-class vJn {
+class AutoDreamRunner {
   runner = null;
 }
 
-var cpt = new j(() => new vJn());
+var cpt = new j(() => new AutoDreamRunner());
 
 async function DJn(e, t) {
   await cpt.of(e.toolUseContext.session.host).runner?.(e, t);
@@ -119668,7 +119667,7 @@ function bUe() {
 var EQo = "2022-11-28",
   YJn = 3000;
 
-class XJn {
+class RepoVisibilityCache {
   visibilityByHostSlug = new Map();
   lookup(e, t) {
     return this.visibilityByHostSlug.get(`${e}/${t}`);
@@ -119687,10 +119686,10 @@ class XJn {
   }
 }
 
-var TQo = new j(() => new XJn());
+var repoVisibilityCache = new j(() => new RepoVisibilityCache());
 
 function Ape() {
-  return TQo.of(B().host);
+  return repoVisibilityCache.of(B().host);
 }
 
 var hpt = {
@@ -120413,7 +120412,7 @@ function VQo(e, t, r, o) {
   });
 }
 
-class MZn {
+class PendingMemoryUpdateQueue {
   pending = [];
   enqueue(e) {
     this.pending.push(e);
@@ -120424,7 +120423,7 @@ class MZn {
   }
 }
 
-var wpt = new j(() => new MZn());
+var wpt = new j(() => new PendingMemoryUpdateQueue());
 
 function UZn(e, t) {
   switch (e) {
@@ -120526,7 +120525,7 @@ async function zZn(e) {
   return { commit: await rPe("commit", r.commit), pr: await rPe("pr", r.pr) };
 }
 
-class qZn {
+class CoauthoredByProbeGuard {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
@@ -120540,10 +120539,10 @@ class qZn {
   }
 }
 
-var vJo = new j(() => new qZn());
+var coauthoredByProbeGuard = new j(() => new CoauthoredByProbeGuard());
 
 function VZn() {
-  return vJo.of(B().host);
+  return coauthoredByProbeGuard.of(B().host);
 }
 
 function CJo() {
@@ -138299,7 +138298,7 @@ function zar(e) {
   return JSON.stringify({ meta: e });
 }
 
-class qar {
+class ClassifierMetaLinesStore {
   lines = new Map();
   record(e, t) {
     this.lines.set(e, t);
@@ -138315,10 +138314,10 @@ class qar {
   }
 }
 
-var eas = new j(() => new qar());
+var classifierMetaLinesStore = new j(() => new ClassifierMetaLinesStore());
 
 function xkt() {
-  return eas.of(B().host);
+  return classifierMetaLinesStore.of(B().host);
 }
 
 function Akt(e, t) {
@@ -138476,7 +138475,7 @@ function _as(e) {
   return null;
 }
 
-class tlr {
+class GitDirStateCache {
   stateByDir = new Map();
   namedRemoteUrlsByDir = new Map();
   seedDir(e, t) {
@@ -138500,10 +138499,10 @@ class tlr {
   }
 }
 
-var bas = new j(() => new tlr());
+var gitDirStateCache = new j(() => new GitDirStateCache());
 
 function Sas() {
-  return bas.of(B().host);
+  return gitDirStateCache.of(B().host);
 }
 
 async function Ume(e, t, r) {
@@ -145313,12 +145312,8 @@ function jds(e) {
   });
 }
 
-function x1e() {
-  let e = getHostStateStore();
-  return ((e.builtinCommandTable ??= Wds()), e.builtinCommandTable);
-}
-
-function Wds() {
+function getBuiltinCommands() {
+  function Wds() {
   return [
     pYe,
     fYe,
@@ -145457,12 +145452,17 @@ function Wds() {
     
   ];
 }
+  let e = getHostStateStore();
+  return ((e.builtinCommandTable ??= Wds()), e.builtinCommandTable);
+}
+
+
 
 function builtInCommandNames() {
   let e = getHostStateStore();
   return (
     (e.builtinCommandNames ??= new Set(
-      x1e().flatMap((t) => [t.name, ...(t.aliases ?? [])]),
+      getBuiltinCommands().flatMap((t) => [t.name, ...(t.aliases ?? [])]),
     )),
     e.builtinCommandNames
   );
@@ -145478,10 +145478,6 @@ function shippedCommandNames() {
     ])),
     e.shippedCommandNames
   );
-}
-
-function getBuiltinCommands() {
-  return x1e();
 }
 
 async function Gds(e, t) {
@@ -145622,7 +145618,7 @@ async function Vds(e, t) {
       ...d,
       ...p,
       ..._,
-      ...x1e(),
+      ...getBuiltinCommands(),
     ],
     F = new Set();
   (lke(F, N), Jdr(F));
@@ -145735,7 +145731,7 @@ async function getCommands(e, t) {
     ),
     Se = [...ue, ..._e];
   if (Se.length === 0) return F;
-  let ve = new Set(x1e().map((xe) => xe.name)),
+  let ve = new Set(getBuiltinCommands().map((xe) => xe.name)),
     Me = F.findIndex((xe) => ve.has(xe.name));
   if (Me === -1) return dropShadowedFallbackSkills([...F, ...Se]);
   return dropShadowedFallbackSkills([...F.slice(0, Me), ...Se, ...F.slice(Me)]);
@@ -155333,17 +155329,17 @@ async function egr(e) {
   }
 }
 
-class tgr {
+class ClaudeMdLoadLatches {
   memoryReadEacces = !1;
   memoryReadFailed = !1;
   skip = !1;
   rulesWalk = !1;
 }
 
-var _gs = new j(() => new tgr());
+var claudeMdLoadLatches = new j(() => new ClaudeMdLoadLatches());
 
 function Dvt() {
-  return _gs.of(B().host);
+  return claudeMdLoadLatches.of(B().host);
 }
 
 function bgs(e, t) {
@@ -163071,7 +163067,7 @@ async function lyr() {
   };
 }
 
-class dyr {
+class TranscriptExitHooksLatch {
   installed = !1;
   claim() {
     if (this.installed) return !1;
@@ -163079,7 +163075,7 @@ class dyr {
   }
 }
 
-var transcriptExitHooksLatches = new j(() => new dyr());
+var transcriptExitHooksLatches = new j(() => new TranscriptExitHooksLatch());
 
 function getTranscriptWriterDegraded() {
   return Xd().writerHealth.degradedStore.getState();
@@ -166403,7 +166399,7 @@ var Sbs = 10,
   Cbs = 15000,
   xbs = 1500;
 
-class Byr {
+class ShutdownCoordinator {
   installed = !1;
   handles = {};
   resumeHintPrinted = !1;
@@ -167027,7 +167023,7 @@ function Ext(e) {
   return hv(e.error_name) ?? S("Error");
 }
 
-var shutdownCoordinators = new j(() => new Byr());
+var shutdownCoordinators = new j(() => new ShutdownCoordinator());
 
 function kF() {
   return bi(shutdownCoordinators);
