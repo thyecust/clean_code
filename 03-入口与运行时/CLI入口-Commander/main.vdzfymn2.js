@@ -2574,8 +2574,7 @@ Usage: claude mcp add <name> <command> [args...]`);
                       ...(K && { xaa: !0 }),
                     }
                   : void 0,
-              { readClientSecret: Me, saveMcpClientSecret: Le } = import.meta
-                .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+              { readClientSecret: Me, saveMcpClientSecret: Le } = lazy_mcpClientModule_4cyej0np
                 .mcpAuthModule(),
               qe = D.clientSecret && D.clientId ? await Me() : void 0,
               fe =
@@ -2634,7 +2633,7 @@ Warning: The command "${q}" looks like a URL, but is being interpreted as a stdi
     );
 }
 function Ke() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpXaaIdpLoginModule();
+  return lazy_mcpClientModule_4cyej0np.mcpXaaIdpLoginModule();
 }
 function vn(v, k) {
   let O = v
@@ -4450,6 +4449,9 @@ async function Kn(v, k, O, R) {
 }
 import { posix, win32 } from "path";
 import { types } from "util";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_chunk_hkbpxv9z from "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
+
 var pa = 1000;
 function ua() {
   let v = process.argv[1] || "",
@@ -7128,8 +7130,7 @@ async function $a(v, k, O, R) {
       storedImagePaths: new Map(),
       imageDescriptions: new Map(),
       classifierApprovals: { approvals: new Map(), checking: new Set() },
-      webBrowser: import.meta
-        .require("../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js")
+      webBrowser: lazy_chunk_hkbpxv9z
         .getDefaultWebBrowserState(),
     };
   if (Ue && le === null) addHistoryEntry(String(Ue), ae);

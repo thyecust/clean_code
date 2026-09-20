@@ -22,6 +22,12 @@ import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { describeAxiosError } from "./chunk-x4q0245z.js";
 import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import * as lazy_chunk_1y2g140m from "../权限系统/chunk-1y2g140m.js";
+import * as lazy_listBridgePeerSessions_g159fp6a from "./listBridgePeerSessions.g159fp6a.js";
+import * as lazy_hasCloudPeerAccess_debnsz8e from "../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js";
+import * as lazy_chunk_ds47w88s from "../会话-历史-恢复/chunk-ds47w88s.js";
+import * as lazy_chunk_tyce0p0b from "./chunk-tyce0p0b.js";
+
 function getPendingActionRequestId(e) {
   for (let t of [e?.request_id, e?.suppressed_request_id])
     if (typeof t === "string" && t.length > 0) return t;
@@ -279,14 +285,12 @@ class BridgeSessionListingCache {
 var bridgeSessionListingCache = new Gt(() => new BridgeSessionListingCache());
 async function refreshPeerIdentityOwner(e = { refresh: !0 }) {
   {
-    let { primePeerIdentityOwner: t } = import.meta.require(
-      "../权限系统/chunk-1y2g140m.js",
-    );
+    let { primePeerIdentityOwner: t } = lazy_chunk_1y2g140m;
     await t(e);
   }
 }
 function m() {
-  let { getPeerBridgeIdentity: e } = import.meta.require("../权限系统/chunk-1y2g140m.js"),
+  let { getPeerBridgeIdentity: e } = lazy_chunk_1y2g140m,
     t = e();
   return t?.live ? t.key : null;
 }
@@ -297,9 +301,7 @@ async function loadBridgePeerSessionRows(e, t) {
     let r = bridgeSessionListingCache.of(e),
       s = r.inFlight;
     if (s !== void 0 && s.identityKey === i) return s.promise;
-    let { listBridgePeerSessions: o } = import.meta.require(
-        "./listBridgePeerSessions.g159fp6a.js",
-      ),
+    let { listBridgePeerSessions: o } = lazy_listBridgePeerSessions_g159fp6a,
       u = { record: void 0 },
       c = Date.now(),
       g = (async () => {
@@ -438,15 +440,15 @@ class CloudPeerSessionsCache {
   }
 }
 function S() {
-  let { walkCredentialKey: e } = import.meta.require("../权限系统/chunk-1y2g140m.js");
+  let { walkCredentialKey: e } = lazy_chunk_1y2g140m;
   return e();
 }
 var cloudPeerSessionsCache = new Gt(() => new CloudPeerSessionsCache());
 async function listCloudPeerSessions(e, t) {
   {
-    let { hasCloudPeerAccess: i } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
+    let { hasCloudPeerAccess: i } = lazy_hasCloudPeerAccess_debnsz8e;
     if (!i()) return { sessions: [], unavailable: "gate_off" };
-    let { walkCcrSessionList: r } = import.meta.require("../会话-历史-恢复/chunk-ds47w88s.js"),
+    let { walkCcrSessionList: r } = lazy_chunk_ds47w88s,
       s = cloudPeerSessionsCache.of(e),
       o = S(),
       u = s.warm(o);
@@ -483,9 +485,7 @@ function A(e, t, i, r) {
   let s = a.CLAUDE_CODE_REMOTE === !0,
     o = s ? sessionIdBody(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "") : "";
   if (o === "") {
-    let { getPeerBridgeIdentity: c } = import.meta.require(
-        "../权限系统/chunk-1y2g140m.js",
-      ),
+    let { getPeerBridgeIdentity: c } = lazy_chunk_1y2g140m,
       g = c()?.bridgeSessionId;
     o = typeof g === "string" ? sessionIdBody(g) : "";
   }
@@ -511,9 +511,7 @@ function A(e, t, i, r) {
     }
     let f = !1;
     if (s) {
-      let { isRemoteControlPeerUnreachableFromHere: d } = import.meta.require(
-        "./chunk-tyce0p0b.js",
-      );
+      let { isRemoteControlPeerUnreachableFromHere: d } = lazy_chunk_tyce0p0b;
       f = d();
     }
     let y = (o === "" ? c : c.filter((d) => sessionIdBody(d.id) !== o)).map((d) => {
@@ -548,7 +546,7 @@ function A(e, t, i, r) {
 }
 function getWarmCloudSessions(e) {
   {
-    let { hasCloudPeerAccess: t } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
+    let { hasCloudPeerAccess: t } = lazy_hasCloudPeerAccess_debnsz8e;
     if (!t()) return;
     return cloudPeerSessionsCache.of(e).warm(S())?.sessions;
   }
@@ -557,9 +555,7 @@ function getWarmCloudSessions(e) {
 function formatUnreachablePeerRefusal(e, t, i) {
   try {
     if (!getWarmCloudSessions(e)?.find((o) => sessionIdBody(o.id) === sessionIdBody(t))?.unreachableFromHere) return;
-    let { formatUnreachableElevatedRefusal: s } = import.meta.require(
-      "./chunk-tyce0p0b.js",
-    );
+    let { formatUnreachableElevatedRefusal: s } = lazy_chunk_tyce0p0b;
     return s(i);
   } catch (r) {
     logForDebugging(

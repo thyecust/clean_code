@@ -12,21 +12,25 @@ import { isSubagentSession, parsePeerAddress, isDefinitelySamePath, isPossiblySa
 import { getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { getRemoteSessionCompatId } from "../../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
 import { MAIN_CONVERSATION_NAME } from "./chunk-enjekn9t.js";
+import * as lazy_chunk_ddtmwhn7 from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
+import * as lazy_认证_OAuth登录_419zdfz3 from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import * as lazy_chunk_9kzxq41e from "../跨会话消息-UDS/chunk-9kzxq41e.js";
+
 var SELF_TARGET_REASON =
     "target is this session itself \u2014 there is no one else to send to",
   u = `address the main conversation as "${MAIN_CONVERSATION_NAME}"`;
 function isOwnMessagingSocket(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息-UDS/chunk-ddtmwhn7.js"),
+  let { ownMessagingSocket: s } = lazy_chunk_ddtmwhn7,
     n = s();
   return n !== void 0 && isDefinitelySamePath(e, n);
 }
 function isLikelyOwnMessagingSocket(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息-UDS/chunk-ddtmwhn7.js"),
+  let { ownMessagingSocket: s } = lazy_chunk_ddtmwhn7,
     n = s();
   return n !== void 0 && isPossiblySamePath(e, n);
 }
 function d(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息-UDS/chunk-ddtmwhn7.js"),
+  let { ownMessagingSocket: s } = lazy_chunk_ddtmwhn7,
     n = s(),
     t = parseAgentDisplayName(e);
   return n !== void 0 && t !== null && isEntityRefPrefix(t.ref, "session", n);
@@ -59,9 +63,7 @@ function formatOwnNameDisplayMessage(e) {
   return `Not sent \u2014 '${e}' is this session's own name.`;
 }
 function formatMainSessionNotice(e, s, n = u) {
-  let { getRegisteredSessionName: t } = import.meta.require(
-      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
-    ),
+  let { getRegisteredSessionName: t } = lazy_认证_OAuth登录_419zdfz3,
     o = normalizeUsableRecipientName(t()?.name),
     i = o === null ? "this session" : `this session ("${o}")`;
   return s
@@ -81,8 +83,8 @@ function hasCompleteTargetLookup(e) {
 }
 function classifySelfNameMatch(e) {
   let { getRegisteredSessionName: s, getHeldSessionNames: n } =
-      import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
-    { ownMessagingSocket: t } = import.meta.require("../跨会话消息-UDS/chunk-ddtmwhn7.js"),
+      lazy_认证_OAuth登录_419zdfz3,
+    { ownMessagingSocket: t } = lazy_chunk_ddtmwhn7,
     o = s(),
     i = t();
   if (o === void 0 || i === void 0 || parsePeerAddress(e).scheme !== "other") return "no";
@@ -96,7 +98,7 @@ function classifySelfNameMatch(e) {
       return c === "derived" ? "categorical" : "note";
     }
   } else if (slugify(e) !== slugify(o.name)) return "no";
-  let { getSessionNamingState: l } = import.meta.require("../跨会话消息-UDS/chunk-9kzxq41e.js");
+  let { getSessionNamingState: l } = lazy_chunk_9kzxq41e;
   return o.source === "derived" ||
     ((o.source === "user" || o.source === "collision") &&
       l().userTypedName === o.name)
@@ -104,9 +106,7 @@ function classifySelfNameMatch(e) {
     : "note";
 }
 function formatOwnSessionMessage(e, s, n = u) {
-  let { getRegisteredSessionName: t } = import.meta.require(
-      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
-    ),
+  let { getRegisteredSessionName: t } = lazy_认证_OAuth登录_419zdfz3,
     o = normalizeUsableRecipientName(t()?.name);
   if (s) {
     let i = o !== null ? ` ("${o}" is the name OTHER sessions use for it)` : "";

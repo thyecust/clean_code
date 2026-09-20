@@ -16,6 +16,8 @@ import { isExemptToolDeniedByRule } from "../../02-功能模块/记忆-CLAUDE.md
 import { partition, uniqBy, isMcpTool, isToolFromMcpServer, filterToolsForRemoteDevice } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { COORDINATOR_ALLOWED_TOOL_NAMES } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { isCoordinatorCommsMcpTool } from "./chunk-qg9n8r78.js";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+
 var p = new Set([BRIEF_TOOL_NAME, SEND_USER_FILE_TOOL_NAME]),
   T = ["subscribe_pr_activity", "unsubscribe_pr_activity"];
 function c(o) {
@@ -30,7 +32,7 @@ function withoutStaticMcpShadows(o, t) {
 function f(o) {
   return !1;
 }
-var s = import.meta.require("../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
+var s = lazy_提示词_SystemPrompt_bt5gmcr2;
 function applyCoordinatorToolFilter(o) {
   let t = a.CLAUDE_CODE_BRIEF,
     e = new Set(

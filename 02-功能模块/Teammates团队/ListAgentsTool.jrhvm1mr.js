@@ -15,6 +15,8 @@ import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
 import { LIST_AGENTS_TOOL_NAME, LIST_AGENTS_TOOL_ALIAS, getListAgentsToolDescription } from "./list-agents-tool-constants.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import * as lazy_buildSubagentExtras_gbrpz8cj from "../../01-核心基础设施/核心工具-未归类/buildSubagentExtras.gbrpz8cj.js";
+
 var h = 1e4,
   d = createLazyValue(() =>
     Qe({
@@ -74,7 +76,7 @@ var h = 1e4,
           listAllPeers: r,
           formatForModel: a,
           buildSubagentExtras: i,
-        } = import.meta.require("../../01-核心基础设施/核心工具-未归类/buildSubagentExtras.gbrpz8cj.js"),
+        } = lazy_buildSubagentExtras_gbrpz8cj,
         o = t.channel?.trim() || void 0,
         l = t.q?.trim() || void 0,
         [n, u] = await Promise.all([

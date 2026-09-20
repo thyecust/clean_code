@@ -26,8 +26,10 @@ import { classifyMcpServerAuth } from "./mcp-hosted-oauth-gate.js";
 import { hasFirstPartyDesignAuth } from "../设计同步/chunk-jhs1bd0k.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { createInterface } from "readline";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 function y() {
-  return import.meta.require("./mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function d() {
   return y().mcpAuthModule();

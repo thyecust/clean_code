@@ -86,11 +86,13 @@ import { Nl, re, E, V, C, d, F } from "../../00-第三方库/react/React运行�
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 F();
 F();
 F();
 function Nt() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpAuthModule();
+  return lazy_mcpClientModule_4cyej0np.mcpAuthModule();
 }
 function rt({ agentServer: s, onCancel: i, onComplete: l }) {
   let f = re((S, ...T) => l(typeof S === "string" ? sanitizeForRelay(S) : S, ...T), [l]),
@@ -1084,8 +1086,7 @@ function He(fs) {
     ((gn = () => {
       let Cn = !1;
       let At = async function At(Tt, Cs) {
-        let { ClaudeAuthProvider: ys } = import.meta
-          .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+        let { ClaudeAuthProvider: ys } = lazy_mcpClientModule_4cyej0np
           .mcpAuthModule();
         let vs = await new ys(Tt.name, Cs).tokens().catch(Rn);
         let bs = getSessionAccessToken() !== null && Tt.type === "connected";

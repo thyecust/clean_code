@@ -22,6 +22,10 @@ import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { DEFAULT_ATTESTATION_FILTER_POLICY, parseAttestationFilterPolicy } from "./chunk-5ne99rq3.js";
 import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { hostname } from "os";
+import * as lazy_POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS_hw6w9yxm from "../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js";
+import * as lazy_chunk_8sw91yn5 from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import * as lazy_认证_OAuth登录_419zdfz3 from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+
 var m = "tengu_sessions_elevated_auth_enforcement",
   c = "require_trusted_devices",
   h = "tengu_sessions_elevated_auth_disable_proactive_enrollment",
@@ -37,10 +41,10 @@ function isProactiveEnrollmentDisabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE(h, !1);
 }
 function L() {
-  return import.meta.require("../../01-核心基础设施/核心工具-未归类/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
+  return lazy_POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS_hw6w9yxm;
 }
 function T() {
-  return import.meta.require("../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js");
+  return lazy_chunk_8sw91yn5;
 }
 function isTrustedDeviceGateEnabled() {
   if (!getFeatureValue_CACHED_MAY_BE_STALE(m, !1)) return !1;
@@ -143,7 +147,7 @@ async function ensureTrustedDeviceTokenForBind(e) {
   );
 }
 function clearTrustedDeviceToken() {
-  let { isClaudeAISubscriber: e } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
+  let { isClaudeAISubscriber: e } = lazy_认证_OAuth登录_419zdfz3;
   if (!isFirstPartyProvider() || !e()) return;
   if (isProactiveEnrollmentDisabled()) return;
   (clearTrustedDeviceTokenCache(),
@@ -159,7 +163,7 @@ async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t })
     isConsumerSubscriber: o,
     getClaudeAIOAuthTokens: A,
     checkAndRefreshOAuthTokenIfNeeded: k,
-  } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
+  } = lazy_认证_OAuth登录_419zdfz3;
   if (!isFirstPartyProvider() || !r()) return;
   try {
     if (!(await checkGate_CACHED_OR_BLOCKING(m))) {

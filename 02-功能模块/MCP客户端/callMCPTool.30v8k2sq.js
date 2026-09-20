@@ -1282,8 +1282,13 @@ function Zt(e, t) {
   };
 }
 import { dirname } from "path";
-var qe = import.meta.require("../Skills技能/fetchMcpSkillsForClient.er0bhc4y.js");
-var Tt = import.meta.require("./getMcpAutoBackgroundMs.7m99c5cf.js");
+import * as lazy_fetchMcpSkillsForClient_er0bhc4y from "../Skills技能/fetchMcpSkillsForClient.er0bhc4y.js";
+import * as lazy_getMcpAutoBackgroundMs_7m99c5cf from "./getMcpAutoBackgroundMs.7m99c5cf.js";
+import * as lazy_getClaudeInChromeMCPToolOverrides_9f9wpf77 from "../浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js";
+import * as lazy_buildSessionContext_s2wedcct from "../图片-截图-ComputerUse/buildSessionContext.s2wedcct.js";
+
+var qe = lazy_fetchMcpSkillsForClient_er0bhc4y;
+var Tt = lazy_getMcpAutoBackgroundMs_7m99c5cf;
 function isMcpSessionExpiredError(e) {
   if (e instanceof McpSessionExpiredError) return !0;
   if (e instanceof McpError) return !1;
@@ -1408,8 +1413,8 @@ function getMcpToolIdleTimeoutMs(e) {
   let o = e?.timeout !== void 0 && e.timeout >= 1000 ? e.timeout : 0;
   return Math.min(Math.max(r, o, 1000), getMcpToolTimeoutMs(e));
 }
-var eo = () => import.meta.require("../浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js"),
-  to = () => import.meta.require("../图片-截图-ComputerUse/buildSessionContext.s2wedcct.js"),
+var eo = () => lazy_getClaudeInChromeMCPToolOverrides_9f9wpf77,
+  to = () => lazy_buildSessionContext_s2wedcct,
   MCP_TREE_ID = "v1",
   oo = 900000,
   no = 14400000,

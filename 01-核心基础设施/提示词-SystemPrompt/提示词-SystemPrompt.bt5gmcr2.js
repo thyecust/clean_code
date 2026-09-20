@@ -63,6 +63,11 @@ import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../核心工具-类型与数值/is-record.js";
 import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
+import * as lazy_chunk_q599wyee from "../核心工具-未归类/chunk-q599wyee.js";
+import * as lazy_核心应用_Agent循环_wmzgeczq from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import * as lazy_记忆_CLAUDE_md_vx19drc8 from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import * as lazy_isPluginSkillToolEnabled_gve67s30 from "../核心工具-未归类/isPluginSkillToolEnabled.gve67s30.js";
+
 var SYSTEM_NOTIFICATION_HEADER = "[SYSTEM NOTIFICATION - NOT USER INPUT]",
   BACKGROUND_TASK_NOTIFICATION_PREAMBLE = `${"[SYSTEM NOTIFICATION - NOT USER INPUT]"}
 This is an automated background-task event, NOT a message from the user.
@@ -1029,7 +1034,7 @@ function fe(e) {
   if (typeof t !== "string") return;
   return t.length > pe ? truncateToCodeUnits(t, pe) + "\u2026" : t;
 }
-var et = import.meta.require("../核心工具-未归类/chunk-q599wyee.js").BRIEF_TOOL_NAME,
+var et = lazy_chunk_q599wyee.BRIEF_TOOL_NAME,
   nt = `Fetches full schema definitions for deferred tools so they can be called.
 
 Deferred tools appear by name in <system-reminder> messages.`,
@@ -1059,7 +1064,7 @@ function _e(e) {
   if (e.name === TOOL_SEARCH_TOOL_NAME) return !0;
   if (e.name === STRUCTURED_OUTPUT_TOOL_NAME) return !0;
   if (e.name === AGENT_TOOL_NAME) {
-    if (import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").isForkSubagentEnabled())
+    if (lazy_核心应用_Agent循环_wmzgeczq.isForkSubagentEnabled())
       return !0;
   }
   if (e.name === et) return !0;
@@ -1393,15 +1398,13 @@ function isSkillToolEnabled() {
   return !0;
 }
 function yt() {
-  let { isScratchpadEnabled: e } = import.meta.require("../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js");
+  let { isScratchpadEnabled: e } = lazy_记忆_CLAUDE_md_vx19drc8;
   return e();
 }
 var Et = new Set([SEND_MESSAGE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME]);
 function Ot(e) {
   {
-    let { isPluginSkillToolAdvertised: t } = import.meta.require(
-      "../核心工具-未归类/isPluginSkillToolEnabled.gve67s30.js",
-    );
+    let { isPluginSkillToolAdvertised: t } = lazy_isPluginSkillToolEnabled_gve67s30;
     return t(e);
   }
   return !0;

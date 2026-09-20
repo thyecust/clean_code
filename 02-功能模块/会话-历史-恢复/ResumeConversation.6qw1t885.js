@@ -260,6 +260,9 @@ import { getEndedByModel } from "../../01-核心基础设施/核心工具-未归
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { dirname } from "path";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import * as lazy_核心应用_Agent循环_wmzgeczq from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+
 function Go() {
   gracefulShutdown(1);
 }
@@ -458,8 +461,7 @@ function ResumeConversation({
         );
       v = "processing_error";
       {
-        let B = import.meta
-          .require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js")
+        let B = lazy_提示词_SystemPrompt_bt5gmcr2
           .matchSessionMode(n.mode);
         if (B) {
           let Ao = await rebuildAgentDefinitionsWithCliAgents(x.project.originalCwd, [], g);
@@ -505,8 +507,8 @@ function ResumeConversation({
         });
       kHe(n.messages, { fork: b, startup: !0 });
       {
-        let { saveMode: l } = import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
-          { isCoordinatorMode: B } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
+        let { saveMode: l } = lazy_核心应用_Agent循环_wmzgeczq,
+          { isCoordinatorMode: B } = lazy_提示词_SystemPrompt_bt5gmcr2;
         l(B() ? "coordinator" : "normal");
       }
       let Ie = buildStandaloneAgentContext(n.agentName, n.agentColor),

@@ -3588,7 +3588,7 @@ function uu(si) {
   }
   return { ...si, voiceWarmingUp: !0 };
 }
-var Za = import.meta.require("../语音-音频/useVoice.ekf7rmy1.js"),
+var Za = lazy_useVoice_ekf7rmy1,
   nn = 120,
   ii = 2000,
   ai = 5,
@@ -4920,6 +4920,8 @@ function wo({
 F();
 import { homedir } from "os";
 import { join } from "path";
+import * as lazy_useVoice_ekf7rmy1 from "../语音-音频/useVoice.ekf7rmy1.js";
+
 function Xu(Qp) {
   return Qp.autoUpdaterResult;
 }

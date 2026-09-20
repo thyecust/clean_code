@@ -1304,6 +1304,11 @@ async function Ie(e) {
   });
 }
 import { randomUUID } from "crypto";
+import * as lazy_WorkflowTool_b1s7beta from "../编排-Workflow/WorkflowTool.b1s7beta.js";
+import * as lazy_workflowPermissionDialog_pk0trr3f from "../编排-Workflow/workflowPermissionDialog.pk0trr3f.js";
+import * as lazy_recordWorkflowUsageConsent_w6jg9g54 from "../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js";
+import * as lazy_MonitorTool from "../../04-tools/MonitorTool.js";
+
 function lo(e, r, o, t) {
   let s = t === "single",
     k = computeStructuredPatchFromContents({ filePath: e, oldContent: r, newContent: o, singleHunk: s });
@@ -1832,10 +1837,10 @@ var fo = null,
   go = null,
   yo = null,
   Po = null,
-  De = import.meta.require("../编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool,
-  ho = import.meta.require("../编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
-  bo = import.meta.require("../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js"),
-  Qo = import.meta.require("../../04-tools/MonitorTool.js").MonitorTool,
+  De = lazy_WorkflowTool_b1s7beta.WorkflowTool,
+  ho = lazy_workflowPermissionDialog_pk0trr3f.workflowPermissionDialog,
+  bo = lazy_recordWorkflowUsageConsent_w6jg9g54,
+  Qo = lazy_MonitorTool.MonitorTool,
   ko =
     "The request this approval was for had already been withdrawn; the answer applied to nothing.";
 function J(e) {

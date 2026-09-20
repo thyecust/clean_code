@@ -9673,6 +9673,9 @@ function splitNonEmptyLines(e) {
   return e.split(/\r?\n/).filter(Boolean);
 }
 import { open, opendir } from "fs/promises";
+import * as lazy_chunk_vtgvbed1 from "../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js";
+import * as lazy_chunk_01ymf0ar from "../制品发布-Artifact/chunk-01ymf0ar.js";
+
 var Zf = 32,
   Yo = 4096;
 async function el(e) {
@@ -15992,7 +15995,7 @@ var PERMISSION_RULE_SOURCES = [
     "hostCredential",
   ],
   op = new Set([
-    import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
+    lazy_chunk_vtgvbed1.END_CONVERSATION_TOOL_NAME,
   ]);
 function isPermissionRuleExemptTool(e) {
   return !e.mcpInfo && op.has(e.name);
@@ -16404,9 +16407,7 @@ function Sp(e, t = getCwd()) {
 function isScratchpadEnabled() {
   if (getFeatureValue_CACHED_MAY_BE_STALE("tengu_scratch", !1)) return !0;
   {
-    let { isArtifactToolEligible: e } = import.meta.require(
-      "../制品发布-Artifact/chunk-01ymf0ar.js",
-    );
+    let { isArtifactToolEligible: e } = lazy_chunk_01ymf0ar;
     return e();
   }
   return !1;

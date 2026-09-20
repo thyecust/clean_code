@@ -41,8 +41,10 @@ import { getDirSyncPayload, SESSION_TRANSPORT_LIMITS } from "./session-event-tra
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
 import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 function T() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 class D {
   #e = new WeakMap();

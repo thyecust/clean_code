@@ -9,15 +9,19 @@
 // Version: 2.1.263
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-var s = importMetaRequire("./SKILL-0289634t.md");
+import * as lazy_SKILL_0289634t from "../../01-核心基础设施/内嵌资源与模块互操作/SKILL-0289634t.md";
+import * as lazy_skeleton_html_893t268n from "../../01-核心基础设施/内嵌资源与模块互操作/skeleton.html-893t268n.txt";
+import * as lazy_theme_script_html_zm5eq8m1 from "../../01-核心基础设施/内嵌资源与模块互操作/theme-script.html-zm5eq8m1.txt";
+
+var s = lazy_SKILL_0289634t;
 var i = "./decisions-script.html-d0ab282f.txt.zst";
 var e = readEmbeddedAssetSync(i, import.meta.dirname);
 var a = "./component.css-02637b0d.txt.zst";
 var n = readEmbeddedAssetSync(a, import.meta.dirname);
 var o = "./tokens.css-6f9090cf.txt.zst";
 var r = readEmbeddedAssetSync(o, import.meta.dirname);
-var c = importMetaRequire("./skeleton.html-893t268n.txt");
-var t = importMetaRequire("./theme-script.html-zm5eq8m1.txt");
+var c = lazy_skeleton_html_893t268n;
+var t = lazy_theme_script_html_zm5eq8m1;
 var SKILL_MD = s,
   DECISION_THEME_SCRIPT = t,
   DECISION_DECISIONS_SCRIPT = e,

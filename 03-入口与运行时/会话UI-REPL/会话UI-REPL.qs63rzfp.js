@@ -2341,7 +2341,7 @@ import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTo
 import { CodeBlock } from "../../02-功能模块/语法高亮-Markdown渲染/code-block.js";
 import { it2SetupDialog } from "../../01-核心基础设施/核心工具-未归类/it2-setup-dialog.js";
 import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG, isMcpElicitationDialogKind } from "../../02-功能模块/MCP客户端/mcp-elicitation-dialogs.js";
-import { isCommandSafe, UNSAFE_COMMAND_NAMES } from "../../02-功能模块/工具Bash-Shell/powershell-command-safety.js";
+import { isCommandSafe, __getUnsafeCommandNames } from "../../02-功能模块/工具Bash-Shell/powershell-command-safety.js";
 import { AltScreenContainer } from "../../02-功能模块/多会话视图-Fleet/alt-screen-container.js";
 import { AuthenticationStatusBox } from "../../01-核心基础设施/核心工具-未归类/authentication-status-box.js";
 import { RemoteBootstrapProgress } from "./remote-bootstrap-checklist.js";
@@ -12814,11 +12814,11 @@ function XYt(Csn) {
 function ZYt(_sn) {
   return _sn.verbose;
 }
-var u7 = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js").BRIEF_TOOL_NAME,
-  E7e = import.meta.require("../../02-功能模块/远程工具执行/chunk-a5errgr8.js").SEND_USER_FILE_TOOL_NAME,
-  d7 = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js").isBriefEnabled,
+var u7 = lazy_chunk_q599wyee.BRIEF_TOOL_NAME,
+  E7e = lazy_chunk_a5errgr8.SEND_USER_FILE_TOOL_NAME,
+  d7 = lazy_chunk_1p3batyk.isBriefEnabled,
   rA = null,
-  D7e = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-0qtt3z52.js").isPewterOwlTool,
+  D7e = lazy_chunk_0qtt3z52.isPewterOwlTool,
   IU = null;
 function N7e(w, I, ne) {
   let me = new Set(I),
@@ -14773,7 +14773,7 @@ function x0(Oan) {
     B5t;
   if (lA[3] !== Bk)
     ((F5t = () => {
-      let { isBriefEnabled: hye } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js");
+      let { isBriefEnabled: hye } = lazy_chunk_1p3batyk;
       let Ban = hye;
       let U5t = () => {
         if (Ban()) {
@@ -14800,7 +14800,7 @@ function x0(Oan) {
     lA[12] !== mZe
   )
     ((hye = () => {
-      let { isBriefEnabled: Uan } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js");
+      let { isBriefEnabled: Uan } = lazy_chunk_1p3batyk;
       if (!Uan() && FU && dye !== "transcript") {
         Bk(J5t);
         return;
@@ -14826,7 +14826,7 @@ function x0(Oan) {
     H5t;
   if (lA[14] !== FU || lA[15] !== Bk)
     ((H5t = () => {
-      let { isBriefEnabled: jan } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js");
+      let { isBriefEnabled: jan } = lazy_chunk_1p3batyk;
       if (!jan() && !FU) {
         return;
       }
@@ -19040,8 +19040,7 @@ function Y7($U, SSe) {
         return;
       }
       btt.current = ktt;
-      let { callIdeRpc: Ibn } = import.meta
-        .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+      let { callIdeRpc: Ibn } = lazy_mcpClientModule_4cyej0np
         .mcpClientModule();
       Ibn("set_permission_mode", { mode: ktt }, Stt).then(F6t).catch(B6t);
     }),
@@ -24967,7 +24966,7 @@ function Wot({ store: w, setAppState: I, storageV5: ne }) {
   );
 }
 function Vot() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpTaskWatcherModule();
+  return lazy_mcpClientModule_4cyej0np.mcpTaskWatcherModule();
 }
 class fZ {
   session;
@@ -25135,8 +25134,7 @@ class fZ {
       let eo = { ...I, messages: dropMalformedAttachments(I.messages) },
         jt = deserializeMessages(eo.messages);
       {
-        let po = import.meta
-          .require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js")
+        let po = lazy_提示词_SystemPrompt_bt5gmcr2
           .matchSessionMode(I.mode);
         if (po) {
           let xo = await rebuildAgentDefinitionsWithCliAgents(me.project.originalCwd, [], Ke);
@@ -25376,10 +25374,8 @@ class fZ {
         if (He.isolationLatch.current) saveIsolationLatch(He.isolationLatch.current, Ke);
       }
       {
-        let { saveMode: Ho } = import.meta.require("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
-          { isCoordinatorMode: po } = import.meta.require(
-            "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js",
-          );
+        let { saveMode: Ho } = lazy_核心应用_Agent循环_wmzgeczq,
+          { isCoordinatorMode: po } = lazy_提示词_SystemPrompt_bt5gmcr2;
         Ho(po() ? "coordinator" : "normal");
       }
       if ((c_e(), restoreCostStateFromRecord(I), ne !== "fork"))
@@ -25992,8 +25988,7 @@ class fZ {
         },
         getKnownVer: (me) => mainObservedArtifactVersion(w.getState(), me),
         commentsGateOpen: () =>
-          import.meta
-            .require("../../02-功能模块/制品发布-Artifact/chunk-b6k1z7an.js")
+          lazy_chunk_b6k1z7an
             .artifactCommentsPromptGateOpen(),
         mayRequestTakeover: () => isArtifactReplyYieldEnabled(),
         jobHolderVerdicts: tot,
@@ -32581,8 +32576,7 @@ async function Iee(w, I, ne, me, pe) {
         return He.argValue;
       }
     })(),
-    { completeResourceTemplate: at, ensureConnectedClient: Zt } = import.meta
-      .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+    { completeResourceTemplate: at, ensureConnectedClient: Zt } = lazy_mcpClientModule_4cyej0np
       .mcpClientModule(),
     Ct = Je.name;
   if (Je.type === "cached" && pe?.shouldSkip(Ct)) return [];
@@ -32824,8 +32818,7 @@ function Awe({
     on = re(() => {
       let Ko = _o.getState();
       if (!Ko.mcp.clients.some((pr) => pr.type === "connected")) return;
-      let { refreshResourceTemplates: cr } = import.meta
-        .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+      let { refreshResourceTemplates: cr } = lazy_mcpClientModule_4cyej0np
         .mcpClientModule();
       cr(Ko.mcp.clients, Ko.mcp.resourceTemplates).then((pr) => {
         if (pr.length === 0) return;
@@ -39350,8 +39343,8 @@ function wj(w) {
   if (w === "mcp_task") return OQ !== null;
   return w !== "monitor_ws";
 }
-var Noe = import.meta.require("../../02-功能模块/编排-Workflow/WorkflowDetailDialog.8ptea57x.js").WorkflowDetailDialog,
-  Hoe = import.meta.require("../../02-功能模块/编排-Workflow/chunk-va9cgbfs.js"),
+var Noe = lazy_WorkflowDetailDialog_8ptea57x.WorkflowDetailDialog,
+  Hoe = lazy_chunk_va9cgbfs,
   lI = Hoe?.killWorkflowTask ?? null,
   Ooe = Hoe?.pauseWorkflowTask ?? null,
   Foe = Hoe?.skipWorkflowAgent ?? null,
@@ -39359,8 +39352,8 @@ var Noe = import.meta.require("../../02-功能模块/编排-Workflow/WorkflowDet
   qio = null,
   cI = qio?.killMonitorMcp ?? null,
   Uoe = null,
-  uI = import.meta.require("../../02-功能模块/MCP客户端/MCP_TASK.5jmzdjnv.js").MCP_TASK.kill,
-  OQ = import.meta.require("../../02-功能模块/MCP客户端/McpTaskDetailDialog.1nzpyp6s.js").McpTaskDetailDialog;
+  uI = lazy_MCP_TASK_5jmzdjnv.MCP_TASK.kill,
+  OQ = lazy_McpTaskDetailDialog_1nzpyp6s.McpTaskDetailDialog;
 function Cj(w) {
   if (w.type === "local_agent" && w.status === "completed")
     return (
@@ -41842,7 +41835,7 @@ function klo(e3n) {
 function vlo(t3n) {
   return t3n.voiceError;
 }
-var Rmt = import.meta.require("../../02-功能模块/GitHub集成/ClosedIssueNotice.wg3hv1vc.js").ClosedIssueNotice,
+var Rmt = lazy_ClosedIssueNotice_wg3hv1vc.ClosedIssueNotice,
   $Q = 5000,
   qN = Yl(function (OXn) {
     let fI = _(42),
@@ -43774,7 +43767,7 @@ function GQ() {
 function huo(G7n) {
   return G7n.settings?.prUrlTemplate;
 }
-var uuo = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
+var uuo = lazy_提示词_SystemPrompt_bt5gmcr2,
   duo = 3;
 function One(H7n) {
   let tv = _(60),
@@ -60757,8 +60750,7 @@ function jJ(uAr) {
 function oxt({ serverName: w, params: I, onResponse: ne }) {
   let { message: me, requestedSchema: pe } = I,
     { credentials: be } = useStorageV5Context(),
-    { parseRelatedTaskMetadata: xe } = import.meta
-      .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+    { parseRelatedTaskMetadata: xe } = lazy_mcpClientModule_4cyej0np
       .mcpElicitationHandlerModule(),
     Ae = xe(I._meta),
     Oe = Ae ? ` (task ${toDisplayLabelString(truncateToCodeUnits(Ae.taskId, 8))})` : "",
@@ -71770,7 +71762,7 @@ var PP = defineDialog({
     hideWhile: ["panel", "draft"],
   });
 var HEt = null,
-  jEt = import.meta.require("../../02-功能模块/编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog;
+  jEt = lazy_workflowPermissionDialog_pk0trr3f.workflowPermissionDialog;
 var ENo = {};
 var DNo = {},
   VC = { text: "Claude needs your permission" },
@@ -72008,7 +72000,7 @@ async function VEt(w, I) {
   let ne = I.name;
   if (!ne) return null;
   if (!/^[A-Za-z0-9_+-]+$/.test(ne)) return null;
-  if (UNSAFE_COMMAND_NAMES.has(ne.toLowerCase())) return null;
+  if (__getUnsafeCommandNames().has(ne.toLowerCase())) return null;
   if (I.nameType === "cmdlet") return ne;
   if (I.elementTypes?.[0] !== "StringConstant") return null;
   for (let Ae = 0; Ae < I.args.length; Ae++) {
@@ -73077,8 +73069,8 @@ function SVe(yKr) {
 }
 var HDt = null,
   jDt = null,
-  $Dt = import.meta.require("../../02-功能模块/编排-Workflow/WorkflowPermissionDialog.q6ph5ccp.js").WorkflowPermissionDialog,
-  WDt = import.meta.require("../../02-功能模块/编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
+  $Dt = lazy_WorkflowPermissionDialog_q6ph5ccp.WorkflowPermissionDialog,
+  WDt = lazy_workflowPermissionDialog_pk0trr3f.workflowPermissionDialog,
   qDt = null,
   NLo = null,
   VDt = NLo?.projectContinuePermissionDialog ?? null,
@@ -76748,7 +76740,7 @@ class kKe {
 function hLt(w) {
   return w.length > 0 ? [] : w;
 }
-var JBo = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js").getCoordinatorUserContext;
+var JBo = lazy_提示词_SystemPrompt_bt5gmcr2.getCoordinatorUserContext;
 class Wce {
   guard = new SKe();
   loading = {
@@ -78789,9 +78781,9 @@ function kLt(w) {
     })
     .catch(() => {});
 }
-var hZr = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
+var hZr = lazy_提示词_SystemPrompt_bt5gmcr2;
 function tUo() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function qce() {
   return tUo().mcpAuthModule();
@@ -83703,7 +83695,7 @@ function jHo(nii) {
   return nii.trim() !== "";
 }
 function p6() {
-  return import.meta.require("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
+  return lazy_核心应用_Agent循环_wmzgeczq;
 }
 async function sw(w, I) {
   let { originalCwd: ne, preEnterOriginalCwd: me, liveLaunchAnchor: pe } = w,
@@ -84285,7 +84277,7 @@ var ZHo = {
     agent: "agent",
     claudeai: "claudeai",
   },
-  k6 = import.meta.require("../../02-功能模块/Skills技能/fetchMcpSkillsForClient.er0bhc4y.js"),
+  k6 = lazy_fetchMcpSkillsForClient_er0bhc4y,
   Bue = 3,
   WOt = [5000, 15000, 45000];
 function O2e(w, I, ne, me) {
@@ -84429,8 +84421,7 @@ function O2e(w, I, ne, me) {
         switch (no.type) {
           case "connected": {
             (ro.current.set(no.name, Bue), Wo.current.delete(no.name));
-            let { registerElicitationHandler: So } = import.meta
-              .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+            let { registerElicitationHandler: So } = lazy_mcpClientModule_4cyej0np
               .mcpElicitationHandlerModule();
             (So(asMcpSdkClient(no.client), no.name, me, no.transportErrorState),
               (asMcpSdkClient(no.client).onclose = () => {
@@ -85033,8 +85024,7 @@ function O2e(w, I, ne, me) {
       () => (
         Pxe((no) => {
           if (!isDiscoveryCacheEnabled()) return;
-          let { registerElicitationHandler: jo } = import.meta
-            .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+          let { registerElicitationHandler: jo } = lazy_mcpClientModule_4cyej0np
             .mcpElicitationHandlerModule();
           jo(asMcpSdkClient(no.client), no.name, me, no.transportErrorState);
         }),
@@ -85650,7 +85640,7 @@ function qOt(w) {
       .catch(() => {}));
 }
 function Qc() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 function ejo(w) {
   switch (w) {
@@ -89393,6 +89383,24 @@ function tQe(w, I) {
   }, [w, I]);
 }
 import { extname } from "path";
+import * as lazy_chunk_q599wyee from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
+import * as lazy_chunk_a5errgr8 from "../../02-功能模块/远程工具执行/chunk-a5errgr8.js";
+import * as lazy_chunk_1p3batyk from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+import * as lazy_chunk_0qtt3z52 from "../../01-核心基础设施/核心工具-未归类/chunk-0qtt3z52.js";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import * as lazy_核心应用_Agent循环_wmzgeczq from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import * as lazy_chunk_b6k1z7an from "../../02-功能模块/制品发布-Artifact/chunk-b6k1z7an.js";
+import * as lazy_WorkflowDetailDialog_8ptea57x from "../../02-功能模块/编排-Workflow/WorkflowDetailDialog.8ptea57x.js";
+import * as lazy_chunk_va9cgbfs from "../../02-功能模块/编排-Workflow/chunk-va9cgbfs.js";
+import * as lazy_MCP_TASK_5jmzdjnv from "../../02-功能模块/MCP客户端/MCP_TASK.5jmzdjnv.js";
+import * as lazy_McpTaskDetailDialog_1nzpyp6s from "../../02-功能模块/MCP客户端/McpTaskDetailDialog.1nzpyp6s.js";
+import * as lazy_ClosedIssueNotice_wg3hv1vc from "../../02-功能模块/GitHub集成/ClosedIssueNotice.wg3hv1vc.js";
+import * as lazy_workflowPermissionDialog_pk0trr3f from "../../02-功能模块/编排-Workflow/workflowPermissionDialog.pk0trr3f.js";
+import * as lazy_WorkflowPermissionDialog_q6ph5ccp from "../../02-功能模块/编排-Workflow/WorkflowPermissionDialog.q6ph5ccp.js";
+import * as lazy_fetchMcpSkillsForClient_er0bhc4y from "../../02-功能模块/Skills技能/fetchMcpSkillsForClient.er0bhc4y.js";
+import * as lazy_useScheduledTasks_jbtbk679 from "../../02-功能模块/Teammates团队/useScheduledTasks.jbtbk679.js";
+
 F();
 class BinaryCheckCache {
   installed = new Map();
@@ -91840,7 +91848,7 @@ function DGo(_error, dGo) {
       : void 0,
   );
 }
-var Jjt = import.meta.require("../../02-功能模块/Teammates团队/useScheduledTasks.jbtbk679.js").useScheduledTasks;
+var Jjt = lazy_useScheduledTasks_jbtbk679.useScheduledTasks;
 var Xjt = () => null;
 function REPLScreen(DYe) {
   let iqo = _(5),

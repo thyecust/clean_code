@@ -138,6 +138,13 @@ import { normalizeMcpName } from "../02-功能模块/MCP客户端/mcp-name-norma
 import { s, O, c, $e, Ko, k } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { countGraphemes, splitGraphemes } from "../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { isRecord } from "../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import * as lazy_chunk_sjd69zy5 from "../02-功能模块/Teammates团队/chunk-sjd69zy5.js";
+import * as lazy_startInProcessTeammate_k24hqy5t from "../02-功能模块/Teammates团队/startInProcessTeammate.k24hqy5t.js";
+import * as lazy_chunk_tyce0p0b from "../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js";
+import * as lazy_listBridgePeerSessions_g159fp6a from "../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js";
+import * as lazy_chunk_ddtmwhn7 from "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import * as lazy_subscribeToPeerIdle_tk67nd8x from "../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js";
+
 var Be = /^local_[0-9a-f-]{8,}$/,
   xe = "ccd_session_mgmt",
   Le = "send_message",
@@ -315,10 +322,8 @@ async function Xe({
       `[resumeInProcessTeammate] stale protocol-frame drop for ${i} did not land; the resumed runner may see stale protocol frames`,
       { level: "warn" },
     );
-  let { spawnInProcessTeammate: X } = import.meta.require(
-      "../02-功能模块/Teammates团队/chunk-sjd69zy5.js",
-    ),
-    { startInProcessTeammate: se } = import.meta.require("../02-功能模块/Teammates团队/startInProcessTeammate.k24hqy5t.js"),
+  let { spawnInProcessTeammate: X } = lazy_chunk_sjd69zy5,
+    { startInProcessTeammate: se } = lazy_startInProcessTeammate_k24hqy5t,
     U = await X(
       {
         name: i,
@@ -514,7 +519,9 @@ function gs(e) {
 }
 var Ye = gs(ke),
   Ms = gs(us);
-class pe extends BoundedTtlCache {}
+// 【惰性化 3】原来是 extends BoundedTtlCache，但那是求值期解析（TDZ）。
+// 该类只当 Map 的 key 用，无 instanceof、无静态成员访问，去掉继承语义不变。
+class pe {}
 function Ne(e) {
   return [e.to, e.message];
 }
@@ -1364,7 +1371,7 @@ var SendMessageTool = buildTool({
           let {
             isRemoteControlPeerUnreachableFromHere: _,
             formatUnreachableElevatedRefusal: i,
-          } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
+          } = lazy_chunk_tyce0p0b;
           if (d.via === "remote-control" && _())
             return (
               de({
@@ -1793,7 +1800,7 @@ ${w[0].text}`,
             postInterClaudeMessage: M,
             isLikelyStaleBridgeError: E,
             classifyBridgeSendError: S,
-          } = import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+          } = lazy_listBridgePeerSessions_g159fp6a,
           B = formatUnreachablePeerRefusal(t.session, h.target, e.to);
         if (B)
           return (
@@ -1888,11 +1895,9 @@ ${w[0].text}`,
               },
             }
           );
-        let { sendToUdsSocket: M, ownMessagingSocket: E } = import.meta.require(
-            "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js",
-          ),
+        let { sendToUdsSocket: M, ownMessagingSocket: E } = lazy_chunk_ddtmwhn7,
           { subscribeToPeerIdle: S, idleSubscriptionLines: B } =
-            import.meta.require("../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js"),
+            lazy_subscribeToPeerIdle_tk67nd8x,
           { notify: P, refusedForPrincipal: v } = ve(e, t),
           x = e.message.trim().length > 0,
           C = Qe({
@@ -1998,9 +2003,7 @@ ${w[0].text}`,
       o.kind !== "ambiguous" &&
       o.kind !== "not-found"
     ) {
-      let { idleSelfTargetMessage: h } = import.meta.require(
-        "../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js",
-      );
+      let { idleSelfTargetMessage: h } = lazy_subscribeToPeerIdle_tk67nd8x;
       return (
         i("unresolved", "invalid_target"),
         logFeatureSad(
@@ -2581,12 +2584,10 @@ ${M}`,
         }
       }
       case "local-session": {
-        let { sendToUdsSocket: h, ownMessagingSocket: I } = import.meta.require(
-            "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js",
-          ),
+        let { sendToUdsSocket: h, ownMessagingSocket: I } = lazy_chunk_ddtmwhn7,
           D = getCurrentSessionPeerName(),
           { subscribeToPeerIdle: M, idleSubscriptionLines: E } =
-            import.meta.require("../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js"),
+            lazy_subscribeToPeerIdle_tk67nd8x,
           { notify: S, refusedForPrincipal: B } = ve(e, t),
           P = Qe({
             input: e,
@@ -2701,11 +2702,11 @@ ${V.display}`
             postInterClaudeMessage: D,
             isLikelyStaleBridgeError: M,
             classifyBridgeSendError: E,
-          } = import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+          } = lazy_listBridgePeerSessions_g159fp6a,
           {
             isRemoteControlPeerUnreachableFromHere: S,
             formatUnreachableElevatedRefusal: B,
-          } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
+          } = lazy_chunk_tyce0p0b;
         if (o.via === "remote-control" && S())
           return (
             i("bridge", "bridge_auth", { via: I }),

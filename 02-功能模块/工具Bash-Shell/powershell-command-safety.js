@@ -1430,7 +1430,12 @@ var ke = new Set(["invoke-webrequest", "invoke-restmethod"]),
     "route",
     "arp",
   ]),
-  UNSAFE_COMMAND_NAMES = (() => {
+  // 【惰性化 1】原来是顶层 IIFE，模块求值期就读 POWERSHELL_COMMAND_ALIASES；
+  // 全静态化后求值顺序变了，那一项还没赋值。改成第一次用时才算。
+  UNSAFE_COMMAND_NAMES = undefined,
+  __getUnsafeCommandNames = () => {
+    if (UNSAFE_COMMAND_NAMES) return UNSAFE_COMMAND_NAMES;
+    UNSAFE_COMMAND_NAMES = (() => {
     let e = new Set([
       ...Ne,
       ...SCRIPT_FILE_EXECUTION_COMMANDS,
@@ -1444,7 +1449,9 @@ var ke = new Set(["invoke-webrequest", "invoke-restmethod"]),
       ...INTERPRETER_COMMAND_NAMES.filter((t) => !t.includes(" ")),
     ]);
     return new Set([...e, ...De(e)]);
-  })();
+    })();
+    return UNSAFE_COMMAND_NAMES;
+  };
 export {
   POWERSHELL_WHITESPACE_REGEX,
   stripLeadingWhitespaceAndComments,
@@ -1473,4 +1480,5 @@ export {
   ARBITRARY_CODE_EXECUTION_COMMANDS,
   MODULE_OR_SCRIPT_INSTALL_COMMANDS,
   UNSAFE_COMMAND_NAMES,
+  __getUnsafeCommandNames,
 };

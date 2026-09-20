@@ -8,8 +8,10 @@
 
 // Version: 2.1.263
 import { defineExportGetters, importMetaRequire } from "./chunk-2c9tjhwd.js";
+import * as lazy_SKILL_5m53528d from "./SKILL-5m53528d.md";
+
 var Ftn = {};
 defineExportGetters(Ftn, { SKILL_MD: () => SKILL_MD, default: () => Ftn });
-var e = importMetaRequire("./SKILL-5m53528d.md");
+var e = lazy_SKILL_5m53528d;
 var SKILL_MD = e;
 export { SKILL_MD, Ftn as default };

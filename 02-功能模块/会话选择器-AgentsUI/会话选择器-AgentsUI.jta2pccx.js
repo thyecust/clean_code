@@ -2354,6 +2354,8 @@ function ji(s, c) {
 }
 import { isAbsolute } from "path";
 import { basename } from "path";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 var eb = 200;
 function qi() {
   return Ca() && isPastSessionsExperimentEnabled();
@@ -4601,8 +4603,7 @@ function bp(s) {
           scope: "dynamic",
         };
         if ((await awaitPolicyColdStart(), b || isMcpServerBlockedAtConnectTime("ide", w))) return;
-        let { clearServerCache: v, connectToServer: R } = import.meta
-            .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+        let { clearServerCache: v, connectToServer: R } = lazy_mcpClientModule_4cyej0np
             .mcpClientModule(),
           O = await R("ide", w);
         if (b) return;

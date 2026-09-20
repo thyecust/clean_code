@@ -74,6 +74,8 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与
 import { stat } from "fs/promises";
 F();
 import { cwd } from "process";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 F();
 function ot(Wt) {
   logForDebugging(`Failed to read existing MCP configs for Desktop import: ${l(Wt)}`, {
@@ -315,7 +317,7 @@ function dt(Xr) {
   return Xr !== null;
 }
 function Pe() {
-  return import.meta.require("./mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function Z() {
   return Pe().mcpAuthModule();

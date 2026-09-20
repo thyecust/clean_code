@@ -261,6 +261,9 @@ import { isNonRegularPathErrno } from "../../02-功能模块/图片-截图-Compu
 
 
 import { A2n, ESo, Prn, Q3, Rrn, TFe, THIRD_PARTY_PLUGIN_LABEL, USER_REJECTED_TOOL_USE_MESSAGE, Wts, bJt, brs, t3t, xSt, ydt } from "./execution-core.js";
+import * as lazy_createLSPClient_90ck36a6 from "../../02-功能模块/IDE集成-LSP/createLSPClient.90ck36a6.js";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+
 
 
 
@@ -7735,7 +7738,7 @@ var uJr = -32801,
 
 
 function ttn(e, t) {
-  let { createLSPClient: r } = import.meta.require("../../02-功能模块/IDE集成-LSP/createLSPClient.90ck36a6.js"),
+  let { createLSPClient: r } = lazy_createLSPClient_90ck36a6,
     o = "stopped",
     d,
     p = 0,
@@ -20451,7 +20454,7 @@ var qKo = createLazyValue(() =>
             d.map(async (_) => {
               if (!isConnectedMcpServer(_) || !_.capabilities?.resources) return [];
               let { ensureConnectedClient: E, fetchResourcesForClient: C } =
-                import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+                lazy_mcpClientModule_4cyej0np.mcpClientModule();
               try {
                 let I = await E(_, {
                   signal: r.signal,
@@ -20568,7 +20571,7 @@ function getDiscoveryCacheStore() {
 
 
 function wdt() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 
 
@@ -20760,7 +20763,7 @@ var JKo = createLazyValue(() =>
 
 
 function Tdt() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 
 
@@ -20922,7 +20925,7 @@ ${jsonStringify(e)}`,
 
 
 function vdt() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 
 

@@ -9,8 +9,11 @@
 // Version: 2.1.263
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-var e = importMetaRequire("./cli-f091jpwx.md");
-var t = importMetaRequire("./server-6cyhjq09.md");
+import * as lazy_cli_f091jpwx from "../../01-核心基础设施/内嵌资源与模块互操作/cli-f091jpwx.md";
+import * as lazy_server_6cyhjq09 from "../../01-核心基础设施/内嵌资源与模块互操作/server-6cyhjq09.md";
+
+var e = lazy_cli_f091jpwx;
+var t = lazy_server_6cyhjq09;
 var s = "./SKILL-cf37e4b8.md.zst";
 var i = readEmbeddedAssetSync(s, import.meta.dirname);
 var SKILL_MD = i,

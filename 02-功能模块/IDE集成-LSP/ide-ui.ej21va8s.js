@@ -34,6 +34,8 @@ import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jp
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import * as fe from "path";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 F();
 function St(Wo) {
   return { ...Wo, autoConnectIde: !1 };
@@ -737,8 +739,7 @@ function ft(_n) {
       if (!oe) {
         if (P && P.type === "connected" && L) {
           setMcpClientOnClose(P, po);
-          let { clearServerCache: Pn } = import.meta
-            .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+          let { clearServerCache: Pn } = lazy_mcpClientModule_4cyej0np
             .mcpClientModule();
           (Pn("ide", P.config), at(fo));
         }

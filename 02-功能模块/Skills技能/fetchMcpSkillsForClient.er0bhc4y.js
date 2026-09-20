@@ -33,6 +33,8 @@ import { xA, Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { randomBytes } from "crypto";
 import { mkdir, rename, rm, writeFile } from "fs/promises";
 import { join } from "path";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 function F(e) {
   if (!e.endsWith("/SKILL.md")) return;
   let r = e.slice(0, -9);
@@ -41,19 +43,17 @@ function F(e) {
   return r;
 }
 function T() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpDirectoryReadModule();
+  return lazy_mcpClientModule_4cyej0np.mcpDirectoryReadModule();
 }
 function O() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpSkillsListModule();
+  return lazy_mcpClientModule_4cyej0np.mcpSkillsListModule();
 }
 function U() {
-  return import.meta
-    .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpSdkErrorClassificationModule();
 }
 function P(e) {
-  return import.meta
-    .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpIsListAuthErrorModule()
     .isClaudeAiBearerRejectedError(e);
 }

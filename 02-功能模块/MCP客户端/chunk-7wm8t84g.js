@@ -29,6 +29,8 @@ function getMcpSkillBuilders() {
   return e;
 }
 import { createHash } from "crypto";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 function isMcpServerUrlMissing(e) {
   return (
     e.configErrorReason === "url_empty" ||
@@ -77,26 +79,22 @@ function getMcpServerConfigCacheKey(e, o) {
   return `${e}-${hashMcpServerConfig(o)}`;
 }
 function invokeMcpToolRaw(e, o, r) {
-  return import.meta
-    .require("./mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpClientModule()
     .invokeToolRaw(e.client, o, r);
 }
 function readMcpResourceRaw(e, o, r) {
-  return import.meta
-    .require("./mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpClientModule()
     .readResourceRaw(e.client, o, r);
 }
 function listMcpToolsRaw(e, o) {
-  return import.meta
-    .require("./mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpClientModule()
     .listToolsRaw(e.client, o);
 }
 function registerMcpNotificationHandler(e, o, r) {
-  import.meta
-    .require("./mcpClientModule.4cyej0np.js")
+  lazy_mcpClientModule_4cyej0np
     .mcpClientModule()
     .onMcpNotification(e, o, r);
 }

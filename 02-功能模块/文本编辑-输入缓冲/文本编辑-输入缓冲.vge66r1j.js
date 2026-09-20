@@ -1888,12 +1888,12 @@ function Tr() {
 function Et() {
   if (!Tr().claim()) return;
   try {
-    let { prewarm: e } = import.meta.require("../../01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js");
+    let { prewarm: e } = lazy_prewarm_ea9vpfhv;
     e();
   } catch {}
 }
 function Ct(e) {
-  let { isModifierPressed: t } = import.meta.require("../../01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js");
+  let { isModifierPressed: t } = lazy_prewarm_ea9vpfhv;
   return t(e);
 }
 var $r = () => {};
@@ -2432,6 +2432,8 @@ function useVoiceLevelMeter() {
 }
 F();
 import { basename } from "path";
+import * as lazy_prewarm_ea9vpfhv from "../../01-核心基础设施/核心工具-未归类/prewarm.ea9vpfhv.js";
+
 var _r = 50;
 function Pt() {
   return getImageLimitsForModel(getMainLoopModel());

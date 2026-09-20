@@ -65,6 +65,10 @@ import { MAIN_CONVERSATION_NAME } from "../02-功能模块/Teammates团队/chunk
 import { s, T, O, v, c, Qe, ai } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { realpath, unlink } from "fs/promises";
 import { basename } from "path";
+import * as lazy_chunk_tyce0p0b from "../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js";
+import * as lazy_chunk_ddtmwhn7 from "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import * as lazy_listBridgePeerSessions_g159fp6a from "../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js";
+
 var Q = createLazyValue(() =>
     Qe({
       to: s().describe(
@@ -179,7 +183,7 @@ ${PREVIOUSLY_USED_NAME_NOTE}`
       let {
         isRemoteControlPeerUnreachableFromHere: p,
         formatUnreachableElevatedRefusal: b,
-      } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
+      } = lazy_chunk_tyce0p0b;
       if (t.via === "remote-control" && p())
         return {
           kind: "refused",
@@ -279,8 +283,9 @@ ${C}`,
       };
   }
 }
-class V extends BoundedTtlCache {}
-class q extends BoundedTtlCache {}
+// 【惰性化 3】同理，只当 Map key 用。
+class V {}
+class q {}
 function K(e) {
   return [e.to, e.message ?? null, e.files.toSorted()];
 }
@@ -529,7 +534,7 @@ var SendFileTool = buildTool({
       let {
           isRemoteControlPeerUnreachableFromHere: r,
           formatUnreachableElevatedRefusal: y,
-        } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js"),
+        } = lazy_chunk_tyce0p0b,
         N =
           formatUnreachablePeerRefusal(o.session, _.sessionId, _.label) ??
           (_.via === "remote-control" && r() ? y(_.label) : void 0);
@@ -625,7 +630,7 @@ var SendFileTool = buildTool({
       if (h.aborted) throw (E(), new Ve());
       if (N.length === 0)
         return w(`No files could be staged for transfer to ${d.label}.`, r);
-      let { sendToUdsSocket: X } = import.meta.require("../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js");
+      let { sendToUdsSocket: X } = lazy_chunk_ddtmwhn7;
       try {
         let { msgId: g } = await X(
           d.sock,
@@ -730,7 +735,7 @@ var SendFileTool = buildTool({
     if (L.length === 0)
       return w(`No files could be uploaded for transfer to ${d.label}.`, D);
     let { postInterClaudeMessage: le, isLikelyStaleBridgeError: de } =
-        import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+        lazy_listBridgePeerSessions_g159fp6a,
       H = await le(
         d.sessionId,
         M(L.map((r) => r.file_name)),

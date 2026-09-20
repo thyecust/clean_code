@@ -22,8 +22,11 @@ import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未�
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { readFileSync } from "fs";
 import { join } from "path";
-var p = importMetaRequire("./loopAutonomousPreamble-07qcyhv4.md");
-var y = importMetaRequire("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
+import * as lazy_loopAutonomousPreamble_07qcyhv4 from "../../01-核心基础设施/内嵌资源与模块互操作/loopAutonomousPreamble-07qcyhv4.md";
+import * as lazy_loopAutonomousPreamblePersistent_3zqtkrvg from "../../01-核心基础设施/内嵌资源与模块互操作/loopAutonomousPreamblePersistent-3zqtkrvg.md";
+
+var p = lazy_loopAutonomousPreamble_07qcyhv4;
+var y = lazy_loopAutonomousPreamblePersistent_3zqtkrvg;
 function g() {
   if (a.CLAUDE_CODE_LOOP_PERSISTENT) return !0;
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_kairos_loop_persistent", !1);

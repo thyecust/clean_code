@@ -13,6 +13,12 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { sanitizeDisplayName, buildBridgeAddress, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getExternalPermissionMode } from "./chunk-e4pfvp7x.js";
 import { setAttestationSenderDropWriter, clearAttestationSenderDropWriter } from "../远程控制-Bridge/chunk-5ne99rq3.js";
+import * as lazy_认证_OAuth登录_419zdfz3 from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import * as lazy_chunk_zqr5ctyf from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import * as lazy_chunk_rfb3s38d from "../跨会话消息-UDS/chunk-rfb3s38d.js";
+import * as lazy_hasCloudPeerAccess_debnsz8e from "../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js";
+import * as lazy_withTimeout_0mr4qg1r from "../../01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js";
+
 function l(e, o) {
   let t = getSessionRuntimeState().dropSenderWriterByHandle;
   if (e !== null && e !== o) {
@@ -125,7 +131,7 @@ function d(e) {
   return ((t.peerIdentityKey = r), r);
 }
 function walkCredentialKey() {
-  let { sameOwnerAccount: e } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+  let { sameOwnerAccount: e } = lazy_认证_OAuth登录_419zdfz3,
     o = c(),
     t = getSessionRuntimeState(),
     i = t.walkCredentialKey;
@@ -134,13 +140,9 @@ function walkCredentialKey() {
   return ((t.walkCredentialKey = r), r);
 }
 function c() {
-  let { sessionsApiBearerFingerprint: e } = import.meta.require(
-      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
-    ),
-    { getStoredOauthAccountInfo: o } = import.meta.require(
-      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
-    ),
-    { env: t } = import.meta.require("../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js"),
+  let { sessionsApiBearerFingerprint: e } = lazy_认证_OAuth登录_419zdfz3,
+    { getStoredOauthAccountInfo: o } = lazy_认证_OAuth登录_419zdfz3,
+    { env: t } = lazy_chunk_zqr5ctyf,
     i = e();
   return {
     accountUuid: i ? `bearer:${i}` : void 0,
@@ -148,27 +150,23 @@ function c() {
   };
 }
 async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
-  let { isCrossSessionMessagingEnabled: t } = import.meta.require(
-    "../跨会话消息-UDS/chunk-rfb3s38d.js",
-  );
+  let { isCrossSessionMessagingEnabled: t } = lazy_chunk_rfb3s38d;
   if (!t()) return;
   if (!(
     getReplBridgeHandle() !== null ||
     getSdkHostedBridgeHandle() !== null ||
     getSessionRuntimeState().supervisedBridgeSession !== null
   )) {
-    let { hasCloudPeerAccess: p } = import.meta.require("../../01-核心基础设施/核心工具-未归类/hasCloudPeerAccess.debnsz8e.js");
+    let { hasCloudPeerAccess: p } = lazy_hasCloudPeerAccess_debnsz8e;
     if (!p()) return;
   }
-  let { primeSessionsApiBearer: r } = import.meta.require(
-      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
-    ),
+  let { primeSessionsApiBearer: r } = lazy_认证_OAuth登录_419zdfz3,
     s = r({ refresh: e, credentials: o }).catch(() => {});
   if (e) {
     await s;
     return;
   }
-  let { withDeadline: f } = import.meta.require("../../01-核心基础设施/核心工具-并发与缓存/withTimeout.0mr4qg1r.js");
+  let { withDeadline: f } = lazy_withTimeout_0mr4qg1r;
   await f(s, g);
 }
 var g = 750;

@@ -29630,7 +29630,7 @@ function yde(e, t) {
   }
   return `<${e}>`;
 }
-var Cde = import.meta.require("../多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
+var Cde = lazy_AGENT_VIEW_RELAUNCH_ENV_KEY_2qggy62y,
   DEFAULT_PROJECT_CONFIG = {
     allowedTools: [],
     mcpContextUris: [],
@@ -29871,8 +29871,7 @@ function wde(e) {
   }
   try {
     let r = importMetaRequire("child_process"),
-      d = import.meta
-        .require("../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js")
+      d = lazy_chunk_twnwwsbr
         .resolveExecutableSafely("git");
     if (d === null) return "untracked";
     let p = r.spawnSync(
@@ -30576,7 +30575,7 @@ function getExplicitRemoteControlAtStartup() {
   return resolveExplicitRemoteControlAtStartup().value;
 }
 function resolveExplicitRemoteControlAtStartup() {
-  let e = import.meta.require("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js"),
+  let e = lazy_核心工具_路径与平台_bt5mxc9p,
     t = e.projectSettingsAliasesUserSettings()
       ? void 0
       : e.getSettingsForSource("projectSettings")?.remoteControlAtStartup,
@@ -30605,7 +30604,7 @@ var Bde = {
 function getRemoteControlAtStartup() {
   let e = getExplicitRemoteControlAtStartup();
   if (e !== void 0) return e;
-  return import.meta.require("../远程控制-Bridge/chunk-9estzwf5.js").getCcrAutoConnectDefault();
+  return lazy_chunk_9estzwf5.getCcrAutoConnectDefault();
 }
 function getDaemonColdStart() {
   let e = process.env.CLAUDE_CODE_DAEMON_COLD_START;
@@ -33458,6 +33457,11 @@ import { request } from "http";
 import { Agent, request as Lpe } from "https";
 import { isIPv4, isIPv6 } from "net";
 import { connect, checkServerIdentity } from "tls";
+import * as lazy_AGENT_VIEW_RELAUNCH_ENV_KEY_2qggy62y from "../多会话视图-Fleet/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js";
+import * as lazy_chunk_twnwwsbr from "../../03-入口与运行时/CLI入口-Commander/chunk-twnwwsbr.js";
+import * as lazy_核心工具_路径与平台_bt5mxc9p from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import * as lazy_chunk_9estzwf5 from "../远程控制-Bridge/chunk-9estzwf5.js";
+
 var Fpe = new Set(["localhost", "127.0.0.1", "[::1]"]);
 function normalizeGatewayUrl(e) {
   let t = e.trim();

@@ -8,6 +8,8 @@
 
 // Version: 2.1.263
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-var e = importMetaRequire("./SKILL-nrz66j7x.md");
+import * as lazy_SKILL_nrz66j7x from "../../01-核心基础设施/内嵌资源与模块互操作/SKILL-nrz66j7x.md";
+
+var e = lazy_SKILL_nrz66j7x;
 var SKILL_MD = e;
 export { SKILL_MD };

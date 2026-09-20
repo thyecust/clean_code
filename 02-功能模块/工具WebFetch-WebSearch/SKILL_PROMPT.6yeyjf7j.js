@@ -10,12 +10,17 @@
 import { PLUGIN_EVAL_QUICKREF_MD } from "../插件系统/plugin-eval-quickref-asset.js";
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-var e = importMetaRequire("./claude-tag-dht2qzjm.md");
-var t = importMetaRequire("./live-sources-pvws3ftv.md");
+import * as lazy_claude_tag_dht2qzjm from "../../01-核心基础设施/内嵌资源与模块互操作/claude-tag-dht2qzjm.md";
+import * as lazy_live_sources_pvws3ftv from "../../01-核心基础设施/内嵌资源与模块互操作/live-sources-pvws3ftv.md";
+import * as lazy_recent_changes_ycb7sy2c from "../../01-核心基础设施/内嵌资源与模块互操作/recent-changes-ycb7sy2c.md";
+import * as lazy_SKILL_rsyv1bsc from "../../01-核心基础设施/内嵌资源与模块互操作/SKILL-rsyv1bsc.md";
+
+var e = lazy_claude_tag_dht2qzjm;
+var t = lazy_live_sources_pvws3ftv;
 var a = "./plugin-eval-b6bc95df.md.zst";
 var n = readEmbeddedAssetSync(a, import.meta.dirname);
-var o = importMetaRequire("./recent-changes-ycb7sy2c.md");
-var s = importMetaRequire("./SKILL-rsyv1bsc.md");
+var o = lazy_recent_changes_ycb7sy2c;
+var s = lazy_SKILL_rsyv1bsc;
 var SKILL_PROMPT = s,
   SKILL_FILES = {
     "references/claude-tag.md": e,

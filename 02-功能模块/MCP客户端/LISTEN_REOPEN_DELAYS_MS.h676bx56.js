@@ -729,17 +729,22 @@ function so(e, t) {
   };
 }
 import { dirname } from "path";
+import * as lazy_fetchMcpSkillsForClient_er0bhc4y from "../Skills技能/fetchMcpSkillsForClient.er0bhc4y.js";
+import * as lazy_getMcpAutoBackgroundMs_7m99c5cf from "./getMcpAutoBackgroundMs.7m99c5cf.js";
+import * as lazy_getClaudeInChromeMCPToolOverrides_9f9wpf77 from "../浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js";
+import * as lazy_buildSessionContext_s2wedcct from "../图片-截图-ComputerUse/buildSessionContext.s2wedcct.js";
+
 function Eo(e) {
   return asMcpClient(e);
 }
 function Xe(e) {
   return asMcpSdkClient(e);
 }
-var wt = import.meta.require("../Skills技能/fetchMcpSkillsForClient.er0bhc4y.js");
+var wt = lazy_fetchMcpSkillsForClient_er0bhc4y;
 var yn = null,
   Bt = null,
   It = null,
-  _n = import.meta.require("./getMcpAutoBackgroundMs.7m99c5cf.js");
+  _n = lazy_getMcpAutoBackgroundMs_7m99c5cf;
 function Po(e) {
   return (
     e instanceof SdkHttpError &&
@@ -1078,8 +1083,8 @@ function getMcpToolIdleTimeoutMs(e) {
   let r = e?.timeout !== void 0 && e.timeout >= 1000 ? e.timeout : 0;
   return Math.min(Math.max(o, r, 1000), getMcpToolTimeoutMs(e));
 }
-var Br = () => import.meta.require("../浏览器集成-ClaudeinChrome/getClaudeInChromeMCPToolOverrides.9f9wpf77.js"),
-  Ur = () => import.meta.require("../图片-截图-ComputerUse/buildSessionContext.s2wedcct.js"),
+var Br = () => lazy_getClaudeInChromeMCPToolOverrides_9f9wpf77,
+  Ur = () => lazy_buildSessionContext_s2wedcct,
   MCP_TREE_ID = "v2",
   jr = 900000,
   zr = 14400000,

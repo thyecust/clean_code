@@ -27,6 +27,8 @@ import "../认证-OAuth登录/pkce-challenge.js";
 import "../认证-OAuth登录/oauth-client.js";
 import { createMcpTaskRecord } from "./mcp-task-record.js";
 import { StreamableHTTPError } from "../MCP传输-stdio-SSE-HTTP/streamable-http-client-transport.js";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 var K = new Set([
   "ClaudeAiProxyBearerRejectedError",
   "McpAuthError",
@@ -54,7 +56,7 @@ function w(e) {
   return K.has(r);
 }
 function p() {
-  return import.meta.require("./mcpClientModule.4cyej0np.js").mcpTaskWatcherModule();
+  return lazy_mcpClientModule_4cyej0np.mcpTaskWatcherModule();
 }
 var V = 120000,
   W = new Set(["sse-ide", "ws-ide"]);

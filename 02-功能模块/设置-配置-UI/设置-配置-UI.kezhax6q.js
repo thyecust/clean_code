@@ -1435,7 +1435,7 @@ function ga({
     Mu = useAppStateSelector((k) => (isFastModeEnabled() ? k.fastMode : !1)),
     Up = useAppStateSelector((k) => k.promptSuggestionEnabled),
     Wp = useAppStateSelector((k) => k.awaySummaryEnabled),
-    Hp = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js").isBriefEntitled(),
+    Hp = lazy_chunk_1p3batyk.isBriefEntitled(),
     Vp = useSetAppState(),
     [Eu, Gp] = d({}),
     Kp = C(xu);
@@ -5181,6 +5181,8 @@ function Ry(s, c, m = 5000) {
   });
 }
 import { basename, sep } from "path";
+import * as lazy_chunk_1p3batyk from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+
 var Ko = 5,
   _y = 1,
   $i = 5,

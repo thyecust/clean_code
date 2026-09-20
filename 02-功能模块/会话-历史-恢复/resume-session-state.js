@@ -183,6 +183,8 @@ async function se(e, o, t) {
 }
 import { resolve, win32 } from "path";
 import { realpathSync, statSync } from "fs";
+import * as lazy_chunk_wdns14nh from "../目标模式-Goal/chunk-wdns14nh.js";
+
 function applyAgentFrontmatterHooks(e) {
   if (!e || !hasAgentFrontmatterHooks(e.hooks)) {
     yHt(void 0);
@@ -238,8 +240,7 @@ function restoreTranscriptDerivedState(e, o, t, r) {
       o((d) => ({ ...d, fileHistory: s }));
     });
   if (
-    (import.meta
-      .require("../目标模式-Goal/chunk-wdns14nh.js")
+    (lazy_chunk_wdns14nh
       .restoreGoalFromTranscript(e.messages, o, t),
     !areTasksEnabled() && e.messages && e.messages.length > 0)
   ) {
@@ -951,7 +952,7 @@ async function restoreSessionFromTranscript(e, o, t) {
   let _ = t.initialState,
     N = createSessionHookRegistry();
   return (
-    import.meta.require("../目标模式-Goal/chunk-wdns14nh.js").restoreGoalFromTranscript(
+    lazy_chunk_wdns14nh.restoreGoalFromTranscript(
       e.messages,
       (f) => {
         _ = f(_);

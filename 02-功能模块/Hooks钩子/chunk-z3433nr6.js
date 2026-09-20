@@ -751,6 +751,8 @@ function W({ scan: e, linked: o }, r, t) {
   return { fn: se(u, p.imported), linked: u };
 }
 import { createHash } from "crypto";
+import * as lazy_bundled_skills from "../Skills技能/bundled-skills.js";
+
 var v = (e) => `${e.length}:${e}`;
 function yr(e) {
   let o = createHash("sha256");
@@ -1219,9 +1221,7 @@ function ut(e) {
   let o = getHostStateStore().builtinPluginWiredSkills,
     r = o.get(e);
   if (!r) {
-    let { wireSkillFilesExtraction: p } = import.meta.require(
-      "../Skills技能/bundled-skills.js",
-    );
+    let { wireSkillFilesExtraction: p } = lazy_bundled_skills;
     ((r = p(e)), o.set(e, r));
   }
   let { skillRoot: t, getPromptForCommand: n } = r,

@@ -55,6 +55,8 @@ import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
 import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import * as lazy_TeleportMenu_ey2n7fyy from "./TeleportMenu.ey2n7fyy.js";
+
 F();
 function B(b) {
   return Boolean(b.replBridgeSessionId) && !b.replBridgeOutboundOnly;
@@ -103,7 +105,7 @@ function L(W) {
   else D = i[5];
   let [Y] = d(D);
   if (Y) {
-    let { TeleportMenu: Z } = import.meta.require("./TeleportMenu.ey2n7fyy.js");
+    let { TeleportMenu: Z } = lazy_TeleportMenu_ey2n7fyy;
     let m;
     if (i[6] !== p || i[7] !== C || i[8] !== c || i[9] !== o || i[10] !== l)
       ((m = e(Z, {

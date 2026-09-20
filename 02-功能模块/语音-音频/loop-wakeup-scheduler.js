@@ -32,7 +32,9 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { FIVE_MINUTES_MS } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js";
-var w = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
+import * as lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba from "../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js";
+
+var w = lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba,
   _ = 60,
   b = 3600,
   O = 1200,
