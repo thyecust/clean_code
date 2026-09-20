@@ -2,3 +2,5 @@ __embedded-lazy-assets.js
 __tree-assets.js
 bake-entry.js
 .stage/
+__baked-assets.js
+bake-entry.js

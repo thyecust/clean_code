@@ -164,7 +164,17 @@ for (const f of walk(ROOT)) {
     // 同一路径的静态 import 就找不到导出了（实测：MonitorTool.js 的 wsEgressDenyReason，
     // 那个导出其实就在 657 行）—— 所以这种照常静态化，环的风险另测。
     const _abs = resolve(hubBase ? HUB : dirname(f), spec);
-    if (_keepTargets.has(_abs)) {
+    // 【全静态化】本来这里是 `if (_keepTargets.has(_abs))` —— 把成环边的目标
+    // 保留成 `import.meta.require`，交给资源嵌入。那是「asset 方案」的做法。
+    //
+    // 实测那条路不必走：静态化确实会成环，但环**只在「顶层求值」时才有害**，
+    // 而全树这样的点只有 3 处（见 powershell-command-safety.js / 工具Bash-Shell.js /
+    // SendMessageTool.js 里的「惰性化 N」注释）。修掉那 3 处之后，450 处全部静态化，
+    // `--help` 逐字节不变，且**不需要把任何 .js 当 asset**。
+    //
+    // 所以这里关掉：全静态化 + 只嵌 .zst/.node 资源 = 107 MB 二进制。
+    // 要回到 asset 方案的话，把下面的 `false &&` 去掉即可。
+    if (false && _keepTargets.has(_abs)) {
       stats.cyclic.push({ file: rel, spec });
       return;
     }
