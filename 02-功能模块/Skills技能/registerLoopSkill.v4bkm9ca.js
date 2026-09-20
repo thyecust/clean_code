@@ -25,7 +25,9 @@ import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/核心工具-
 import { LOOP_SKILL_NAME } from "./bundled-skill-names.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME, AUTONOMOUS_LOOP_SENTINEL, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
-var r = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
+import * as lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba from "../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js";
+
+var r = lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba,
   b = "10m";
 function y() {
   return isAgentPushNotificationEnabled()

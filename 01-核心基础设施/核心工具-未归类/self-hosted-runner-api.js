@@ -15,6 +15,8 @@ import { jsonStringify } from "../核心工具-日志与脱敏/核心工具-日�
 import { getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { redactSecrets } from "../核心工具-日志与脱敏/redact-secrets.js";
+import * as lazy_模型目录_ModelCatalog_3msq3jt8 from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+
 var p =
   " \u2014 run `claude login` to refresh your session, or verify ANTHROPIC_BASE_URL matches your login environment";
 class i extends Error {
@@ -26,7 +28,7 @@ class i extends Error {
 }
 var DEFAULT_HEALTH_PORT = 8080;
 function c() {
-  let { getAPIProvider: t } = import.meta.require("../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js");
+  let { getAPIProvider: t } = lazy_模型目录_ModelCatalog_3msq3jt8;
   if (t() !== "firstParty")
     throw new i(
       403,

@@ -53,6 +53,8 @@ var MCP_URL_ELICITATION_DIALOG = defineDialog({
   default: { action: "cancel" },
 });
 import { join } from "path";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 function getMcpNeedsAuthCachePath() {
   return join(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
 }
@@ -102,7 +104,7 @@ function clearMcpNeedsAuthCache(t) {
     .catch(() => {});
 }
 function T() {
-  return import.meta.require("./mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function b() {
   return T().mcpAuthModule();

@@ -9,14 +9,21 @@
 // Version: 2.1.263
 import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
 import { importMetaRequire } from "./chunk-2c9tjhwd.js";
-var e = importMetaRequire("./cli-40vh1c3p.md");
+import * as lazy_cli_40vh1c3p from "./cli-40vh1c3p.md";
+import * as lazy_library_yywvyb11 from "./library-yywvyb11.md";
+import * as lazy_playwright_g4wwbqeh from "./playwright-g4wwbqeh.md";
+import * as lazy_server_z4ytjptt from "./server-z4ytjptt.md";
+import * as lazy_tui_93b0fcsh from "./tui-93b0fcsh.md";
+import * as lazy_SKILL_9ddmsnpa from "./SKILL-9ddmsnpa.md";
+
+var e = lazy_cli_40vh1c3p;
 var t = "./electron-8035775b.md.zst";
 var a = readEmbeddedAssetSync(t, import.meta.dirname);
-var s = importMetaRequire("./library-yywvyb11.md");
-var n = importMetaRequire("./playwright-g4wwbqeh.md");
-var r = importMetaRequire("./server-z4ytjptt.md");
-var i = importMetaRequire("./tui-93b0fcsh.md");
-var o = importMetaRequire("./SKILL-9ddmsnpa.md");
+var s = lazy_library_yywvyb11;
+var n = lazy_playwright_g4wwbqeh;
+var r = lazy_server_z4ytjptt;
+var i = lazy_tui_93b0fcsh;
+var o = lazy_SKILL_9ddmsnpa;
 var SKILL_MD = o,
   RUN_EXAMPLE_FILES = {
     "examples/cli.md": e,

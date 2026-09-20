@@ -288,7 +288,12 @@ function ln(e) {
   }
   return;
 }
-var cn = [
+// 【惰性化 2】原来顶层就展开 KNOWN_COMMAND_NAMES；全静态化后求值顺序变了。
+var cn = null;
+var dn = null;
+function __getDn() {
+  if (dn) return dn;
+  cn = [
     ...KNOWN_COMMAND_NAMES,
     "Invoke-WebRequest",
     "winget",
@@ -307,8 +312,10 @@ var cn = [
     "icacls",
     "certutil",
     "schtasks",
-  ],
-  un = [
+  ];
+  return (dn = new Map(cn.map((e) => [e.toLowerCase(), e])));
+}
+var un = [
     "get",
     "set",
     "new",
@@ -331,8 +338,7 @@ var cn = [
     "convertto",
     "convertfrom",
   ];
-var dn = new Map(cn.map((e) => [e.toLowerCase(), e])),
-  mn = new Map(un.map((e) => [e, `cmdlet_${e}`])),
+var mn = new Map(un.map((e) => [e, `cmdlet_${e}`])),
   pn = new Set([
     "set-location",
     "push-location",
@@ -349,7 +355,7 @@ function Ie(e) {
     return POWERSHELL_COMMAND_ALIASES[f]?.toLowerCase() ?? f;
   });
   for (let a of t) {
-    let d = dn.get(a);
+    let d = __getDn().get(a);
     if (d) return d;
   }
   let o,

@@ -14569,15 +14569,13 @@ function getBuiltInAgents() {
   let e = Ave();
   if (e === "none") return [];
   if (e === "coordinator") {
-    let { getCoordinatorAgents: o } = import.meta.require(
-      "../../02-功能模块/权限系统/getCoordinatorAgents.2te73w6j.js",
-    );
+    let { getCoordinatorAgents: o } = lazy_getCoordinatorAgents_2te73w6j;
     return o();
   }
   let t = [GENERAL_PURPOSE_AGENT];
   if (!isSafeMode()) t.push(xZt);
   if (!isAgentViewDisabled()) {
-    let { CLAUDE_AGENT: o } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js");
+    let { CLAUDE_AGENT: o } = lazy_chunk_kyy28ene;
     t.push(o);
   }
   if (f8()) t.push(b0, vve);
@@ -16217,8 +16215,7 @@ function getIdeConnectionStatus(e) {
   return { status: "disconnected", ideName: o };
 }
 async function invokeIdeRpc(e, t, r) {
-  return import.meta
-    .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpClientModule()
     .callIdeRpc(e, t, r);
 }
@@ -28174,9 +28171,9 @@ function GDo(e) {
 function iNn(e) {
   return Sq(e) && (e.type === "thinking" || e.type === "redacted_thinking");
 }
-var KDo = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js").BRIEF_TOOL_NAME,
-  YDo = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js").LEGACY_BRIEF_TOOL_NAME,
-  XDo = import.meta.require("../../02-功能模块/远程工具执行/chunk-a5errgr8.js").SEND_USER_FILE_TOOL_NAME,
+var KDo = lazy_chunk_q599wyee.BRIEF_TOOL_NAME,
+  YDo = lazy_chunk_q599wyee.LEGACY_BRIEF_TOOL_NAME,
+  XDo = lazy_chunk_a5errgr8.SEND_USER_FILE_TOOL_NAME,
   QDo = new Set([
     "compaction_reminder",
     "companion_intro",
@@ -47678,8 +47675,7 @@ async function logInitialContextSize(e, t, r, o, d) {
   let p = () => {
       if (Object.keys(t).length === 0) return Promise.resolve({ tools: [] });
       try {
-        let { prefetchAllMcpResources: Ne } = import.meta
-          .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+        let { prefetchAllMcpResources: Ne } = lazy_mcpClientModule_4cyej0np
           .mcpClientModule();
         return Ne(t, o, d);
       } catch (Ne) {
@@ -49216,6 +49212,12 @@ async function flushPendingAsyncRewakeHooks() {
 }
 
 import { Amr, C2e, DWe, I4, JR, Jd, KSe, Lmr, Mmr, N3e, NOTIFICATION_DELAY_MS, NWe, Tmr, Zhe, bMt, createBaseHookInput, formatHookTarget, formatScriptHookLabel, getMaterializedSessionFile, getPolicyEnabledPluginIds, getTranscriptPathForSession, qb, recordPluginUsage, shouldSkipHookDueToTrust, tM, vmr } from "./hook-helper.js";
+import * as lazy_getCoordinatorAgents_2te73w6j from "../../02-功能模块/权限系统/getCoordinatorAgents.2te73w6j.js";
+import * as lazy_chunk_kyy28ene from "../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_chunk_q599wyee from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
+import * as lazy_chunk_a5errgr8 from "../../02-功能模块/远程工具执行/chunk-a5errgr8.js";
+
 
 
 

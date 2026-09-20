@@ -81,6 +81,10 @@ import { pruneAgentNameRegistry } from "../Teammates团队/agent-lifecycle.js";
 import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { randomUUID } from "crypto";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_核心应用_Agent循环_wmzgeczq from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+
 async function* clearConversation({
   session: t,
   setMessages: m,
@@ -207,8 +211,7 @@ async function* clearConversation({
     for (let e of s().mcp.clients)
       if (e.name === "ide" && e.type === "connected") {
         setMcpClientOnClose(e, void 0);
-        let { clearServerCache: r } = import.meta
-          .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+        let { clearServerCache: r } = lazy_mcpClientModule_4cyej0np
           .mcpClientModule();
         await r(e.name, e.config).catch(() => {});
       }
@@ -242,8 +245,8 @@ async function* clearConversation({
     initTaskOutputAsSymlink(e.id, getAgentTranscriptPath(oo(e.agentId)));
   }
   {
-    let { saveMode: e } = import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
-      { isCoordinatorMode: r } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
+    let { saveMode: e } = lazy_核心应用_Agent循环_wmzgeczq,
+      { isCoordinatorMode: r } = lazy_提示词_SystemPrompt_bt5gmcr2;
     e(r() ? "coordinator" : "normal");
   }
   let R = getCurrentWorktreeSession();

@@ -214,6 +214,8 @@ import {
 } from "fs/promises";
 import { homedir } from "os";
 import { resolve } from "path";
+import * as lazy_udsInboxShape_dasynwyz from "../../02-功能模块/跨会话消息-UDS/udsInboxShape.dasynwyz.js";
+
 function h() {
   return !1;
 }
@@ -2733,7 +2735,7 @@ function f(t, o) {
 var env = f(AI, T),
   DI = {},
   antEnv = f(DI, null),
-  cI = import.meta.require("../../02-功能模块/跨会话消息-UDS/udsInboxShape.dasynwyz.js").udsInboxShape,
+  cI = lazy_udsInboxShape_dasynwyz.udsInboxShape,
   udsEnv = f(cI, null);
 export {
   isRunningWithBun,

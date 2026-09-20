@@ -29,6 +29,8 @@ import { getAutoContinueAtUsageLimitSetting, isAutoContinueSettingUserControlled
 import { getSecuritySensitiveSettings, getEffectiveConfig, noopConfigSetters, createSettingsViewModel } from "../../01-核心基础设施/设置-配置/settings-config-model.js";
 import { isWorkflowSizeGuidelineConfigured } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+import * as lazy_chunk_1p3batyk from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+
 function parseConfigShorthand(n) {
   let o = n.trim();
   if (!o || !o.includes("=")) return null;
@@ -298,7 +300,7 @@ function c(n, o) {
     r = !isWorkflowSizeGuidelineConfigured(),
     u = isAutoContinueSettingUserControlled(),
     h = isArtifactConfigToggleable(),
-    C = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js").isBriefEntitled();
+    C = lazy_chunk_1p3batyk.isBriefEntitled();
   return {
     globalConfig: s,
     settingsData: e,

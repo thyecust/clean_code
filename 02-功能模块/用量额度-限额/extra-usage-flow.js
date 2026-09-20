@@ -14,7 +14,9 @@ import { runPostLoginHooks, loginCompletion, Login } from "../远程控制-Bridg
 import { UsageCreditsAdminRequestDialog } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { USAGE_CREDITS_ADMIN_REQUEST_NOTICE, canBuyUsageCreditsInApp, resolveExtraUsageOutcome } from "../成本-Token统计/usage-credits-flow.js";
-var s = import.meta.require("./ExtraUsageDialog.fybj08bs.js").ExtraUsageDialog;
+import * as lazy_ExtraUsageDialog_fybj08bs from "./ExtraUsageDialog.fybj08bs.js";
+
+var s = lazy_ExtraUsageDialog_fybj08bs.ExtraUsageDialog;
 async function startExtraUsageFlow(u, n) {
   let t = withAutoResumeRecheck(u);
   if (s && canBuyUsageCreditsInApp()) return e(s, { onDone: t });

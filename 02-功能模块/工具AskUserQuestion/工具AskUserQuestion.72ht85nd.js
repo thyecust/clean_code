@@ -42,6 +42,8 @@ import {
 } from "fs/promises";
 import { dirname, join } from "path";
 import { appendFile } from "fs/promises";
+import * as lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba from "../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js";
+
 var Te = [
     "**/.claude/scheduled_tasks.lock",
     "**/.claude/scheduled_tasks.json",
@@ -181,7 +183,7 @@ class Z {
       (this.lastBlockedBy = void 0));
   }
 }
-var Ee = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
+var Ee = lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba,
   ue = 1000,
   Le = 300,
   Oe = 5000;

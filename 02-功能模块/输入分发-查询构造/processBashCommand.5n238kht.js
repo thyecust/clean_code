@@ -22,6 +22,8 @@ import { PERSISTED_OUTPUT_OPEN_TAG, persistMappedToolResult } from "../工具结
 import { getDefaultShell } from "../终端环境探测-TUI-tmux/get-default-shell.js";
 import { getBashSpawnFailureDetail } from "../../01-核心基础设施/核心工具-未归类/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
+import * as lazy_工具Bash_Shell_edt8d0b4 from "../工具Bash-Shell/工具Bash-Shell.edt8d0b4.js";
+
 async function processBashCommand(t, S, e) {
   let h = isPowerShellToolEnabled() && getDefaultShell() === "powershell",
     l = getInitialSettings().respondToBashCommands ?? !0;
@@ -60,7 +62,7 @@ async function processBashCommand(t, S, e) {
         });
       },
       o = null;
-    if (h) o = import.meta.require("../工具Bash-Shell/工具Bash-Shell.edt8d0b4.js").PowerShellTool;
+    if (h) o = lazy_工具Bash_Shell_edt8d0b4.PowerShellTool;
     let y = o ?? BashTool,
       r = (
         o

@@ -25,6 +25,8 @@ import { fetchOrgSkills } from "../02-功能模块/Skills技能/org-skills-sync.
 import "../02-功能模块/云会话-Teleport/first-party-remote-session.js";
 import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "../02-功能模块/插件系统/plugin-skill-tool-names.js";
 import { s, O, v, c, Qe, it, X } from "../00-第三方库/zod/zod.5ef0bk11.js";
+import * as lazy_ATIS_REQUEST_HEADER_9bwp2jqb from "../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js";
+
 var z = createLazyValue(() =>
     it({
       id: s(),
@@ -387,8 +389,7 @@ Do NOT call this if the suggestion is not relevant, you are unsure it would help
   }),
   ie = "tengu_saddle_lantern";
 function Q() {
-  return import.meta
-    .require("../01-核心基础设施/核心工具-未归类/ATIS_REQUEST_HEADER.9bwp2jqb.js")
+  return lazy_ATIS_REQUEST_HEADER_9bwp2jqb
     .getFeatureValueWithSource_CACHED_MAY_BE_STALE(ie, !1);
 }
 function J() {

@@ -2807,7 +2807,7 @@ function Cu(e) {
 function ia({ proactivityLevel: e, toolPermissionContext: t }) {
   return;
 }
-var Gp = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js").getCoordinatorUserContext;
+var Gp = lazy_提示词_SystemPrompt_bt5gmcr2.getCoordinatorUserContext;
 function Pl({ userSpecifiedModel: e, permissionMode: t, thinkingConfig: o }) {
   let d = e && (isExemptDefaultResolvingPick(e) || isModelAllowed(e)) ? parseUserSpecifiedModel(e) : getMainLoopModel(),
     _ = getRuntimeMainLoopModel({ permissionMode: t, mainLoopModel: d });
@@ -4915,7 +4915,7 @@ function em(e, t) {
   return t.hostOwnsStdinOrigin ? e.hooks : void 0;
 }
 function ga() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 function Wl(e, t, o, d) {
   if (Object.hasOwn(t, e)) return t[e];
@@ -6415,6 +6415,20 @@ function nf(e) {
 }
 import { homedir, userInfo } from "os";
 import { isAbsolute } from "path";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_chunk_s1hpfa12 from "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js";
+import * as lazy_工具AskUserQuestion_72ht85nd from "../../02-功能模块/工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js";
+import * as lazy_chunk_52kaw3c1 from "../../01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js";
+import * as lazy_chunk_mk3zm4ew from "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
+import * as lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba from "../../02-功能模块/自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js";
+import * as lazy_fetchMcpSkillsForClient_er0bhc4y from "../../02-功能模块/Skills技能/fetchMcpSkillsForClient.er0bhc4y.js";
+import * as lazy_核心应用_Agent循环_wmzgeczq from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import * as lazy_bootTeleportFromTranscript_pyxed80h from "../../02-功能模块/云会话-Teleport/bootTeleportFromTranscript.pyxed80h.js";
+import * as lazy_validateExplicitMessagingSocketPath_knbv811d from "../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js";
+import * as lazy_MAX_IDLE_SUBSCRIPTIONS_7zp91kjd from "../../02-功能模块/跨会话消息-UDS/MAX_IDLE_SUBSCRIPTIONS.7zp91kjd.js";
+import * as lazy_chunk_54kz7amv from "../../02-功能模块/制品发布-Artifact/chunk-54kz7amv.js";
+
 function rf() {
   try {
     return userInfo().homedir;
@@ -6463,18 +6477,18 @@ function __(e, t, o, d) {
     return `update_settings values must be strings (deletion is not supported): ${I.sort().join(", ")}`;
   return null;
 }
-var cf = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js"),
-  jo = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
-  y_ = import.meta.require("../../02-功能模块/工具AskUserQuestion/工具AskUserQuestion.72ht85nd.js"),
-  h_ = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-52kaw3c1.js"),
-  uf = import.meta.require("../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js"),
-  mf = import.meta.require("../../02-功能模块/自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
-  S_ = import.meta.require("../../02-功能模块/Skills技能/fetchMcpSkillsForClient.er0bhc4y.js"),
-  k_ = import.meta.require("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
+var cf = lazy_chunk_s1hpfa12,
+  jo = lazy_提示词_SystemPrompt_bt5gmcr2,
+  y_ = lazy_工具AskUserQuestion_72ht85nd,
+  h_ = lazy_chunk_52kaw3c1,
+  uf = lazy_chunk_mk3zm4ew,
+  mf = lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba,
+  S_ = lazy_fetchMcpSkillsForClient_er0bhc4y,
+  k_ = lazy_核心应用_Agent循环_wmzgeczq,
   ff = null,
-  Ma = import.meta.require("../../02-功能模块/云会话-Teleport/bootTeleportFromTranscript.pyxed80h.js");
+  Ma = lazy_bootTeleportFromTranscript_pyxed80h;
 function Pi() {
-  return import.meta.require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function Yt() {
   return Pi().mcpClientModule();
@@ -8255,9 +8269,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       (Ss(p), vf(t, en, p));
     }));
   {
-    let { setOnPeerMessageStatus: p } = import.meta.require(
-      "../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js",
-    );
+    let { setOnPeerMessageStatus: p } = lazy_validateExplicitMessagingSocketPath_knbv811d;
     p((T, x, r) => {
       logForDebugging(
         `[headless] cross-session hold-receipt: status=${T} from=${String(x ?? "(unknown)")}${r ? ` reason=${r.dropReason ?? "unknown"} count=${r.droppedCount}` : ""}`,
@@ -11530,7 +11542,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       });
   }
   {
-    let { setOnEnqueue: p } = import.meta.require("../../02-功能模块/远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js");
+    let { setOnEnqueue: p } = lazy_validateExplicitMessagingSocketPath_knbv811d;
     p(() => {
       if (!Ve) (ea("uds_message"), Ar());
     });
@@ -11543,7 +11555,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       setIdleLastTurnTextProvider: r,
       notePeerIdleStatus: L,
       enqueueIdleNoticesForModel: de,
-    } = import.meta.require("../../02-功能模块/跨会话消息-UDS/MAX_IDLE_SUBSCRIPTIONS.7zp91kjd.js");
+    } = lazy_MAX_IDLE_SUBSCRIPTIONS_7zp91kjd;
     (p((W) => {
       if (
         (logForDebugging(
@@ -11557,7 +11569,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       r(() => getLastAssistantText(ct)));
     {
       let { registerReplyYieldHolder: W, notifyModelOfReplyYield: Se } =
-        import.meta.require("../../02-功能模块/制品发布-Artifact/chunk-54kz7amv.js");
+        lazy_chunk_54kz7amv;
       W({
         yielded: (Ce) => {
           (logForDebugging(

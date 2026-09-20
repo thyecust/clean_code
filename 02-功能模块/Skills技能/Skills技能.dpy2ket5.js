@@ -177,10 +177,21 @@ function registerBuiltinPlugins() {
     ((e.builtinPluginsInitialized = !0),
     a.CLAUDE_CODE_ENTRYPOINT !== "local-agent")
   )
-    tn(import.meta.require("./SKILL_MD.1bkj5m4h.js")).registerPlugin();
+    tn(lazy_SKILL_MD_1bkj5m4h).registerPlugin();
 }
 import { access } from "fs/promises";
 import { join } from "path";
+import * as lazy_SKILL_MD_1bkj5m4h from "./SKILL_MD.1bkj5m4h.js";
+import * as lazy_registerDesignCanvasSkill_c6pp42wn from "./registerDesignCanvasSkill.c6pp42wn.js";
+import * as lazy_registerCoworkSetupSkill_hpt54a2k from "./registerCoworkSetupSkill.hpt54a2k.js";
+import * as lazy_registerLoopSkill_v4bkm9ca from "./registerLoopSkill.v4bkm9ca.js";
+import * as lazy_Routines_定时云任务_j56ajwyt from "../Routines-定时云任务/Routines-定时云任务.j56ajwyt.js";
+import * as lazy_registerClaudeApiSkill_mp5xenfc from "../工具WebFetch-WebSearch/registerClaudeApiSkill.mp5xenfc.js";
+import * as lazy_registerClaudeCodeSkill_5ep67jch from "../工具WebFetch-WebSearch/registerClaudeCodeSkill.5ep67jch.js";
+import * as lazy_renderWorkflowAuthoringSkillBody_2a6g0n2c from "../编排-Workflow/renderWorkflowAuthoringSkillBody.2a6g0n2c.js";
+import * as lazy_registerRunSkill_3h9k7g3w from "./registerRunSkill.3h9k7g3w.js";
+import * as lazy_registerRunSkillGeneratorSkill_xv52wgjx from "./registerRunSkillGeneratorSkill.xv52wgjx.js";
+
 var et = 5000,
   an = 5000,
   ln = 5000,
@@ -4726,9 +4737,7 @@ function registerAllBundledSkills() {
     return;
   }
   {
-    let { registerDesignCanvasSkill: p } = import.meta.require(
-      "./registerDesignCanvasSkill.c6pp42wn.js",
-    );
+    let { registerDesignCanvasSkill: p } = lazy_registerDesignCanvasSkill_c6pp42wn;
     p();
   }
   (registerDesignSkill(),
@@ -4764,36 +4773,24 @@ function registerAllBundledSkills() {
     lo(),
     _o());
   {
-    let { registerCoworkSetupSkill: p } = import.meta.require(
-      "./registerCoworkSetupSkill.hpt54a2k.js",
-    );
+    let { registerCoworkSetupSkill: p } = lazy_registerCoworkSetupSkill_hpt54a2k;
     p();
   }
-  let { registerLoopSkill: t } = import.meta.require("./registerLoopSkill.v4bkm9ca.js");
+  let { registerLoopSkill: t } = lazy_registerLoopSkill_v4bkm9ca;
   t();
-  let { registerScheduleRemoteAgentsSkill: o } = import.meta.require(
-    "../Routines-定时云任务/Routines-定时云任务.j56ajwyt.js",
-  );
+  let { registerScheduleRemoteAgentsSkill: o } = lazy_Routines_定时云任务_j56ajwyt;
   o();
-  let { registerClaudeApiSkill: s } = import.meta.require(
-    "../工具WebFetch-WebSearch/registerClaudeApiSkill.mp5xenfc.js",
-  );
+  let { registerClaudeApiSkill: s } = lazy_registerClaudeApiSkill_mp5xenfc;
   s({ disabled: a.CLAUDE_CODE_DISABLE_CLAUDE_API_SKILL === !0 });
-  let { registerClaudeCodeSkill: d } = import.meta.require(
-    "../工具WebFetch-WebSearch/registerClaudeCodeSkill.5ep67jch.js",
-  );
+  let { registerClaudeCodeSkill: d } = lazy_registerClaudeCodeSkill_5ep67jch;
   d({ disabled: a.CLAUDE_CODE_DISABLE_CLAUDE_CODE_SKILL === !0 });
   {
-    let { registerWorkflowAuthoringSkill: p } = import.meta.require(
-      "../编排-Workflow/renderWorkflowAuthoringSkillBody.2a6g0n2c.js",
-    );
+    let { registerWorkflowAuthoringSkill: p } = lazy_renderWorkflowAuthoringSkillBody_2a6g0n2c;
     p();
   }
   Ct({ disabled: doesEnterpriseMcpConfigExist() || a.CLAUDE_CODE_DISABLE_CFC_PROMPT === !0 });
-  let { registerRunSkill: r } = import.meta.require("./registerRunSkill.3h9k7g3w.js"),
-    { registerRunSkillGeneratorSkill: h } = import.meta.require(
-      "./registerRunSkillGeneratorSkill.xv52wgjx.js",
-    );
+  let { registerRunSkill: r } = lazy_registerRunSkill_3h9k7g3w,
+    { registerRunSkillGeneratorSkill: h } = lazy_registerRunSkillGeneratorSkill_xv52wgjx;
   (r(), h());
 }
 export { registerBuiltinPlugins, CHROME_INSTALL_UPSELL_DIALOG, CHROME_INSTALL_SETUP_DIALOG, registerAllBundledSkills };

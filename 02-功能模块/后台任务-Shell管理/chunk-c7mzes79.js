@@ -1797,7 +1797,7 @@ function adoptedCounts(t) {
   };
 }
 function createBaseAppState() {
-  let t = import.meta.require("../Teammates团队/teammate-context.js"),
+  let t = lazy_teammate_context,
     o = t.isTeammate() && t.isPlanModeRequired() ? "plan" : "default";
   return {
     sessionNoticesPoll: { pendingDeliveryUuids: [] },
@@ -1897,8 +1897,7 @@ function createBaseAppState() {
     imageDescriptions: new Map(),
     classifierApprovals: { approvals: new Map(), checking: new Set() },
     teammateColors: { assignments: new Map(), index: 0 },
-    webBrowser: import.meta
-      .require("../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js")
+    webBrowser: lazy_chunk_hkbpxv9z
       .getDefaultWebBrowserState(),
   };
 }
@@ -2735,7 +2734,7 @@ function reconcileDynamicMcpState(t, o, r) {
   return k;
 }
 function tt() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 function Gi(t) {
   ((asMcpSdkClient(t.client).onclose = void 0),
@@ -3526,6 +3525,10 @@ function is(t, o) {
   ad(t.overrideValue);
 }
 import { resolve } from "path";
+import * as lazy_teammate_context from "../Teammates团队/teammate-context.js";
+import * as lazy_chunk_hkbpxv9z from "../../01-核心基础设施/设置-配置/chunk-hkbpxv9z.js";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 var autoModeGateChangeNotifier = new Gt(() => Le());
 function applySettingsChange(t, o, r, s, l) {
   let k = getInitialSettings();

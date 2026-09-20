@@ -3031,17 +3031,15 @@ import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tr
 import { SUPERVISED_CRASH_EXIT_CODE } from "../../01-核心基础设施/核心工具-其他/exit-codes.js";
 
 var pur = commonJS(function (S1c, Zcs) {
-  Zcs.exports = importMetaRequire("./simple_plan-c1nffcyk.txt");
+  Zcs.exports = lazy_simple_plan_c1nffcyk;
 });
 
 var mur = commonJS(function (k1c, eus) {
-  eus.exports = importMetaRequire("./visual_plan-169gvcqt.txt");
+  eus.exports = lazy_visual_plan_169gvcqt;
 });
 
 var gur = commonJS(function (w1c, tus) {
-  tus.exports = importMetaRequire(
-    "./three_subagents_with_critique-t1zec1f6.txt",
-  );
+  tus.exports = lazy_three_subagents_with_critique_t1zec1f6;
 });
 
 var Yyr = 10485760,
@@ -26802,8 +26800,7 @@ function getIdeDisplayName(e) {
 }
 
 function Den() {
-  return import.meta
-    .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+  return lazy_mcpClientModule_4cyej0np
     .mcpClientModule();
 }
 
@@ -40286,9 +40283,7 @@ var yZe;
 
 function getBuiltinTools() {
   if (yZe) return yZe;
-  let { PowerShellTool: e } = import.meta.require(
-    "../../02-功能模块/工具Bash-Shell/工具Bash-Shell.edt8d0b4.js",
-  );
+  let { PowerShellTool: e } = lazy_工具Bash_Shell_edt8d0b4;
   return (yZe = [
     ReadTool,
     WriteTool,
@@ -41172,27 +41167,15 @@ function n9(e) {
   return typeof e === "string" && !e.includes("\x00");
 }
 
-var rlo = import.meta.require(
-    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
-  ).ARTIFACT_TOOL_NAME,
-  Fan = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js",
-  ).isNarrationSummaryBlock,
-  olo = import.meta.require(
-    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
-  ).isPublishShapedArtifactAction,
+var rlo = lazy_核心工具_常量与消息_602x2b1z.ARTIFACT_TOOL_NAME,
+  Fan = lazy_isNarrationSummaryBlock_adf7egmq.isNarrationSummaryBlock,
+  olo = lazy_核心工具_常量与消息_602x2b1z.isPublishShapedArtifactAction,
   slo = () =>
-    import.meta.require(
-      "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js",
-    ).isScratchpadDisplayPath,
+    lazy_记忆_CLAUDE_md_vx19drc8.isScratchpadDisplayPath,
   ilo = () =>
-    import.meta.require(
-      "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js",
-    ).isWorkshopDisplayPath,
+    lazy_记忆_CLAUDE_md_vx19drc8.isWorkshopDisplayPath,
   alo = () =>
-    import.meta.require(
-      "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js",
-    ).getPlansDirectory;
+    lazy_计划模式_Plan_e5mh1avy.getPlansDirectory;
 
 function r9(e) {
   return e.file_path ?? e.path;
@@ -52565,19 +52548,11 @@ var ile = new Map([
   ]);
 
 var _yn = null,
-  byn = import.meta.require(
-    "../../02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js",
-  ).SEARCH_MCP_REGISTRY_TOOL_NAME,
-  Syn = import.meta.require(
-    "../../02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js",
-  ).SUGGEST_CONNECTORS_TOOL_NAME,
-  wyn = import.meta.require(
-    "../../02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js",
-  ).LIST_CONNECTORS_TOOL_NAME,
-  zmo = import.meta.require(
-    "../../04-tools/PluginSkillTools.js",
-  ).PLUGIN_SKILL_SAFE_TOOL_NAMES,
-  Htt = import.meta.require("../../02-功能模块/自托管Runner/chunk-01gj9cjk.js"),
+  byn = lazy_chunk_p2wzfbaj.SEARCH_MCP_REGISTRY_TOOL_NAME,
+  Syn = lazy_chunk_0mrh424x.SUGGEST_CONNECTORS_TOOL_NAME,
+  wyn = lazy_chunk_9g3yj4km.LIST_CONNECTORS_TOOL_NAME,
+  zmo = lazy_PluginSkillTools.PLUGIN_SKILL_SAFE_TOOL_NAMES,
+  Htt = lazy_chunk_01gj9cjk,
   Eyn = null,
   Tyn = null,
   qmo = new Set([
@@ -53503,9 +53478,7 @@ function Pbn(e, t) {
   };
 }
 
-var Pgo = import.meta.require(
-  "../../02-功能模块/编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js",
-);
+var Pgo = lazy_recordWorkflowUsageConsent_w6jg9g54;
 
 function isAutoModeConsentFlowEnabled(e) {
   return !isModelDrivenSession(e.agentId) && int();
@@ -54686,6 +54659,84 @@ Latest blocked action: ${t}`,
 }
 
 import { isAskRuleDrivenReason, carriesAskRuleIntent } from "./utils.js";
+import * as lazy_simple_plan_c1nffcyk from "../../01-核心基础设施/内嵌资源与模块互操作/simple_plan-c1nffcyk.txt";
+import * as lazy_visual_plan_169gvcqt from "../../01-核心基础设施/内嵌资源与模块互操作/visual_plan-169gvcqt.txt";
+import * as lazy_three_subagents_with_critique_t1zec1f6 from "../../01-核心基础设施/内嵌资源与模块互操作/three_subagents_with_critique-t1zec1f6.txt";
+import * as lazy_mcpClientModule_4cyej0np from "../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_工具Bash_Shell_edt8d0b4 from "../../02-功能模块/工具Bash-Shell/工具Bash-Shell.edt8d0b4.js";
+import * as lazy_核心工具_常量与消息_602x2b1z from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import * as lazy_isNarrationSummaryBlock_adf7egmq from "../../01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js";
+import * as lazy_记忆_CLAUDE_md_vx19drc8 from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import * as lazy_计划模式_Plan_e5mh1avy from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
+import * as lazy_chunk_p2wzfbaj from "../../02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js";
+import * as lazy_chunk_0mrh424x from "../../02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js";
+import * as lazy_chunk_9g3yj4km from "../../02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js";
+import * as lazy_PluginSkillTools from "../../04-tools/PluginSkillTools.js";
+import * as lazy_chunk_01gj9cjk from "../../02-功能模块/自托管Runner/chunk-01gj9cjk.js";
+import * as lazy_recordWorkflowUsageConsent_w6jg9g54 from "../../02-功能模块/编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js";
+import * as lazy_GoogleDrive集成_f0ersdj8 from "../../02-功能模块/GoogleDrive集成/GoogleDrive集成.f0ersdj8.js";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import * as lazy_chunk_qg9n8r78 from "../../01-核心基础设施/核心工具-未归类/chunk-qg9n8r78.js";
+import * as lazy_chunk_qv8z365a from "../../02-功能模块/云会话-Teleport/chunk-qv8z365a.js";
+import * as lazy_chunk_aqawy2mp from "../../02-功能模块/MCP客户端/chunk-aqawy2mp.js";
+import * as lazy_spawnTeammate_chmkp3v5 from "../../02-功能模块/Teammates团队/spawnTeammate.chmkp3v5.js";
+import * as lazy_LocalWorkflowTask_c8wnxdrq from "../../02-功能模块/编排-Workflow/LocalWorkflowTask.c8wnxdrq.js";
+import * as lazy_MCP_TASK_5jmzdjnv from "../../02-功能模块/MCP客户端/MCP_TASK.5jmzdjnv.js";
+import * as lazy_CronCreateTool from "../../04-tools/CronCreateTool.js";
+import * as lazy_CronDeleteTool from "../../04-tools/CronDeleteTool.js";
+import * as lazy_CronListTool from "../../04-tools/CronListTool.js";
+import * as lazy_SelfHostedRunnerTools from "../../04-tools/SelfHostedRunnerTools.js";
+import * as lazy_RemoteTriggerTool from "../../04-tools/RemoteTriggerTool.js";
+import * as lazy_SearchMcpRegistryTool from "../../04-tools/SearchMcpRegistryTool.js";
+import * as lazy_SuggestConnectorsTool from "../../04-tools/SuggestConnectorsTool.js";
+import * as lazy_ListConnectorsTool from "../../04-tools/ListConnectorsTool.js";
+import * as lazy_MonitorTool from "../../04-tools/MonitorTool.js";
+import * as lazy_SendUserFileTool from "../../04-tools/SendUserFileTool.js";
+import * as lazy_ProposeSkillsTool from "../../04-tools/ProposeSkillsTool.js";
+import * as lazy_ProposeGoalTool from "../../04-tools/ProposeGoalTool.js";
+import * as lazy_PushNotificationTool from "../../04-tools/PushNotificationTool.js";
+import * as lazy_DesignSyncTool from "../../04-tools/DesignSyncTool.js";
+import * as lazy_DesignTool from "../../04-tools/DesignTool.js";
+import * as lazy_ProjectsTool from "../../04-tools/ProjectsTool.js";
+import * as lazy_EndConversationTool from "../../04-tools/EndConversationTool.js";
+import * as lazy_SendMessageTool from "../../04-tools/SendMessageTool.js";
+import * as lazy_SendFileTool from "../../04-tools/SendFileTool.js";
+import * as lazy_BrowserEnableStubTools from "../../04-tools/BrowserEnableStubTools.js";
+import * as lazy_PollTool from "../../04-tools/PollTool.js";
+import * as lazy_ArtifactTool from "../../04-tools/ArtifactTool.js";
+import * as lazy_ArtifactAddonTools from "../../04-tools/ArtifactAddonTools.js";
+import * as lazy_ListAgentsTool_jrhvm1mr from "../../02-功能模块/Teammates团队/ListAgentsTool.jrhvm1mr.js";
+import * as lazy_ShareOnboardingGuideTool_7qpf1er4 from "../../02-功能模块/Teammates团队/ShareOnboardingGuideTool.7qpf1er4.js";
+import * as lazy_initBundledWorkflows_qzxf1256 from "../../02-功能模块/编排-Workflow/initBundledWorkflows.qzxf1256.js";
+import * as lazy_WorkflowTool_b1s7beta from "../../02-功能模块/编排-Workflow/WorkflowTool.b1s7beta.js";
+import * as lazy_chunk_vtgvbed1 from "../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js";
+import * as lazy_LINK_SCAN_MAX_BYTES_mjs9q59k from "../../02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js";
+import * as lazy_chunk_s1hpfa12 from "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js";
+import * as lazy_chunk_1p3batyk from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+import * as lazy_chunk_q599wyee from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
+import * as lazy_composeTeleportFetchOverride_twznxbef from "../../02-功能模块/云会话-Teleport/composeTeleportFetchOverride.twznxbef.js";
+import * as lazy_工具EndConversation_409rx3vp from "../../02-功能模块/工具EndConversation/工具EndConversation.409rx3vp.js";
+import * as lazy_chunk_y89mhs4a from "../../02-功能模块/Teammates团队/chunk-y89mhs4a.js";
+import * as lazy_createContextHintController_e1f53p9a from "../../02-功能模块/Hooks钩子/createContextHintController.e1f53p9a.js";
+import * as lazy_default_qb1kazsd from "../../01-核心基础设施/核心工具-未归类/default.qb1kazsd.js";
+import * as lazy_chunk_g6nvp9mm from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
+import * as lazy_default_jtnaktw8 from "../../02-功能模块/斜杠命令-框架/default.jtnaktw8.js";
+import * as lazy_default_8yey92bt from "../../02-功能模块/斜杠命令-框架/default.8yey92bt.js";
+import * as lazy_default_q2xj3ye7 from "../../02-功能模块/斜杠命令-框架/default.q2xj3ye7.js";
+import * as lazy_default_tqjrfh0d from "../../02-功能模块/权限系统/default.tqjrfh0d.js";
+import * as lazy_goalNonInteractive_zn0jn7dv from "../../02-功能模块/斜杠命令-框架/goalNonInteractive.zn0jn7dv.js";
+import * as lazy_default_9n0xs4ps from "../../02-功能模块/斜杠命令-框架/default.9n0xs4ps.js";
+import * as lazy_chunk_a4vej95c from "../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js";
+import * as lazy_default_rjsfd0pf from "../../02-功能模块/Skills技能/default.rjsfd0pf.js";
+import * as lazy_default_cg5shkdd from "../../02-功能模块/Teammates团队/default.cg5shkdd.js";
+import * as lazy_default_dhdcsavf from "../../02-功能模块/斜杠命令-框架/default.dhdcsavf.js";
+import * as lazy_stopNonInteractive_82ddb5rz from "../../02-功能模块/斜杠命令-框架/stopNonInteractive.82ddb5rz.js";
+import * as lazy_getWorkflowCommands_nd3hcr54 from "../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js";
+import * as lazy_chunk_ddtmwhn7 from "../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import * as lazy_isWorkshopProgressEnabled_787y0abb from "../../02-功能模块/工具文件读写编辑/isWorkshopProgressEnabled.787y0abb.js";
+import * as lazy_task_output from "../../02-功能模块/后台任务-Shell管理/task-output.js";
+import * as lazy_getCutoffDate_6heqfanj from "../../02-功能模块/会话-历史-恢复/getCutoffDate.6heqfanj.js";
+
 
 function isServerPolicyAskReason(e) {
   return (
@@ -64949,9 +65000,7 @@ function qle() {
   return getInitialSettings().includeGitInstructions ?? !0;
 }
 
-var Cwo = import.meta.require(
-    "../../02-功能模块/GoogleDrive集成/GoogleDrive集成.f0ersdj8.js",
-  ).getProjectContextBlock,
+var Cwo = lazy_GoogleDrive集成_f0ersdj8.getProjectContextBlock,
   vst = [],
   aq = new Gt(() => ({ byId: new Map(), builds: Le() }));
 
@@ -65859,9 +65908,7 @@ function zwo({
   eHt($n);
 }
 
-var sxn = import.meta.require(
-  "../../01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js",
-).isNarrationTaggedBlock;
+var sxn = lazy_isNarrationSummaryBlock_adf7egmq.isNarrationTaggedBlock;
 
 function dxn({
   model: e,
@@ -66634,12 +66681,8 @@ function ITo({
 }) {
   if (p) return { prompt: asSystemPrompt([p]), servesDefault: !1 };
   if (isCoordinatorModeEnabled() && !e) {
-    let { getCoordinatorSystemPrompt: N } = import.meta.require(
-        "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js",
-      ),
-      { hasCommsRoledServer: F } = import.meta.require(
-        "../../01-核心基础设施/核心工具-未归类/chunk-qg9n8r78.js",
-      ),
+    let { getCoordinatorSystemPrompt: N } = lazy_提示词_SystemPrompt_bt5gmcr2,
+      { hasCommsRoledServer: F } = lazy_chunk_qg9n8r78,
       U = asSystemPrompt([N(F(t.options.mcpClients)), ...(d ? [d] : [])]);
     if (!E) logFeatureOk("coordinator_mode_start");
     return { prompt: U, servesDefault: !1 };
@@ -72547,9 +72590,7 @@ function discardPrecomputedCompact(e, t, r, o, d) {
 }
 
 function getTeleportCacheModule() {
-  return import.meta.require(
-    "../../02-功能模块/云会话-Teleport/chunk-qv8z365a.js",
-  );
+  return lazy_chunk_qv8z365a;
 }
 
 function $H(e, t, r) {
@@ -92026,9 +92067,7 @@ function bQ(e, t) {
   return r;
 }
 
-var vUn = import.meta.require(
-  "../../01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js",
-).narrationBlockIndexes;
+var vUn = lazy_isNarrationSummaryBlock_adf7egmq.narrationBlockIndexes;
 
 function isSyntheticMessage(e) {
   return (
@@ -94208,12 +94247,9 @@ async function d2o(e, t, r, o, d) {
             C.push(de),
             null
           );
-        let { connectToServer: Me, fetchToolsForClient: xe } = import.meta
-            .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
+        let { connectToServer: Me, fetchToolsForClient: xe } = lazy_mcpClientModule_4cyej0np
             .mcpClientModule(),
-          { boundDial: Oe } = import.meta.require(
-            "../../02-功能模块/MCP客户端/chunk-aqawy2mp.js",
-          ),
+          { boundDial: Oe } = lazy_chunk_aqawy2mp,
           Ne = Me(de, _e, void 0, o, d),
           De;
         try {
@@ -96163,12 +96199,8 @@ function s1n(e, t) {
   });
 }
 
-var G2o = import.meta.require(
-    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
-  ).ARTIFACT_TOOL_NAME,
-  z2o = import.meta.require(
-    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
-  ).isPublishShapedArtifactAction,
+var G2o = lazy_核心工具_常量与消息_602x2b1z.ARTIFACT_TOOL_NAME,
+  z2o = lazy_核心工具_常量与消息_602x2b1z.isPublishShapedArtifactAction,
   $Hn = new Set([
     TODO_WRITE_TOOL_NAME,
     TASK_CREATE_TOOL_NAME,
@@ -98439,9 +98471,7 @@ var EGo = createLazyValue(() =>
             new NI(`Agent type '${p}' is not offered in this session.`)
           );
         if ((en(), is?.color)) setAgentTypeColorOverride(p, is.color);
-        let { spawnTeammate: wi } = import.meta.require(
-            "../../02-功能模块/Teammates团队/spawnTeammate.chmkp3v5.js",
-          ),
+        let { spawnTeammate: wi } = lazy_spawnTeammate_chmkp3v5,
           fl = await wi(
             {
               name: E,
@@ -101669,12 +101699,10 @@ function bzo() {
   ];
   return (
     e.push(
-      import.meta.require(
-        "../../02-功能模块/编排-Workflow/LocalWorkflowTask.c8wnxdrq.js",
-      ).LocalWorkflowTask,
+      lazy_LocalWorkflowTask_c8wnxdrq.LocalWorkflowTask,
     ),
     e.push(
-      import.meta.require("../../02-功能模块/MCP客户端/MCP_TASK.5jmzdjnv.js")
+      lazy_MCP_TASK_5jmzdjnv
         .MCP_TASK,
     ),
     new Map(e.map((t) => [t.type, t]))
@@ -107360,70 +107388,38 @@ function r6n() {
 }
 
 var CronTools = [
-    import.meta.require("../../04-tools/CronCreateTool.js").CronCreateTool,
-    import.meta.require("../../04-tools/CronDeleteTool.js").CronDeleteTool,
-    import.meta.require("../../04-tools/CronListTool.js").CronListTool,
+    lazy_CronCreateTool.CronCreateTool,
+    lazy_CronDeleteTool.CronDeleteTool,
+    lazy_CronListTool.CronListTool,
   ],
-  SelfHostedRunnerTools = import.meta.require(
-    "../../04-tools/SelfHostedRunnerTools.js",
-  ).SELF_HOSTED_RUNNER_TOOLS,
-  RemoteTriggerTool = import.meta.require(
-    "../../04-tools/RemoteTriggerTool.js",
-  ).RemoteTriggerTool,
-  SearchMcpRegistryTool = import.meta.require(
-    "../../04-tools/SearchMcpRegistryTool.js",
-  ).SearchMcpRegistryTool,
-  SuggestConnectorsTool = import.meta.require(
-    "../../04-tools/SuggestConnectorsTool.js",
-  ).SuggestConnectorsTool,
-  ListConnectorsTool = import.meta.require(
-    "../../04-tools/ListConnectorsTool.js",
-  ).ListConnectorsTool,
-  PluginSkillTools = import.meta.require(
-    "../../04-tools/PluginSkillTools.js",
-  ).PLUGIN_SKILL_TOOLS,
-  MonitorTool = import.meta.require(
-    "../../04-tools/MonitorTool.js",
-  ).MonitorTool,
-  SendUserFileTool = import.meta.require(
-    "../../04-tools/SendUserFileTool.js",
-  ).SendUserFileTool,
-  ProposeSkillsTool = import.meta.require(
-    "../../04-tools/ProposeSkillsTool.js",
-  ).ProposeSkillsTool,
-  ProposeGoalTool = import.meta.require(
-    "../../04-tools/ProposeGoalTool.js",
-  ).ProposeGoalTool,
-  PushNotificationTool = import.meta.require(
-    "../../04-tools/PushNotificationTool.js",
-  ).PushNotificationTool,
-  DesignSyncTool = import.meta.require(
-    "../../04-tools/DesignSyncTool.js",
-  ).DesignSyncTool,
+  SelfHostedRunnerTools = lazy_SelfHostedRunnerTools.SELF_HOSTED_RUNNER_TOOLS,
+  RemoteTriggerTool = lazy_RemoteTriggerTool.RemoteTriggerTool,
+  SearchMcpRegistryTool = lazy_SearchMcpRegistryTool.SearchMcpRegistryTool,
+  SuggestConnectorsTool = lazy_SuggestConnectorsTool.SuggestConnectorsTool,
+  ListConnectorsTool = lazy_ListConnectorsTool.ListConnectorsTool,
+  PluginSkillTools = lazy_PluginSkillTools.PLUGIN_SKILL_TOOLS,
+  MonitorTool = lazy_MonitorTool.MonitorTool,
+  SendUserFileTool = lazy_SendUserFileTool.SendUserFileTool,
+  ProposeSkillsTool = lazy_ProposeSkillsTool.ProposeSkillsTool,
+  ProposeGoalTool = lazy_ProposeGoalTool.ProposeGoalTool,
+  PushNotificationTool = lazy_PushNotificationTool.PushNotificationTool,
+  DesignSyncTool = lazy_DesignSyncTool.DesignSyncTool,
   getDesignTool = () => {
     if (isEssentialTrafficOnly()) return null;
-    return import.meta.require("../../04-tools/DesignTool.js").DesignTool;
+    return lazy_DesignTool.DesignTool;
   },
-  ProjectsTool = import.meta.require(
-    "../../04-tools/ProjectsTool.js",
-  ).ProjectsTool,
-  EndConversationTool = import.meta.require(
-    "../../04-tools/EndConversationTool.js",
-  ).EndConversationTool,
+  ProjectsTool = lazy_ProjectsTool.ProjectsTool,
+  EndConversationTool = lazy_EndConversationTool.EndConversationTool,
   getSendMessageTool = () =>
-    import.meta.require("../../04-tools/SendMessageTool.js").SendMessageTool,
+    lazy_SendMessageTool.SendMessageTool,
   getSendFileTool = () =>
-    import.meta.require("../../04-tools/SendFileTool.js").SendFileTool,
-  BrowserEnableStubTools = import.meta.require(
-    "../../04-tools/BrowserEnableStubTools.js",
-  ).BROWSER_ENABLE_STUB_TOOLS,
-  PollTool = import.meta.require("../../04-tools/PollTool.js").PollTool,
+    lazy_SendFileTool.SendFileTool,
+  BrowserEnableStubTools = lazy_BrowserEnableStubTools.BROWSER_ENABLE_STUB_TOOLS,
+  PollTool = lazy_PollTool.PollTool,
   d6n = null,
-  ArtifactTool = import.meta.require(
-    "../../04-tools/ArtifactTool.js",
-  ).ArtifactTool,
+  ArtifactTool = lazy_ArtifactTool.ArtifactTool,
   getArtifactAddonTools = () =>
-    import.meta.require("../../04-tools/ArtifactAddonTools.js")
+    lazy_ArtifactAddonTools
       .ARTIFACT_ADDON_TOOLS,
   p6n = null;
 
@@ -107433,33 +107429,20 @@ function V4o() {
 
 var m6n = null,
   g6n = null,
-  h6n = import.meta.require(
-    "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js",
-  ),
+  h6n = lazy_提示词_SystemPrompt_bt5gmcr2,
   y6n = null,
   K4o = null,
   _6n = null,
-  b6n = import.meta.require(
-    "../../02-功能模块/Teammates团队/ListAgentsTool.jrhvm1mr.js",
-  ).ListAgentsTool,
-  S6n = import.meta.require(
-    "../../02-功能模块/Teammates团队/ShareOnboardingGuideTool.7qpf1er4.js",
-  ).ShareOnboardingGuideTool,
+  b6n = lazy_ListAgentsTool_jrhvm1mr.ListAgentsTool,
+  S6n = lazy_ShareOnboardingGuideTool_7qpf1er4.ShareOnboardingGuideTool,
   nJ = (() => (
-    import.meta
-      .require(
-        "../../02-功能模块/编排-Workflow/initBundledWorkflows.qzxf1256.js",
-      )
+    lazy_initBundledWorkflows_qzxf1256
       .initBundledWorkflows(),
-    import.meta.require(
-      "../../02-功能模块/编排-Workflow/WorkflowTool.b1s7beta.js",
-    ).WorkflowTool
+    lazy_WorkflowTool_b1s7beta.WorkflowTool
   ))(),
   Pdt = () => {
     if (!isPowerShellToolEnabled()) return null;
-    return import.meta.require(
-      "../../02-功能模块/工具Bash-Shell/工具Bash-Shell.edt8d0b4.js",
-    ).PowerShellTool;
+    return lazy_工具Bash_Shell_edt8d0b4.PowerShellTool;
   };
 
 function getBuiltinToolDefinitions() {
@@ -107833,9 +107816,7 @@ function P6n(e, t) {
   }
 }
 
-var t5o = import.meta.require(
-  "../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js",
-).END_CONVERSATION_TOOL_NAME;
+var t5o = lazy_chunk_vtgvbed1.END_CONVERSATION_TOOL_NAME;
 
 function Afe(e, t, r) {
   if (!e.aborted) return null;
@@ -118620,19 +118601,11 @@ function logPromptSuggestionSuppressed(e, t, r) {
 }
 
 var mQo = { executeExtractMemories },
-  fpt = import.meta.require(
-    "../../02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js",
-  ),
-  gQo = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js",
-  );
+  fpt = lazy_LINK_SCAN_MAX_BYTES_mjs9q59k,
+  gQo = lazy_chunk_s1hpfa12;
 
-var LJn = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js",
-  ),
-  xpe = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js",
-  );
+var LJn = lazy_chunk_1p3batyk,
+  xpe = lazy_chunk_q599wyee;
 
 function FJn(e) {
   return e.findLastIndex(
@@ -121296,13 +121269,9 @@ function notifyAutoReactHumanTurnObserver() {
 
 var ker = null,
   WC = () =>
-    import.meta.require(
-      "../../02-功能模块/自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js",
-    ),
+    lazy_LINK_SCAN_MAX_BYTES_mjs9q59k,
   Ppe = () =>
-    import.meta.require(
-      "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js",
-    );
+    lazy_chunk_s1hpfa12;
 
 var Opt;
 
@@ -121311,9 +121280,7 @@ function fF(e) {
   return Opt;
 }
 
-var wer = import.meta.require(
-    "../../02-功能模块/云会话-Teleport/composeTeleportFetchOverride.twznxbef.js",
-  ),
+var wer = lazy_composeTeleportFetchOverride_twznxbef,
   QJo = {
     resolveStage: (e, t, r) =>
       F8({
@@ -128056,9 +128023,7 @@ var _nr = (() => {
   let e;
   return () => {
     if (!e)
-      e = import.meta.require(
-        "../../02-功能模块/工具Bash-Shell/工具Bash-Shell.edt8d0b4.js",
-      ).PowerShellTool;
+      e = lazy_工具Bash_Shell_edt8d0b4.PowerShellTool;
     return e;
   };
 })();
@@ -130699,12 +130664,8 @@ function rir(e, t) {
 var nkt =
   "IMPORTANT: Assist with authorized security testing, defensive security, CTF challenges, and educational contexts. Refuse requests for destructive techniques, DoS attacks, mass targeting, supply chain compromise, or detection evasion for malicious purposes. Dual-use security tools (C2 frameworks, credential testing, exploit development) require clear authorization context: pentesting engagements, CTF competitions, security research, or defensive use cases.";
 
-var qos = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js",
-  ).BRIEF_PROACTIVE_SECTION,
-  okt = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js",
-  );
+var qos = lazy_chunk_q599wyee.BRIEF_PROACTIVE_SECTION,
+  okt = lazy_chunk_1p3batyk;
 
 function Vos() {
   let e = kP().latest_per_family;
@@ -131218,12 +131179,8 @@ Date: ${getCurrentSessionDate()}`,
       Nh("willow_tern", () => uss(d)),
       Nh("autonomy_append", () => pss(_, d)),
       Nh("endconv_deferred_hint", () => {
-        let _e = import.meta.require(
-            "../../01-核心基础设施/核心工具-未归类/chunk-vtgvbed1.js",
-          ),
-          _eDh = import.meta.require(
-            "../../02-功能模块/工具EndConversation/工具EndConversation.409rx3vp.js",
-          ),
+        let _e = lazy_chunk_vtgvbed1,
+          _eDh = lazy_工具EndConversation_409rx3vp,
           Se = getMainLoopCanonical();
         return F.has(_e.END_CONVERSATION_TOOL_NAME) && Se !== void 0
           ? _eDh.getDeferredHintSection(Se)
@@ -131551,8 +131508,7 @@ async function C0e(e, t) {
       : "",
     Me = "",
     xe = matchesToolName(e, ARTIFACT_TOOL_NAME)
-      ? import.meta
-          .require("../../02-功能模块/Teammates团队/chunk-y89mhs4a.js")
+      ? lazy_chunk_y89mhs4a
           .artifactCorePromptCacheKeyBit(t.tools)
       : "",
     Oe =
@@ -134104,10 +134060,7 @@ async function* Har(e, t, r, o, d, p) {
   if (p.evictCacheOnComplete && p.stickyBetas !== void 0 && Dis())
     gB(Me, PROMPT_CACHING_EVICT_BETA);
   let Gr = W1(Me, PROMPT_CACHING_EVICT_BETA),
-    sa = import.meta
-      .require(
-        "../../02-功能模块/Hooks钩子/createContextHintController.e1f53p9a.js",
-      )
+    sa = lazy_createContextHintController_e1f53p9a
       .createContextHintController({
         querySource: p.querySource,
         agentId: p.agentId,
@@ -139030,9 +138983,7 @@ function Clr() {
 }
 
 var VHe = Oas(
-    import.meta.require(
-      "../../01-核心基础设施/核心工具-未归类/default.qb1kazsd.js",
-    ),
+    lazy_default_qb1kazsd,
   ),
   Uas = clr(),
   flr = /^- Unrequested Artifact Publish .*\r?\n/m,
@@ -139576,8 +139527,7 @@ ${OS(It.ask.text)}`,
       tn.type === "attachment" &&
       tn.attachment.type === "teammate_mailbox"
     ) {
-      let dn = import.meta
-        .require("../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js")
+      let dn = lazy_chunk_g6nvp9mm
         .formatTeammateMessages(tn.attachment.messages, {
           recipientIsLead: tn.attachment.recipientIsLead ?? !1,
         });
@@ -145163,48 +145113,26 @@ var Fdr = { isEnabled: () => !1, isHidden: !0, name: "stub" };
 var $dr = { isEnabled: () => !1, isHidden: !0, name: "stub" };
 
 var vTt = null,
-  Dds = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/default.jtnaktw8.js",
-  ).default,
-  Bdr = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/default.8yey92bt.js",
-  ).default,
-  ATt = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/default.q2xj3ye7.js",
-  ).default,
-  Jme = import.meta.require(
-    "../../02-功能模块/权限系统/default.tqjrfh0d.js",
-  ).default,
+  Dds = lazy_default_jtnaktw8.default,
+  Bdr = lazy_default_8yey92bt.default,
+  ATt = lazy_default_q2xj3ye7.default,
+  Jme = lazy_default_tqjrfh0d.default,
   ege = null,
   RTt = null,
   PTt = null,
   MTt = null,
-  Kdr = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/goalNonInteractive.zn0jn7dv.js",
-  ),
+  Kdr = lazy_goalNonInteractive_zn0jn7dv,
   { default: Nds, goalNonInteractive: $Tt } = Kdr,
-  Udr = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/default.9n0xs4ps.js",
-  ).default,
-  Lds = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js",
-  ).default,
+  Udr = lazy_default_9n0xs4ps.default,
+  Lds = lazy_chunk_a4vej95c.default,
   Fds = [],
-  Hdr = import.meta.require(
-    "../../02-功能模块/Skills技能/default.rjsfd0pf.js",
-  ).default,
-  l1e = import.meta.require(
-    "../../02-功能模块/Teammates团队/default.cg5shkdd.js",
-  ).default,
+  Hdr = lazy_default_rjsfd0pf.default,
+  l1e = lazy_default_cg5shkdd.default,
   f1e = null,
   jdr = null,
   y1e = null,
-  $ds = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/default.dhdcsavf.js",
-  ).default,
-  Ydr = import.meta.require(
-    "../../02-功能模块/斜杠命令-框架/stopNonInteractive.82ddb5rz.js",
-  ),
+  $ds = lazy_default_dhdcsavf.default,
+  Ydr = lazy_stopNonInteractive_82ddb5rz,
   Bds = Ydr?.default ?? null,
   Wdr = Ydr?.stopNonInteractive ?? null,
   v1e = null,
@@ -145548,15 +145476,9 @@ async function Gds(e, t) {
   }
 }
 
-var Gdr = import.meta.require(
-    "../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js",
-  ).getWorkflowCommands,
-  zds = import.meta.require(
-    "../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js",
-  ).invalidateWorkflowCache,
-  zdr = import.meta.require(
-    "../../02-功能模块/编排-Workflow/getWorkflowCommands.nd3hcr54.js",
-  ).warmWorkflows;
+var Gdr = lazy_getWorkflowCommands_nd3hcr54.getWorkflowCommands,
+  zds = lazy_getWorkflowCommands_nd3hcr54.invalidateWorkflowCache,
+  zdr = lazy_getWorkflowCommands_nd3hcr54.warmWorkflows;
 
 function meetsAvailabilityRequirement(e) {
   if (!e.availability) return !0;
@@ -146001,7 +145923,7 @@ async function listPeerSessions() {
 async function loadLivePeerSessions() {
   if (isCrossSessionMessagingEnabled()) {
     let { listLivePeerSessions: e, SessionRecordsUnreadableError: t } =
-      import.meta.require("../../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js");
+      lazy_chunk_ddtmwhn7;
     try {
       return { sessions: await e(), unavailable: !1 };
     } catch (r) {
@@ -146904,9 +146826,7 @@ ${t}`,
 
 var dvt = null;
 
-var Jfr = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js",
-  ),
+var Jfr = lazy_chunk_q599wyee,
   { BRIEF_TOOL_NAME: nge, LEGACY_BRIEF_TOOL_NAME: Cfs } = Jfr,
   O1e = { TURNS_SINCE_WRITE: 10, TURNS_BETWEEN_REMINDERS: 10 };
 
@@ -156907,9 +156827,7 @@ function mhs(e, t) {
 class Egr {
   module;
   requireModule = () =>
-    import.meta.require(
-      "../../02-功能模块/工具文件读写编辑/isWorkshopProgressEnabled.787y0abb.js",
-    );
+    lazy_isWorkshopProgressEnabled_787y0abb;
   load() {
     if (this.module !== void 0) return this.module ?? void 0;
     try {
@@ -156948,9 +156866,7 @@ function vgr() {
 }
 
 function _hs() {
-  return import.meta.require(
-    "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js",
-  );
+  return lazy_chunk_g6nvp9mm;
 }
 
 var xgr = "Tool loaded.";
@@ -156964,9 +156880,7 @@ function appendAutoMemoryReminder(e) {
   return e;
 }
 
-var Agr = import.meta.require(
-    "../../01-核心基础设施/核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js",
-  ).isNarrationSummaryBlock,
+var Agr = lazy_isNarrationSummaryBlock_adf7egmq.isNarrationSummaryBlock,
   USER_REJECTED_TOOL_USE_MESSAGE =
     "The user doesn't want to proceed with this tool use. The tool use was rejected (eg. if it was a file edit, the new_string was NOT written to the file). STOP what you are doing and wait for the user to tell you how to proceed.",
   USER_REJECTED_TOOL_USE_PREFIX = `The user doesn't want to proceed with this tool use. The tool use was rejected (eg. if it was a file edit, the new_string was NOT written to the file). To tell you how to proceed, the user said:
@@ -165512,8 +165426,7 @@ async function relocateSessionTranscript(e) {
       }
     if (ue)
       try {
-        await import.meta
-          .require("../../02-功能模块/后台任务-Shell管理/task-output.js")
+        await lazy_task_output
           .repointTaskOutputSymlinks(V, re);
       } catch (de) {
         logError(de);
@@ -165540,9 +165453,7 @@ async function qCt(e) {
     if (W(o)) return;
     throw o;
   }
-  let { isRetentionExemptionDisabled: r } = import.meta.require(
-    "../../02-功能模块/会话-历史-恢复/getCutoffDate.6heqfanj.js",
-  );
+  let { isRetentionExemptionDisabled: r } = lazy_getCutoffDate_6heqfanj;
   if (!r()) {
     let o = new Date();
     await lutimes(t, o, o).catch((d) => {

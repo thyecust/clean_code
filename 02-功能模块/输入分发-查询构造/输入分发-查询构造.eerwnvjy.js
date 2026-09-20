@@ -2220,8 +2220,7 @@ function collectAmbientContext() {
   }
   let O;
   return (
-    (O = import.meta
-      .require("../远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js")
+    (O = lazy_validateExplicitMessagingSocketPath_knbv811d
       .getUdsMessagingSocketPath()),
     {
       cwd: getCwd(),
@@ -2405,8 +2404,8 @@ function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
 }
 var Sc =
     "Blank prompt \u2014 the message was only whitespace, so nothing was sent to the model.",
-  Ei = () => import.meta.require("../自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
-  Sy = () => import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js");
+  Ei = () => lazy_LINK_SCAN_MAX_BYTES_mjs9q59k,
+  Sy = () => lazy_chunk_s1hpfa12;
 class ClassifierJobStateStore {
   state = void 0;
 }
@@ -2631,9 +2630,7 @@ async function processUserInput({
 async function vc(w, I, O) {
   if (!w.shouldQuery) return;
   try {
-    let { getWorkflowAuthoringAutoloadMessages: U } = import.meta.require(
-      "../编排-Workflow/getWorkflowAuthoringAutoloadMessages.x36rsj57.js",
-    );
+    let { getWorkflowAuthoringAutoloadMessages: U } = lazy_getWorkflowAuthoringAutoloadMessages_x36rsj57;
     w.messages.push(...(await U(w.messages, I, O)));
   } catch (U) {
     logError(U);
@@ -8728,9 +8725,7 @@ async function sm(w) {
     !a.CLAUDE_CODE_REMOTE &&
     a.CLAUDE_CODE_SESSION_KIND !== "bg"
   ) {
-    let { toolsSpecNamesSelfHostedRunnerTool: ne } = import.meta.require(
-      "../../01-核心基础设施/核心工具-未归类/chunk-02q6xmh3.js",
-    );
+    let { toolsSpecNamesSelfHostedRunnerTool: ne } = lazy_chunk_02q6xmh3;
     if (ne(w.baseTools)) enableWizardOperatorTools();
   }
   let I = await initializeToolPermissionContext({
@@ -11627,6 +11622,18 @@ function Cp(w) {
 }
 import { createHash } from "crypto";
 import { fileURLToPath } from "url";
+import * as lazy_validateExplicitMessagingSocketPath_knbv811d from "../远程控制-Bridge/validateExplicitMessagingSocketPath.knbv811d.js";
+import * as lazy_LINK_SCAN_MAX_BYTES_mjs9q59k from "../自动模式-AutoMode/LINK_SCAN_MAX_BYTES.mjs9q59k.js";
+import * as lazy_chunk_s1hpfa12 from "../../01-核心基础设施/核心工具-未归类/chunk-s1hpfa12.js";
+import * as lazy_getWorkflowAuthoringAutoloadMessages_x36rsj57 from "../编排-Workflow/getWorkflowAuthoringAutoloadMessages.x36rsj57.js";
+import * as lazy_chunk_02q6xmh3 from "../../01-核心基础设施/核心工具-未归类/chunk-02q6xmh3.js";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+import * as lazy_teammate_context from "../Teammates团队/teammate-context.js";
+import * as lazy_chunk_5nnwwahg from "../Teammates团队/chunk-5nnwwahg.js";
+import * as lazy_chunk_88ybhavr from "../Teammates团队/chunk-88ybhavr.js";
+import * as lazy_提示词_SystemPrompt_bt5gmcr2 from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import * as lazy_chunk_1p3batyk from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+
 var wp = "https://downloads.claude.ai/model-catalog/v1/catalog.json",
   Kl = ".raw-sig.json";
 function Wl() {
@@ -13293,18 +13300,17 @@ function Cf(w, I) {
 }
 function WC(w, I, O) {
   try {
-    let { prefetchAllMcpResources: U } = import.meta
-      .require("../MCP客户端/mcpClientModule.4cyej0np.js")
+    let { prefetchAllMcpResources: U } = lazy_mcpClientModule_4cyej0np
       .mcpClientModule();
     return U(w, I, O);
   } catch (U) {
     return (logError(U), Promise.resolve({ clients: [], tools: [], commands: [] }));
   }
 }
-var getTeammateContextModule = () => import.meta.require("../Teammates团队/teammate-context.js"),
-  zC = () => import.meta.require("../Teammates团队/chunk-5nnwwahg.js"),
-  VC = () => import.meta.require("../Teammates团队/chunk-88ybhavr.js"),
-  systemPromptModule = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
+var getTeammateContextModule = () => lazy_teammate_context,
+  zC = () => lazy_chunk_5nnwwahg,
+  VC = () => lazy_chunk_88ybhavr,
+  systemPromptModule = lazy_提示词_SystemPrompt_bt5gmcr2,
   wf = null;
 function qC() {
   try {
@@ -13439,7 +13445,7 @@ function applyBriefModeFlag(w) {
   let I = w.brief,
     O = a.CLAUDE_CODE_BRIEF;
   if (!I && !O) return;
-  let { isBriefEntitled: U } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js"),
+  let { isBriefEntitled: U } = lazy_chunk_1p3batyk,
     V = U();
   if (V) lZ(!0);
   logEvent("tengu_brief_mode_enabled", {
@@ -14302,9 +14308,7 @@ ${Gn}`
     });
   }
   if ($e.length > 0) {
-    let { shouldToolsListOptInToBrief: Le } = import.meta.require(
-      "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js",
-    );
+    let { shouldToolsListOptInToBrief: Le } = lazy_chunk_1p3batyk;
     if (Le(splitToolRuleList($e))) lZ(!0);
   }
   if (ke()) {
@@ -14795,7 +14799,7 @@ ${so}`
       else logForDebugging(`[autocompact] ${st}`, { level: "warn" });
   }
   if ((applyBriefModeFlag(I), !ke() && !Ox() && getInitialSettings().defaultView === "chat")) {
-    let { isBriefEntitled: Le } = import.meta.require("../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js");
+    let { isBriefEntitled: Le } = lazy_chunk_1p3batyk;
     if (Le()) lZ(!0);
   }
   let Os,
@@ -15476,7 +15480,7 @@ function getChecklistCancelMessage(w) {
     : "Cancelled before a cloud session was created";
 }
 function Xo() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js").mcpClientModule();
+  return lazy_mcpClientModule_4cyej0np.mcpClientModule();
 }
 function Af(w) {
   try {

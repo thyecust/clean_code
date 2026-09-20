@@ -4888,20 +4888,20 @@ function rw(l) {
   });
 }
 var _y = {
-    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js")
+    name: lazy_chunk_p2wzfbaj
       .SEARCH_MCP_REGISTRY_TOOL_NAME,
-    ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.k3vkyx31.js"),
+    ui: lazy_renderToolResultMessage_k3vkyx31,
   },
   Py = {
-    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js")
+    name: lazy_chunk_0mrh424x
       .SUGGEST_CONNECTORS_TOOL_NAME,
-    ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.9n29ntaq.js"),
+    ui: lazy_renderToolResultMessage_9n29ntaq,
   },
   Cy = null,
   wy = null,
   Uy = {
-    name: import.meta.require("../../02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js").LIST_CONNECTORS_TOOL_NAME,
-    ui: import.meta.require("../../02-功能模块/MCP客户端/renderToolResultMessage.ddfh23kw.js"),
+    name: lazy_chunk_9g3yj4km.LIST_CONNECTORS_TOOL_NAME,
+    ui: lazy_renderToolResultMessage_ddfh23kw,
   },
   Ny = null,
   Ay = null,
@@ -4909,21 +4909,21 @@ var _y = {
   _p = null,
   Ly = null,
   Gu = {
-    name: import.meta.require("../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js").WORKFLOW_TOOL_NAME,
-    ui: import.meta.require("../../02-功能模块/编排-Workflow/renderToolResultMessage.ew7kwnxk.js"),
+    name: lazy_chunk_7fcxwgtq.WORKFLOW_TOOL_NAME,
+    ui: lazy_renderToolResultMessage_ew7kwnxk,
   },
   Sp = null,
-  di = import.meta.require("../../02-功能模块/MCP客户端/makeResultCountRenderer.rtp0eamn.js"),
+  di = lazy_makeResultCountRenderer_rtp0eamn,
   Pp = null,
   Cp = null,
   es = {
-    name: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
-    names: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
-    ui: import.meta.require("../../02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js"),
+    name: lazy_核心工具_常量与消息_602x2b1z.ARTIFACT_TOOL_NAME,
+    names: lazy_核心工具_常量与消息_602x2b1z,
+    ui: lazy_renderCheckToolUseMessage_zxaexmtx,
   },
   vy = {
-    name: import.meta.require("../核心工具-未归类/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME,
-    ui: import.meta.require("../../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js"),
+    name: lazy_chunk_vtgvbed1.END_CONVERSATION_TOOL_NAME,
+    ui: lazy_renderToolResultMessage_pwg9xdk6,
   },
   Iy = {
     [AGENT_TOOL_NAME]: {
@@ -4936,7 +4936,7 @@ var _y = {
       userFacingNameBackgroundColor: getAgentToolUserFacingBackgroundColor,
     },
     get [BASH_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js");
+      let l = lazy_BackgroundHint_nne14pfp;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseProgressMessage: l.renderToolUseProgressMessage,
@@ -4954,7 +4954,7 @@ var _y = {
     [BRIEF_TOOL_NAME]: { renderToolResultMessage: yC },
     [EXIT_PLAN_MODE_TOOL_NAME]: { renderToolResultMessage: zP, renderToolUseRejectedMessage: KP },
     get [EDIT_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具文件读写编辑/renderToolUseErrorMessage.8cb1t7h1.js");
+      let l = lazy_renderToolUseErrorMessage_8cb1t7h1;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseRejectedMessage: l.renderToolUseRejectedMessage,
@@ -4962,7 +4962,7 @@ var _y = {
       };
     },
     get [WRITE_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具UI渲染/isResultTruncated.y9qtnzef.js");
+      let l = lazy_isResultTruncated_y9qtnzef;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseRejectedMessage: l.renderToolUseRejectedMessage,
@@ -4971,7 +4971,7 @@ var _y = {
       };
     },
     get [MEMORY_WRITE_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具UI渲染/isResultTruncated.7wy9kjgd.js");
+      let l = lazy_isResultTruncated_7wy9kjgd;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
@@ -4979,7 +4979,7 @@ var _y = {
       };
     },
     get [READ_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具文件读写编辑/renderToolUseTag.1xg51k6k.js");
+      let l = lazy_renderToolUseTag_1xg51k6k;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
@@ -4987,7 +4987,7 @@ var _y = {
       };
     },
     get [TASK_OUTPUT_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具UI渲染/renderToolUseTag.mt0rtkfc.js");
+      let l = lazy_renderToolUseTag_mt0rtkfc;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseProgressMessage: l.renderToolUseProgressMessage,
@@ -4995,7 +4995,7 @@ var _y = {
       };
     },
     get [NOTEBOOK_EDIT_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/Notebook-ipynb/Notebook-ipynb.zmx4vxzb.js");
+      let l = lazy_Notebook_ipynb_zmx4vxzb;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseRejectedMessage: l.renderToolUseRejectedMessage,
@@ -5003,7 +5003,7 @@ var _y = {
       };
     },
     get [POWERSHELL_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具Bash-Shell/renderToolUseErrorMessage.fxtssd7a.js");
+      let l = lazy_renderToolUseErrorMessage_fxtssd7a;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseErrorMessage: l.renderToolUseErrorMessage,
@@ -5017,7 +5017,7 @@ var _y = {
     [WEB_SEARCH_TOOL_NAME]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
     [REPORT_FINDINGS_TOOL_NAME]: { renderToolResultMessage: EC },
     get [SKILL_TOOL_NAME]() {
-      let l = import.meta.require("../../02-功能模块/工具UI渲染/renderToolUseErrorMessage.gg04apb2.js");
+      let l = lazy_renderToolUseErrorMessage_gg04apb2;
       return {
         renderToolResultMessage: l.renderToolResultMessage,
         renderToolUseProgressMessage: l.renderToolUseProgressMessage,
@@ -6195,6 +6195,34 @@ import {
   join,
   normalize,
 } from "path";
+import * as lazy_chunk_p2wzfbaj from "../../02-功能模块/MCP连接器-Connector/chunk-p2wzfbaj.js";
+import * as lazy_renderToolResultMessage_k3vkyx31 from "../../02-功能模块/MCP客户端/renderToolResultMessage.k3vkyx31.js";
+import * as lazy_chunk_0mrh424x from "../../02-功能模块/MCP连接器-Connector/chunk-0mrh424x.js";
+import * as lazy_renderToolResultMessage_9n29ntaq from "../../02-功能模块/MCP客户端/renderToolResultMessage.9n29ntaq.js";
+import * as lazy_chunk_9g3yj4km from "../../02-功能模块/MCP连接器-Connector/chunk-9g3yj4km.js";
+import * as lazy_renderToolResultMessage_ddfh23kw from "../../02-功能模块/MCP客户端/renderToolResultMessage.ddfh23kw.js";
+import * as lazy_chunk_7fcxwgtq from "../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js";
+import * as lazy_renderToolResultMessage_ew7kwnxk from "../../02-功能模块/编排-Workflow/renderToolResultMessage.ew7kwnxk.js";
+import * as lazy_makeResultCountRenderer_rtp0eamn from "../../02-功能模块/MCP客户端/makeResultCountRenderer.rtp0eamn.js";
+import * as lazy_核心工具_常量与消息_602x2b1z from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import * as lazy_renderCheckToolUseMessage_zxaexmtx from "../../02-功能模块/制品发布-Artifact/renderCheckToolUseMessage.zxaexmtx.js";
+import * as lazy_chunk_vtgvbed1 from "../核心工具-未归类/chunk-vtgvbed1.js";
+import * as lazy_renderToolResultMessage_pwg9xdk6 from "../../02-功能模块/工具UI渲染/renderToolResultMessage.pwg9xdk6.js";
+import * as lazy_BackgroundHint_nne14pfp from "../../02-功能模块/工具UI渲染/BackgroundHint.nne14pfp.js";
+import * as lazy_renderToolUseErrorMessage_8cb1t7h1 from "../../02-功能模块/工具文件读写编辑/renderToolUseErrorMessage.8cb1t7h1.js";
+import * as lazy_isResultTruncated_y9qtnzef from "../../02-功能模块/工具UI渲染/isResultTruncated.y9qtnzef.js";
+import * as lazy_isResultTruncated_7wy9kjgd from "../../02-功能模块/工具UI渲染/isResultTruncated.7wy9kjgd.js";
+import * as lazy_renderToolUseTag_1xg51k6k from "../../02-功能模块/工具文件读写编辑/renderToolUseTag.1xg51k6k.js";
+import * as lazy_renderToolUseTag_mt0rtkfc from "../../02-功能模块/工具UI渲染/renderToolUseTag.mt0rtkfc.js";
+import * as lazy_Notebook_ipynb_zmx4vxzb from "../../02-功能模块/Notebook-ipynb/Notebook-ipynb.zmx4vxzb.js";
+import * as lazy_renderToolUseErrorMessage_fxtssd7a from "../../02-功能模块/工具Bash-Shell/renderToolUseErrorMessage.fxtssd7a.js";
+import * as lazy_renderToolUseErrorMessage_gg04apb2 from "../../02-功能模块/工具UI渲染/renderToolUseErrorMessage.gg04apb2.js";
+import * as lazy_UserChannelMessage_t71awb1k from "../../02-功能模块/Teammates团队/UserChannelMessage.t71awb1k.js";
+import * as lazy_UserCrossSessionMessage_tkya3krn from "../../02-功能模块/Teammates团队/UserCrossSessionMessage.tkya3krn.js";
+import * as lazy_UserForkBoilerplateMessage_xec8zrws from "../../02-功能模块/会话-历史-恢复/UserForkBoilerplateMessage.xec8zrws.js";
+import * as lazy_isNarrationSummaryBlock_adf7egmq from "../核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js";
+import * as lazy_AssistantNarrationSummaryMessage_kz8yw55j from "../../03-入口与运行时/会话UI-REPL/AssistantNarrationSummaryMessage.kz8yw55j.js";
+
 var DD = 16,
   xw = "surveyRating";
 function BD(l) {
@@ -8754,7 +8782,7 @@ function Jz(jZ) {
     return Re;
   }
   if (isExternalSourceMessage(fe.text)) {
-    let { UserChannelMessage: FZ } = import.meta.require("../../02-功能模块/Teammates团队/UserChannelMessage.t71awb1k.js");
+    let { UserChannelMessage: FZ } = lazy_UserChannelMessage_t71awb1k;
     let Re;
     if (jo[9] !== Ae || jo[10] !== fe || jo[11] !== fs)
       ((Re = e(FZ, { addMargin: Ae, param: fe, followsSpeakerLabel: fs })),
@@ -8766,9 +8794,7 @@ function Jz(jZ) {
     return Re;
   }
   if (isCrossSessionMessage(fe.text)) {
-    let { UserCrossSessionMessage: $Z } = import.meta.require(
-      "../../02-功能模块/Teammates团队/UserCrossSessionMessage.tkya3krn.js",
-    );
+    let { UserCrossSessionMessage: $Z } = lazy_UserCrossSessionMessage_tkya3krn;
     const Re = vi?.kind === "peer" && vi.hostInjected === !0;
     let Dr;
     if (
@@ -8963,9 +8989,7 @@ function Jz(jZ) {
     return Re;
   }
   if (fe.text.includes("<fork-boilerplate>")) {
-    let { UserForkBoilerplateMessage: WZ } = import.meta.require(
-      "../../02-功能模块/会话-历史-恢复/UserForkBoilerplateMessage.xec8zrws.js",
-    );
+    let { UserForkBoilerplateMessage: WZ } = lazy_UserForkBoilerplateMessage_xec8zrws;
     let Re;
     if (jo[60] !== Ae || jo[61] !== fe)
       ((Re = e(WZ, { addMargin: Ae, param: fe })),
@@ -14542,10 +14566,8 @@ function y_(gae) {
 function BW(Cle) {
   return Cle.host;
 }
-var wg = import.meta.require("../核心工具-未归类/isNarrationSummaryBlock.adf7egmq.js").isNarrationSummaryBlock,
-  Ug = import.meta.require(
-    "../../03-入口与运行时/会话UI-REPL/AssistantNarrationSummaryMessage.kz8yw55j.js",
-  ).AssistantNarrationSummaryMessage,
+var wg = lazy_isNarrationSummaryBlock_adf7egmq.isNarrationSummaryBlock,
+  Ug = lazy_AssistantNarrationSummaryMessage_kz8yw55j.AssistantNarrationSummaryMessage,
   Vs = null;
 function FE(nle) {
   let to = _(145),

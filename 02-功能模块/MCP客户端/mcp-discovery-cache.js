@@ -172,6 +172,8 @@ import {
   createDecipheriv,
   randomBytes,
 } from "crypto";
+import * as lazy_mcpClientModule_4cyej0np from "./mcpClientModule.4cyej0np.js";
+
 var Pe = 32,
   Q = 12,
   H = 16,
@@ -331,8 +333,7 @@ function $e() {
 var gt = 384,
   He = 448,
   ne = createLazyValue(() => {
-    let e = import.meta
-      .require("./mcpClientModule.4cyej0np.js")
+    let e = lazy_mcpClientModule_4cyej0np
       .mcpClientModule()
       .discoveryWireSchemas();
     return c({

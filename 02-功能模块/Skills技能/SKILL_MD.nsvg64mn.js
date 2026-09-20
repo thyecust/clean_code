@@ -9,7 +9,9 @@
 // Version: 2.1.263
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/内嵌资源与模块互操作/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-var e = importMetaRequire("./SKILL-s3202xee.md");
+import * as lazy_SKILL_s3202xee from "../../01-核心基础设施/内嵌资源与模块互操作/SKILL-s3202xee.md";
+
+var e = lazy_SKILL_s3202xee;
 var t = "./template.html-1461d319.txt.zst";
 var a = readEmbeddedAssetSync(t, import.meta.dirname);
 var SKILL_MD = { doc: e },

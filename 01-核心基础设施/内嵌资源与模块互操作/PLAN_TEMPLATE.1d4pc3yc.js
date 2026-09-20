@@ -9,7 +9,9 @@
 // Version: 2.1.263
 import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
 import { importMetaRequire } from "./chunk-2c9tjhwd.js";
-var t = importMetaRequire("./SKILL-e1sgkfee.md");
+import * as lazy_SKILL_e1sgkfee from "./SKILL-e1sgkfee.md";
+
+var t = lazy_SKILL_e1sgkfee;
 var a = "./artifact-plan.html-1506d178.txt.zst";
 var e = readEmbeddedAssetSync(a, import.meta.dirname);
 var SKILL_MD = t,

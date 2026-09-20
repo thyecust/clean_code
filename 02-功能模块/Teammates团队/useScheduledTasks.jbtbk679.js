@@ -32,6 +32,8 @@ import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "./chunk-z2t8b9yc.js";
 F();
 import { randomUUID } from "crypto";
+import * as lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba from "../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js";
+
 function I(o) {
   return (
     o.type === "system" &&
@@ -166,7 +168,7 @@ function w(o, r) {
   if (!s || !p) return 0;
   return Math.round((Date.parse(p) - Date.parse(s)) / 1000);
 }
-var T = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
+var T = lazy_LOOP_FILE_DYNAMIC_SENTINEL_y675anba,
   A = null;
 function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, storageV5: p }) {
   let c = useCommandQueue(),

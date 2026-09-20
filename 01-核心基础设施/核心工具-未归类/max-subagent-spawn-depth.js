@@ -9,6 +9,8 @@
 // Version: 2.1.263
 import { getSessionFeatureCache } from "../../02-功能模块/Hooks钩子/session-feature-cache.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import * as lazy_ATIS_REQUEST_HEADER_9bwp2jqb from "./ATIS_REQUEST_HEADER.9bwp2jqb.js";
+
 var o = 3,
   _ = "tengu_hazel_trellis";
 function getMaxSubagentSpawnDepth() {
@@ -16,9 +18,7 @@ function getMaxSubagentSpawnDepth() {
   if (n !== void 0) return n;
   let t = getSessionFeatureCache();
   if (t.maxSubagentSpawnDepthFromGrowthBook === void 0) {
-    let { getFeatureValue_CACHED_MAY_BE_STALE: r } = import.meta.require(
-        "./ATIS_REQUEST_HEADER.9bwp2jqb.js",
-      ),
+    let { getFeatureValue_CACHED_MAY_BE_STALE: r } = lazy_ATIS_REQUEST_HEADER_9bwp2jqb,
       e = r(_, o);
     t.maxSubagentSpawnDepthFromGrowthBook =
       typeof e === "number" && Number.isInteger(e) && e >= 1 ? e : o;

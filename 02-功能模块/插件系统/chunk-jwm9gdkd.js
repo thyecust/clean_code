@@ -5373,7 +5373,7 @@ function db() {
 var MCP_AUTH_UNATTENDED_SESSION_MESSAGE =
   "Can't authenticate MCP servers while no terminal is attached to this background session. Attach to it and try again.";
 function Em() {
-  return import.meta.require("../MCP客户端/mcpClientModule.4cyej0np.js");
+  return lazy_mcpClientModule_4cyej0np;
 }
 function Yr() {
   return Em().mcpAuthModule();
@@ -6943,6 +6943,8 @@ function Gm() {
   );
 }
 import { join, resolve, sep } from "path";
+import * as lazy_mcpClientModule_4cyej0np from "../MCP客户端/mcpClientModule.4cyej0np.js";
+
 async function Jm(a, k) {
   let v = join(k.path, "..", ".claude-plugin", "marketplace.json");
   if (isHoverRestEnabled() && a !== void 0 && (await Vb(a, k))) {
